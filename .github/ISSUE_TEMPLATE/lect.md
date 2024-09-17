@@ -9,16 +9,20 @@ assignees: ''
 
 **Topic**
 
+lectureTopicExample
+
 **Date and Time**
+
+Month Day, Year
+12:30 pm
 
 **Attendance**
 
-- [ ] team member1
-- [ ] team member2
-- [ ] team member3
-- [ ] team member4
-- [ ] team member5
+- [ ] Nicholas Fabugais-Inaba
+- [ ] Casra Ghazanfari
+- [ ] Jung Woo Lee
+- [ ] Alexander Verity
 
 **Questions to Ask**
 
--
+- exampleQuestion?
