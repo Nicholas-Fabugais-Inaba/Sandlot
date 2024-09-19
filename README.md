@@ -1,8 +1,14 @@
 # Project Name
+TDB
 
 Developer Names:
+- Nicholas Fabugais-Inaba
+- Casra Ghazanfari
+- Jung Woo Lee
+- Alexander Verity
 
 Date of project start:
+September 16th 2024
 
 This project is ...
 
