@@ -11,10 +11,10 @@ assignees: ''
 
 **Attendance**
 
-- [x] Nicholas Fabugais-Inaba
-- [x] Casra Ghazanfari
-- [x] Jung Woo Lee
-- [x] Alexander Verity
+- [ ] Nicholas Fabugais-Inaba
+- [ ] Casra Ghazanfari
+- [ ] Jung Woo Lee
+- [ ] Alexander Verity
 
 **Agenda**
 
