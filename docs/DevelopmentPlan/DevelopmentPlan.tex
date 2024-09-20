@@ -82,6 +82,26 @@ leader, meeting chair, reviewer.  Assigning specific people to those roles is
 not necessary at this stage.  In a student team the role of the individuals will
 likely change throughout the year.}
 
+\begin{itemize}
+	\item Jung Woo Lee
+	\begin{itemize}
+	  \item Scrum Master
+	  \item Developer
+  \end{itemize}
+	\item Alex Verity
+  \begin{itemize}
+	  \item Developer
+  \end{itemize}
+  \item Nicholas Fabugais-Inaba
+  \begin{itemize}
+	  \item Developer
+  \end{itemize}
+  \item Casra Ghazanfari
+  \begin{itemize}
+	  \item Developer
+  \end{itemize}
+\end{itemize}
+
 \section{Workflow Plan}
 
 \begin{itemize}
@@ -90,6 +110,25 @@ likely change throughout the year.}
 	classification, etc.?
   \item Use of CI/CD
 \end{itemize}
+
+Git is the most important part in managing issues, editing documentation, and developing features.
+Before any changes should be made, a "git pull" should be entered into the Github capstone directory
+for updating the local repository to the latest changes on the remote branch.
+Once this is complete, a branch should be created, from the main branch, for any commits involving
+documentation, development code, or any other changes present within the repository.
+With these commits, there should be comments detailing the changes that have been made.
+Furthermore, each commit should have the designated code name associated with it.
+After these commits are tested, committed, and then pushed from the local to the remote repository,
+a pull request should be made to merge the branch commit to the main branch. 
+At least one approval will be required from a reviewer for each pull request
+to be merged with the main branch. Finally, when the commits have been successfully
+merged to the main branch, the branch the commits were made on will be deleted.
+\\
+\\
+\indent For managing merge conflicts, the developer should identify the conflicting changes,
+making sure to resolve any conflicts before new changes are made. Once all conflicts
+are resolved, the developer should be able to proceed in testing, committing, and pushing
+their changes to the remote repository.
 
 \section{Project Decomposition and Scheduling}
 
