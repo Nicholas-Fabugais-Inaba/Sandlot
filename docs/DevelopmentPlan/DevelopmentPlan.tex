@@ -78,9 +78,44 @@ in-person.}
 
 \wss{How will the meetings be structured?  There should be a chair for all meetings.  There should be an agenda for all meetings.}
 
+Team meetings will be held weekly on Tuesdays at 2:00pm at a Hatch conference 
+room. However, team meetings are flexible, if a majority of the team (3/4 members) 
+agrees to either cancel the weekly meeting, schedule an extra meeting, or hold 
+the meeting virtually then the according changes will be made.
+\\
+\\
+\indent Supervisor meetings will be held every 2 weeks on Wednesdays at 3:00pm in JHE 373. Similar to team meetings, if either the supervisor requests 
+or a majority of the team agrees to any of the previously stated changes, 
+they will be made.
+\\
+\\
+\indent The meeting chair will head meetings and will present the weekly agenda at 
+the beginning of each meeting which will cover the topics to be discussed. 
+Each team member will provide a weekly summary covering the work they've 
+done and outstanding issues they've been tackling. Discussion of these 
+weekly agenda items and outstanding issues will be lead by the meeting 
+chair. Every team member will leave the meeting with a list of TODO items 
+that they plan to tackle next. The agenda, weekly summaries, outstanding 
+issues, decisions made and TODOs will be recorded by the scribe in the 
+meeting's assigned Github issue. Finally, meetings have a maximum duration of
+1 hour.
+
 \section{Team Communication Plan}
 
 \wss{Issues on GitHub should be part of your communication plan.}
+
+\indent GitHub issues will be used to communicate technical information 
+between group members.
+\\
+\\
+\indent Discord will be used as the main group communication channel for the team. A majority 
+of group communication will be held through here including online meetings, admin details, 
+and general unplanned discussions. 
+\\
+\\
+\indent Call and Text will be used for direct communication between 2 team members
+and will generally be reserved for high priority and urgent communication or 
+campus location coordination. 
 
 \section{Team Member Roles}
 
@@ -174,16 +209,92 @@ Topics to discuss include the following:
 
 \begin{itemize}
 \item Specific programming language
+\subitem The project can roughly be divided into 3 main components:
+\begin{enumerate}
+  \item A database where the bulk of the site's data will be stored.
+  \item A webserver which will host the website's visual data and code.
+  \item Middleware which will allow for communication between the 
+  webserver and database.
+\end{enumerate}
+\subitem The middleware will be written in Python due to its ease of use and 
+familiarity among team members.
+\subitem We will either use PostgreSQL scripts or an ORM (like SQLalchemy) 
+to implement the database, the language used will depend on the implementation 
+chosen. PostgreSQL scripts would require using only SQL, while an ORM would 
+likely live with the middleware and as such would be written in Python.
+\subitem The webserver will be written in Javascript using the React framework.
+This is because of its ease of use, team member experience, and large set 
+of available libraries which will be useful for implementing the visual elements
+of the website. Additionally, it was expressed to us by stakeholders that the 
+website should be easily maintainable. Implementing the website using an 
+extremely popular and widespread framework such as React means that there 
+are countless resources online to help future maintainers keep the project alive.
+
 \item Specific libraries
+\subitem Depending on the implementation, the middleware will use some combination
+of the FastAPI and SQLalchemy libraries. FastAPI will be used to implement HTTPS 
+communication routers between the database and webserver. SQLalchemy will be used to 
+implement the database if it is decided that it will be implemented using an ORM.
+\subitem The webserver will use a large set of both functional and visual React
+libraries. For example, react-navigation will be used for its page traversal 
+functionality while libraries such as react-datepicker and react-calendar will 
+be very helpful when implementing the visual elements of a scheduling system. 
+Additionally, the axios library will be used to form and send the HTTPS requests 
+to the middleware from the webserver.
 \item Pre-trained models
+\subitem This project does not include an AI component and will not use 
+a machine learning model.
 \item Specific linter tool (if appropriate)
+\subitem ESLint will be used for linting Javascript code while flake8 will be 
+used to lint Python code. We chose these linters due to our previous experience 
+using them and because they provide our preferred formatting style.
 \item Specific unit testing framework
+\subitem The pytest framework will be used to create unit tests for the middleware
+code. We chose pytest over other python testing frameworks due to its simplicity, 
+small amount of boilerplate code, and plugins which can add useful functionalities
+like coverage reporting. We plan to incorporate these pytest unit tests as a part
+of our CI plans for the project via Github actions.
+\subitem Testing the database will likely be done using a dummy / development 
+PostgreSQL database prior to making any changes to the production database to 
+ensure that minimal migrations are required during development.
+\subitem Our plans for testing our webserver's React code are not decided yet, 
+but we're currently investigating potential testing options.
 \item Investigation of code coverage measuring tools
+\subitem The Coverage.py Python library will be used to measure the code coverage
+of our middleware program. For the webserver's React code, Jest is included by 
+default when using the "create-react-app" command and will be used to measure 
+the code coverage of the webserver.
 \item Specific plans for Continuous Integration (CI), or an explanation that CI
   is not being done
 \item Specific performance measuring tools (like Valgrind), if
   appropriate
+\subitem The webserver will be hosted on azure's web app services, meaning that
+azure's suite of performance measurement tools and metrics will be used as the 
+webserver's main performance measurement system. Additionally, we plan to do
+practical performance tests with stakeholders by having them use the website 
+casually to ensure that performance during regular use is up to their standards 
+/ expectations.
+\subitem Similarly, the database will be hosted on an azure container, meaning 
+that azure's suite of performance measurement tools and metrics will once again 
+be used as the databases main performance measurement system. Additionally, 
+performance of queries will be timed throughout development to determine what 
+indices should exist on the database for practical performance.
+\subitem Finally, the middleware will use the profile library included with 
+Python to measure the performance of its HTTPS routes.
 \item Tools you will likely be using?
+\subitem There are a number of tools/programs/services that we plan to use that 
+were either mentioned in passing previously or not mentioned at all.
+\subitem Azure containers and/or virtual machines will be used to host both the 
+database and middleware components of this project. Additionally, the webserver 
+will be hosted using azure's web app services. This allows all main components 
+of the project to be hosted in one place.
+\subitem Node.js will be the server environment which we run our webserver on 
+and npm will be what we use to manage our Javascript 
+packages.
+\subitem Git/GitHub will be used for version control on the project. GitHub 
+projects will be used as a general project management tool to help keep 
+track of issues, work done, and available tasks. Finally, GitHub actions will 
+be used for CI of tests as the repository is modified.
 \end{itemize}
 
 \wss{git, GitHub and GitHub projects should be part of your technology.}
