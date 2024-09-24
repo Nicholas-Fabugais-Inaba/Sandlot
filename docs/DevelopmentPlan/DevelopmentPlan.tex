@@ -159,22 +159,37 @@ likely change throughout the year.}
 \end{itemize}
 
 Git is the most important part in managing issues, editing documentation, and developing features.
-Before any changes should be made, a "git pull" should be entered into the Github capstone directory
-for updating the local repository to the latest changes on the remote branch.
-Once this is complete, a branch should be created, from the main branch, for any commits involving
-documentation, development code, or any other changes present within the repository.
-With these commits, there should be comments detailing the changes that have been made.
-Furthermore, each commit should have the designated code name associated with it.
-After these commits are tested, committed, and then pushed from the local to the remote repository,
-a pull request should be made to merge the branch commit to the main branch. 
-At least one approval will be required from a reviewer for each pull request
-to be merged with the main branch. Finally, when the commits have been successfully
-merged to the main branch, the branch the commits were made on will be deleted.\newline
-
-For managing merge conflicts, the developer should identify the conflicting changes,
-making sure to resolve any conflicts before new changes are made. Once all conflicts
-are resolved, the developer should be able to proceed in testing, committing, and pushing
-their changes to the remote repository.
+Before any changes should be made, the local repository should be updated to the latest changes on
+the remote branch. Once this is complete, a branch should be created from either the documentation
+or development branch for any commits involving documentation, development code, or any other
+changes present within the repository. With these commits, there should be comments detailing the
+changes that have been made. Once all commits are in place and pushed to the remote branch, a pull
+request will be created that will go through our CI/CD process using Github Actions. This will use
+automated testing against the development code being submitted. Regarding the pull request for the
+branch with all the commit changes, it should be merged to either the documentation or development
+branch and the associated Git label should be added (i.e. documentation, bug). At least one
+approval will be required from a reviewer for each pull request to merge all the commit changes.
+Finally, when the commits have been successfully merged, the changes that were made on the
+development or documentation branch will then be merged to main as the main branch will act as
+the team's "production" branch. Main will be merged and updated with for milestones, POC's, and
+final deployments.
+\\
+\\
+\indent For managing merge conflicts, the developer should identify the conflicting changes,
+making sure to resolve any conflicts before new changes are made. Once all conflicts are resolved,
+the developer should be able to proceed in committing, and pushing their changes to the remote
+repository.
+\\
+\\
+\indent For each issue, a team member should be assigned to the issue on Github. The descriptions
+of the issues should be explained in detail and labeled appropriately with a Git label. New labels
+should be created, if none of the existing labels match the description of the issue in question.
+Issue templates should be used where possible for maintaining the quality and consistency of the
+issues.
+\\
+\\
+\indent Milestones and checklists will be used to help keep the team on track. The team will
+utilize these from the already existing templates within the Github repository.
 
 \section{Project Decomposition and Scheduling}
 
