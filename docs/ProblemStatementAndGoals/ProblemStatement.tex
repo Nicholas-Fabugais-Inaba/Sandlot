@@ -22,7 +22,7 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
+September 23, 2024 & NFI, JL, CG, AV & Initial Draft\\
 Date2 & Name(s) & Description of changes\\
 ... & ... & ...\\
 \bottomrule
@@ -31,6 +31,8 @@ Date2 & Name(s) & Description of changes\\
 
 \section{Problem Statement}
 
+\subsection{Background}
+
 \wss{You should check your problem statement with the
 \href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
 {problem statement checklist}.} 
@@ -38,22 +40,112 @@ Date2 & Name(s) & Description of changes\\
 \wss{You can change the section headings, as long as you include the required
 information.}
 
+The McMaster GSA softball league is used every summer by 30-40 teams and
+as many as 1,000 unique participants. The league is currently organized through
+an old software platform accessible via a web browser, but it is outdated and
+does not include features for administrators to maintain the site without
+extensive knowledge of computer programming.
+
 \subsection{Problem}
 
+\indent \indent The GSA league is aware that paid-for and ad-supported services are available,
+and features present in those applications should be explored and added if
+possible. The GSA league is a minimal-cost non-profit and would like a
+personalized platform by which to operate without committing to paid-for
+services. The platform will be responsible for including all functionalities
+such as scheduling, division management, communication between captains, waiver
+management, rescheduling, score and league standings management, and other
+tasks identified by the stakeholders. The platform would be a web-based service
+with the same functionalities, but in an updated form that also enables league
+and schedule management from a convenient user interface
+(specific access privileges for team representatives and league administrators).
+
 \subsection{Inputs and Outputs}
+
+\subsubsection{Inputs}
+
+\begin{itemize}
+    \item Player/Captain/Commissioner login information
+    \item Player/Captain/Commissioner contact information
+    \item Team name
+    \item Game score
+\end{itemize}
+
+\subsubsection{Outputs}
+
+\begin{itemize}
+    \item League standings
+    \item League scheduling
+\end{itemize}
 
 \wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
 Use abstraction so that you can avoid details.}
 
 \subsection{Stakeholders}
 
+\begin{itemize}
+    \item The supervisor of the project, Dr. Jake Nease
+    \item Captains and players of the softball league
+\end{itemize}
+
 \subsection{Environment}
+
+\begin{description}
+    \item [Software] Windows, Linux or Mac OS
+    \item [Hardware] Computers with access to the internet
+\end{description}
 
 \wss{Hardware and software environment}
 
 \section{Goals}
 
+\begin{description}
+    \item [Accomplish everything the existing league website does]
+    The current website allows captains to log in and record their matches
+    and scores. It allows scheduling and rescheduling, and provides a place
+    to see the league rules, parking information and other information. The
+    current website often breaks, requiring the current website admin to fix
+    issues as they arise. First and foremost we need to recreate the original
+    league website functionality.
+    \item [User interface should be intuitive to all users.] The current
+    interface is unintuiative and awkward to use. Users should understand
+    how to log in and how to view their schedule just by looking at their
+    homepage. No external information should be required.
+    \item [Allow players to make accounts] Currently, only captains have
+    accounts in the system. Player accounts should only be able to view the
+    contact information of their team captain, captains should only be able
+    to view the contact of their players and other captains, and commisioners
+    should be able to see everything.
+    \item [Matches should be able to be scheduled and rescheduled.] 
+    Team captains should be able to give their team's availablity and the
+    software will algorithmically schedule the season's matches. If a team
+    isn't available for a match after it has been scheduled, captains can
+    send a reschedule request with a selection of possible alternative times
+    that the opposition team's captain can agree to.
+    \item [Commisioners should be able to notify captains with information]
+    Commisioner level accounts should be able to easily send out a
+    notification to specific users or entire groups of users, such as all
+    captains or all players. The information in the notification should be
+    customizable by the commisioner.
+\end{description}
+
 \section{Stretch Goals}
+
+\begin{description}
+    \item [Commisioners should be able to "rain out" matches] After a match
+    has been scheduled, commisioner level accounts should be able to force
+    a reschedule if the weather makes the game unreasonable to play. This
+    will send a notification to the two team captains so they can
+    choose a date that works.
+    \item [League template saving] A season's teams and players should be
+    able to be saved as a template that can be loaded the next season. This
+    is useful as many teams remain the same or similar between seasons, and
+    it would be convienient for all returning teams to avoid reinviting all
+    returning players.
+    \item [A mobile application companion] Users would be able to perform
+    some actions they can on the website, like viewing schedules and
+    standings.
+\end{description}
 
 \section{Challenge Level and Extras}
 
