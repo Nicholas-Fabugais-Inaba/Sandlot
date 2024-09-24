@@ -107,7 +107,7 @@ and general unplanned discussions.
 \\
 \\
 \indent Call and Text will be used for direct communication between 2 team members
-and will generally be resereved for high priority and urgent communcation or 
+and will generally be reserved for high priority and urgent communication or 
 campus location coordination. 
 
 \section{Team Member Roles}
@@ -214,7 +214,7 @@ familiarity among team members.
 \subitem We will either use PostgreSQL scripts or an ORM (like SQLalchemy) 
 to implement the database, the language used will depend on the implementation 
 chosen. PostgreSQL scripts would require using only SQL, while an ORM would 
-likely live where with middleware and as such would be written in Python.
+likely live with the middleware and as such would be written in Python.
 \subitem The webserver will be written in Javascript using the React framework.
 This is because of its ease of use, team member experience, and large set 
 of available libraries which will be useful for implementing the visual elements
@@ -226,12 +226,12 @@ are countless resources online to help future maintainers keep the project alive
 \item Specific libraries
 \subitem Depending on the implementation, the middleware will use some combination
 of the FastAPI and SQLalchemy libraries. FastAPI will be used to implement HTTPS 
-commmunication rotuers between the database and webserver. SQLalchemy will be used to 
+communication routers between the database and webserver. SQLalchemy will be used to 
 implement the database if it is decided that it will be implemented using an ORM.
-\subitem The webserver will use a large set of both funcational and visual react
-libraries. For example react-navigation will be used for its page traversal 
+\subitem The webserver will use a large set of both functional and visual React
+libraries. For example, react-navigation will be used for its page traversal 
 functionality while libraries such as react-datepicker and react-calendar will 
-be very helpful in implement the visual elements of a scheduling system. 
+be very helpful when implementing the visual elements of a scheduling system. 
 Additionally, the axios library will be used to form and send the HTTPS requests 
 to the middleware from the webserver.
 \item Pre-trained models
@@ -261,15 +261,14 @@ the code coverage of the webserver.
   is not being done
 \item Specific performance measuring tools (like Valgrind), if
   appropriate
-\subitem lighthouse for react, cProfile included with python
 \subitem The webserver will be hosted on azure's web app services, meaning that
-azure's suite of performance measrement tools and metrics will be used as the 
+azure's suite of performance measurement tools and metrics will be used as the 
 webserver's main performance measurement system. Additionally, we plan to do
 practical performance tests with stakeholders by having them use the website 
 casually to ensure that performance during regular use is up to their standards 
 / expectations.
 \subitem Similarly, the database will be hosted on an azure container, meaning 
-that azure's suite of performance meaurement tools and metrics will once again 
+that azure's suite of performance measurement tools and metrics will once again 
 be used as the databases main performance measurement system. Additionally, 
 performance of queries will be timed throughout development to determine what 
 indices should exist on the database for practical performance.
@@ -277,7 +276,7 @@ indices should exist on the database for practical performance.
 Python to measure the performance of its HTTPS routes.
 \item Tools you will likely be using?
 \subitem There are a number of tools/programs/services that we plan to use that 
-were either mentioned in passing previously or not mentioned at at all.
+were either mentioned in passing previously or not mentioned at all.
 \subitem Azure containers and/or virtual machines will be used to host both the 
 database and middleware components of this project. Additionally, the webserver 
 will be hosted using azure's web app services. This allows all main components 
