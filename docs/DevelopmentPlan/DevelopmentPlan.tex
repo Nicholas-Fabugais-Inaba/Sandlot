@@ -38,13 +38,17 @@ what is contained in the report.}
 \href{https://gitlab.cas.mcmaster.ca/courses/capstone/-/blob/main/Lectures/L02b_POCAndDevPlan/POCAndDevPlan.pdf?ref_type=heads}
 {lecture slides}.}
 
+This document contains our development plan for the "Sandlot" project, a
+softball league scheduler. It includes team members, team meetings, workflows,
+standards, expected technologies, reflections and our team charter.
+
 \section{Confidential Information?}
 
 \wss{State whether your project has confidential information from industry, or
 not.  If there is confidential information, point to the agreement you have in
 place.}
 
-Our project has no confidential information from industry.
+This project has no confidential information to protect from industry.
 
 \wss{For most teams this section will just state that there is no confidential
 information to protect.}
@@ -54,7 +58,7 @@ information to protect.}
 All students who are working on a project that requires an IP agreement are also
 required to sign the ``Intellectual Property Guide Acknowledgement.''}
 
-There is no IP to protect.
+There is no intellectual property to protect.
 
 \section{Copyright License}
 
@@ -78,42 +82,40 @@ in-person.}
 
 \wss{How will the meetings be structured?  There should be a chair for all meetings.  There should be an agenda for all meetings.}
 
-Team meetings will be held weekly on Tuesdays at 2:00pm at a Hatch conference 
-room. However, team meetings are flexible, if a majority of the team (3/4 members) 
-agrees to either cancel the weekly meeting, schedule an extra meeting, or hold 
-the meeting virtually then the according changes will be made.
-\\
-\\
-\indent Supervisor meetings will be held every 2 weeks on Wednesdays at 3:00pm in JHE 373. Similar to team meetings, if either the supervisor requests 
-or a majority of the team agrees to any of the previously stated changes, 
-they will be made.
-\\
-\\
-\indent The meeting chair will head meetings and will present the weekly agenda at 
-the beginning of each meeting which will cover the topics to be discussed. 
-Each team member will provide a weekly summary covering the work they've 
-done and outstanding issues they've been tackling. Discussion of these 
-weekly agenda items and outstanding issues will be lead by the meeting 
-chair. Every team member will leave the meeting with a list of TODO items 
-that they plan to tackle next. The agenda, weekly summaries, outstanding 
-issues, decisions made and TODOs will be recorded by the scribe in the 
-meeting's assigned Github issue. Finally, meetings have a maximum duration of
-1 hour.
+The team will have 2 scrum meetings a week on Tuesdays and Thursdays every week
+between lectures. We ask every team member to be in attendance unless a valid
+excuse is given. These meetings will be in person if possible.\newline
+
+During scrum meetings, the scrum master will ask each team member to describe
+work they've done since the last meeting, what they plan to work on, and any
+pain points or blockers they've ran into while working.\newline
+
+We will also have flexible meetings if a specific issue arrises. The meeting
+chair will organize an agenda before the meeting. These meetings can be in
+person or online. We ask all group members to attend these meetings, but
+flexiblity is allowed if a member cannot attend.\newline
+
+Supervisor meetings will be held biweekly in the supervisor's office. If the
+team and supervisor agree a meeting isn't necessary, it can be cancelled.
+\newline
+
+The meeting chair will head non-scrum meetings and will present the weekly
+agenda at the beginning of each meeting. The meeting chair will also create an
+issue for the meeting with the agenda on GitHub. The assigned team scribe will
+record the meeting minutes, and add them to the meeting issue.
 
 \section{Team Communication Plan}
 
 \wss{Issues on GitHub should be part of your communication plan.}
 
-\indent GitHub issues will be used to communicate technical information 
-between group members.
-\\
-\\
-\indent Discord will be used as the main group communication channel for the team. A majority 
+GitHub issues will be used to communicate technical information 
+between group members.\newline
+
+Discord will be used as the main group communication channel for the team. A majority 
 of group communication will be held through here including online meetings, admin details, 
-and general unplanned discussions. 
-\\
-\\
-\indent Call and Text will be used for direct communication between 2 team members
+and general unplanned discussions.\newline
+
+Call and Text will be used for direct communication between 2 team members
 and will generally be reserved for high priority and urgent communication or 
 campus location coordination. 
 
@@ -437,6 +439,39 @@ method to organize our pull requests would be to not only state what the
 commits or changes were about, but also attach a label in Github, indicating
 the category the pull request focuses on (i.e. documentation, bug).
 
+\subsection*{Reflection -- Jung Woo Lee}
+
+A development plan is crucial prior to beginning the project to lay out 
+necessary information for the team to follow. The information it provides 
+guides each team member’s actions regarding the project, ensuring the 
+quality of their work, work ethic, and the project as a whole. The 
+development plan being created beforehand further reduces risks of 
+disagreements on fundamental details of project management and operations
+occurring in the middle of the project, where it would be more cumbersome 
+to adapt. It can also simplify the team’s work, as ambiguities regarding 
+certain aspects of the project should be clarified in this document. \newline
+
+An advantage of CI/CD is that it can quickly and automatically perform
+tests on one’s code in a standardized method, such that a certain defined 
+quality is met. This can catch common problems and also might reduce the
+need of each developer testing every aspect of their code. It can also 
+integrate with GitHub to automatically create issues, saving on a lot 
+of boiler-plate actions; tests can be imported easily as well. A 
+disadvantage is that setup may be complicated, and for an efficacious 
+CI/CD system, a lot of thought and time needs to be put into it. There 
+may also be a psychological aspect where developers may be led into a 
+false sense of security when passing the automated tests. Lastly, 
+automated tests do not pertain to usability aspects of the project, 
+which requires manual testing and stakeholder interaction.\newline
+
+Slight disagreement regarding use of labelling and tagging occurred 
+but was resolved by consulting with a TA. Slight disagreement regarding 
+meeting schedule and times was resolved through discussion and consensus. 
+There was significant disagreement about the design of the scrum board 
+about the sections. This was resolved through discussion and agreeing 
+to changes later if needed.\newline
+
+
 \newpage{}
 
 \section*{Appendix --- Team Charter}
@@ -452,6 +487,10 @@ goals related to the functionality or quality fo the project.  These are the
 goals on what the team wishes to achieve with the project.  Potential goals are
 to win a prize at the Capstone EXPO, or to have something to talk about in
 interviews, or to get an A+, etc.}
+
+Our team's external goals are to get a good mark in the 4G06 course. Our team
+considers a 85\% or above a good mark. We also want to have a well made and
+well documented project to show on resumes and discuss in interviews.
 
 \subsection*{Attendance}
 
@@ -522,6 +561,17 @@ instructor for this.}
 consequences if someone doesn't hit their targets?  Do they need to bring the
 coffee to the next team meeting?  Does the team need to make an appointment with
 their TA, or the instructor?  Are there incentives for reaching targets early?}
+
+The primary method our team will use to keep on track will be scrum meetings.
+Our scrum master will ask each member what they've worked on since the last
+meeting, which will inform the group of each other's progress. This will let
+the group know if we are falling behind on the project, and will let any team
+member know if they are less productive than the others.\newline
+
+We will use attendance metrics to make sure team members are attending enough
+meetings. If a member misses 3 meetings in the past 2 weeks, the team will do a
+check in and make sure the member is on track. We will also loosely monitor
+commit metrics on GitHub to make sure members are on track. 
 
 \subsubsection*{Team Building}
 
