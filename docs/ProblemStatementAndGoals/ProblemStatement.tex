@@ -82,19 +82,51 @@ Use abstraction so that you can avoid details.}
 \section{Goals}
 
 \begin{description}
-    \item [Goal1] desc
-    \item [Goal2] desc
-    \item [Goal3] desc
-    \item [Goal4] desc
-    \item [Goal5] desc
+    \item [Accomplish everything the existing league website does]
+    The current website allows captains to log in and record their matches
+    and scores. It allows scheduling and rescheduling, and provides a place
+    to see the league rules, parking information and other information. The
+    current website often breaks, requiring the current website admin to fix
+    issues as they arise. First and foremost we need to recreate the original
+    league website functionality.
+    \item [User interface should be intuitive to all users.] The current
+    interface is unintuiative and awkward to use. Users should understand
+    how to log in and how to view their schedule just by looking at their
+    homepage. No external information should be required.
+    \item [Allow players to make accounts] Currently, only captains have
+    accounts in the system. Player accounts should only be able to view the
+    contact information of their team captain, captains should only be able
+    to view the contact of their players and other captains, and commisioners
+    should be able to see everything.
+    \item [Matches should be able to be scheduled and rescheduled.] 
+    Team captains should be able to give their team's availablity and the
+    software will algorithmically schedule the season's matches. If a team
+    isn't available for a match after it has been scheduled, captains can
+    send a reschedule request with a selection of possible alternative times
+    that the opposition team's captain can agree to.
+    \item [Commisioners should be able to notify captains with information]
+    Commisioner level accounts should be able to easily send out a
+    notification to specific users or entire groups of users, such as all
+    captains or all players. The information in the notification should be
+    customizable by the commisioner.
 \end{description}
 
 \section{Stretch Goals}
 
 \begin{description}
-    \item [Goal1] desc
-    \item [Goal2] desc
-    \item [Goal3] desc
+    \item [Commisioners should be able to "rain out" matches] After a match
+    has been scheduled, commisioner level accounts should be able to force
+    a reschedule if the weather makes the game unreasonable to play. This
+    will send a notification to the two team captains so they can
+    choose a date that works.
+    \item [League template saving] A season's teams and players should be
+    able to be saved as a template that can be loaded the next season. This
+    is useful as many teams remain the same or similar between seasons, and
+    it would be convienient for all returning teams to avoid reinviting all
+    returning players.
+    \item [A mobile application companion] Users would be able to perform
+    some actions they can on the website, like viewing schedules and
+    standings.
 \end{description}
 
 \section{Challenge Level and Extras}
