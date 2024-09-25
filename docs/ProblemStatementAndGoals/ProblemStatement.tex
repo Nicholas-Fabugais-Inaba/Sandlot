@@ -23,42 +23,40 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 September 23, 2024 & NFI, JL, CG, AV & Initial Draft\\
-Date2 & Name(s) & Description of changes\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
+\newpage{}
+
 \section{Problem Statement}
 
 \subsection{Background}
-
-\wss{You should check your problem statement with the
-\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.} 
-
-\wss{You can change the section headings, as long as you include the required
-information.}
 
 The McMaster GSA softball league is used every summer by 30-40 teams and
 as many as 1,000 unique participants. The league is currently organized through
 an old software platform accessible via a web browser, but it is outdated and
 does not include features for administrators to maintain the site without
-extensive knowledge of computer programming.
+extensive knowledge of computer programming. The GSA league is aware that
+paid-for and ad-supported services are available, and features present in
+those applications should be explored and added if possible. The GSA league
+is a minimal-cost non-profit and would like a personalized platform by which
+to operate without committing to paid-for services. Some players find the
+current website UI difficult to use and unstable, and would prefer a more
+intuitive solution that needs little to no maintenance.
 
 \subsection{Problem}
 
-\indent \indent The GSA league is aware that paid-for and ad-supported services are available,
-and features present in those applications should be explored and added if
-possible. The GSA league is a minimal-cost non-profit and would like a
-personalized platform by which to operate without committing to paid-for
-services. The platform will be responsible for including all functionalities
-such as scheduling, division management, communication between captains, waiver
-management, rescheduling, score and league standings management, and other
-tasks identified by the stakeholders. The platform would be a web-based service
-with the same functionalities, but in an updated form that also enables league
-and schedule management from a convenient user interface
-(specific access privileges for team representatives and league administrators).
+The platform will be responsible for including all functionalities
+of the current solution such as scheduling, division management,
+communication between captains, waiver management, rescheduling, score and
+league standings management, and other tasks identified by the stakeholders.
+Our solution would be an updated form of the existing website's capabilities
+with a modernized UI and the additional features of player-specific logins,
+real-time standings, and commisioner announcements. Additionally, enhanced
+stability is key in replacing the lack of maintainability of the current
+website. 
 
 \subsection{Inputs and Outputs}
 
@@ -67,8 +65,11 @@ and schedule management from a convenient user interface
 \begin{itemize}
     \item Player/Captain/Commissioner login information
     \item Player/Captain/Commissioner contact information
-    \item Team name
+    \item Team information
     \item Game score
+    \item Captain/Team availability
+    \item Reschedule requests
+    \item Commissioner announcements
 \end{itemize}
 
 \subsubsection{Outputs}
@@ -76,16 +77,17 @@ and schedule management from a convenient user interface
 \begin{itemize}
     \item League standings
     \item League scheduling
+    \item Commissioner announcements
 \end{itemize}
-
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
 
 \subsection{Stakeholders}
 
 \begin{itemize}
     \item The supervisor of the project, Dr. Jake Nease
-    \item Captains and players of the softball league
+    \item Commissioners of the league
+    \item Captains/Players/Umpires of the softball league
+    \item Administrators of the scheduling tool
+    \item Spectators
 \end{itemize}
 
 \subsection{Environment}
@@ -95,18 +97,15 @@ Use abstraction so that you can avoid details.}
     \item [Hardware] Computers with access to the internet
 \end{description}
 
-\wss{Hardware and software environment}
-
 \section{Goals}
 
 \begin{description}
     \item [Accomplish everything the existing league website does]
-    The current website allows captains to log in and record their matches
-    and scores. It allows scheduling and rescheduling, and provides a place
-    to see the league rules, parking information and other information. The
-    current website often breaks, requiring the current website admin to fix
-    issues as they arise. First and foremost we need to recreate the original
-    league website functionality.
+    The original league website functionality should be recreated in the
+    solution. The current website allows captains to log in and record 
+    their matches and scores. It allows scheduling and rescheduling, and
+    provides a place to see the league rules, parking information and
+    other information.
     \item [User interface should be intuitive to all users.] The current
     interface is unintuiative and awkward to use. Users should understand
     how to log in and how to view their schedule just by looking at their
@@ -122,11 +121,15 @@ Use abstraction so that you can avoid details.}
     isn't available for a match after it has been scheduled, captains can
     send a reschedule request with a selection of possible alternative times
     that the opposition team's captain can agree to.
-    \item [Commisioners should be able to notify captains with information]
-    Commisioner level accounts should be able to easily send out a
-    notification to specific users or entire groups of users, such as all
-    captains or all players. The information in the notification should be
-    customizable by the commisioner.
+    \item [Solution should be maintainable and robust] 
+    Currently, the website in use is maintained by one administrator, and
+    requires constant maintainance. The website often breaks, requiring 
+    the current administrator to fix issues as they arise. Some site 
+    functions are prone to breaking or are broken. The new solution should 
+    be robust enough to not require frequent intervention from an administrator.
+    The solution should be maintainable; if issues do arise, the solution  
+    should be well-documented such that non-domain experts are able to 
+    solve the issues.
 \end{description}
 
 \section{Stretch Goals}
@@ -144,43 +147,27 @@ Use abstraction so that you can avoid details.}
     returning players.
     \item [A mobile application companion] Users would be able to perform
     some actions they can on the website, like viewing schedules and
-    standings.
+    standings from their mobile device.
 \end{description}
 
 \section{Challenge Level and Extras}
 
-\wss{State your expected challenge level (advanced, general or basic).  The
-challenge can come through the required domain knowledge, the implementation or
-something else.  Usually the greater the novelty of a project the greater its
-challenge level.  You should include your rationale for the selected level.
-Approval of the level will be part of the discussion with the instructor for
-approving the project.  The challenge level, with the approval (or request) of
-the instructor, can be modified over the course of the term.}
+\subsection{Challenge Level}
+\begin{description}
+    \item[Challenge level:] General
+    \item[Rationale:] Does not involve any extensive research and it is an
+    improvement of an already existing solution.
+\end{description}
 
-\wss{Teams may wish to include extras as either potential bonus grades, or to
-make up for a less advanced challenge level.  Potential extras include usability
-testing, code walkthroughs, user documentation, formal proof, GenderMag
-personas, Design Thinking, etc.  Normally the maximum number of extras will be
-two.  Approval of the extras will be part of the discussion with the instructor
-for approving the project.  The extras, with the approval (or request) of the
-instructor, can be modified over the course of the term.}
+\subsection{Extras}
+\begin{itemize}
+    \item Code walkthroughs
+    \item User documentation
+\end{itemize}
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741}
-
-\input{../Reflection.tex}
-
-\begin{enumerate}
-    \item What went well while writing this deliverable? 
-    \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-    \item How did you and your team adjust the scope of your goals to ensure
-    they are suitable for a Capstone project (not overly ambitious but also of
-    appropriate complexity for a senior design project)?
-\end{enumerate}  
 
 \subsection*{Reflection -- Nicholas Fabugais-Inaba}
 
@@ -209,5 +196,91 @@ the Capstone project isn't too overly ambitious and definitely achievable.
 The stretch goals help to add complexity to create a senior design project
 as developing a mobile version of the system and other additional features
 are extra add-ons that add to the bulk of the work needed to be completed.
+
+\subsection*{Reflection -- Alex Verity}
+
+Writing the goals went smoothly, as we were able to use the notes taken during
+the initial supervisor meeting directly when making the goals. We also easily
+decided on extras for section four, as the supervisor requested for the code
+to be explained thorougly.\newline
+
+A particular pain point was finalizing the problem statement, as I find
+writing problem statements to be difficult. They require a lot of information
+given in a very short statement, which can be difficult. They also require
+the author to not describe a possible solution, but to only lay out the
+problem and I often feel compelled to add unnessecary details such as the
+language we plan to use. It is also difficult to make sure we are not missing
+out on any important elements of our problem.\newline
+
+We accounted for scope by making sure we are happy with our stretch goals if
+we require them to increase the complexity of our project. I believe they are
+useful additions that would make the project more interesting and present
+additional layers if we choose to persue them. We also made sure we have plans
+for staying productive to make sure we can complete our goals, although we may
+course correct down the line if necessary.
+
+\subsection*{Reflection -- Casra Ghazanfari}
+
+Writing the “Challenge Level and Extras” section of this deliverable went
+very well for our team. From the beginning, we had no doubts about the challenge
+level of our project because the professor’s description of the different levels
+had made it clear to us as a team which level our project fell into.
+Additionally, there was no disagreement on which extras we wanted to tackle for
+this project. We had a very short discussion discussing the extras we were
+interested in, which happened to almost perfectly match, making the decision
+very quick and easy. \newline
+
+A particular pain point our team faced during this deliverable was the inputs
+and outputs section. Initially, we found it difficult to think of our systems
+inputs and outputs without a particular implementation in our mind. We resolved
+this by shifting our thinking from implementation to high-level design. Through
+this mindset shift we were able to come up with more vague, high-level, and
+implementation agnostic inputs and outputs for our system that conveyed ideas
+rather than implementations. \newline
+
+Our team adjusted the scope of our goals using two key rules. First, we made
+sure that all of our goals were features/capabilities that the stakeholders
+of the project would consider necessary for the project to be considered
+“complete” or “fully-functional”. This ensured that our goals didn’t stray too
+far from the base idea of the project, meaning that they couldn’t stray into
+either overly ambitious or low complexity territory. Second, we made a clear
+distinction in our minds between goals and stretch goals to ensure that we
+didn’t blur the lines between them. Any goal that we deemed to be a
+“nice to have” feature or “not completely necessary” we classified as a stretch
+goal. We could not realistically guarantee any of these stretch goals would be
+met due to their lack of necessity and therefore made sure they were not
+considered goals, allowing us to keep our more ambitious ideas in check.
+
+\subsection*{Reflection -- Jung Woo Lee}
+
+For this deliverable, having the interview with the supervisor gave us all the
+necessary information to fill out this document with ease. The background, 
+problem, inputs and outputs, goals and stretch goals were all discussed to 
+some extent, giving us a lot of information to work with and confidence that 
+what we have written is desired and makes sense. \newline
+
+One pain point was an apparent lack of outputs. This troubled me as I saw many
+inputs and thought there should be more outputs than we had. Discussion with the
+team relieved my worries as the current outputs are broad and encompassing, as 
+well as the fact that this first revision will not get everything correct and we
+will have the chance to revise this later. Another pain point were the goals, as 
+I felt some were overlapping and could cause issues later. Discussion with my 
+teammate led to the conclusion that although there are overlaps, the goals were 
+important enough to expand upon on their own, even if another goal technically 
+encompassed it. Lastly, I felt as though there were not enough goals relating to 
+non-functional aspects of the solution, and thinking ahead, I believed it would 
+be in our interest to include one. After discussion with the team, it was decided 
+to replace one weaker goal with another non-functional goal of robustness and 
+maintainability. \newline
+
+With the initial interview with the supervisor, the team was able to clearly 
+differentiate between possible goals the solution would likely require, and goals
+that can be achieved once the main solution is completed. We avoided lofty goals 
+and kept them grounded, ensuring the goals corresponded to the necessities of the 
+solution. We ensured that the goals would allow us to challenge ourselves and 
+force us to take on a learning curve that we deemed appropriate. For added 
+complexity, stretch goals were made as discussed with the supervisor. These will 
+be taken on if it is deemed that the solution is completed and the extra features
+are feasible.
 
 \end{document}
