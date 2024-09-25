@@ -33,32 +33,29 @@ Date2 & Name(s) & Description of changes\\
 
 \subsection{Background}
 
-\wss{You should check your problem statement with the
-\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.} 
-
-\wss{You can change the section headings, as long as you include the required
-information.}
-
 The McMaster GSA softball league is used every summer by 30-40 teams and
 as many as 1,000 unique participants. The league is currently organized through
 an old software platform accessible via a web browser, but it is outdated and
 does not include features for administrators to maintain the site without
-extensive knowledge of computer programming.
+extensive knowledge of computer programming. The GSA league is aware that
+paid-for and ad-supported services are available, and features present in
+those applications should be explored and added if possible. The GSA league
+is a minimal-cost non-profit and would like a personalized platform by which
+to operate without committing to paid-for services. Some players find the
+current website UI difficult to use and unstable, and would prefer a more
+intuitive solution that needs little to no maintenance.
 
 \subsection{Problem}
 
-\indent \indent The GSA league is aware that paid-for and ad-supported services are available,
-and features present in those applications should be explored and added if
-possible. The GSA league is a minimal-cost non-profit and would like a
-personalized platform by which to operate without committing to paid-for
-services. The platform will be responsible for including all functionalities
-such as scheduling, division management, communication between captains, waiver
-management, rescheduling, score and league standings management, and other
-tasks identified by the stakeholders. The platform would be a web-based service
-with the same functionalities, but in an updated form that also enables league
-and schedule management from a convenient user interface
-(specific access privileges for team representatives and league administrators).
+The platform will be responsible for including all functionalities
+of the current solution such as scheduling, division management,
+communication between captains, waiver management, rescheduling, score and
+league standings management, and other tasks identified by the stakeholders.
+Our solution would be an updated form of the existing website's capabilities
+with a modernized UI and the additional features of player-specific logins,
+real-time standings, and commisioner announcements. Additionally, enhanced
+stability is key in replacing the lack of maintainability of the current
+website. 
 
 \subsection{Inputs and Outputs}
 
@@ -67,8 +64,11 @@ and schedule management from a convenient user interface
 \begin{itemize}
     \item Player/Captain/Commissioner login information
     \item Player/Captain/Commissioner contact information
-    \item Team name
+    \item Team information
     \item Game score
+    \item Captain/Team availability
+    \item Reschedule requests
+    \item Commissioner announcements
 \end{itemize}
 
 \subsubsection{Outputs}
@@ -76,16 +76,15 @@ and schedule management from a convenient user interface
 \begin{itemize}
     \item League standings
     \item League scheduling
+    \item Commissioner announcements
 \end{itemize}
-
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
 
 \subsection{Stakeholders}
 
 \begin{itemize}
     \item The supervisor of the project, Dr. Jake Nease
-    \item Captains and players of the softball league
+    \item Commissioners of the league
+    \item Captains/Players/Umpires of the softball league
 \end{itemize}
 
 \subsection{Environment}
@@ -94,8 +93,6 @@ Use abstraction so that you can avoid details.}
     \item [Software] Windows, Linux or Mac OS
     \item [Hardware] Computers with access to the internet
 \end{description}
-
-\wss{Hardware and software environment}
 
 \section{Goals}
 
@@ -149,21 +146,18 @@ Use abstraction so that you can avoid details.}
 
 \section{Challenge Level and Extras}
 
-\wss{State your expected challenge level (advanced, general or basic).  The
-challenge can come through the required domain knowledge, the implementation or
-something else.  Usually the greater the novelty of a project the greater its
-challenge level.  You should include your rationale for the selected level.
-Approval of the level will be part of the discussion with the instructor for
-approving the project.  The challenge level, with the approval (or request) of
-the instructor, can be modified over the course of the term.}
+\subsection{Challenge Level}
+\begin{description}
+    \item[Challenge level:] General
+    \item[Rationale:] Does not involve any extensive research and it is an
+    improvement of an already existing solution.
+\end{description}
 
-\wss{Teams may wish to include extras as either potential bonus grades, or to
-make up for a less advanced challenge level.  Potential extras include usability
-testing, code walkthroughs, user documentation, formal proof, GenderMag
-personas, Design Thinking, etc.  Normally the maximum number of extras will be
-two.  Approval of the extras will be part of the discussion with the instructor
-for approving the project.  The extras, with the approval (or request) of the
-instructor, can be modified over the course of the term.}
+\subsection{Extras}
+\begin{itemize}
+    \item Code walkthroughs
+    \item User documentation
+\end{itemize}
 
 \newpage{}
 
