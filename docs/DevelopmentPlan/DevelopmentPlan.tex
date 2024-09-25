@@ -113,28 +113,21 @@ campus location coordination.
 Git is the most important part in managing issues, editing documentation, and developing features.
 \newline
 
-NOTE: mention dev and doc branches
+We are using two central branches named documentation and development for writing documentation
+and developing software respectively.
+The main branch will be merged and updated for milestones, proof of concepts, and
+final deployments.
+For new features, bug fixes or documents, a branch can be made from the documenation or development branch.
+Before any changes are be made, the local repository should be updated to the latest changes on
+the remote branch.\newline
 
-Before any changes should be made, the local repository should be updated to the latest changes on
-the remote branch.
-
-CI will be implemented via GitHub Actions. When a pull request is made, automated
+Continuous integration will be implemented via GitHub Actions. When a pull request is made, automated
 tests will run against the code being tested.
-
 Each pull request will be assigned a GitHub label (i.e. documentation, bug). At least one
 approval will be required from a reviewer for each pull request.
-\newline
-
-The main branch will be merged and updated for milestones, POC's, and
-final deployments.\newline
-
 All pull requests to the main branch should have no obvious issues. Changes should be made
 to the development or documentation branch, and once quality is confirmed, the branch will
-be merged with main.
-For managing merge conflicts, the developer should identify the conflicting changes,
-making sure to resolve any conflicts before new changes are made. Once all conflicts are resolved,
-the developer should be able to proceed in committing, and pushing their changes to the remote
-repository.\newline
+be merged with main.\newline
 
 For each issue, a team member should be assigned to the issue on Github. The descriptions
 of the issues should be explained in detail and labeled appropriately with a Git label. New labels
@@ -202,7 +195,7 @@ website should be easily maintainable. Implementing the website using an
 extremely popular and widespread framework such as React means that there 
 are countless resources online to help future maintainers keep the project alive.
 
-\item Leeibraries
+\item Libraries
 \subitem Depending on the implementation, the middleware will use some combination
 of the FastAPI and SQLalchemy libraries. FastAPI will be used to implement HTTPS 
 communication routers between the database and webserver. SQLalchemy will be used to 
@@ -215,7 +208,7 @@ Additionally, the axios library will be used to form and send the HTTPS requests
 to the middleware from the webserver.
 \item Pre-trained models
 \subitem This project does not include an AI component and will not use 
-a machine learning model.
+a machine learning model
 \item Linter tools
 \subitem ESLint will be used for linting Javascript code while flake8 will be 
 used to lint Python code. We chose these linters due to our previous experience 
