@@ -7,4 +7,4 @@ assignees: ''
 
 ---
 
-Work on section []
+Work on section [insert section number]
