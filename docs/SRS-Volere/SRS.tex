@@ -13,6 +13,7 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
+\usepackage{array}
 
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -101,7 +102,7 @@ desired need for an upgrade to an outdated website.
 \subsection{Goals of the Project}
 Our goals with the project are to recreate everything the current website
 solution does, with a better user interface and a more stable foundation, so
-that future site admins and league commisioners don't have to deal with the
+that future site admins and league commissioners don't have to deal with the
 solution breaking or captains/players not understanding how to use the tool.
 We also plan to add features such as player accounts to help players view
 their schedules, and a standings viewer to see league scores.
@@ -185,14 +186,47 @@ It is important to note that we will not be using the existing solution other
 than as a feature guide. The current solution is hosted on the web and is
 written in PHP. The current login system does not use a username and password.
 Only captains can log in, and they are emailed an ASCII code which they use to
-access the website to schedule games and submit scores. Commisioners can login
+access the website to schedule games and submit scores. Commissioners can login
 in the same way as captains and can modify schedules, scores and team
 compositions as needed. Currently the standings functionality, which would
 allow users to view the scores of played games, is not working.
 \subsection{The Context of the Work}
 \includegraphics[scale=0.6]{6b_context_diagram.png}
 \subsection{Work Partitioning}
-Event list
+  \begin{center}
+    \begin{tabular}{|m{4cm}|m{4cm}|m{6cm}|}
+      \hline
+      Event Name & Input and Output & Summary of BUC\\
+      \hline
+      1. User logs in & Login Data (in) & A player, captain or commissioner
+      enters their username and password and the system grants them access to
+      their account.\\
+      2. Captain creates a team & New Team Information (in) & At the
+      start of the season, captains can enter team information such as a team
+      name. This registers a new team.\\
+      2. Player requests to join a team & Team Join Request (in) & At the
+      start of the season, players are not assigned to a team and must request
+      to join one.\\
+      3. Season starts and availability entered & Season Availability Schedule
+      (in) & Record the team captain's entered availability schedule. This
+      will be used to generate the league schedule.\\
+      4. Reschedule request entered & Reschedule Dates (in) & Record
+      availability dates the requesting captain entered as alternates for the
+      planned date.\\
+      5. Reschedule request recieved & Reschedule Dates (out) & Send the dates
+      the captain who sent the request submit to the other team's captain.\\
+      6. User navigates to schedule section & Season Schedule (out) & Display
+      stored season schedule (if available) to site user.\\
+      7. User submits alert & Alert Content (in) & Commissioners can submit custom
+      alerts to send to any chosen users.\\
+      8. System sends alert & Alert Content (out) & Send the alert to any user the
+      alert must reach.\\
+      9. Commissioner inputs admin command & Commissioner Admin Commands (in)
+      & Commissioners have the ability to overwrite team composition and
+      schedule.\\
+      \hline
+    \end{tabular}
+  \end{center}
 \subsection{Specifying a Business Use Case (BUC)}
 \lips
 
