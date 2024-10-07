@@ -276,7 +276,6 @@ allow users to view the scores of played games, is not working.
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
-\lips
 
 \begin{myreq}
   \threeinline
@@ -295,6 +294,27 @@ allow users to view the scores of played games, is not working.
   {\reqconf 111}
   \reqmater other text other text other text 
   \reqhist other text other text other text 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 1}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc System must display the season schedule to all users without login.
+  \reqrat Users who don't have a login (ie. spectators and umpires) will still
+  need to access the schedule, so it should be visible to all.
+  \reqorig Alex Verity
+  \reqfit The schedule should be viewable without entering a username or
+  password.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
 \end{myreq}
 
 \section{Look and Feel Requirements}
