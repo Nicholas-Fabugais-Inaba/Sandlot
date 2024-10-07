@@ -327,7 +327,7 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno 1}
+    {\reqno xx}
     {\reqtype 0}
     {\reqevent 7}
   \reqdesc System must display the season schedule and standings to all users
@@ -349,7 +349,7 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno 2}
+    {\reqno xx}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Captains should be able to create a team which is added to the
@@ -388,6 +388,28 @@ allow users to view the scores of played games, is not working.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 8,9}
+  \reqdesc Commissioners should be able to send alerts with custom information
+  to a specified user or group of user.
+  \reqrat Commissioners have the need to notify league members with any new
+  information relevant to the league. 
+  \reqorig Alex Verity
+  \reqfit When a commissioner enters information to alert league members, the
+  league members recieve a notification with the relevant information.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 3}
   \twoinline
   {\reqdep None}
   {\reqconf None}
