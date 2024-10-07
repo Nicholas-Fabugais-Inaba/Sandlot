@@ -133,7 +133,34 @@ of the website.
 \subsection{Hands-On Users of the Project}
 \lips
 \subsection{Personas}
-\lips
+
+\begin{itemize}
+  \item [1.]
+  
+  Josh Brown is a 26 year old player that has recently joined the McMaster GSA
+  softball league and he is unfamiliar with how the website functions. As someone
+  who understands how technology works though, he is able to navigate the interface
+  quite well. However, some links he interacts with give him a 404 page not found
+  error. This aggravates Josh as he just wants to understand certain information
+  about the softball league, but the website isn't able to provide it to him
+  because the links on the website are faulty or other issues occur. Josh, along
+  with many others who are new to the league, may be technically literate, but due
+  to the structural integrity of the system, there are many times where users may
+  not be able to access certain information because there is either an error or a
+  link that leads to nothing.
+  \item [2.]
+  
+  Ken Phillips is a 58 year old captain for his McMaster GSA softball team and he has
+  been using the current website for as long as he can remember. Although he is not
+  too familiar with how technology works, he is still able to navigate and utilize the
+  website's functionalities as he has used them for quite some time now. Unfortunately,
+  with the creation of the new website, even though the website has the same existing
+  functions as the old system, he is not as familiar with how to navigate the interface
+  the same way he has before. Ken and other individuals that may be comfortable and
+  familiar with the current outdated platform, need the new website to be easy-to-use,
+  especially for people that are either older or not as technically literate.
+\end{itemize}
+
 \subsection{Priorities Assigned to Users}
 \lips
 \subsection{User Participation}
@@ -517,7 +544,52 @@ allow users to view the scores of played games, is not working.
 
 \section{Security Requirements}
 \subsection{Access Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 12}
+    {\reqevent 1}
+  \reqdesc Players, captains, and commissioners must sign in to their account to
+  access respective functionalities.
+  \reqrat Only commissioners can send league-wide announcements and rain out games,
+  captains can create their own team and reschedule games, players can join teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Users are able to only perform the functions that apply to their role 
+  (player, captain, commissioner)
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 7, 2024 
+\end{myreq}
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 12}
+    {\reqevent 1}
+  \reqdesc A user's contact information must be kept private.
+  \reqrat A user's email, phone number, and gender shall remain anonymous to
+  individuals outside the league or to certain parties.
+  \reqorig other text other text other text 
+  \reqfit Contact information for players can only be seen by their own captain or
+  the other players on their team, captain contact information can only be seen by
+  the players on their team or other captains from other teams, and commissioner
+  contact information can only be seen by captains. Commissioners can see everything.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep some more text}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 7, 2024 
+\end{myreq}
+
+
 \subsection{Integrity Requirements}
 \lips
 \subsection{Privacy Requirements}
