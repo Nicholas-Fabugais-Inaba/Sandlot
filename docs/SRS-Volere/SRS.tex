@@ -188,7 +188,14 @@ account created.
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
 involved in the Project}
-\lips
+Sandlot: Management software for a softball baseball league, the software that
+is the subject of this document.\\\\
+Player: A person who plays on a baseball team in the league. They have an
+account on Sandlot and are a member of a team.\\\\
+Captain: A person who plays and leads a baseball team in the league. They are
+in charge of defining the team's information on Sandlot.\\\\
+Team: A name and a list of players representing a baseball team defined by a
+captain. Teams are stored on a database on Sandlot.\\\\
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
@@ -234,24 +241,24 @@ allow users to view the scores of played games, is not working.
       2. Captain creates a team & New Team Information (in) & At the
       start of the season, captains can enter team information such as a team
       name. This registers a new team.\\
-      2. Player requests to join a team & Team Join Request (in) & At the
+      3. Player requests to join a team & Team Join Request (in) & At the
       start of the season, players are not assigned to a team and must request
       to join one.\\
-      3. Season starts and availability entered & Season Availability Schedule
+      4. Season starts and availability entered & Season Availability Schedule
       (in) & Record the team captain's entered availability schedule. This
       will be used to generate the league schedule.\\
-      4. Reschedule request entered & Reschedule Dates (in) & Record
+      5. Reschedule request entered & Reschedule Dates (in) & Record
       availability dates the requesting captain entered as alternates for the
       planned date.\\
-      5. Reschedule request recieved & Reschedule Dates (out) & Send the dates
+      6. Reschedule request recieved & Reschedule Dates (out) & Send the dates
       the captain who sent the request submit to the other team's captain.\\
-      6. User navigates to schedule section & Season Schedule (out) & Display
+      7. User navigates to schedule section & Season Schedule (out) & Display
       stored season schedule (if available) to site user.\\
-      7. User submits alert & Alert Content (in) & Commissioners can submit custom
-      alerts to send to any chosen users.\\
-      8. System sends alert & Alert Content (out) & Send the alert to any user the
-      alert must reach.\\
-      9. Commissioner inputs admin command & Commissioner Admin Commands (in)
+      8. User submits alert & Alert Content (in) & Commissioners can submit
+      customalerts to send to any chosen users.\\
+      9. System sends alert & Alert Content (out) & Send the alert to any user
+      the alert must reach.\\
+      10. Commissioner inputs admin command & Commissioner Admin Commands (in)
       & Commissioners have the ability to overwrite team composition and
       schedule.\\
       \hline
@@ -300,16 +307,40 @@ allow users to view the scores of played games, is not working.
   \threeinline
     {\reqno 1}
     {\reqtype 0}
-    {\reqevent 0}
-  \reqdesc System must display the season schedule to all users without login.
+    {\reqevent 7}
+  \reqdesc System must display the season schedule and standings to all users
+  without login.
   \reqrat Users who don't have a login (ie. spectators and umpires) will still
-  need to access the schedule, so it should be visible to all.
+  need to access the schedule and standings, so it should be visible to all.
   \reqorig Alex Verity
-  \reqfit The schedule should be viewable without entering a username or
-  password.
+  \reqfit The schedule and standings shall be viewable without entering a
+  username and password.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 2}
+    {\reqtype 0}
+    {\reqevent 2}
+  \reqdesc Captains should be able to create a team which is added to the
+  Sandlot database.
+  \reqrat Teams are defined by captains, in charge of scheduling and
+  recording scores. Captains must be able to define teams at the start of the
+  season.
+  \reqorig Alex Verity
+  \reqfit When captains make a team, it should be added to the Sandlot
+  database.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
   \twoinline
   {\reqdep None}
   {\reqconf None}
