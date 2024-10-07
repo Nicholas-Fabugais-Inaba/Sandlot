@@ -267,6 +267,98 @@ allow users to view the scores of played games, is not working.
   \reqhist other text other text other text 
 \end{myreq}
 
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 7}
+  \reqdesc System must display the season schedule and standings to all users
+  without login.
+  \reqrat Users who don't have a login (ie. spectators and umpires) will still
+  need to access the schedule and standings, so it should be visible to all.
+  \reqorig Alex Verity
+  \reqfit The schedule and standings shall be viewable without entering a
+  username and password.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 2}
+  \reqdesc Captains should be able to create a team which is added to the
+  Sandlot database.
+  \reqrat Teams are defined by captains, in charge of scheduling and
+  recording scores. Captains must be able to define teams at the start of the
+  season.
+  \reqorig Alex Verity
+  \reqfit When captains make a team, it should be added to the Sandlot
+  database.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 2}
+    {\reqtype 0}
+    {\reqevent 2}
+  \reqdesc Users should be able to create a new account by 
+  providing the necessary information. 
+  \reqrat An account strcuture is necessary to be able to change 
+  what a user of the system can see/do based on who they are. 
+  For example, a player and captain should not be able to see/do 
+  the same things or 2 players from different teams should not be 
+  able to see/do the same things.
+  \reqorig Casra Ghazanfari
+  \reqfit When a user provides the necessary information, an account 
+  should be created from that information
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 8,9}
+  \reqdesc Commissioners should be able to send alerts with custom information
+  to a specified user or group of user.
+  \reqrat Commissioners have the need to notify league members with any new
+  information relevant to the league. 
+  \reqorig Alex Verity
+  \reqfit When a commissioner enters information to alert league members, the
+  league members recieve a notification with the relevant information.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
 \lips
@@ -275,7 +367,29 @@ allow users to view the scores of played games, is not working.
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 7}
+  \reqdesc All users must be able to easily find the season schedule.
+  \reqrat Many users of Sandlot will not be using it often, and the
+  schedule will be one of the most frequented parts of Sandlot. It must be
+  easy to find and access. 
+  \reqorig Alex Verity
+  \reqfit On average, a new user shall not take more than one minute to find
+  the schedule, and it should not take more than 2 clicks to access.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Personalization and Internationalization Requirements}
 \lips
 \subsection{Learning Requirements}
