@@ -169,7 +169,29 @@ account created.
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 2,3}
+  \reqdesc Non-commissioner accounts can only be a member of one team.
+  \reqrat To ensure competition is fair and to avoid captains accidentally
+  making extranious teams, users are limited to one team each.
+  \reqorig Alex Verity
+  \reqfit Once a team is created by a captain or a team is joined by a player,
+  they shall not be allowed to use the functionality to create a team or join
+  a team.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Implementation Environment of the Current System}
 \lips
 \subsection{Partner or Collaborative Applications}
