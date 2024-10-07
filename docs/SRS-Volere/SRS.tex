@@ -426,15 +426,86 @@ allow users to view the scores of played games, is not working.
 
 \section{Security Requirements}
 \subsection{Access Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 12}
+    {\reqevent 1}
+  \reqdesc Players, captains, and commissioners must sign in to their account to
+  access respective functionalities.
+  \reqrat Only commissioners can send league-wide announcements and rain out games,
+  captains can create their own team and reschedule games, players can join teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Users are able to only perform the functions that apply to their role 
+  (player, captain, commissioner)
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 7, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 12}
+    {\reqevent 1}
+  \reqdesc A user's contact information must be kept private.
+  \reqrat A user's email, phone number, and gender shall remain anonymous to
+  individuals outside the league or to certain parties.
+  \reqorig other text other text other text 
+  \reqfit Contact information for players can only be seen by their own captain or
+  the other players on their team, captain contact information can only be seen by
+  the players on their team or other captains from other teams, and commissioner
+  contact information can only be seen by captains. Commissioners can see everything.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep some more text}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 7, 2024 
+\end{myreq}
+
 \subsection{Integrity Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 12}
+    {\reqevent 4}
+  \reqdesc Website must not create conflicts when scheduling games.
+  \reqrat For the start of the season, the system shall create an entire schedule with all
+  of the teams registered in the league, without games being scheduled on the same day,
+  at the same time, on the same field. Rescheduled games must not conflict with the
+  season schedule as well.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit There exists no conflicts in the season schedule when the season begins or
+  throughout the season when games are rescheduled.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 7, 2024 
+\end{myreq}
+
 \subsection{Privacy Requirements}
 \lips
 \subsection{Audit Requirements}
-\lips
+
+Not applicable
+
 \subsection{Immunity Requirements}
-\lips
+
+Not applicable
 
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
