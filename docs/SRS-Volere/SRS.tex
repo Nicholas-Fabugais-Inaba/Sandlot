@@ -133,7 +133,34 @@ of the website.
 \subsection{Hands-On Users of the Project}
 \lips
 \subsection{Personas}
-\lips
+
+\begin{itemize}
+  \item [1.]
+  
+  Josh Brown is a 26 year old player that has recently joined the McMaster GSA
+  softball league and he is unfamiliar with how the website functions. As someone
+  who understands how technology works though, he is able to navigate the interface
+  quite well. However, some links he interacts with give him a 404 page not found
+  error. This aggravates Josh as he just wants to understand certain information
+  about the softball league, but the website isn't able to provide it to him
+  because the links on the website are faulty or other issues occur. Josh, along
+  with many others who are new to the league, may be technically literate, but due
+  to the structural integrity of the system, there are many times where users may
+  not be able to access certain information because there is either an error or a
+  link that leads to nothing.
+  \item [2.]
+  
+  Ken Phillips is a 58 year old captain for his McMaster GSA softball team and he has
+  been using the current website for as long as he can remember. Although he is not
+  too familiar with how technology works, he is still able to navigate and utilize the
+  website's functionalities as he has used them for quite some time now. Unfortunately,
+  with the creation of the new website, even though the website has the same existing
+  functions as the old system, he is not as familiar with how to navigate the interface
+  the same way he has before. Ken and other individuals that may be comfortable and
+  familiar with the current outdated platform, need the new website to be easy-to-use,
+  especially for people that are either older or not as technically literate.
+\end{itemize}
+
 \subsection{Priorities Assigned to Users}
 \lips
 \subsection{User Participation}
@@ -143,7 +170,29 @@ of the website.
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 2,3}
+  \reqdesc Non-commissioner accounts can only be a member of one team.
+  \reqrat To ensure competition is fair and to avoid captains accidentally
+  making extranious teams, users are limited to one team each.
+  \reqorig Alex Verity
+  \reqfit Once a team is created by a captain or a team is joined by a player,
+  they shall not be allowed to use the functionality to create a team or join
+  a team.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Implementation Environment of the Current System}
 \lips
 \subsection{Partner or Collaborative Applications}
@@ -162,7 +211,15 @@ of the website.
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
 involved in the Project}
-\lips
+
+Sandlot: Management software for a softball baseball league, the software that
+is the subject of this document.\\\\
+Player: A person who plays on a baseball team in the league. They have an
+account on Sandlot and are a member of a team.\\\\
+Captain: A person who plays and leads a baseball team in the league. They are
+in charge of defining the team's information on Sandlot.\\\\
+Team: A name and a list of players representing a baseball team defined by a
+captain. Teams are stored on a database on Sandlot.\\\\
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
