@@ -87,7 +87,7 @@ October 9, 2024 & 1.1 & Rev0\\
 \subsection{User Business}
 
 The McMaster GSA softball league's current scheduling and management platform
-is used from the 1st week of May till the last week of August. The website
+is used from the 1st week of May until the last week of August. The website
 creates a season schedule based on the 30-40 teams that are entered into the
 league by their respective captains. If scheduling conflicts or weather concerns
 occur, games are able to be rescheduled by the team captains based on a team's
@@ -129,37 +129,7 @@ account created.
 \subsection{Hands-On Users of the Project}
 \lips
 \subsection{Personas}
-
-\begin{itemize}
-  \item [1.]
-  
-  Josh Brown is a 26 year old player that has recently joined the McMaster GSA
-  softball league and he is unfamiliar with how the website functions. As someone
-  who understands how technology works though, he is able to navigate the interface
-  quite well. However, some links he interacts with give him a 404 page not found
-  error. This aggravates Josh as he just wants to understand certain information
-  about the softball league, but the website isn't able to provide it to him
-  because the links on the website are faulty or other issues occur. Josh, along
-  with many others who are new to the league, may be technically literate, but due
-  to the structural integrity of the system, there are many times where users may
-  not be able to access certain information because there is either an error or a
-  link that leads to nothing.
-
-  \item [2.]
-  
-  Ken Phillips is a 58 year old captain for his McMaster GSA softball team and he has
-  been using the current website for as long as he can remember. Although he is not
-  too familiar with how technology works, he is still able to navigate and utilize the
-  website's functionalities as he has used them for quite some time now. Unfortunately,
-  with the creation of the new website, even though the website has the same existing
-  functions as the old system, he is not as familiar with how to navigate the interface
-  the same way he has before. Ken and other individuals that may be comfortable and
-  familiar with the current outdated platform, need the new website to be easy-to-use,
-  especially for people that are either older or not as technically literate.
-
-\end{itemize}
-
-
+\lips
 \subsection{Priorities Assigned to Users}
 \lips
 \subsection{User Participation}
@@ -169,29 +139,7 @@ account created.
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-
-\begin{myreq}
-  \threeinline
-    {\reqno 0}
-    {\reqtype 0}
-    {\reqevent 2,3}
-  \reqdesc Non-commissioner accounts can only be a member of one team.
-  \reqrat To ensure competition is fair and to avoid captains accidentally
-  making extranious teams, users are limited to one team each.
-  \reqorig Alex Verity
-  \reqfit Once a team is created by a captain or a team is joined by a player,
-  they shall not be allowed to use the functionality to create a team or join
-  a team.
-  \twoinline
-    {\reqsatis 2}
-    {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
-\end{myreq}
-
+\lips
 \subsection{Implementation Environment of the Current System}
 \lips
 \subsection{Partner or Collaborative Applications}
@@ -210,14 +158,7 @@ account created.
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
 involved in the Project}
-Sandlot: Management software for a softball baseball league, the software that
-is the subject of this document.\\\\
-Player: A person who plays on a baseball team in the league. They have an
-account on Sandlot and are a member of a team.\\\\
-Captain: A person who plays and leads a baseball team in the league. They are
-in charge of defining the team's information on Sandlot.\\\\
-Team: A name and a list of players representing a baseball team defined by a
-captain. Teams are stored on a database on Sandlot.\\\\
+\lips
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
@@ -263,24 +204,24 @@ allow users to view the scores of played games, is not working.
       2. Captain creates a team & New Team Information (in) & At the
       start of the season, captains can enter team information such as a team
       name. This registers a new team.\\
-      3. Player requests to join a team & Team Join Request (in) & At the
+      2. Player requests to join a team & Team Join Request (in) & At the
       start of the season, players are not assigned to a team and must request
       to join one.\\
-      4. Season starts and availability entered & Season Availability Schedule
+      3. Season starts and availability entered & Season Availability Schedule
       (in) & Record the team captain's entered availability schedule. This
       will be used to generate the league schedule.\\
-      5. Reschedule request entered & Reschedule Dates (in) & Record
+      4. Reschedule request entered & Reschedule Dates (in) & Record
       availability dates the requesting captain entered as alternates for the
       planned date.\\
-      6. Reschedule request recieved & Reschedule Dates (out) & Send the dates
+      5. Reschedule request recieved & Reschedule Dates (out) & Send the dates
       the captain who sent the request submit to the other team's captain.\\
-      7. User navigates to schedule section & Season Schedule (out) & Display
+      6. User navigates to schedule section & Season Schedule (out) & Display
       stored season schedule (if available) to site user.\\
-      8. User submits alert & Alert Content (in) & Commissioners can submit
-      customalerts to send to any chosen users.\\
-      9. System sends alert & Alert Content (out) & Send the alert to any user
-      the alert must reach.\\
-      10. Commissioner inputs admin command & Commissioner Admin Commands (in)
+      7. User submits alert & Alert Content (in) & Commissioners can submit custom
+      alerts to send to any chosen users.\\
+      8. System sends alert & Alert Content (out) & Send the alert to any user the
+      alert must reach.\\
+      9. Commissioner inputs admin command & Commissioner Admin Commands (in)
       & Commissioners have the ability to overwrite team composition and
       schedule.\\
       \hline
@@ -305,6 +246,7 @@ allow users to view the scores of played games, is not working.
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
+\lips
 
 \begin{myreq}
   \threeinline
@@ -325,76 +267,6 @@ allow users to view the scores of played games, is not working.
   \reqhist other text other text other text 
 \end{myreq}
 
-\begin{myreq}
-  \threeinline
-    {\reqno 1}
-    {\reqtype 0}
-    {\reqevent 7}
-  \reqdesc System must display the season schedule and standings to all users
-  without login.
-  \reqrat Users who don't have a login (ie. spectators and umpires) will still
-  need to access the schedule and standings, so it should be visible to all.
-  \reqorig Alex Verity
-  \reqfit The schedule and standings shall be viewable without entering a
-  username and password.
-  \twoinline
-    {\reqsatis 3}
-    {\reqdissat 3}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
-\end{myreq}
-
-\begin{myreq}
-  \threeinline
-    {\reqno 2}
-    {\reqtype 0}
-    {\reqevent 2}
-  \reqdesc Captains should be able to create a team which is added to the
-  Sandlot database.
-  \reqrat Teams are defined by captains, in charge of scheduling and
-  recording scores. Captains must be able to define teams at the start of the
-  season.
-  \reqorig Alex Verity
-  \reqfit When captains make a team, it should be added to the Sandlot
-  database.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
-\end{myreq}
-
-\begin{myreq}
-  \threeinline
-    {\reqno 2}
-    {\reqtype 0}
-    {\reqevent 2}
-  \reqdesc Users should be able to create a new account by 
-  providing the necessary information. 
-  \reqrat An account strcuture is necessary to be able to change 
-  what a user of the system can see/do based on who they are. 
-  For example, a player and captain should not be able to see/do 
-  the same things or 2 players from different teams should not be 
-  able to see/do the same things.
-  \reqorig Casra Ghazanfari
-  \reqfit When a user provides the necessary information, an account 
-  should be created from that information
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
-\end{myreq}
-
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
 \lips
@@ -403,29 +275,7 @@ allow users to view the scores of played games, is not working.
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
-
-\begin{myreq}
-  \threeinline
-    {\reqno xx}
-    {\reqtype 0}
-    {\reqevent 7}
-  \reqdesc All users must be able to easily find the season schedule.
-  \reqrat Many users of Sandlot will not be using it often, and the
-  schedule will be one of the most frequented parts of Sandlot. It must be
-  easy to find and access. 
-  \reqorig Alex Verity
-  \reqfit On average, a new user shall not take more than one minute to find
-  the schedule, and it should not take more than 2 clicks to access.
-  \twoinline
-    {\reqsatis 3}
-    {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
-\end{myreq}
-
+\lips
 \subsection{Personalization and Internationalization Requirements}
 \lips
 \subsection{Learning Requirements}
@@ -473,86 +323,15 @@ allow users to view the scores of played games, is not working.
 
 \section{Security Requirements}
 \subsection{Access Requirements}
-
-\begin{myreq}
-  \threeinline
-    {\reqno xx}
-    {\reqtype 12}
-    {\reqevent 1}
-  \reqdesc Players, captains, and commissioners must sign in to their account to
-  access respective functionalities.
-  \reqrat Only commissioners can send league-wide announcements and rain out games,
-  captains can create their own team and reschedule games, players can join teams.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Users are able to only perform the functions that apply to their role 
-  (player, captain, commissioner)
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 7, 2024 
-\end{myreq}
-
-\begin{myreq}
-  \threeinline
-    {\reqno xx}
-    {\reqtype 12}
-    {\reqevent 1}
-  \reqdesc A user's contact information must be kept private.
-  \reqrat A user's email, phone number, and gender shall remain anonymous to
-  individuals outside the league or to certain parties.
-  \reqorig other text other text other text 
-  \reqfit Contact information for players can only be seen by their own captain or
-  the other players on their team, captain contact information can only be seen by
-  the players on their team or other captains from other teams, and commissioner
-  contact information can only be seen by captains. Commissioners can see everything.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-  \twoinline
-  {\reqdep some more text}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 7, 2024 
-\end{myreq}
-
+\lips
 \subsection{Integrity Requirements}
-
-\begin{myreq}
-  \threeinline
-    {\reqno xx}
-    {\reqtype 12}
-    {\reqevent 4}
-  \reqdesc Website must not create conflicts when scheduling games.
-  \reqrat For the start of the season, the system shall create an entire schedule with all
-  of the teams registered in the league, without games being scheduled on the same day,
-  at the same time, on the same field. Rescheduled games must not conflict with the
-  season schedule as well.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit There exists no conflicts in the season schedule when the season begins or
-  throughout the season when games are rescheduled.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 7, 2024 
-\end{myreq}
-
+\lips
 \subsection{Privacy Requirements}
 \lips
 \subsection{Audit Requirements}
-
-Not applicable
-
+\lips
 \subsection{Immunity Requirements}
-
-Not applicable
+\lips
 
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
