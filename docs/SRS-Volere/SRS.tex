@@ -249,28 +249,6 @@ in the maintaining of the new platform after development is completed.
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
 
-\begin{myreq}
-  \threeinline
-    {\reqno 0}
-    {\reqtype 0}
-    {\reqevent 2,3}
-  \reqdesc Non-commissioner accounts can only be a member of one team.
-  \reqrat To ensure competition is fair and to avoid captains accidentally
-  making extranious teams, users are limited to one team each.
-  \reqorig Alex Verity
-  \reqfit Once a team is created by a captain or a team is joined by a player,
-  they shall not be allowed to use the functionality to create a team or join
-  a team.
-  \twoinline
-    {\reqsatis 2}
-    {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
-\end{myreq}
-
 \subsection{Implementation Environment of the Current System}
 \lips
 \subsection{Partner or Collaborative Applications}
@@ -295,8 +273,13 @@ Player: A person who plays on a baseball team in the league. They have an
 account on Sandlot and are a member of a team.\\\\
 Captain: A person who plays and leads a baseball team in the league. They are
 in charge of defining the team's information on Sandlot.\\\\
-Team: A name and a list of players representing a baseball team defined by a
-captain. Teams are stored on a database on Sandlot.\\\\
+Team: A name, list of players and record of match scores that represents a
+baseball team defined by a captain. Teams are stored on a database on Sandlot.
+\\\\
+Commissioner: A person who manages the league. They may also play in the
+league. Commissioners have top level permissions on Sandlot, they may edit any
+team information like player list and past scores.\\\\
+
 
 
 \section{Relevant Facts And Assumptions}
@@ -618,7 +601,7 @@ allow users to view the scores of played games, is not working.
   \threeinline
     {\reqno xx}
     {\reqtype 0}
-    {\reqevent 3}
+    {\reqevent 6}
   \reqdesc Captains must be able to request a reschedule for upcoming games
   as long as the game is at least 24 hours in the future. Rescheduling
   involves giving a list of alternate dates which are sent to the opposing
@@ -632,6 +615,28 @@ allow users to view the scores of played games, is not working.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 2,3}
+  \reqdesc Non-commissioner accounts can only be a member of one team.
+  \reqrat To ensure competition is fair and to avoid captains accidentally
+  making extranious teams, users are limited to one team each.
+  \reqorig Alex Verity
+  \reqfit Once a team is created by a captain or a team is joined by a player,
+  they shall not be allowed to use the functionality to create a team or join
+  a team.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
   \twoinline
   {\reqdep None}
   {\reqconf None}
