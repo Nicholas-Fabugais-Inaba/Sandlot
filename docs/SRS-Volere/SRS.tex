@@ -536,6 +536,31 @@ allow users to view the scores of played games, is not working.
   \reqhist
 \end{myreq}
 
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc Captains must be able to request a reschedule for upcoming games
+  as long as the game is at least 24 hours in the future. Rescheduling
+  involves giving a list of alternate dates which are sent to the opposing
+  team's captain to choose a date and accept.
+  \reqrat Rescheduling is a core feature of the product, and schedule changes
+  less than a day from when they are to occur may be too little warning for
+  players to prepare for.
+  \reqorig Alex Verity
+  \reqfit A captain shall have the option to request a reschedule for games
+  only more than 24 hours in the future.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
 \lips
