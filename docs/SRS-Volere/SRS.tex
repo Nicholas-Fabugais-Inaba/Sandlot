@@ -843,7 +843,28 @@ allow users to view the scores of played games, is not working.
 \end{myreq}
 
 \subsection{Privacy Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 15}
+    {\reqevent 1}
+  \reqdesc The product shall not reveal contact information to any
+  parties without the necessary access.
+  \reqrat Contact information must be kept private within the league.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Contact information cannot be accessed by users that do not have
+  an account registered in the league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
+
 \subsection{Audit Requirements}
 Not applicable.
 \subsection{Immunity Requirements}
@@ -851,32 +872,64 @@ Not applicable.
 
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 16}
+    {\reqevent 1}
+  \reqdesc The product shall provide an option to not specify gender.
+  \reqrat Users may not associate themselves as male or female.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit A user must be able to choose an option to not specify their
+  gender.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
 
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
-\lips
+Not applicable.
 \subsection{Standards Compliance Requirements}
-\lips
+Not applicable.
 
 \section{Open Issues}
-\lips
+
+\begin{itemize}
+
+  \item There are no open issues
+
+\end{itemize}
 
 \section{Off-the-Shelf Solutions}
 \subsection{Ready-Made Products}
-\lips
+Not applicable.
 \subsection{Reusable Components}
-\lips
+Not applicable.
 \subsection{Products That Can Be Copied}
-\lips
+Not applicable.
 
 \section{New Problems}
 \subsection{Effects on the Current Environment}
-\lips
+Not applicable.
 \subsection{Effects on the Installed Systems}
-\lips
+Not applicable.
 \subsection{Potential User Problems}
-\lips
+
+Existing users of the current platform may suffer from the migration
+to the new platform as they may not be familiar with how to navigate
+the new system and utilize certain functions/features. This could be
+concerning considering the age group and lack of technical literacy
+for some users. One precaution that can be taken is to create a user
+guide to aid users in interacting with the new system and the various
+features it has to offer.
+
 \subsection{Limitations in the Anticipated Implementation Environment That May
 Inhibit the New Product}
 \lips
