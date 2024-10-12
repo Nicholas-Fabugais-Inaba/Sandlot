@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" modified="2024-10-12T00:42:05.469Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36" etag="9bkn8h62Q7luraNi_mSN" version="21.1.5" type="device">
+  <diagram name="Page-1" id="JnzmWsL6z2Re8o1ti-J2">
+    <mxGraphModel dx="1313" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-39" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="560" y="500" width="150" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-10" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="300" y="190" width="670" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-36" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="300" y="310" width="430" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-32" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="540" y="310" width="430" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-14" value="Commissioner" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="575" y="210" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-17" value="Create account" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="605" y="380" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-18" value="Login to account" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="600" y="420" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-19" value="Request to join a team" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="760" y="420" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-20" value="Create a team" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="350" y="410" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-21" value="Reschedule a game" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="340" y="470" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-22" value="View schedule" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="575" y="570" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-23" value="Send announcement" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="700" y="260" width="105" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-24" value="View player contact information" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="380" y="630" width="125" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-25" value="View captain contact information" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="560" y="460" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-26" value="View commissioner contact information" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="340" y="540" width="125" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-27" value="Add/drop player to/from team" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="435" y="410" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-28" value="Enter team availability" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="440" y="470" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-29" value="View standings" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="640" y="570" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-30" value="Enter scores" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="470" y="580" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-33" value="Player" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-35" value="Captain" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-40" value="Non-account&lt;br&gt;user" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="583.75" y="510" width="102.5" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-41" value="Modify scores" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="485" y="250" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-42" value="Modify team information" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="485" y="770" width="105" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rxiL4GYcsnc8a9dMhZeH-43" value="Modify schedule" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="625" y="770" width="105" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

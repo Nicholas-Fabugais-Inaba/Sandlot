@@ -461,11 +461,12 @@ allow users to view the scores of played games, is not working.
     \end{tabular}
   \end{center}
 \subsection{Specifying a Business Use Case (BUC)}
-\lips
+Not applicable as events are simple and described above
+in the work partitioning table.
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
-\lips
+\includegraphics[scale=1.1]{business_data_model.png}
 \subsection{Data Dictionary}
 \lips
 
@@ -1181,11 +1182,11 @@ allow users to view the scores of played games, is not working.
     {\reqno xx}
     {\reqtype 15}
     {\reqevent 12}
-  \reqdesc Only commissioners can change a team's composition.
+  \reqdesc Only commissioners can change any team's composition.
   \reqrat Users not logged in as a commissioner should not be able to change
   a team's composition.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to change a team's composition.
+  \reqfit Commissioners are able to change any team's composition.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1194,6 +1195,26 @@ allow users to view the scores of played games, is not working.
   {\reqconf None}
   \reqmater None
   \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only captains can change their own team's composition.
+  \reqrat Users not logged in as a captain should not be able to change
+  a team's composition.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Captains are able to change their own team's composition.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
 \end{myreq}
 
 \begin{myreq}
@@ -1221,13 +1242,11 @@ allow users to view the scores of played games, is not working.
     {\reqno xx}
     {\reqtype 15}
     {\reqevent 9}
-  \reqdesc Only players can see the contact information of their own captain and the
-  other players on their team.
+  \reqdesc Only players can see the contact information of their own captain.
   \reqrat A player's email and phone number shall remain anonymous to
-  individuals outside the league and to players on other teams.
+  individuals outside the league and everyone else but their captain.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Contact information for players can only be seen by their own captain or
-  the other players on their own team.
+  \reqfit Contact information for players can only be seen by their own captain.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1243,7 +1262,7 @@ allow users to view the scores of played games, is not working.
     {\reqno xx}
     {\reqtype 15}
     {\reqevent 9}
-  \reqdesc Only captains can see the contact information of players on their own team and
+  \reqdesc Captains can see the contact information of players on their own team and
   other captains on other teams.
   \reqrat A captain's email and phone number shall remain anonymous to
   individuals outside the league or to players on other teams.
