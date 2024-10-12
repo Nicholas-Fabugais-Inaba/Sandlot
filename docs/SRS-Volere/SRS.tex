@@ -483,26 +483,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno 75}
-    {\reqtype 9}
-    {\reqevent 7.9}
-  \reqdesc description text description text description text 
-  \reqrat some more text some more text some more text 
-  \reqorig other text other text other text 
-  \reqfit longer text that needs more than one line longer text that needs more than one line
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 3}
-  \twoinline
-  {\reqdep some more text}
-  {\reqconf 111}
-  \reqmater other text other text other text 
-  \reqhist other text other text other text 
-\end{myreq}
-
-\begin{myreq}
-  \threeinline
-    {\reqno xx}
+    {\reqno 01}
     {\reqtype 0}
     {\reqevent 7}
   \reqdesc System must display the season schedule and standings to all users
@@ -524,7 +505,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 02}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Captains should be able to create a team which is added to the
@@ -547,7 +528,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 03}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Users should be able to create a new account by providing 
@@ -572,7 +553,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 04}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Users should be able to change their account information 
@@ -595,7 +576,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 05}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Users should be able delete their account by providing 
@@ -617,7 +598,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 06}
     {\reqtype 0}
     {\reqevent 8,9}
   \reqdesc Commissioners should be able to send alerts with custom information
@@ -639,7 +620,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 07}
     {\reqtype 0}
     {\reqevent 9}
   \reqdesc Commissioners should be able to update the team information of any
@@ -660,7 +641,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 08}
     {\reqtype 0}
     {\reqevent 3}
   \reqdesc Before the season starts, captains must have the option to give a
@@ -683,7 +664,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 09}
     {\reqtype 0}
     {\reqevent 3}
   \reqdesc Once the season start due date is reached, all captain's
@@ -705,7 +686,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 10}
     {\reqtype 0}
     {\reqevent 6}
   \reqdesc Captains must be able to request a reschedule for upcoming games
@@ -730,7 +711,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 11}
     {\reqtype 0}
     {\reqevent 3}
   \reqdesc When recieving a reschedule request from another captain, the system should
@@ -755,19 +736,16 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 12}
     {\reqtype 0}
     {\reqevent 3}
-  \reqdesc Captains must be able to request a reschedule for upcoming games
-  as long as the game is at least 24 hours in the future. Rescheduling
-  involves giving a list of alternate dates which are sent to the opposing
-  team's captain to choose a date and accept.
-  \reqrat Rescheduling is a core feature of the product, and schedule changes
-  less than a day from when they are to occur may be too little warning for
-  players to prepare for.
-  \reqorig Alex Verity
-  \reqfit A captain shall have the option to request a reschedule for games
-  only more than 24 hours in the future.
+  \reqdesc When a captains rechedule request is either accepted or denied the system should
+  notify them about about the outcome.
+  \reqrat It is important that the sender of the rechedule request is informed about the status of 
+  the request quickly
+  \reqorig Casra Ghazanfari
+  \reqfit A captain who sent a reschedule request shall be notified on the status of the request
+  when it is responded to. 
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -780,7 +758,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 13}
     {\reqtype 0}
     {\reqevent 9}
   \reqdesc Captains should be able to update the team information of only their
@@ -803,7 +781,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 14}
     {\reqtype 0}
     {\reqevent 9}
   \reqdesc Users should not be able to update the team information of any
@@ -824,7 +802,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 15}
     {\reqtype 0}
     {\reqevent 9}
   \reqdesc The score of a game should not be able to be updated until after
@@ -847,7 +825,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno 0}
+    {\reqno 16}
     {\reqtype 0}
     {\reqevent 2,3}
   \reqdesc Non-commissioner accounts can only be a member of one team.
@@ -872,7 +850,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 17}
     {\reqtype 0}
     {\reqevent xx}
   \reqdesc All buttons and user input elements should stand out with
@@ -896,7 +874,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 18}
     {\reqtype 0}
     {\reqevent xx}
   \reqdesc All images and visuals made for/by Sandlot should be high quality.
@@ -919,7 +897,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 19}
     {\reqtype 0}
     {\reqevent xx}
   \reqdesc Navigation should be straightforward, with menus and links easily
@@ -943,7 +921,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 20}
     {\reqtype 0}
     {\reqevent xx}
   \reqdesc The solution should use a consistent style across the entire user
@@ -968,7 +946,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 21}
     {\reqtype 0}
     {\reqevent 7}
   \reqdesc All users must be able to easily find the season schedule.
@@ -998,7 +976,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 22}
     {\reqtype 0}
     {\reqevent xx}
   \reqdesc The fonts used should be readable by all users.
@@ -1023,7 +1001,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 23}
     {\reqtype 0}
     {\reqevent xx}
   \reqdesc Solution must load quickly and provide smooth user interactions,
@@ -1081,7 +1059,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 24}
     {\reqtype 15}
     {\reqevent 4}
   \reqdesc Only players can join a team.
@@ -1100,7 +1078,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 25}
     {\reqtype 15}
     {\reqevent 3}
   \reqdesc Only captains can create their own teams.
@@ -1120,7 +1098,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 26}
     {\reqtype 15}
     {\reqevent 6}
   \reqdesc Only captains can reschedule games for their team.
@@ -1139,7 +1117,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 27}
     {\reqtype 15}
     {\reqevent 10}
   \reqdesc Only commissioners can send a league-wide alert.
@@ -1159,7 +1137,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 28}
     {\reqtype 15}
     {\reqevent 12}
   \reqdesc Only commissioners can assign teams to a division.
@@ -1179,7 +1157,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 29}
     {\reqtype 15}
     {\reqevent 12}
   \reqdesc Only commissioners can change any team's composition.
@@ -1199,7 +1177,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 30}
     {\reqtype 15}
     {\reqevent 12}
   \reqdesc Only captains can change their own team's composition.
@@ -1219,7 +1197,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 31}
     {\reqtype 15}
     {\reqevent 12}
   \reqdesc Only commissioners can change the season schedule.
@@ -1239,7 +1217,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 32}
     {\reqtype 15}
     {\reqevent 9}
   \reqdesc Only players can see the contact information of their own captain.
@@ -1259,7 +1237,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 33}
     {\reqtype 15}
     {\reqevent 9}
   \reqdesc Captains can see the contact information of players on their own team and
@@ -1281,7 +1259,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 34}
     {\reqtype 15}
     {\reqevent 9}
   \reqdesc Only commissioners can see the contact information of everyone in the league.
@@ -1304,7 +1282,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 35}
     {\reqtype 15}
     {\reqevent 5}
   \reqdesc Website must not create conflicts when scheduling games.
@@ -1328,7 +1306,7 @@ in the work partitioning table.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 36}
     {\reqtype 15}
     {\reqevent 1}
   \reqdesc The product shall not reveal contact information to any
@@ -1357,7 +1335,7 @@ Not applicable.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 37}
     {\reqtype 16}
     {\reqevent 1}
   \reqdesc The product shall provide an option to not specify gender.
