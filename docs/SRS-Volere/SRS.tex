@@ -401,7 +401,7 @@ allow users to view the scores of played games, is not working.
     {\reqevent 7}
   \reqdesc System must display the season schedule and standings to all users
   without login.
-  \reqrat Users who don't have a login (ie. spectators and umpires) will still
+  \reqrat Users who don't have a login (e.g. spectators and umpires) will still
   need to access the schedule and standings, so it should be visible to all.
   \reqorig Alex Verity
   \reqfit The schedule and standings shall be viewable without entering a
@@ -646,9 +646,99 @@ allow users to view the scores of played games, is not working.
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc All buttons and user input elements should stand out with
+  distinctive colours or borders and have feedback. 
+  \reqrat User input should be clear to all users so users know where to enter
+  inputs.
+  \reqorig Alex Verity
+  \reqfit Buttons and user input elements must have a minimum size of 44x44
+  pixels, maintain at least a 3:1 contrast ratio with the background, and
+  include distinct visual feedback (e.g., color change or shadow) on hover or
+  click for clear visibility and interactivity.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc All images and visuals made for/by Sandlot should be high quality.
+  \reqrat Low quality images and visuals are unprofessional, and the solution
+  should appear professional when possible. Only images made for/by Sandlot
+  are included in this requirement as older photos or other visuals may need
+  to be displayed that don't meet this standard.
+  \reqorig Alex Verity
+  \reqfit All images made for/by Sandlot must be free of pixelation or
+  blurring at their displayed size.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Navigation should be straightforward, with menus and links easily
+  accessible and readable.
+  \reqrat Users should know what section of the site they will be accessing
+  when they click on a navigation option so they don't get lost or confused.
+  \reqorig Alex Verity
+  \reqfit Navigation options should be consistently placed across pages and
+  their destination should be visibly written.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Style Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc The solution should use a consistent style across the entire user
+  interface.
+  \reqrat To ensure the professionalism of the solution, the style should
+  feel unified and consistent to all users.
+  \reqorig Alex Verity
+  \reqfit All interface elements must use consistent fonts, colors, layout
+  grids, and spacing, ensuring a cohesive visual style and branding.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
@@ -682,11 +772,54 @@ allow users to view the scores of played games, is not working.
 \subsection{Understandability and Politeness Requirements}
 \lips
 \subsection{Accessibility Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc The fonts used should be readable by all users.
+  \reqrat Sandlot will have a wide variety of users, and we must make sure the
+  font is an appropriate size for those with reduced vision.
+  \reqorig Alex Verity
+  \reqfit Body text must have a minimum font size of 16 pixels, a contrast
+  ratio of at least 4.5:1, and a line length between 45 and 75 characters for
+  optimal readability across all devices.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Solution must load quickly and provide smooth user interactions,
+  ensuring minimal delays when accessing content.
+  \reqrat Sandlot will need to be a solution users are not frustrated by to
+  encourage use, and long load times are frustrating.
+  \reqorig Alex Verity
+  \reqfit The website must achieve a total page load time of under 3 seconds
+  on a stable internet connection.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Safety-Critical Requirements}
 \lips
 \subsection{Precision or Accuracy Requirements}
