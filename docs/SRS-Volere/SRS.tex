@@ -13,6 +13,7 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
+\usepackage{array}
 
 \hypersetup{
     bookmarks=true,         % show bookmarks bar?
@@ -54,7 +55,7 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
+\title{Software Requirements Specification for \progname: Softball League Scheduling and Management Web Application} 
 \author{\authname}
 \date{\today}
 	
@@ -73,8 +74,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Oct. 7, 2024 & 1.0 & TA Feedback\\
+Oct. 11, 2024 & 1.1 & Rev0\\
 \bottomrule
 \end{tabularx}
 
@@ -82,137 +83,1067 @@ Date 2 & 1.1 & Notes\\
 
 ~\newpage
 \section{Purpose of the Project}
+
 \subsection{User Business}
-\lips
+
+The McMaster GSA softball league's current scheduling and management platform
+is used from the 1st week of May until the last week of August. The website
+creates a season schedule based on the 30-40 teams that are entered into the
+league by their respective captains. If scheduling conflicts or weather concerns
+occur, games are able to be rescheduled by the team captains based on a team's
+availability. For the many users interacting with the platform, individuals need
+an intuitive interface that is robust and will allow administrators to easily
+maintain the system, especially when the website experiences problems. The current
+platform lacks the capabilities to provide these functionalities to the players,
+captains, and commissioners. With this project, our team is provided an
+opportunity to apply our software engineering background to fulfill a
+desired need for an upgrade to an outdated website.
+
 \subsection{Goals of the Project}
-\lips
+Our goals with the project are to recreate everything the current website
+solution does, with a better user interface and a more stable foundation, so
+that future site admins and league commissioners don't have to deal with the
+solution breaking or captains/players not understanding how to use the tool.
+We also plan to add features such as player accounts to help players view
+their schedules, and a standings viewer to see league scores.
+
 \section{Stakeholders}
 \subsection{Client}
-\lips
+
+The client of the project, Dr. Jake Nease, is an active participant in the
+McMaster GSA softball league and understands the difficulties associated with
+the current scheduling and management platform. The stability and maintainability
+concerns with the website are driving factors that contribute to the need for
+an improved interface.
+
 \subsection{Customer}
-\lips
+
+The customers for this project include the players, captains, commissioners,
+umpires, and other individuals that may interact with the website. These
+individuals require an easy-to-use platform that allows them to seamlessly
+enter the website and view the season schedule, whether or not they have an
+account created. 
+
 \subsection{Other Stakeholders}
-\lips
+
+Future website administrators and maintainers have an interest in the
+maintainability, learnability of administrative functions, and the robustness
+of the website.
+
 \subsection{Hands-On Users of the Project}
-\lips
+
+\begin{itemize}
+  \item [Players]
+  \begin{itemize}
+    \item User creates an account, logins to their account,
+    and requests to join a team.
+    \item User needs to know their login details, the team they
+    will join, game details from looking at the schedule.
+  \end{itemize}
+  \item [Captains]
+  \begin{itemize}
+    \item User creates an account, logins to their account,
+    creates a team, and reschedules a game.
+    \item User needs to know their login details, game details from
+    looking at the schedule, days the team is free to reschedule a game.
+  \end{itemize}
+  \item [Commissioners]
+  \begin{itemize}
+    \item User creates an account, logins to their account,
+    can send leage alerts, and assign teams to divisions.
+    \item User needs to know their login details, and what alerts
+    they may need to send to the league.
+  \end{itemize}
+  \item [Umpires]
+  \begin{itemize}
+    \item User needs to view the schedule for the game they will
+    be the umpire for.
+    \item User needs to know the game details from looking at the
+    schedule.
+  \end{itemize}
+  \item [Project Supervisor]
+  \begin{itemize}
+    \item User will help gather stakeholders to test the product,
+    meet with the team to discuss the project, provide insight
+    to requirements desired in the product.
+    \item User needs to know how to contact the team, which stakeholders
+    can be contacted to test the product, what requirements are needed
+    to satisfy the needs of the project.
+  \end{itemize}
+\end{itemize}
+
 \subsection{Personas}
-\lips
+
+\begin{itemize}
+  \item [1.]
+  
+  Josh Brown is a 26 year old player that has recently joined the McMaster GSA
+  softball league and he is unfamiliar with how the website functions. As someone
+  who understands how technology works though, he is able to navigate the interface
+  quite well. However, some links he interacts with give him a 404 page not found
+  error. This aggravates Josh as he just wants to understand certain information
+  about the softball league, but the website isn't able to provide it to him
+  because the links on the website are faulty or other issues occur. Josh, along
+  with many others who are new to the league, may be technically literate, but due
+  to the structural integrity of the system, there are many times where users may
+  not be able to access certain information because there is either an error or a
+  link that leads to nothing.
+  \item [2.]
+  
+  Ken Phillips is a 58 year old captain for his McMaster GSA softball team and he has
+  been using the current website for as long as he can remember. Although he is not
+  too familiar with how technology works, he is still able to navigate and utilize the
+  website's functionalities as he has used them for quite some time now. Unfortunately,
+  with the creation of the new website, even though the website has the same existing
+  functions as the old system, he is not as familiar with how to navigate the interface
+  the same way he has before. Ken and other individuals that may be comfortable and
+  familiar with the current outdated platform, need the new website to be easy-to-use,
+  especially for people that are either older or not as technically literate.
+\end{itemize}
+
 \subsection{Priorities Assigned to Users}
-\lips
+
+\begin{itemize}
+  \item [Key Users]
+  \begin{itemize}
+    \item Players
+    \item Captains
+    \item Commissioners
+  \end{itemize}
+  \item [Secondary Users]
+  \begin{itemize}
+    \item Umpires
+  \end{itemize}
+  \item [Unimportant Users]
+  \begin{itemize}
+    \item Spectators
+  \end{itemize}
+\end{itemize}
+
 \subsection{User Participation}
-\lips
+
+Mainly user participation will be for testing the product. This can
+be done by many users included below:
+
+\begin{itemize}
+  \item Players
+  \item Captains
+  \item Commissioners
+  \item Umpires
+  \item Spectators
+  \item Project Supervisor
+\end{itemize}
+
+Additionally, the project supervisor will provide valuable
+insight about the existing system and its capabilities. These
+will be used to improve the overall design that will be implemented
+in the new system.
+
 \subsection{Maintenance Users and Service Technicians}
-\lips
+
+The team will be maintaining the product over the development phase until
+March 2025. Knowledge transfer will then be handed over to the
+project supervisor along with documentation and other information to aid
+in the maintaining of the new platform after development is completed.
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
-\lips
+
 \subsection{Implementation Environment of the Current System}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The system must be accessible by the internet.
+  \reqrat Users must be able to access all functionalities from
+  their device.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Users can interact with the system when connected to the
+  internet.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The system must implement a database.
+  \reqrat The system must store information including user login
+  information, the season schedule, team composition,
+  player/captain/commissioner contact information, and game scores.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The system is able to store and access information pertaining
+  to the league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Partner or Collaborative Applications}
-\lips
+
+Not applicable.
+
 \subsection{Off-the-Shelf Software}
-\lips
+Not applicable.
 \subsection{Anticipated Workplace Environment}
-\lips
+Not applicable.
 \subsection{Schedule Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The project shall be completed before the final demo.
+  \reqrat Project deadline is non-negotiable and the product must
+  be completed before the final presentation.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The product is successfully completed before the final demo.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Budget Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The project shall be subject to a \$750 budget.
+  \reqrat Resources required for the project must be under a sum total of
+  \$750.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The total amount spent for the project is under \$750.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Enterprise Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The product shall be made available to the project supervisor.
+  \reqrat After project completion, the project supervisor will have
+  access to the product for future use. 
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The project supervisor must be able to access all functionalities
+  of the product.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
 involved in the Project}
-\lips
+Sandlot: Management software for a softball baseball league, the software that
+is the subject of this document.\\\\
+Player: A person who plays on a baseball team in the league. They have an
+account on Sandlot and are a member of a team.\\\\
+Captain: A person who plays and leads a baseball team in the league. They are
+in charge of defining the team's information on Sandlot.\\\\
+Team: A name, list of players and record of match scores that represents a
+baseball team defined by a captain. Teams are stored on a database on Sandlot.
+\\\\
+Commissioner: A person who manages the league. They may also play in the
+league. Commissioners have top level permissions on Sandlot, they may edit any
+team information like player list and past scores.\\\\
+
+
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
-\lips
+\begin{itemize}
+  \item The current solution is a website with url 
+  \url{https://www.gsasoftball.ca/}
+  \item There are currently 25-32 teams in the league playing an average of
+  100 games a month.
+  \item Many users are older and require an intuitive UI to enjoy using the
+  site
+\end{itemize}
+
 \subsection{Business Rules}
-\lips
+Not applicable
+
 \subsection{Assumptions}
-\lips
+\begin{itemize}
+  \item All users will understand how to log in to a website using a username
+  and password.
+  \item Users will know how a softball league is structured and how it functions.
+\end{itemize}
 
 \section{The Scope of the Work}
 \subsection{The Current Situation}
-\lips
+It is important to note that we will not be using the existing solution other
+than as a feature guide. The current solution is hosted on the web and is
+written in PHP. The current login system does not use a username and password.
+Only captains can log in, and they are emailed an ASCII code which they use to
+access the website to schedule games and submit scores. Commissioners can login
+in the same way as captains and can modify schedules, scores and team
+compositions as needed. Currently the standings functionality, which would
+allow users to view the scores of played games, is not working.
 \subsection{The Context of the Work}
-\lips
+\includegraphics[scale=0.6]{6b_context_diagram.png}
 \subsection{Work Partitioning}
-\lips
+  \begin{center}
+    \begin{tabular}{|m{4cm}|m{4cm}|m{6cm}|}
+      \hline
+      Event Name & Input and Output & Summary of BUC\\
+      \hline
+      1. User creates an account & Account Data (in) & A player, captain or
+      commissioner enters in a username and password along with account details
+      including their name, email, phone number, and gender.\\
+      2. User logs in & Login Data (in) & A player, captain or commissioner
+      enters their username and password and the system grants them access to
+      their account.\\
+      3. Captain creates a team & New Team Information (in) & At the
+      start of the season, captains can enter team information such as a team
+      name. This registers a new team.\\
+      4. Player requests to join a team & Team Join Request (in) & At the
+      start of the season, players are not assigned to a team and must request
+      to join one.\\
+      5. Season starts and availability entered & Season Availability Schedule
+      (in) & Record the team captain's entered availability schedule. This
+      will be used to generate the league schedule.\\
+      6. Reschedule request entered & Reschedule Dates (in) & Record
+      availability dates the requesting captain entered as alternates for the
+      planned date.\\
+      7. Reschedule request received & Reschedule Dates (out) & Send the dates
+      the captain who sent the request submit to the other team's captain.\\
+      8. User navigates to schedule section & Season Schedule (out) & Display
+      stored season schedule (if available) to site user.\\
+      9. User navigates to contact information & Contact Infromation (out) & Display
+      stored contact information (requires specific access) to site user.\\
+      10. User submits alert & Alert Content (in) & Commissioners can submit custom
+      alerts to send to any chosen users.\\
+      11. System sends alert & Alert Content (out) & Send the alert to any user the
+      alert must reach.\\
+      12. Commissioner inputs admin command & Commissioner Admin Commands (in)
+      & Commissioners have the ability to overwrite team composition and
+      schedule.\\
+      \hline
+    \end{tabular}
+  \end{center}
 \subsection{Specifying a Business Use Case (BUC)}
-\lips
+Not applicable as events are simple and described above
+in the work partitioning table.
+
+\subsection{User Type Hierarchy}
+\includegraphics[scale=1.1]{business_data_model.png}
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
-\lips
+Need to add.
+
 \subsection{Data Dictionary}
-\lips
+Need to add.
 
 \section{The Scope of the Product}
+All necessary parts of this section were covered in section 6.
 \subsection{Product Boundary}
-\lips
+
 \subsection{Product Use Case Table}
-\lips
+
 \subsection{Individual Product Use Cases (PUC's)}
-\lips
+
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
-\lips
 
 \begin{myreq}
   \threeinline
-    {\reqno 75}
-    {\reqtype 9}
-    {\reqevent 7.9}
-  \reqdesc description text description text description text 
-  \reqrat some more text some more text some more text 
-  \reqorig other text other text other text 
-  \reqfit longer text that needs more than one line longer text that needs more than one line
+    {\reqno 01}
+    {\reqtype 0}
+    {\reqevent 7}
+  \reqdesc System must display the season schedule and standings to all users
+  without login.
+  \reqrat Users who don't have a login (e.g. spectators and umpires) will still
+  need to access the schedule and standings, so it should be visible to all.
+  \reqorig Alex Verity
+  \reqfit The schedule and standings shall be viewable without entering a
+  username and password.
   \twoinline
-    {\reqsatis 5}
+    {\reqsatis 3}
     {\reqdissat 3}
   \twoinline
-  {\reqdep some more text}
-  {\reqconf 111}
-  \reqmater other text other text other text 
-  \reqhist other text other text other text 
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 02}
+    {\reqtype 0}
+    {\reqevent 2}
+  \reqdesc Captains should be able to create a team which is added to the
+  Sandlot database.
+  \reqrat Teams are defined by captains, in charge of scheduling and
+  recording scores. Captains must be able to define teams at the start of the
+  season.
+  \reqorig Alex Verity
+  \reqfit When captains make a team, it should be added to the Sandlot
+  database.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 03}
+    {\reqtype 0}
+    {\reqevent 2}
+  \reqdesc Users should be able to create a new account by providing 
+  the necessary information. 
+  \reqrat An account strcuture is necessary to be able to change 
+  what a user of the system can see/do based on who they are. 
+  For example, a player and captain should not be able to see/do 
+  the same things or 2 players from different teams should not be 
+  able to see/do the same things.
+  \reqorig Casra Ghazanfari
+  \reqfit When a user provides the necessary information, an account 
+  should be created from that information
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 04}
+    {\reqtype 0}
+    {\reqevent 2}
+  \reqdesc Users should be able to change their account information 
+  by providing the necessary information.
+  \reqrat User information does not stay the same forever, 
+  therefore the system should have a way for the user to change 
+  their information if it ever changes.
+  \reqorig Casra Ghazanfari
+  \reqfit When a user provides the necessary information, 
+  their account information should change.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 05}
+    {\reqtype 0}
+    {\reqevent 2}
+  \reqdesc Users should be able delete their account by providing 
+  the necessary information.
+  \reqrat If a user wants to quit the league they should be able to
+  delete any of their personal information at any time.
+  \reqorig Casra Ghazanfari
+  \reqfit When a user provides the necessary information, 
+  their account should be deleted.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 06}
+    {\reqtype 0}
+    {\reqevent 8,9}
+  \reqdesc Commissioners should be able to send alerts with custom information
+  to a specified user or group of user.
+  \reqrat Commissioners have the need to notify league members with any new
+  information relevant to the league. 
+  \reqorig Alex Verity
+  \reqfit When a commissioner enters information to alert league members, the
+  league members recieve a notification with the relevant information.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 07}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Commissioners should be able to update the team information of any
+  team, including player list and scores.
+  \reqrat Commissioners have the need to easily fix any errors made by users.
+  \reqorig Alex Verity
+  \reqfit When a commissioner enters team information to be changed, the
+  changes are made in the database.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 08}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc Before the season starts, captains must have the option to give a
+  list of days over the season marking their team's availabilty.
+  \reqrat Each team will have members who may only be free on certain days of
+  the season. This availability will inform the season schedule so that teams
+  will have as many people attending each game as possible.
+  \reqorig Alex Verity
+  \reqfit Before the seaon starts, captains shall be able to view the option to
+  enter their availability and once entered, it shall be stored by the system.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 09}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc Once the season start due date is reached, all captain's
+  availability will be used to generate a season schedule.
+  \reqrat Once the season starts all users need to know the schedule to know
+  when and where to go to games.
+  \reqorig Alex Verity
+  \reqfit When the season start due date is reached, a season schedule shall
+  be displayed on the website.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 10}
+    {\reqtype 0}
+    {\reqevent 6}
+  \reqdesc Captains must be able to request a reschedule for upcoming games
+  as long as the game is at least 24 hours in the future. Rescheduling
+  involves giving a list of alternate dates which are sent to the opposing
+  team's captain to choose a date and accept.
+  \reqrat Rescheduling is a core feature of the product, and schedule changes
+  less than a day from when they are to occur may be too little warning for
+  players to prepare for.
+  \reqorig Alex Verity
+  \reqfit A captain shall have the option to request a reschedule for games
+  only more than 24 hours in the future.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 11}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc When recieving a reschedule request from another captain, the system should
+  prompt the captain to either accept the reshedule request and choose a date or 
+  deny the request.
+  \reqrat Sometimes a captain may not be able to reschedule a game due to prior commitments
+  or some other external factors. Therefore there should be both an option to accept or deny 
+  any reshedule request.
+  or deny
+  \reqorig Casra Ghazanfari
+  \reqfit A captain shall have the option to either accepy or deny any request to 
+  reschedule a game.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 12}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc When a captains rechedule request is either accepted or denied the system should
+  notify them about about the outcome.
+  \reqrat It is important that the sender of the rechedule request is informed about the status of 
+  the request quickly
+  \reqorig Casra Ghazanfari
+  \reqfit A captain who sent a reschedule request shall be notified on the status of the request
+  when it is responded to. 
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 13}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Captains should be able to update the team information of only their
+  team, including team name, player list and scores.
+  \reqrat Captains are representatives of their teams and should have the ability
+  to control information about their team on a high level. However, they should not
+  have the same power as the comissioner and therefore should only be able to change 
+  information related to their team.
+  \reqorig Casra Ghazanfari
+  \reqfit A captain shall have the ability to update team information.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 14}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Users should not be able to update the team information of any
+  team, including team name, player list and scores.
+  \reqrat Users are generally low level users and should not have the ability to
+  make changes that affect their whole team.
+  \reqorig Casra Ghazanfari
+  \reqfit A user shall not have the ability to update team information.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 15}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc The score of a game should not be able to be updated until after
+  the it is completed.
+  \reqrat The score of a game is unknown until it is completed having the option to 
+  update the score of the game before it is completed is useless at best and harmful
+  at worst.
+  \reqorig Casra Ghazanfari
+  \reqfit The ability to update the score of a game will only display after the 
+  game has been played.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 16}
+    {\reqtype 0}
+    {\reqevent 2,3}
+  \reqdesc Non-commissioner accounts can only be a member of one team.
+  \reqrat To ensure competition is fair and to avoid captains accidentally
+  making extranious teams, users are limited to one team each.
+  \reqorig Alex Verity
+  \reqfit Once a team is created by a captain or a team is joined by a player,
+  they shall not be allowed to use the functionality to create a team or join
+  a team.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
 \end{myreq}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 17}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc All user input elements should be distinctive such that they can be
+  contrasted. 
+  \reqrat User input should be clear to all users so users know where to enter
+  inputs.
+  \reqorig Alex Verity
+  \reqfit User input elements shall have a minimum size of 44x44
+  pixels, maintain at least a 3:1 contrast ratio with the background.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 17}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc All user input elements should provide feedback.
+  \reqrat Users should be able to know if their inputs are working or not.
+  \reqorig Alex Verity
+  \reqfit User input elements shall include distinct visual feedback (e.g., color change or shadow) on hover or
+  click for clear visibility and interactivity.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 18}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc All images and visuals made for/by Sandlot should be high quality.
+  \reqrat Low quality images and visuals are unprofessional, and the solution
+  should appear professional when possible. Only images made for/by Sandlot
+  are included in this requirement as older photos or other visuals may need
+  to be displayed that don't meet this standard.
+  \reqorig Alex Verity
+  \reqfit All images made for/by Sandlot shall be free of pixelation or
+  blurring at their displayed size.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 19}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Navigation should be straightforward, with menus and links easily
+  accessible and readable.
+  \reqrat Users should know what section of the site they will be accessing
+  when they click on a navigation option so they don't get lost or confused.
+  \reqorig Alex Verity
+  \reqfit Navigation options shall be consistently placed across pages and
+  their destination should be visibly written.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Style Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 20}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc The solution should use a consistent style across the entire user
+  interface.
+  \reqrat To ensure the professionalism of the solution, the style should
+  feel unified and consistent to all users.
+  \reqorig Alex Verity
+  \reqfit All interface elements shall use consistent fonts, colors, layout
+  grids, and spacing, ensuring a cohesive visual style and branding.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 21}
+    {\reqtype 0}
+    {\reqevent 7}
+  \reqdesc All users must be able to easily find the season schedule.
+  \reqrat Many users of Sandlot will not be using it often, and the
+  schedule will be one of the most frequented parts of Sandlot. It must be
+  easy to find and access. 
+  \reqorig Alex Verity
+  \reqfit On average, a new user shall not take more than one minute to find
+  the schedule, and it should not take more than 2 clicks to access.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Personalization and Internationalization Requirements}
-\lips
+Not applicable.
+
 \subsection{Learning Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 21}
+    {\reqtype 0}
+    {\reqevent 7}
+  \reqdesc A commissioner should be able to able to learn how to perform all of
+  their available actions in a short amount of time.
+  \reqrat Commissioners will need to make the necessary changes to the 
+  product as the league plays out or changes season, and they have the most
+  available actions that need to be learned.
+  \reqorig Jung Woo Lee
+  \reqfit A new commissioner to the product should be able to learn all of their
+  possible actions withing 1 hour.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 21}
+    {\reqtype 0}
+    {\reqevent 7}
+  \reqdesc A captain should be able to able to learn how to perform all of
+  their available actions in a short amount of time.
+  \reqrat Captains have certain actions that will be available to them that
+  require some learning
+  \reqorig Jung Woo Lee
+  \reqfit A new captain to the product should be able to learn all of their
+  possible actions withing 1 hour.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 21}
+    {\reqtype 0}
+    {\reqevent 7}
+  \reqdesc A new user should be able to use the basic features (such as viewing
+  the league schedule) of the product without having prior knowledge of the product.
+  \reqrat All users should be able to intuitively perform some actions such as 
+  viewing the season schedule.
+  \reqorig Jung Woo Lee
+  \reqfit A new user should be able to navigate to the season schedule on
+  their first time interacting with the product.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Understandability and Politeness Requirements}
 \lips
 \subsection{Accessibility Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 22}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc The fonts used should be readable by all users.
+  \reqrat Sandlot will have a wide variety of users, and we must make sure the
+  font is an appropriate size for those with reduced vision.
+  \reqorig Alex Verity
+  \reqfit Body text shall have a minimum font size of 16 pixels, and a line 
+  length between 45 and 75 characters for optimal readability across all devices.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 22}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Colours used should be colour blind friendly.
+  \reqrat Sandlot will have a wide variety of users, and we must make sure the
+  colours are able to be contrasted by all users.
+  \reqorig Jung Woo Lee
+  \reqfit  All colours applied to elements users will interact with must have
+  a contrast ratio of at least 4.5:1.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 23}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Solution must load quickly and provide smooth user interactions,
+  ensuring minimal delays when accessing content.
+  \reqrat Sandlot will need to be a solution users are not frustrated by to
+  encourage use, and long load times are frustrating.
+  \reqorig Alex Verity
+  \reqfit The website shall load in under 3 seconds on a stable internet
+  connection.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Safety-Critical Requirements}
-\lips
+Not applicable.
 \subsection{Precision or Accuracy Requirements}
-\lips
+Need to add requirement for viewing accurate standings.
 \subsection{Robustness or Fault-Tolerance Requirements}
-\lips
+Need to add requirement for if disconnected from internet.
 \subsection{Capacity Requirements}
-\lips
+Need to add requirement for number of users on the system
+at the same time.
 \subsection{Scalability or Extensibility Requirements}
-\lips
+Need to add requirement if additional features would be added in
+the future.
 \subsection{Longevity Requirements}
 \lips
 
@@ -238,44 +1169,340 @@ involved in the Project}
 
 \section{Security Requirements}
 \subsection{Access Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 24}
+    {\reqtype 15}
+    {\reqevent 4}
+  \reqdesc Only players can join a team.
+  \reqrat Users not logged in as a player should not be able to join a team.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Player is able to request to join the team their captain created.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 25}
+    {\reqtype 15}
+    {\reqevent 3}
+  \reqdesc Only captains can create their own teams.
+  \reqrat Users not logged in as a captain should not be able to create their
+  own team.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Captains are able to create their own teams.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 26}
+    {\reqtype 15}
+    {\reqevent 6}
+  \reqdesc Only captains can reschedule games for their team.
+  \reqrat Users not logged in as a captain should not be able to reschedule games.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Captains are able to request a reschedule for their upcoming game.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 27}
+    {\reqtype 15}
+    {\reqevent 10}
+  \reqdesc Only commissioners can send a league-wide alert.
+  \reqrat Users not logged in as a commissioner should not be able to send a
+  league-wide alert.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to send an alert to the entire league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 28}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only commissioners can assign teams to a division.
+  \reqrat Users not logged in as a commissioner should not be able to assign
+  teams to a division.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to assign a team to a division.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 29}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only commissioners can change any team's composition.
+  \reqrat Users not logged in as a commissioner should not be able to change
+  a team's composition.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to change any team's composition.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 30}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only captains can change their own team's composition.
+  \reqrat Users not logged in as a captain should not be able to change
+  a team's composition.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Captains are able to change their own team's composition.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 31}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only commissioners can change the season schedule.
+  \reqrat Users not logged in as a commissioner should not be able to change
+  the season's schedule.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to change the season's schedule.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 32}
+    {\reqtype 15}
+    {\reqevent 9}
+  \reqdesc Only players can see the contact information of their own captain.
+  \reqrat A player's email and phone number shall remain anonymous to
+  individuals outside the league and everyone else but their captain.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Contact information for players can only be seen by their own captain.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 33}
+    {\reqtype 15}
+    {\reqevent 9}
+  \reqdesc Captains can see the contact information of players on their own team and
+  other captains on other teams.
+  \reqrat A captain's email and phone number shall remain anonymous to
+  individuals outside the league or to players on other teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Contact information for captains can only be seen by
+  the players on their own team or other captains from other teams.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 34}
+    {\reqtype 15}
+    {\reqevent 9}
+  \reqdesc Only commissioners can see the contact information of everyone in the league.
+  \reqrat Player and captains shall remain anonymous to
+  individuals outside the league or to players on other teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are the only individuals in the league that can see everyone's
+  contact information.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
 \subsection{Integrity Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 35}
+    {\reqtype 15}
+    {\reqevent 5}
+  \reqdesc Website must not create conflicts when scheduling games.
+  \reqrat The system shall create a schedule for all the teams in the league,
+  without scheduling conflicts. Rescheduled games must also not conflict with the
+  season schedule.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit There exists no conflicts in the season schedule when the season begins or
+  throughout the season when games are rescheduled.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 7, 2024 
+\end{myreq}
+
 \subsection{Privacy Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 36}
+    {\reqtype 15}
+    {\reqevent 1}
+  \reqdesc The product shall not reveal contact information to any
+  parties without the necessary access.
+  \reqrat Contact information must be kept private within the league.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Contact information cannot be accessed by users that do not have
+  an account registered in the league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
+
 \subsection{Audit Requirements}
-\lips
+Not applicable.
 \subsection{Immunity Requirements}
-\lips
+Not applicable.
 
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 37}
+    {\reqtype 16}
+    {\reqevent 1}
+  \reqdesc The product shall provide an option to not specify gender.
+  \reqrat Users may not associate themselves as male or female.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit A user must be able to choose an option to not specify their
+  gender.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
 
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
-\lips
+Not applicable.
 \subsection{Standards Compliance Requirements}
-\lips
+Not applicable.
 
 \section{Open Issues}
-\lips
+
+\begin{itemize}
+
+  \item There are no open issues
+
+\end{itemize}
 
 \section{Off-the-Shelf Solutions}
 \subsection{Ready-Made Products}
-\lips
+Not applicable.
 \subsection{Reusable Components}
-\lips
+Not applicable.
 \subsection{Products That Can Be Copied}
-\lips
+Not applicable.
 
 \section{New Problems}
 \subsection{Effects on the Current Environment}
-\lips
+Not applicable.
 \subsection{Effects on the Installed Systems}
-\lips
+Not applicable.
 \subsection{Potential User Problems}
-\lips
+
+Existing users of the current platform may suffer from the migration
+to the new platform as they may not be familiar with how to navigate
+the new system and utilize certain functions/features. This could be
+concerning considering the age group and lack of technical literacy
+for some users. One precaution that can be taken is to create a user
+guide to aid users in interacting with the new system and the various
+features it has to offer.
+
 \subsection{Limitations in the Anticipated Implementation Environment That May
 Inhibit the New Product}
 \lips
@@ -291,6 +1518,7 @@ Inhibit the New Product}
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
 \lips
+
 \subsection{Data That Has to be Modified or Translated for the New System}
 \lips
 
@@ -298,7 +1526,29 @@ Inhibit the New Product}
 \lips
 \section{User Documentation and Training}
 \subsection{User Documentation Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc There must exist a user guide that informs users of the previous
+  system and new users how to use the features of the new system.
+  \reqrat There will be many new users of the system who might not be familiar
+  with how to use the features of our solution, and will require guidance.
+  \reqorig Alex Verity
+  \reqfit There shall exist a user guide that explains all major features of
+  the system.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 1}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Training Requirements}
 \lips
 
@@ -314,6 +1564,8 @@ Inhibit the New Product}
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Lifelong Learning.  Please answer the following questions:
 
+\subsection*{Team -- Reflection}
+
 \begin{enumerate}
   \item What knowledge and skills will the team collectively need to acquire to
   successfully complete this capstone project?  Examples of possible knowledge
@@ -322,10 +1574,173 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   computer science knowledge.  Skills may be related to technology, or writing,
   or presentation, or team management, etc.  You should look to identify at
   least one item for each team member.
+
+  The team collectively needs to acquire lots of knowledge skills to successfully 
+  complete this capstone project. In particular, Web development skills and knowledge 
+  about the React language  will be key in developing a working website efficiently. SQL 
+  skills and knowledge about database design and data migrations will be extremely useful 
+  when working to store the website’s information properly. Knowledge on hosting these 
+  different pieces of the project as well as learning how to properly integrate our project 
+  with the host and finally, domain knowledge of the UI/UX design of existing scheduling 
+  solutions on the market so that we can learn from existing solutions to ensure our 
+  ease-of-use and user experience is top of the line. Casra will take on the web development 
+  skills and knowledge, Nicholas will tackle the SQL skills and database knowledge, 
+  Alex will look into hosting information and integrations, and Jung Woo will look into 
+  domain knowledge of existing scheduling systems.
+
   \item For each of the knowledge areas and skills identified in the previous
   question, what are at least two approaches to acquiring the knowledge or
   mastering the skill?  Of the identified approaches, which will each team
   member pursue, and why did they make this choice?
+
+  Web development skills and knowledge of the React language can be learned either by reading 
+  the React documentation or by starting a separate test project and spending some time 
+  learning by experimenting with the language. SQL skills and database design knowledge can 
+  be learned by either creating practice queries on a dummy database or taking an online 
+  structured learning course. Knowledge about hosting the different components of the project 
+  can be gained by getting hands-on experience with cloud hosting platforms such as Microsoft 
+  Azure or AWS or by testing hosting in a local environment on our own computers. To gain 
+  domain knowledge of UI/UX design of scheduling platforms can either be gained by 
+  investigating existing systems hands on and analyzing their UI/UX or by surveying people 
+  about different applications they use and what parts of them they like/dislike.
+  Casra will pursue learning web development and React by creating a separate test project 
+  because he finds that learning by doing is much more effective for him than other methods. 
+  Nicholas will pursue learning SQL and database design by taking an structured online course 
+  on the subject because he feels that the more structured nature of the course will help him 
+  learn consistently. Alex will pursue getting hands-on experience with cloud hosting 
+  platforms because these platforms are likely what we will be using for the project and 
+  so getting experience with them would be beneficial. Finally, Jung Woo will pursue 
+  investigating the UI/UX domain knowledge and design of existing scheduling systems hands 
+  on because he feels as though he will learn more from the existing system will give 
+  insights into the developers perspective of UI/UX design which will be helpful for us as 
+  the developers.
+
+\end{enumerate}
+
+\subsection*{Alex Verity -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  The parts that went well for me were the non-functional requirements, I felt
+  the look and feel section gave me a much better idea of what the solution is
+  going to look like. The TA meeting was also extremely helpful and gave me a
+  much better perspective on the project and confidence in our solution.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Some pain points experienced were trying to get full coverage when coming up
+  with use cases and functional requirements, we have many more questions for
+  the supervisor now and will almost certainly need to come back to this
+  document and modify it with new information we recieve. I still don't know
+  if the use cases provided are well put together or not and will be looking
+  heavily at feedback in that area.
+  \item How many of your requirements were inspired by speaking to your
+  client(s) or their proxies (e.g. your peers, stakeholders, potential users)?
+  \\\\
+  Almost all requirements are inspired by speaking to our supervisor and
+  primary stakeholder, as he defined the entire project during meetings with
+  him. We were also heavily inspired by the TA meeting, where many of the
+  look and feel requirements and user guide requirements came from, as well
+  as advice on what to make into functional requirements.
+  \item Which of the courses you have taken, or are currently taking, will help
+  your team to be successful with your capstone project.\\\\
+  The class 4HC3, whose subject is human computer interfaces and talks mainly
+  about designing user interface. One of the main goals of the project is
+  designing the UI to be more readable and better designed than the current
+  solution, so any learning in that regard will be vital.
+
+\end{enumerate}
+
+\subsection*{Jung Woo Lee -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  Coming up with most of the requirements was easier than expected due to the breadth of information we had from talking with the supervisor on the product.
+  
+  
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Going through and working on this document, made me realize how much more we as a team probably need to know about user needs. Sometimes we were left with questions on if something was a requirement or not. All of this indicated to the fact that we need to have more time to speak to our supervisor.
+  
+  \item How many of your requirements were inspired by speaking to your
+  client(s) or their proxies (e.g. your peers, stakeholders, potential users)?\\\\
+  Almost all of the requirements came from the supervisor, who is both a potential user and stakeholder. With the initial information he provided us on the problem and desired product, we could develop most of these requirements. A few of the requirements were not explicitly told to us, but could be inferred and others have been created by us to conform with ethical practices for example.
+  
+  \item Which of the courses you have taken, or are currently taking, will help
+  your team to be successful with your capstone project.\\\\
+  All project based courses are definitely useful to understand project dynamics. Dealing with a team, and performing to certain standards has been taught to us in all of these various courses. Providing deliverables and project scheduling has also been taught to us, such that administrative duties are easier for us to tackle. The databases course will likely help us as our project will most likely be using this in our solution. The user-interface course will help us in creating a human-centred design that is intuitive and clean. This is one of the pitfalls of the current solution, and thus one of the important non-functional requirements. The requirements course will also help us interpret requirements going forward and make use of our work here. And late it will undoubtedly help us revise this document.
+
+\end{enumerate}
+
+\subsection*{Nicholas Fabugais-Inaba -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  When writing this deliverable, outlining the different requirements associated
+  with the varying aspects of the project helped in understanding what is required
+  from the team to accomplish a completed product for this project. More specifically,
+  outlining the access requirements and creating the hierarchy diagram aided in
+  my understanding of how each user will interact with the system.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Some of the pain points from this deliverable was the amount of content 
+  needed to be covered with all of the different sections. With so many different
+  types of requirements in mind and the number of overlaping requirements, it
+  was incredibly difficult to fill in each section or understand why a certain
+  type of requirement may not apply to the project. These pain points were resolved
+  by brainstorming as a team our own requirements that we would then review
+  amongst each other to understand if the requirement was satisfactory enough
+  or if it should be constructed in a different way.
+  \item How many of your requirements were inspired by speaking to your
+  client(s) or their proxies (e.g. your peers, stakeholders, potential users)?
+  \\\\
+  From both the TA and the initial meeting with the project supervisor, the team
+  was able to get a grasp on the requirements that must be important to mention
+  in the SRS. Mainly the project supervisor was able to outline the overall
+  requirements needed to improve on the existing system, however, the TA was 
+  still able to provide valuable insight into either how general or how specific
+  a requirement should be defined.
+  \item Which of the courses you have taken, or are currently taking, will help
+  your team to be successful with your capstone project.\\\\
+  Specifically for the SRS, our software requirements class that is primarily taken
+  in the 3rd year for software engineering students aided in the creation
+  of the SRS document. Additionally, our software design III course will help the
+  team be successful with the capstone project as we had created a prototype design
+  similar to Uber. Collaborating with a team for a project that had many moving
+  parts to it should surely aid in the creation of the team's initial MVP for
+  the project as well as the development towards the final product that will
+  be showcased early in 2025.
+
+\end{enumerate}
+
+\subsection*{Casra Ghazanfari -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  Writing the functional requirements section of this deliverable went well 
+  because we had access to the old existing system that the project is aiming 
+  to improve upon. This allowed us to look at the old existing system’s functionalities 
+  and easily come up with functional requirements that the new system would need to meet 
+  based on the old system’s functionalities.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  The biggest pain point during this deliverable was understanding what each section 
+  of the document was asking for. Many sections of the document have unintuitive names 
+  that do not accurately describe the information the section should hold. In addition many 
+  of the sections were either inapplicable or very loosely applicable to our project making 
+  it difficult to understand which sections we should be tackling.
+  \item How many of your requirements were inspired by speaking to your
+  client(s) or their proxies (e.g. your peers, stakeholders, potential users)?
+  \\\\
+  There isn’t an exact number but ~25\% of our requirements are directly inspired/created 
+  from information we got while talking to our client. Most prominently our look and feel 
+  requirements were directly from our discussions where we learned that UX and ease of use 
+  were extremely important factors for both the client and users of our system.
+  \item Which of the courses you have taken, or are currently taking, will help
+  your team to be successful with your capstone project.\\\\
+  SFWRENG 3XB3 Software Engineering Practice and Experience is a project oriented software 
+  design course which is, and will be extremely helpful for a successful capstone project. 
+  3XB3 taught effective software design and got me used to the workflow of a software project 
+  which will both be very applicable to our capstone.
 \end{enumerate}
 
 \end{document}
