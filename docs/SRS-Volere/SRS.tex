@@ -74,8 +74,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\textbf{Date}} & {\textbf{Version}} & {\textbf{Notes}}\\
 \midrule
-October 7, 2024 & 1.0 & TA Feedback\\
-October 9, 2024 & 1.1 & Rev0\\
+Oct. 7, 2024 & 1.0 & TA Feedback\\
+Oct. 11, 2024 & 1.1 & Rev0\\
 \bottomrule
 \end{tabularx}
 
@@ -131,7 +131,47 @@ maintainability, learnability of administrative functions, and the robustness
 of the website.
 
 \subsection{Hands-On Users of the Project}
-\lips
+
+\begin{itemize}
+  \item [Players]
+  \begin{itemize}
+    \item User creates an account, logins to their account,
+    and requests to join a team.
+    \item User needs to know their login details, the team they
+    will join, game details from looking at the schedule.
+  \end{itemize}
+  \item [Captains]
+  \begin{itemize}
+    \item User creates an account, logins to their account,
+    creates a team, and reschedules a game.
+    \item User needs to know their login details, game details from
+    looking at the schedule, days the team is free to reschedule a game.
+  \end{itemize}
+  \item [Commissioners]
+  \begin{itemize}
+    \item User creates an account, logins to their account,
+    can send leage alerts, and assign teams to divisions.
+    \item User needs to know their login details, and what alerts
+    they may need to send to the league.
+  \end{itemize}
+  \item [Umpires]
+  \begin{itemize}
+    \item User needs to view the schedule for the game they will
+    be the umpire for.
+    \item User needs to know the game details from looking at the
+    schedule.
+  \end{itemize}
+  \item [Project Supervisor]
+  \begin{itemize}
+    \item User will help gather stakeholders to test the product,
+    meet with the team to discuss the project, provide insight
+    to requirements desired in the product.
+    \item User needs to know how to contact the team, which stakeholders
+    can be contacted to test the product, what requirements are needed
+    to satisfy the needs of the project.
+  \end{itemize}
+\end{itemize}
+
 \subsection{Personas}
 
 \begin{itemize}
@@ -162,30 +202,69 @@ of the website.
 \end{itemize}
 
 \subsection{Priorities Assigned to Users}
-\lips
+
+\begin{itemize}
+  \item [Key Users]
+  \begin{itemize}
+    \item Players
+    \item Captains
+    \item Commissioners
+  \end{itemize}
+  \item [Secondary Users]
+  \begin{itemize}
+    \item Umpires
+  \end{itemize}
+  \item [Unimportant Users]
+  \begin{itemize}
+    \item Spectators
+  \end{itemize}
+\end{itemize}
+
 \subsection{User Participation}
-\lips
+
+Mainly user participation will be for testing the product. This can
+be done by many users included below:
+
+\begin{itemize}
+  \item Players
+  \item Captains
+  \item Commissioners
+  \item Umpires
+  \item Spectators
+  \item Project Supervisor
+\end{itemize}
+
+Additionally, the project supervisor will provide valuable
+insight about the existing system and its capabilities. These
+will be used to improve the overall design that will be implemented
+in the new system.
+
 \subsection{Maintenance Users and Service Technicians}
-\lips
+
+The team will be maintaining the product over the development phase until
+March 2025. Knowledge transfer will then be handed over to the
+project supervisor along with documentation and other information to aid
+in the maintaining of the new platform after development is completed.
 
 \section{Mandated Constraints}
 \subsection{Solution Constraints}
+
+\subsection{Implementation Environment of the Current System}
 
 \begin{myreq}
   \threeinline
     {\reqno 0}
     {\reqtype 0}
-    {\reqevent 2,3}
-  \reqdesc Non-commissioner accounts can only be a member of one team.
-  \reqrat To ensure competition is fair and to avoid captains accidentally
-  making extranious teams, users are limited to one team each.
-  \reqorig Alex Verity
-  \reqfit Once a team is created by a captain or a team is joined by a player,
-  they shall not be allowed to use the functionality to create a team or join
-  a team.
+    {\reqevent 0}
+  \reqdesc The system must be accessible by the internet.
+  \reqrat Users must be able to access all functionalities from
+  their device.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Users can interact with the system when connected to the
+  internet.
   \twoinline
-    {\reqsatis 2}
-    {\reqdissat 2}
+    {\reqsatis 5}
+    {\reqdissat 5}
   \twoinline
   {\reqdep None}
   {\reqconf None}
@@ -193,20 +272,102 @@ of the website.
   \reqhist
 \end{myreq}
 
-\subsection{Implementation Environment of the Current System}
-\lips
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The system must implement a database.
+  \reqrat The system must store information including user login
+  information, the season schedule, team composition,
+  player/captain/commissioner contact information, and game scores.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The system is able to store and access information pertaining
+  to the league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Partner or Collaborative Applications}
-\lips
+
+Not applicable.
+
 \subsection{Off-the-Shelf Software}
-\lips
+Not applicable.
 \subsection{Anticipated Workplace Environment}
-\lips
+Not applicable.
 \subsection{Schedule Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The project shall be completed before the final demo.
+  \reqrat Project deadline is non-negotiable and the product must
+  be completed before the final presentation.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The product is successfully completed before the final demo.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Budget Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The project shall be subject to a \$750 budget.
+  \reqrat Resources required for the project must be under a sum total of
+  \$750.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The total amount spent for the project is under \$750.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Enterprise Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The product shall be made available to the project supervisor.
+  \reqrat After project completion, the project supervisor will have
+  access to the product for future use. 
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The project supervisor must be able to access all functionalities
+  of the product.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
@@ -217,8 +378,13 @@ Player: A person who plays on a baseball team in the league. They have an
 account on Sandlot and are a member of a team.\\\\
 Captain: A person who plays and leads a baseball team in the league. They are
 in charge of defining the team's information on Sandlot.\\\\
-Team: A name and a list of players representing a baseball team defined by a
-captain. Teams are stored on a database on Sandlot.\\\\
+Team: A name, list of players and record of match scores that represents a
+baseball team defined by a captain. Teams are stored on a database on Sandlot.
+\\\\
+Commissioner: A person who manages the league. They may also play in the
+league. Commissioners have top level permissions on Sandlot, they may edit any
+team information like player list and past scores.\\\\
+
 
 
 \section{Relevant Facts And Assumptions}
@@ -260,41 +426,47 @@ allow users to view the scores of played games, is not working.
       \hline
       Event Name & Input and Output & Summary of BUC\\
       \hline
-      1. User logs in & Login Data (in) & A player, captain or commissioner
+      1. User creates an account & Account Data (in) & A player, captain or
+      commissioner enters in a username and password along with account details
+      including their name, email, phone number, and gender.\\
+      2. User logs in & Login Data (in) & A player, captain or commissioner
       enters their username and password and the system grants them access to
       their account.\\
-      2. Captain creates a team & New Team Information (in) & At the
+      3. Captain creates a team & New Team Information (in) & At the
       start of the season, captains can enter team information such as a team
       name. This registers a new team.\\
-      2. Player requests to join a team & Team Join Request (in) & At the
+      4. Player requests to join a team & Team Join Request (in) & At the
       start of the season, players are not assigned to a team and must request
       to join one.\\
-      3. Season starts and availability entered & Season Availability Schedule
+      5. Season starts and availability entered & Season Availability Schedule
       (in) & Record the team captain's entered availability schedule. This
       will be used to generate the league schedule.\\
-      4. Reschedule request entered & Reschedule Dates (in) & Record
+      6. Reschedule request entered & Reschedule Dates (in) & Record
       availability dates the requesting captain entered as alternates for the
       planned date.\\
-      5. Reschedule request recieved & Reschedule Dates (out) & Send the dates
+      7. Reschedule request received & Reschedule Dates (out) & Send the dates
       the captain who sent the request submit to the other team's captain.\\
-      6. User navigates to schedule section & Season Schedule (out) & Display
+      8. User navigates to schedule section & Season Schedule (out) & Display
       stored season schedule (if available) to site user.\\
-      7. User submits alert & Alert Content (in) & Commissioners can submit custom
+      9. User navigates to contact information & Contact Infromation (out) & Display
+      stored contact information (requires specific access) to site user.\\
+      10. User submits alert & Alert Content (in) & Commissioners can submit custom
       alerts to send to any chosen users.\\
-      8. System sends alert & Alert Content (out) & Send the alert to any user the
+      11. System sends alert & Alert Content (out) & Send the alert to any user the
       alert must reach.\\
-      9. Commissioner inputs admin command & Commissioner Admin Commands (in)
+      12. Commissioner inputs admin command & Commissioner Admin Commands (in)
       & Commissioners have the ability to overwrite team composition and
       schedule.\\
       \hline
     \end{tabular}
   \end{center}
 \subsection{Specifying a Business Use Case (BUC)}
-\lips
+Not applicable as events are simple and described above
+in the work partitioning table.
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
-\lips
+\includegraphics[scale=1.1]{business_data_model.png}
 \subsection{Data Dictionary}
 \lips
 
@@ -308,35 +480,15 @@ allow users to view the scores of played games, is not working.
 
 \section{Functional Requirements}
 \subsection{Functional Requirements}
-\lips
 
 \begin{myreq}
   \threeinline
-    {\reqno 75}
-    {\reqtype 9}
-    {\reqevent 7.9}
-  \reqdesc description text description text description text 
-  \reqrat some more text some more text some more text 
-  \reqorig other text other text other text 
-  \reqfit longer text that needs more than one line longer text that needs more than one line
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 3}
-  \twoinline
-  {\reqdep some more text}
-  {\reqconf 111}
-  \reqmater other text other text other text 
-  \reqhist other text other text other text 
-\end{myreq}
-
-\begin{myreq}
-  \threeinline
-    {\reqno xx}
+    {\reqno 01}
     {\reqtype 0}
     {\reqevent 7}
   \reqdesc System must display the season schedule and standings to all users
   without login.
-  \reqrat Users who don't have a login (ie. spectators and umpires) will still
+  \reqrat Users who don't have a login (e.g. spectators and umpires) will still
   need to access the schedule and standings, so it should be visible to all.
   \reqorig Alex Verity
   \reqfit The schedule and standings shall be viewable without entering a
@@ -353,7 +505,7 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 02}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Captains should be able to create a team which is added to the
@@ -376,7 +528,7 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 03}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Users should be able to create a new account by providing 
@@ -401,7 +553,7 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 04}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Users should be able to change their account information 
@@ -424,7 +576,7 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 05}
     {\reqtype 0}
     {\reqevent 2}
   \reqdesc Users should be able delete their account by providing 
@@ -446,7 +598,7 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 06}
     {\reqtype 0}
     {\reqevent 8,9}
   \reqdesc Commissioners should be able to send alerts with custom information
@@ -466,18 +618,335 @@ allow users to view the scores of played games, is not working.
   \reqhist
 \end{myreq}
 
+\begin{myreq}
+  \threeinline
+    {\reqno 07}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Commissioners should be able to update the team information of any
+  team, including player list and scores.
+  \reqrat Commissioners have the need to easily fix any errors made by users.
+  \reqorig Alex Verity
+  \reqfit When a commissioner enters team information to be changed, the
+  changes are made in the database.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 08}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc Before the season starts, captains must have the option to give a
+  list of days over the season marking their team's availabilty.
+  \reqrat Each team will have members who may only be free on certain days of
+  the season. This availability will inform the season schedule so that teams
+  will have as many people attending each game as possible.
+  \reqorig Alex Verity
+  \reqfit Before the seaon starts, captains shall be able to view the option to
+  enter their availability and once entered, it shall be stored by the system.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 09}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc Once the season start due date is reached, all captain's
+  availability will be used to generate a season schedule.
+  \reqrat Once the season starts all users need to know the schedule to know
+  when and where to go to games.
+  \reqorig Alex Verity
+  \reqfit When the season start due date is reached, a season schedule shall
+  be displayed on the website.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 10}
+    {\reqtype 0}
+    {\reqevent 6}
+  \reqdesc Captains must be able to request a reschedule for upcoming games
+  as long as the game is at least 24 hours in the future. Rescheduling
+  involves giving a list of alternate dates which are sent to the opposing
+  team's captain to choose a date and accept.
+  \reqrat Rescheduling is a core feature of the product, and schedule changes
+  less than a day from when they are to occur may be too little warning for
+  players to prepare for.
+  \reqorig Alex Verity
+  \reqfit A captain shall have the option to request a reschedule for games
+  only more than 24 hours in the future.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 11}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc When recieving a reschedule request from another captain, the system should
+  prompt the captain to either accept the reshedule request and choose a date or 
+  deny the request.
+  \reqrat Sometimes a captain may not be able to reschedule a game due to prior commitments
+  or some other external factors. Therefore there should be both an option to accept or deny 
+  any reshedule request.
+  or deny
+  \reqorig Casra Ghazanfari
+  \reqfit A captain shall have the option to either accepy or deny any request to 
+  reschedule a game.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 12}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc When a captains rechedule request is either accepted or denied the system should
+  notify them about about the outcome.
+  \reqrat It is important that the sender of the rechedule request is informed about the status of 
+  the request quickly
+  \reqorig Casra Ghazanfari
+  \reqfit A captain who sent a reschedule request shall be notified on the status of the request
+  when it is responded to. 
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 13}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Captains should be able to update the team information of only their
+  team, including team name, player list and scores.
+  \reqrat Captains are representatives of their teams and should have the ability
+  to control information about their team on a high level. However, they should not
+  have the same power as the comissioner and therefore should only be able to change 
+  information related to their team.
+  \reqorig Casra Ghazanfari
+  \reqfit A captain shall have the ability to update team information.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 14}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Users should not be able to update the team information of any
+  team, including team name, player list and scores.
+  \reqrat Users are generally low level users and should not have the ability to
+  make changes that affect their whole team.
+  \reqorig Casra Ghazanfari
+  \reqfit A user shall not have the ability to update team information.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 15}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc The score of a game should not be able to be updated until after
+  the it is completed.
+  \reqrat The score of a game is unknown until it is completed having the option to 
+  update the score of the game before it is completed is useless at best and harmful
+  at worst.
+  \reqorig Casra Ghazanfari
+  \reqfit The ability to update the score of a game will only display after the 
+  game has been played.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 16}
+    {\reqtype 0}
+    {\reqevent 2,3}
+  \reqdesc Non-commissioner accounts can only be a member of one team.
+  \reqrat To ensure competition is fair and to avoid captains accidentally
+  making extranious teams, users are limited to one team each.
+  \reqorig Alex Verity
+  \reqfit Once a team is created by a captain or a team is joined by a player,
+  they shall not be allowed to use the functionality to create a team or join
+  a team.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 17}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc All buttons and user input elements should stand out with
+  distinctive colours or borders and have feedback. 
+  \reqrat User input should be clear to all users so users know where to enter
+  inputs.
+  \reqorig Alex Verity
+  \reqfit Buttons and user input elements shall have a minimum size of 44x44
+  pixels, maintain at least a 3:1 contrast ratio with the background, and
+  include distinct visual feedback (e.g., color change or shadow) on hover or
+  click for clear visibility and interactivity.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 18}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc All images and visuals made for/by Sandlot should be high quality.
+  \reqrat Low quality images and visuals are unprofessional, and the solution
+  should appear professional when possible. Only images made for/by Sandlot
+  are included in this requirement as older photos or other visuals may need
+  to be displayed that don't meet this standard.
+  \reqorig Alex Verity
+  \reqfit All images made for/by Sandlot shall be free of pixelation or
+  blurring at their displayed size.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 19}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Navigation should be straightforward, with menus and links easily
+  accessible and readable.
+  \reqrat Users should know what section of the site they will be accessing
+  when they click on a navigation option so they don't get lost or confused.
+  \reqorig Alex Verity
+  \reqfit Navigation options shall be consistently placed across pages and
+  their destination should be visibly written.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Style Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 20}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc The solution should use a consistent style across the entire user
+  interface.
+  \reqrat To ensure the professionalism of the solution, the style should
+  feel unified and consistent to all users.
+  \reqorig Alex Verity
+  \reqfit All interface elements shall use consistent fonts, colors, layout
+  grids, and spacing, ensuring a cohesive visual style and branding.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 2}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
+    {\reqno 21}
     {\reqtype 0}
     {\reqevent 7}
   \reqdesc All users must be able to easily find the season schedule.
@@ -504,11 +973,54 @@ allow users to view the scores of played games, is not working.
 \subsection{Understandability and Politeness Requirements}
 \lips
 \subsection{Accessibility Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 22}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc The fonts used should be readable by all users.
+  \reqrat Sandlot will have a wide variety of users, and we must make sure the
+  font is an appropriate size for those with reduced vision.
+  \reqorig Alex Verity
+  \reqfit Body text shall have a minimum font size of 16 pixels, a contrast
+  ratio of at least 4.5:1, and a line length between 45 and 75 characters for
+  optimal readability across all devices.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 23}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Solution must load quickly and provide smooth user interactions,
+  ensuring minimal delays when accessing content.
+  \reqrat Sandlot will need to be a solution users are not frustrated by to
+  encourage use, and long load times are frustrating.
+  \reqorig Alex Verity
+  \reqfit The website shall load in under 3 seconds on a stable internet
+  connection.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Safety-Critical Requirements}
 \lips
 \subsection{Precision or Accuracy Requirements}
@@ -547,16 +1059,13 @@ allow users to view the scores of played games, is not working.
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
-    {\reqtype 12}
-    {\reqevent 1}
-  \reqdesc Players, captains, and commissioners must sign in to their account to
-  access respective functionalities.
-  \reqrat Only commissioners can send league-wide announcements and rain out games,
-  captains can create their own team and reschedule games, players can join teams.
+    {\reqno 24}
+    {\reqtype 15}
+    {\reqevent 4}
+  \reqdesc Only players can join a team.
+  \reqrat Users not logged in as a player should not be able to join a team.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Users are able to only perform the functions that apply to their role 
-  (player, captain, commissioner)
+  \reqfit Player is able to request to join the team their captain created.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -564,44 +1073,222 @@ allow users to view the scores of played games, is not working.
   {\reqdep None}
   {\reqconf None}
   \reqmater None
-  \reqhist Created October 7, 2024 
+  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
-    {\reqtype 12}
-    {\reqevent 1}
-  \reqdesc A user's contact information must be kept private.
-  \reqrat A user's email, phone number, and gender shall remain anonymous to
-  individuals outside the league or to certain parties.
-  \reqorig other text other text other text 
-  \reqfit Contact information for players can only be seen by their own captain or
-  the other players on their team, captain contact information can only be seen by
-  the players on their team or other captains from other teams, and commissioner
-  contact information can only be seen by captains. Commissioners can see everything.
+    {\reqno 25}
+    {\reqtype 15}
+    {\reqevent 3}
+  \reqdesc Only captains can create their own teams.
+  \reqrat Users not logged in as a captain should not be able to create their
+  own team.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Captains are able to create their own teams.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
   \twoinline
-  {\reqdep some more text}
+  {\reqdep None}
   {\reqconf None}
   \reqmater None
-  \reqhist Created October 7, 2024 
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 26}
+    {\reqtype 15}
+    {\reqevent 6}
+  \reqdesc Only captains can reschedule games for their team.
+  \reqrat Users not logged in as a captain should not be able to reschedule games.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Captains are able to request a reschedule for their upcoming game.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 27}
+    {\reqtype 15}
+    {\reqevent 10}
+  \reqdesc Only commissioners can send a league-wide alert.
+  \reqrat Users not logged in as a commissioner should not be able to send a
+  league-wide alert.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to send an alert to the entire league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 28}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only commissioners can assign teams to a division.
+  \reqrat Users not logged in as a commissioner should not be able to assign
+  teams to a division.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to assign a team to a division.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 29}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only commissioners can change any team's composition.
+  \reqrat Users not logged in as a commissioner should not be able to change
+  a team's composition.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to change any team's composition.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 30}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only captains can change their own team's composition.
+  \reqrat Users not logged in as a captain should not be able to change
+  a team's composition.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Captains are able to change their own team's composition.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 31}
+    {\reqtype 15}
+    {\reqevent 12}
+  \reqdesc Only commissioners can change the season schedule.
+  \reqrat Users not logged in as a commissioner should not be able to change
+  the season's schedule.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to change the season's schedule.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 32}
+    {\reqtype 15}
+    {\reqevent 9}
+  \reqdesc Only players can see the contact information of their own captain.
+  \reqrat A player's email and phone number shall remain anonymous to
+  individuals outside the league and everyone else but their captain.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Contact information for players can only be seen by their own captain.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 33}
+    {\reqtype 15}
+    {\reqevent 9}
+  \reqdesc Captains can see the contact information of players on their own team and
+  other captains on other teams.
+  \reqrat A captain's email and phone number shall remain anonymous to
+  individuals outside the league or to players on other teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Contact information for captains can only be seen by
+  the players on their own team or other captains from other teams.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 34}
+    {\reqtype 15}
+    {\reqevent 9}
+  \reqdesc Only commissioners can see the contact information of everyone in the league.
+  \reqrat Player and captains shall remain anonymous to
+  individuals outside the league or to players on other teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are the only individuals in the league that can see everyone's
+  contact information.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \subsection{Integrity Requirements}
 
 \begin{myreq}
   \threeinline
-    {\reqno xx}
-    {\reqtype 12}
-    {\reqevent 4}
+    {\reqno 35}
+    {\reqtype 15}
+    {\reqevent 5}
   \reqdesc Website must not create conflicts when scheduling games.
-  \reqrat For the start of the season, the system shall create an entire schedule with all
-  of the teams registered in the league, without games being scheduled on the same day,
-  at the same time, on the same field. Rescheduled games must not conflict with the
-  season schedule as well.
+  \reqrat The system shall create a schedule for all the teams in the league,
+  without scheduling conflicts. Rescheduled games must also not conflict with the
+  season schedule.
   \reqorig Nicholas Fabugais-Inaba
   \reqfit There exists no conflicts in the season schedule when the season begins or
   throughout the season when games are rescheduled.
@@ -616,43 +1303,93 @@ allow users to view the scores of played games, is not working.
 \end{myreq}
 
 \subsection{Privacy Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 36}
+    {\reqtype 15}
+    {\reqevent 1}
+  \reqdesc The product shall not reveal contact information to any
+  parties without the necessary access.
+  \reqrat Contact information must be kept private within the league.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Contact information cannot be accessed by users that do not have
+  an account registered in the league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
+
 \subsection{Audit Requirements}
-
 Not applicable.
-
 \subsection{Immunity Requirements}
-
 Not applicable.
 
 \section{Cultural Requirements}
 \subsection{Cultural Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 37}
+    {\reqtype 16}
+    {\reqevent 1}
+  \reqdesc The product shall provide an option to not specify gender.
+  \reqrat Users may not associate themselves as male or female.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit A user must be able to choose an option to not specify their
+  gender.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater None
+  \reqhist Created October 11, 2024 
+\end{myreq}
 
 \section{Compliance Requirements}
 \subsection{Legal Requirements}
-\lips
+Not applicable.
 \subsection{Standards Compliance Requirements}
-\lips
+Not applicable.
 
 \section{Open Issues}
-\lips
+
+\begin{itemize}
+
+  \item There are no open issues
+
+\end{itemize}
 
 \section{Off-the-Shelf Solutions}
 \subsection{Ready-Made Products}
-\lips
+Not applicable.
 \subsection{Reusable Components}
-\lips
+Not applicable.
 \subsection{Products That Can Be Copied}
-\lips
+Not applicable.
 
 \section{New Problems}
 \subsection{Effects on the Current Environment}
-\lips
+Not applicable.
 \subsection{Effects on the Installed Systems}
-\lips
+Not applicable.
 \subsection{Potential User Problems}
-\lips
+
+Existing users of the current platform may suffer from the migration
+to the new platform as they may not be familiar with how to navigate
+the new system and utilize certain functions/features. This could be
+concerning considering the age group and lack of technical literacy
+for some users. One precaution that can be taken is to create a user
+guide to aid users in interacting with the new system and the various
+features it has to offer.
+
 \subsection{Limitations in the Anticipated Implementation Environment That May
 Inhibit the New Product}
 \lips
@@ -668,6 +1405,7 @@ Inhibit the New Product}
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
 \lips
+
 \subsection{Data That Has to be Modified or Translated for the New System}
 \lips
 
@@ -675,7 +1413,29 @@ Inhibit the New Product}
 \lips
 \section{User Documentation and Training}
 \subsection{User Documentation Requirements}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc There must exist a user guide that informs users of the previous
+  system and new users how to use the features of the new system.
+  \reqrat There will be many new users of the system who might not be familiar
+  with how to use the features of our solution, and will require guidance.
+  \reqorig Alex Verity
+  \reqfit There shall exist a user guide that explains all major features of
+  the system.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 1}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Training Requirements}
 \lips
 
