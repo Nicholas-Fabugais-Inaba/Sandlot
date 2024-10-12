@@ -250,19 +250,124 @@ in the maintaining of the new platform after development is completed.
 \subsection{Solution Constraints}
 
 \subsection{Implementation Environment of the Current System}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The system must be accessible by the internet.
+  \reqrat Users must be able to access all functionalities from
+  their device.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Users can interact with the system when connected to the
+  internet.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The system must implement a database.
+  \reqrat The system must store information including user login
+  information, the season schedule, team composition,
+  player/captain/commissioner contact information, and game scores.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The system is able to store and access information pertaining
+  to the league.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Partner or Collaborative Applications}
-\lips
+
+Not applicable.
+
 \subsection{Off-the-Shelf Software}
-\lips
+Not applicable.
 \subsection{Anticipated Workplace Environment}
-\lips
+Not applicable.
 \subsection{Schedule Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The project shall be completed before the final demo.
+  \reqrat Project deadline is non-negotiable and the product must
+  be completed before the final presentation.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The product is successfully completed before the final demo.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Budget Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The project shall be subject to a \$750 budget.
+  \reqrat Resources required for the project must be under a sum total of
+  \$750.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The total amount spent for the project is under \$750.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
 \subsection{Enterprise Constraints}
-\lips
+
+\begin{myreq}
+  \threeinline
+    {\reqno 0}
+    {\reqtype 0}
+    {\reqevent 0}
+  \reqdesc The product shall be made available to the project supervisor.
+  \reqrat After project completion, the project supervisor will have
+  access to the product for future use. 
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The project supervisor must be able to access all functionalities
+  of the product.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
 
 \section{Naming Conventions and Terminology}
 \subsection{Glossary of All Terms, Including Acronyms, Used by Stakeholders
@@ -612,6 +717,123 @@ allow users to view the scores of played games, is not working.
   \reqorig Alex Verity
   \reqfit A captain shall have the option to request a reschedule for games
   only more than 24 hours in the future.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc When recieving a reschedule request from another captain, the system should
+  prompt the captain to either accept the reshedule request and choose a date or 
+  deny the request.
+  \reqrat Sometimes a captain may not be able to reschedule a game due to prior commitments
+  or some other external factors. Therefore there should be both an option to accept or deny 
+  any reshedule request.
+  or deny
+  \reqorig Casra Ghazanfari
+  \reqfit A captain shall have the option to either accepy or deny any request to 
+  reschedule a game.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 3}
+  \reqdesc Captains must be able to request a reschedule for upcoming games
+  as long as the game is at least 24 hours in the future. Rescheduling
+  involves giving a list of alternate dates which are sent to the opposing
+  team's captain to choose a date and accept.
+  \reqrat Rescheduling is a core feature of the product, and schedule changes
+  less than a day from when they are to occur may be too little warning for
+  players to prepare for.
+  \reqorig Alex Verity
+  \reqfit A captain shall have the option to request a reschedule for games
+  only more than 24 hours in the future.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Captains should be able to update the team information of only their
+  team, including team name, player list and scores.
+  \reqrat Captains are representatives of their teams and should have the ability
+  to control information about their team on a high level. However, they should not
+  have the same power as the comissioner and therefore should only be able to change 
+  information related to their team.
+  \reqorig Casra Ghazanfari
+  \reqfit A captain shall have the ability to update team information.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc Users should not be able to update the team information of any
+  team, including team name, player list and scores.
+  \reqrat Users are generally low level users and should not have the ability to
+  make changes that affect their whole team.
+  \reqorig Casra Ghazanfari
+  \reqfit A user shall not have the ability to update team information.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+  \twoinline
+  {\reqdep None}
+  {\reqconf None}
+  \reqmater
+  \reqhist
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent 9}
+  \reqdesc The score of a game should not be able to be updated until after
+  the it is completed.
+  \reqrat The score of a game is unknown until it is completed having the option to 
+  update the score of the game before it is completed is useless at best and harmful
+  at worst.
+  \reqorig Casra Ghazanfari
+  \reqfit The ability to update the score of a game will only display after the 
+  game has been played.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
