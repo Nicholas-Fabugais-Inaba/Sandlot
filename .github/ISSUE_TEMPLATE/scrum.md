@@ -1,3 +1,12 @@
+---
+name: Scrum Meeting
+about: Create an agenda for team scrum meetings and track details.
+title: 'Scrum Meeting - Date'
+labels: 'meeting'
+assignees: ''
+
+---
+
 **Date and Time**
 [month] [day], [YYYY]
 [HH:MM [am/pm]
