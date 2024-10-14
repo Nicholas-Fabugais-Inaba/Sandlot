@@ -24,3 +24,7 @@ test commands worked by running
 
 project was created using:
 - npx create-react-app sandlot
+
+may need to install visuaL studio community 2022
+if still having issues follow instructions from second answer of this post:
+https://stackoverflow.com/questions/70315519/node-gyp-error-could-not-find-any-visual-studio-installation-to-use
