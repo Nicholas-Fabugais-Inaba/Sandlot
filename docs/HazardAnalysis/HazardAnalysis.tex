@@ -4,6 +4,11 @@
 \usepackage{tabularx}
 \usepackage{hyperref}
 \usepackage{multirow}
+\usepackage{multicol}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{array}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -12,6 +17,30 @@
     filecolor=magenta,      % color of file links
     urlcolor=cyan           % color of external links
 }
+
+\newenvironment{myreq}[1]{%
+\setlist[description]{font=\normalfont\color{darkgray}}%
+\begin{tcolorbox}[colframe=black,colback=white, sharp corners, boxrule=1pt]%
+\bfseries\color{blue}%
+\begin{description}#1}%
+{\end{description}\end{tcolorbox}}
+
+\newcommand{\threeinline}[3]{\begin{multicols}{3}#1 #2 #3\end{multicols}}
+\newcommand{\twoinline}[2]{\begin{multicols}{2}#1 #2\end{multicols}}
+
+\newcommand{\reqno}{\item[Requirement \#:]}
+\newcommand{\reqtype}{\item[Requirement Type:]}
+\newcommand{\reqevent}{\item[Event/BUC/PUC \#:]}
+\newcommand{\reqdesc}{\item[Description:]}
+\newcommand{\reqrat}{\item[Rationale:]}
+\newcommand{\reqorig}{\item[Originator:]}
+\newcommand{\reqfit}{\item[Fit Criterion:]}
+\newcommand{\reqsatis}{\item[Customer Satisfaction:]}
+\newcommand{\reqdissat}{\item[Customer Dissatisfaction:]}
+\newcommand{\reqdep}{\item[Dependencies:]}
+\newcommand{\reqconf}{\item[Conflicts:]}
+\newcommand{\reqmater}{\item[Materials:]}
+\newcommand{\reqhist}{\item[History:]}
 
 \title{Hazard Analysis\\\progname}
 
@@ -179,15 +208,12 @@ that can give commissioner level permissions. & System allows for all
 commissioner accounts to be deleted. & RPN & Do not let users delete the a
 commissioner account if there is only one left.\\
 \hline
-\multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. & 
+\multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and database has incorrect scores. & User inputs the wrong score. &
 RPN & Allow both captains to input a score, if there is a mismatch, a
 commissioner is notified to resolve the issue.\\
 \cline{2-6}
 \hline
-
-\hline
-
 \end{tabularx}
 
 
@@ -196,6 +222,73 @@ commissioner is notified to resolve the issue.\\
 
 \wss{Newly discovered requirements.  These should also be added to the SRS.  (A
 rationale design process how and why to fake it.)}
+
+\begin{myreq}
+    \threeinline
+      {\reqno xx}
+      {\reqtype 0}
+      {\reqevent xx}
+    \reqdesc If the season start availability due date hasn't been reached, a
+    captain should be able to resubmit availability data which overwrites
+    previous availability data.
+    \reqrat If the captain makes an error when submitting availability data
+    they should be able to fix their error.
+    \reqorig Alex Verity
+    \reqfit If the captain has submitted data, they shall be able to overwrite
+    it with new data.
+    \twoinline
+      {\reqsatis 4}
+      {\reqdissat 3}
+    \twoinline
+    {\reqdep None}
+    {\reqconf None}
+    \reqmater None
+    \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+    \threeinline
+      {\reqno xx}
+      {\reqtype 0}
+      {\reqevent xx}
+    \reqdesc Giving permissions to users must be accompanied by an error that
+    warns the user of the severity of the action.
+    \reqrat Accidentally giving permissions to users who shouldn't have them
+    could result in unexpected errors.
+    \reqorig Alex Verity
+    \reqfit If permissions are being changed, a warning shall be displayed to
+    the user before updating the permissions.
+    \twoinline
+      {\reqsatis 5}
+      {\reqdissat 5}
+    \twoinline
+    {\reqdep None}
+    {\reqconf None}
+    \reqmater None
+    \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+    \threeinline
+      {\reqno xx}
+      {\reqtype 0}
+      {\reqevent xx}
+    \reqdesc If there is only one commissioner level account, that account
+    cannot be deleted.
+    \reqrat Deleting this account would stop any more commissioner level
+    accounts from being created, softlocking the system.
+    \reqorig Alex Verity
+    \reqfit If there is only one commissioner level account it shall not be
+    deleted.
+    \twoinline
+      {\reqsatis 3}
+      {\reqdissat 3}
+    \twoinline
+    {\reqdep None}
+    {\reqconf None}
+    \reqmater None
+    \reqhist Created 2024-10-15
+\end{myreq}
 
 \section{Roadmap}
 
