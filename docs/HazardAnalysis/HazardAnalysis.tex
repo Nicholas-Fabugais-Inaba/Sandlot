@@ -131,15 +131,22 @@ documentation, and/or test cases.}\\
 \hline
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{RPN} & \textbf{Recommended Actions}\\
 \hline
-\multirow{2}{*}{Example row} & Column 1 & Column 2 & e & e & e\\
-Component & Failure Mode & Failure Effect & Failure Cause & RPN & Recommended Actions\\
+\multirow{2}{2cm}{Example row} & Column 1 & Column 2 & e & e & e\\
+\cline{2-6}
+& Failure Mode & Failure Effect & Failure Cause & RPN & Recommended Actions\\
 \hline
-Accounts & Account is given the wrong permissions. & User has access to
+\multirow{1}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. & 
+Standings and database has incorrect scores. & Misinputted data. & RPN & Allow
+both captains to input a score, if there is a mismatch, a commissioner is
+notified to resolve the issue.\\
+\cline{2-6}
+\hline
+\multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User has access to
 actions they shouldn't use. & Misinputted permissions command. & RPN & Giving
 an account additional permissions should give a warning to the user when
 configuring accounts.\\
-\hline
-Accounts & All commissioner level accounts are deleted. & There are no
+\cline{2-6}
+& All commissioner level accounts are deleted. & There are no
 accounts left that can give commissioner level permissions. & Account deletion
 option. & RPN & Do not let users delete the a commissioner account if there is
 only one left.\\
