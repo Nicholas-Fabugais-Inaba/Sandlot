@@ -110,16 +110,6 @@ are discovered from the analysis.
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
-
-If you look at the samples, the components are where the hazards may come from.
-I think you could probably think of it as what section of the product the hazard will come from.
-Try using them to figure how to break Sandlot down into components.
-
 \subsection{System Components}
 The system can be divided into the following components:
 \begin{itemize}
@@ -150,7 +140,8 @@ The system can be divided into the following components:
 \end{itemize}
 
 \subsection{System Boundaries}
-server
+The alerts system component is responsible for allowing users with commissioner
+permissions to send alerts to any parties interacting with the user interface.
 
 \section{Critical Assumptions}
 
@@ -159,7 +150,11 @@ minimize the number of assumptions that remove potential hazards.  For instance,
 you could assume a part will never fail, but it is generally better to include
 this potential failure mode.}
 
-
+\begin{itemize}
+    \item It is assumed users will only login to their respective accounts that they
+    have created within the system and not attempt to login to any other user accounts
+    to take advantage of certain permissions the system may allow.
+\end{itemize}
 
 \section{Failure Mode and Effect Analysis}
 
