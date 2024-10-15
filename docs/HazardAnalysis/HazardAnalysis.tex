@@ -114,6 +114,8 @@ minimize the number of assumptions that remove potential hazards.  For instance,
 you could assume a part will never fail, but it is generally better to include
 this potential failure mode.}
 
+
+
 \section{Failure Mode and Effect Analysis}
 
 \wss{Include your FMEA table here. This is the most important part of this document.}
@@ -145,11 +147,10 @@ overwrites previously submitted availability if submitted before the due date.
 travel to a game at the wrong time. & Misinterpreted information. & RPN &
 Ensure schedule data and structure is visible and readable.\\
 \hline
-\multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. & 
-Standings and database has incorrect scores. & Misinputted scoring data. & RPN
-& Allow both captains to input a score, if there is a mismatch, a commissioner
-is notified to resolve the issue.\\
-\cline{2-6}
+\multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
+will be shown the wrong schedule and team information. & Misinputted team
+assignment data. & RPN & Ensure that when assigning a team for a user, the
+team options to select from are clear and the input section is readable.\\
 \hline
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User has access to
 actions they shouldn't use. & Misinputted permissions command. & RPN & Giving
@@ -160,6 +161,14 @@ configuring accounts.\\
 accounts left that can give commissioner level permissions. & Account deletion
 option. & RPN & Do not let users delete the a commissioner account if there is
 only one left.\\
+\hline
+\multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. & 
+Standings and database has incorrect scores. & Misinputted scoring data. & RPN
+& Allow both captains to input a score, if there is a mismatch, a commissioner
+is notified to resolve the issue.\\
+\cline{2-6}
+\hline
+
 \hline
 
 \end{tabularx}
