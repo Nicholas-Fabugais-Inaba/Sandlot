@@ -4,6 +4,7 @@
 \usepackage{tabularx}
 \usepackage{hyperref}
 \usepackage{multirow}
+\usepackage{pdflscape}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -143,22 +144,23 @@ requirements.}
 entered in the table, including strategies involving providing additional
 documentation, and/or test cases.}\\
 
-
+\begin{landscape}
+% this removes page number
+\thispagestyle{empty}
+% breaks margins
+\vspace*{-3.25cm}
 \hspace*{-3.25cm}
-\begin{tabularx}{504pt}{|p{2cm}||p{3cm}|p{3cm}|p{3cm}|p{1cm}|p{3cm}|}
-\hline
+% adds vertical padding to table
+\def\arraystretch{1.3}
+\begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|}
+\cline{1-6}
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions}\\
-\hline
-\multirow{2}{2cm}{Example row} & Column 1 & Column 2 & e & e & e\\
-\cline{2-6}
-& Failure Mode & Failure Effect & Failure Cause & RPN & Recommended Actions\\
-\hline
+\cline{1-6}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
 & RPN & Misinputted user login information should give a warning to the user when
 login information does not exist or is incorrect.\\
-\cline{2-6}
-\hline
+\cline{1-6}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
 RPN & Allow captain to resubmit availability that overwrites previously
@@ -172,13 +174,13 @@ readable.\\
 & Teams availability data have scheduling conflicts. & System cannot make a
 valid schedule. & Availability data has scheduling conflicts. & RPN & Teams
 will be given a warning if their availability data has scheduling conflicts.\\
-\hline
+\cline{1-6}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
 unclear or user makes an error. & 17 & Ensure that when assigning a team for a
 user, the team options to select from are clear and the input section is
 readable.\\
-\hline
+\cline{1-6}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
 has access to actions they shouldn't use. & Interface lacks security or user
 makes an error. & RPN & Giving an account additional permissions should give
@@ -188,17 +190,16 @@ a warning to the user when configuring accounts.\\
 that can give commissioner level permissions. & System allows for all
 commissioner accounts to be deleted. & RPN & Do not let users delete a
 commissioner account if there is only one left.\\
-\hline
+\cline{1-6}
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. & 
 Standings and database has incorrect scores. & User inputs the wrong score. &
 RPN & Allow both captains to input a score, if there is a mismatch, a
 commissioner is notified to resolve the issue.\\
-\cline{2-6}
-\hline
-
-\hline
+\cline{1-6}
 
 \end{tabularx}
+
+\end{landscape}
 
 
 
