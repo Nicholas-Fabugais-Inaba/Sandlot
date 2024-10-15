@@ -5,6 +5,11 @@
 \usepackage{hyperref}
 \usepackage{multirow}
 \usepackage{pdflscape}
+\usepackage{multicol}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{array}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -13,6 +18,30 @@
     filecolor=magenta,      % color of file links
     urlcolor=cyan           % color of external links
 }
+
+\newenvironment{myreq}[1]{%
+\setlist[description]{font=\normalfont\color{darkgray}}%
+\begin{tcolorbox}[colframe=black,colback=white, sharp corners, boxrule=1pt]%
+\bfseries\color{blue}%
+\begin{description}#1}%
+{\end{description}\end{tcolorbox}}
+
+\newcommand{\threeinline}[3]{\begin{multicols}{3}#1 #2 #3\end{multicols}}
+\newcommand{\twoinline}[2]{\begin{multicols}{2}#1 #2\end{multicols}}
+
+\newcommand{\reqno}{\item[Requirement \#:]}
+\newcommand{\reqtype}{\item[Requirement Type:]}
+\newcommand{\reqevent}{\item[Event/BUC/PUC \#:]}
+\newcommand{\reqdesc}{\item[Description:]}
+\newcommand{\reqrat}{\item[Rationale:]}
+\newcommand{\reqorig}{\item[Originator:]}
+\newcommand{\reqfit}{\item[Fit Criterion:]}
+\newcommand{\reqsatis}{\item[Customer Satisfaction:]}
+\newcommand{\reqdissat}{\item[Customer Dissatisfaction:]}
+\newcommand{\reqdep}{\item[Dependencies:]}
+\newcommand{\reqconf}{\item[Conflicts:]}
+\newcommand{\reqmater}{\item[Materials:]}
+\newcommand{\reqhist}{\item[History:]}
 
 \title{Hazard Analysis\\\progname}
 
@@ -82,16 +111,6 @@ are discovered from the analysis.
 
 \section{System Boundaries and Components}
 
-\wss{Dividing the system into components will help you brainstorm the hazards.
-You shouldn't do a full design of the components, just get a feel for the major
-ones.  For projects that involve hardware, the components will typically include
-each individual piece of hardware.  If your software will have a database, or an
-important library, these are also potential components.}
-
-If you look at the samples, the components are where the hazards may come from.
-I think you could probably think of it as what section of the product the hazard will come from.
-Try using them to figure how to break Sandlot down into components.
-
 \subsection{System Components}
 The system can be divided into the following components:
 \begin{itemize}
@@ -122,7 +141,8 @@ The system can be divided into the following components:
 \end{itemize}
 
 \subsection{System Boundaries}
-server
+The alerts system component is responsible for allowing users with commissioner
+permissions to send alerts to any parties interacting with the user interface.
 
 \section{Critical Assumptions}
 
@@ -131,7 +151,11 @@ minimize the number of assumptions that remove potential hazards.  For instance,
 you could assume a part will never fail, but it is generally better to include
 this potential failure mode.}
 
-
+\begin{itemize}
+    \item It is assumed users will only login to their respective accounts that they
+    have created within the system and not attempt to login to any other user accounts
+    to take advantage of certain permissions the system may allow.
+\end{itemize}
 
 \section{Failure Mode and Effect Analysis}
 
@@ -191,7 +215,7 @@ that can give commissioner level permissions. & System allows for all
 commissioner accounts to be deleted. & RPN & Do not let users delete a
 commissioner account if there is only one left.\\
 \cline{1-6}
-\multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. & 
+\multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and database has incorrect scores. & User inputs the wrong score. &
 RPN & Allow both captains to input a score, if there is a mismatch, a
 commissioner is notified to resolve the issue.\\
@@ -207,6 +231,73 @@ commissioner is notified to resolve the issue.\\
 
 \wss{Newly discovered requirements.  These should also be added to the SRS.  (A
 rationale design process how and why to fake it.)}
+
+\begin{myreq}
+    \threeinline
+      {\reqno xx}
+      {\reqtype 0}
+      {\reqevent xx}
+    \reqdesc If the season start availability due date hasn't been reached, a
+    captain should be able to resubmit availability data which overwrites
+    previous availability data.
+    \reqrat If the captain makes an error when submitting availability data
+    they should be able to fix their error.
+    \reqorig Alex Verity
+    \reqfit If the captain has submitted data, they shall be able to overwrite
+    it with new data.
+    \twoinline
+      {\reqsatis 4}
+      {\reqdissat 3}
+    \twoinline
+    {\reqdep None}
+    {\reqconf None}
+    \reqmater None
+    \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+    \threeinline
+      {\reqno xx}
+      {\reqtype 0}
+      {\reqevent xx}
+    \reqdesc Giving permissions to users must be accompanied by an error that
+    warns the user of the severity of the action.
+    \reqrat Accidentally giving permissions to users who shouldn't have them
+    could result in unexpected errors.
+    \reqorig Alex Verity
+    \reqfit If permissions are being changed, a warning shall be displayed to
+    the user before updating the permissions.
+    \twoinline
+      {\reqsatis 5}
+      {\reqdissat 5}
+    \twoinline
+    {\reqdep None}
+    {\reqconf None}
+    \reqmater None
+    \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+    \threeinline
+      {\reqno xx}
+      {\reqtype 0}
+      {\reqevent xx}
+    \reqdesc If there is only one commissioner level account, that account
+    cannot be deleted.
+    \reqrat Deleting this account would stop any more commissioner level
+    accounts from being created, softlocking the system.
+    \reqorig Alex Verity
+    \reqfit If there is only one commissioner level account it shall not be
+    deleted.
+    \twoinline
+      {\reqsatis 3}
+      {\reqdissat 3}
+    \twoinline
+    {\reqdep None}
+    {\reqconf None}
+    \reqmater None
+    \reqhist Created 2024-10-15
+\end{myreq}
 
 \section{Roadmap}
 
