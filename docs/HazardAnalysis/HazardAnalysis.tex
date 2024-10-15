@@ -3,7 +3,6 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
-\usepackage{multirow}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -54,13 +53,16 @@ Oct. 23, 2024 & NFI, JL, AV, CG & Rev0\\
 
 \section{Introduction}
 
-This documentation covers the hazard analysis for the Sandlot project.
+\wss{May not need to restate product}
 Sandlot is intended to be the successor for the current McMaster GSA
 softball league scheduling and management platform. This project
 will implement the current functionality from the existing system including
 additional features such as a new login system, commissioner admin
 privileges, and an improvement to the robustness, ease of use, and
 maintainability to the platform.
+
+Hazards are conditions of the product system that could lead to undesirable outcomes. 
+In Sandlot, hazards of security, malfunctions, usability, among others will be analyzed.
 
 \section{Scope and Purpose of Hazard Analysis}
 
@@ -111,25 +113,11 @@ requirements.}
 entered in the table, including strategies involving providing additional
 documentation, and/or test cases.}\\
 
-\wss{}
-
-\hspace*{-4cm}
-\begin{tabular}{|p{3cm}||p{3cm}|p{3cm}|p{3cm}|p{2cm}|p{3cm}|}
-    \hline
-    Component & Failure Modes & Failure Effect & Failure Cause & RPN & Recommended Actions\\
-    \hline
-    example textexample textexample textexample textexample text & 
-    example textexample textexample textexample text & 
-    example textexample textexample textcell3 & 
-    example textexample textexample textexample textcell & 
-    example textexample textexample textexample textexample textexample textexample textexample textexample textexample textcell & 
-    example textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textcell\\ 
-    \hline 
-    \multirow{2}{*}{example mult row} & e & e & e & e & e\\
-    LEAVE THIS EMPTY! & f & f & f & f & f\\
-    \hline
-    
-\end{tabular}
+\begin{tabularx}{250pt}{|c|X|c|X|}
+\hline
+c & c & c & c\\
+\hline
+\end{tabularx}
 
 
 
