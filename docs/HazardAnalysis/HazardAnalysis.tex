@@ -215,8 +215,8 @@ commissioner account if there is only one left.\\
 \hline
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and database has incorrect scores. & User inputs the wrong score. &
-RPN & Allow both captains to input a score, if there is a mismatch, a
-commissioner is notified to resolve the issue.\\
+RPN & Allow the opposing team's captain to verify the score and contest it if
+the score is wrong.\\
 \cline{2-6}
 \hline
 \end{tabularx}
@@ -281,10 +281,33 @@ rationale design process how and why to fake it.)}
     \reqdesc If there is only one commissioner level account, that account
     cannot be deleted.
     \reqrat Deleting this account would stop any more commissioner level
-    accounts from being created, softlocking the system.
+    accounts from being created, soft-locking the system.
     \reqorig Alex Verity
     \reqfit If there is only one commissioner level account it shall not be
     deleted.
+    \twoinline
+      {\reqsatis 3}
+      {\reqdissat 3}
+    \twoinline
+    {\reqdep None}
+    {\reqconf None}
+    \reqmater None
+    \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+    \threeinline
+      {\reqno xx}
+      {\reqtype 0}
+      {\reqevent xx}
+    \reqdesc All match scores must be visible and contestable by other
+    captains once recorded.
+    \reqrat Match score correctness is extremely important for a competitive
+    league, if a score is wrong, captains should be able to request that it be
+    fixed.
+    \reqorig Alex Verity
+    \reqfit Any match scores shall have the option to be viewed and contested
+    by captains.
     \twoinline
       {\reqsatis 3}
       {\reqdissat 3}
