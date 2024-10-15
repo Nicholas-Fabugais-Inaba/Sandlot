@@ -85,26 +85,36 @@ If you look at the samples, the components are where the hazards may come from.
 I think you could probably think of it as what section of the product the hazard will come from.
 Try using them to figure how how to break Sandlot down into components.
 
+\subsection{System Components}
 The system can be divided into the following components:
-\subsection{Authentication}
-This component authenticates user inputted login information with the database
-and determines whether a login is successful.
-\subsection{Scheduling}
-This component
-and allows 
-\subsection{Teams}
+\begin{itemize}
+    \item Authentication
+    \subitem This component authenticates user inputted login information with the database
+    and determines whether a login is successful.
+    \item Scheduling
+    \subitem This component generates a schedule based on user inputted availability data. 
+    Additionally, it allows for rescheduling events in these schedules after they 
+    have been generated.
+    \item Accounts
+    \subitem This component allows users to create, delete or edit accounts. Additionally, account types 
+    determine the ways in which a user can interact with the system, its data, and its components.
+    \item Team Structure
+    \subitem This component is a data strcuture of the system which allows accounts to be grouped together 
+    such that a group of accounts interact with the system, its data, and its components in the same way as 
+    each other. Additionally, accounts can be added/removed from teams, users can request to join a 
+    certain team, and teams can be created/deleted.
+    \item Scoring/Standings
+    \subitem This component allows users to input score data associated with specific events and will 
+    generate cumulative standings based on score data.
+    \item Alerts
+    \subitem This component alerts users of important information related to the system.
+    \item Database
+    \subitem This component stores the system's data.
+    \item User Interface
+    \subitem This component displays the system's data to the user.
+\end{itemize}
 
-\subsection{Accounts}
-
-\subsection{Scoring/Standings}
-
-\subsection{Alerts}
-
-\subsection{Database}
-
-\subsection{User Interface}
-
-\subsection{System Boundary}
+\subsection{System Boundaries}
 server
 
 \section{Critical Assumptions}
@@ -136,6 +146,12 @@ documentation, and/or test cases.}\\
 \multirow{2}{2cm}{Example row} & Column 1 & Column 2 & e & e & e\\
 \cline{2-6}
 & Failure Mode & Failure Effect & Failure Cause & RPN & Recommended Actions\\
+\hline
+\multirow{2}{2cm}{Authentica- tion} & User login information does not match database stored
+login information. & User cannot access their account. & Misinputted user login information.
+& RPN & Misinputted user login information should give a warning to the user when
+login information does not exist or is incorrect.\\
+\cline{2-6}
 \hline
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Misinputted
