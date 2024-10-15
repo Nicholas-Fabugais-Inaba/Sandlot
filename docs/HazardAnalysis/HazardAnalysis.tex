@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{multirow}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -120,9 +121,14 @@ requirements.}
 entered in the table, including strategies involving providing additional
 documentation, and/or test cases.}\\
 
-\begin{tabularx}{250pt}{|c|X|c|X|}
+
+\hspace*{-3cm}
+\begin{tabularx}{486pt}{|c||c|c|c|c|c|}
 \hline
-c & c & c & c\\
+\textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{RPN} & \textbf{Recommended Actions}\\
+\hline
+\multirow{2}{*}{Example row} & Column 1 & Column 2 & e & e & e\\
+LEAVEMPTY & Failure Mode & Failure Effect & Failure Cause & RPN & Recommended Actions\\
 \hline
 \end{tabularx}
 
