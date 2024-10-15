@@ -3,6 +3,7 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{multirow}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -74,6 +75,24 @@ ones.  For projects that involve hardware, the components will typically include
 each individual piece of hardware.  If your software will have a database, or an
 important library, these are also potential components.}
 
+\wss{If you look at the samples, the components are where the hazards may come from.
+I think you could probably think of it as what section of the product the hazard will come from.
+Try using them to figure how how to break Sandlot down into components.}
+
+System Components:
+\begin{itemize}
+    \item Database
+    \item Login System (Authentication?)
+    \item Scheduler
+    \item Commissioner accounts and actions (idk if these are considered components)
+    \item Captain accounts and actions
+    \item Player accounts and actions
+    \item Non-accounts and actions
+    \item Front-end interface
+    \item Middleware (idk)
+    \item 
+\end{itemize}
+
 \section{Critical Assumptions}
 
 \wss{These assumptions that are made about the software or system.  You should
@@ -90,7 +109,29 @@ requirements you have already written, or you might need to add new
 requirements.}
 \wss{If no safety requirement can be devised, other mitigation strategies can be
 entered in the table, including strategies involving providing additional
-documentation, and/or test cases.}
+documentation, and/or test cases.}\\
+
+\wss{}
+
+\hspace*{-4cm}
+\begin{tabular}{|p{3cm}||p{3cm}|p{3cm}|p{3cm}|p{2cm}|p{3cm}|}
+    \hline
+    Component & Failure Modes & Failure Effect & Failure Cause & RPN & Recommended Actions\\
+    \hline
+    example textexample textexample textexample textexample text & 
+    example textexample textexample textexample text & 
+    example textexample textexample textcell3 & 
+    example textexample textexample textexample textcell & 
+    example textexample textexample textexample textexample textexample textexample textexample textexample textexample textcell & 
+    example textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textexample textcell\\ 
+    \hline 
+    \multirow{2}{*}{example mult row} & e & e & e & e & e\\
+    LEAVE THIS EMPTY! & f & f & f & f & f\\
+    \hline
+    
+\end{tabular}
+
+
 
 \section{Safety and Security Requirements}
 
