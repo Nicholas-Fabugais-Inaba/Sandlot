@@ -135,6 +135,12 @@ documentation, and/or test cases.}\\
 \cline{2-6}
 & Failure Mode & Failure Effect & Failure Cause & RPN & Recommended Actions\\
 \hline
+\multirow{2}{2cm}{Authentica- tion} & User login information does not match database stored
+login information. & User cannot access their account. & Misinputted user login information.
+& RPN & Misinputted user login information should give a warning to the user when
+login information does not exist or is incorrect.\\
+\cline{2-6}
+\hline
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Misinputted
 availability data. & RPN & Allow captain to resubmit availablilty that
