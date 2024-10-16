@@ -198,6 +198,12 @@ readable.\\
 & Teams availability data have scheduling conflicts. & System cannot make a
 valid schedule. & Availability data has scheduling conflicts. & RPN & Teams
 will be given a warning if their availability data has scheduling conflicts.\\
+\cline{2-6}
+& Captain doesn't respond to another captain's reschedule request. & Captain
+who sent the reschedule request will not know if the opposing captain wants to
+reschedule or not. & System doesn't adequately notify the opposing captain
+about the reschedule request. & RPN & Make sure the captain who needs to
+accept the request cannot avoid seeing the request notification.\\
 \cline{1-6}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
@@ -248,10 +254,6 @@ rationale design process how and why to fake it.)}
     \twoinline
       {\reqsatis 4}
       {\reqdissat 3}
-    \twoinline
-    {\reqdep None}
-    {\reqconf None}
-    \reqmater None
     \reqhist Created 2024-10-15
 \end{myreq}
 
@@ -270,10 +272,6 @@ rationale design process how and why to fake it.)}
     \twoinline
       {\reqsatis 5}
       {\reqdissat 5}
-    \twoinline
-    {\reqdep None}
-    {\reqconf None}
-    \reqmater None
     \reqhist Created 2024-10-15
 \end{myreq}
 
@@ -292,10 +290,6 @@ rationale design process how and why to fake it.)}
     \twoinline
       {\reqsatis 3}
       {\reqdissat 3}
-    \twoinline
-    {\reqdep None}
-    {\reqconf None}
-    \reqmater None
     \reqhist Created 2024-10-15
 \end{myreq}
 
@@ -315,11 +309,26 @@ rationale design process how and why to fake it.)}
     \twoinline
       {\reqsatis 3}
       {\reqdissat 3}
-    \twoinline
-    {\reqdep None}
-    {\reqconf None}
-    \reqmater None
     \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+  \threeinline
+    {\reqno xx}
+    {\reqtype 0}
+    {\reqevent xx}
+  \reqdesc Captains are adequately notified when they receive an alert or a
+  reschedule request.
+  \reqrat Important information may be shared in alerts, and reschedule
+  requests that go unanswered may be frustrating for captains. Notifications
+  should reach their intended targets if possible.
+  \reqorig Alex Verity
+  \reqfit Assuming the user hasn't interfered, alerts and reschedule requests
+  shall always be sent to a place the user receives notifications.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-15
 \end{myreq}
 
 \section{Roadmap}
