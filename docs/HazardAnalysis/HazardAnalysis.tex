@@ -26,12 +26,9 @@
 \begin{description}#1}%
 {\end{description}\end{tcolorbox}}
 
-\newcommand{\threeinline}[3]{\begin{multicols}{3}#1 #2 #3\end{multicols}}
 \newcommand{\twoinline}[2]{\begin{multicols}{2}#1 #2\end{multicols}}
 
 \newcommand{\reqno}{\item[Requirement \#:]}
-\newcommand{\reqtype}{\item[Requirement Type:]}
-\newcommand{\reqevent}{\item[Event/BUC/PUC \#:]}
 \newcommand{\reqdesc}{\item[Description:]}
 \newcommand{\reqrat}{\item[Rationale:]}
 \newcommand{\reqorig}{\item[Originator:]}
@@ -174,12 +171,12 @@ documentation, and/or test cases.}\\
 \cline{1-6}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
-& RPN & Misinputted user login information should give a warning to the user when
+& SR-xx & Misinputted user login information should give a warning to the user when
 login information does not exist or is incorrect.\\
 \cline{1-6}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
-RPN & Allow captain to resubmit availability that overwrites previously
+SR-1 & Allow captain to resubmit availability that overwrites previously
 submitted availability if submitted before the due date.\\
 \cline{2-6}
 & User reads schedule incorrectly. & User may not attend a game by accident or
@@ -188,13 +185,13 @@ makes an error. & 22 & Ensure schedule data and structure is visible and
 readable.\\
 \cline{2-6}
 & Teams availability data have scheduling conflicts. & System cannot make a
-valid schedule. & Availability data has scheduling conflicts. & RPN & Teams
+valid schedule. & Availability data has scheduling conflicts. & SR-xx & Teams
 will be given a warning if their availability data has scheduling conflicts.\\
 \cline{2-6}
 & Captain doesn't respond to another captain's reschedule request. & Captain
 who sent the reschedule request will not know if the opposing captain wants to
 reschedule or not. & System doesn't adequately notify the opposing captain
-about the reschedule request. & RPN & Make sure the captain who needs to
+about the reschedule request. & SR-5 & Make sure the captain who needs to
 accept the request cannot avoid seeing the request notification.\\
 \cline{1-6}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
@@ -205,24 +202,24 @@ readable.\\
 \cline{1-6}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
 has access to actions they shouldn't use. & Interface lacks security or user
-makes an error. & RPN & Giving an account additional permissions should give
+makes an error. & SR-2 & Giving an account additional permissions should give
 a warning to the user when configuring accounts.\\
 \cline{2-6}
 & All commissioner level accounts are deleted. & There are no accounts left
 that can give commissioner level permissions. & System allows for all
-commissioner accounts to be deleted. & RPN & Do not let users delete a
+commissioner accounts to be deleted. & SR-3 & Do not let users delete a
 commissioner account if there is only one left.\\
 \cline{1-6}
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and database has incorrect scores. & User inputs the wrong score. &
-RPN & Allow the opposing team's captain to verify the score and contest it if
+SR-4 & Allow the opposing team's captain to verify the score and contest it if
 the score is wrong.\\
 \cline{2-6}
 \cline{1-6}
 \multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
 critical information. & Alert is unclear, unreadable, or user makes an error. &
-RPN & Ensure alert message is visible and readable.\\
+SR-xx & Ensure alert message is visible and readable.\\
 \cline{2-6}
 \hline
 \end{tabularx}
@@ -235,10 +232,7 @@ RPN & Ensure alert message is visible and readable.\\
 rationale design process how and why to fake it.)}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-1
     \reqdesc If the season start availability due date hasn't been reached, a
     captain should be able to resubmit availability data which overwrites
     previous availability data.
@@ -254,10 +248,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-2
     \reqdesc Giving permissions to users must be accompanied by an error that
     warns the user of the severity of the action.
     \reqrat Accidentally giving permissions to users who shouldn't have them
@@ -272,10 +263,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-3
     \reqdesc If there is only one commissioner level account, that account
     cannot be deleted.
     \reqrat Deleting this account would stop any more commissioner level
@@ -290,10 +278,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-4
     \reqdesc All match scores must be visible and contestable by other
     captains once recorded.
     \reqrat Match score correctness is extremely important for a competitive
@@ -309,10 +294,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno xx}
-    {\reqtype 0}
-    {\reqevent xx}
+  \reqno SR-5
   \reqdesc Captains are adequately notified when they receive an alert or a
   reschedule request.
   \reqrat Important information may be shared in alerts, and reschedule
@@ -337,7 +319,17 @@ introduced to the project's already existing requirements located in the
 SRS. Provided the time constraints and current project deadlines, critical
 requirements will be initially addressed with lower priority requirements
 being investigated in the future. The hazard analysis will be used as a guideline
-to ensure the safety and security of the Sandlot platform's users.
+to ensure the safety and security of the Sandlot platform's users.\\\\
+
+Proof of Concept Demonstration (November 11-22)
+\begin{itemize}
+  \item Authentication
+\end{itemize}
+
+Final Demonstration (Revision 1) (March 24-30)
+\begin{itemize}
+  \item 
+\end{itemize}
 
 \newpage{}
 
