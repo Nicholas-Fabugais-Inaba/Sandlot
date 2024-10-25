@@ -370,4 +370,65 @@ to ensure the safety and security of the Sandlot platform's users.
     software products. Why are they important to consider?
 \end{enumerate}
 
+\subsection*{Casra Ghazanfari -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  Writing the “System Components” section of this deliverable went well for our 
+  team. This is because going into this deliverable we already had a concrete 
+  idea of the structure of our overall system. This allowed us to quickly 
+  partition the system into components based on our ideas for the overall 
+  structure. Moreover, due to our existing understanding of the overall system 
+  we were able to easily envision and determine how the derived components of 
+  the system would interact with each other and the system boundaries.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  The biggest pain point during this deliverable was connecting hazards in our 
+  FMEA table to security requirements (SRs). This is because our SRS deliverable 
+  was incomplete at the time of writing this deliverable and did not have a 
+  proper set of security requirements to connect to any of the hazards 
+  identified in the FMEA. This significantly increased the amount of work 
+  needed for us to properly complete this deliverable and generally slowed down 
+  the process of creating the FMEA table as well.
+  \item Which of your listed risks had your team thought of before this
+  deliverable, and which did you think of while doing this deliverable? For
+  the latter ones (ones you thought of while doing the Hazard Analysis), how
+  did they come about?\\\\
+  The team didn’t concretely identify any risks prior to working on this 
+  deliverable, but had loose ideas of more obvious potential risks to include 
+  in the deliverable. “The user incorrectly inputting their login information” 
+  or “the user joining the wrong team” are examples of risks we had thought of 
+  before working on this deliverable. Risks like “all commissioner accounts are 
+  deleted” and “account is given wrong permissions” are examples of risks we 
+  thought of while working through this deliverable. Generally, the idea to 
+  include these risks came from carefully evaluating each individual component 
+  defined previously in the document and asking ourselves the question: 
+  “if anything could go wrong, what would go wrong?”. From this line of thinking 
+  we were able to envision and identify uncommon risk scenarios for the system 
+  that were tied to the system’s more complex components.
+  \item Other than the risk of physical harm (some projects may not have any
+  appreciable risks of this form), list at least 2 other types of risk in
+  software products. Why are they important to consider?\\\\
+  \begin{enumerate}
+    \item Security risks\\
+    Software products that handle sensitive data (i.e. personal / financial / 
+    health information) must consider the risks of handling sensitive information. 
+    Data can be stolen through unauthorized access and data breaches and can cause 
+    financial and reputational harm to both the users and owners of the product. 
+    Therefore, security risks such as data breaches are important to consider when 
+    handling sensitive data, especially when trying to comply with data protection 
+    regulations.
+    \item Operational risks\\
+    Software products that require high availability must consider the risks of 
+    relying on services outside the product’s system boundary. For example, when 
+    using a hosting service provided by another organization to host the product’s 
+    website or database, There’s the inherent risk that if the organization hosting 
+    the service faces issues, so will your product. Issues like these can cause 
+    delays or system downtime for your product which is especially harmful if the 
+    product requires high availability as downtime negatively impacts the user 
+    satisfaction and experience of users of the product.
+  \end{enumerate}
+
+\end{enumerate}
+
 \end{document}
