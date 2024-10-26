@@ -10,6 +10,7 @@
 \usepackage{enumitem}
 \usepackage{tcolorbox}
 \usepackage{array}
+\usepackage{afterpage}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -26,12 +27,9 @@
 \begin{description}#1}%
 {\end{description}\end{tcolorbox}}
 
-\newcommand{\threeinline}[3]{\begin{multicols}{3}#1 #2 #3\end{multicols}}
 \newcommand{\twoinline}[2]{\begin{multicols}{2}#1 #2\end{multicols}}
 
 \newcommand{\reqno}{\item[Requirement \#:]}
-\newcommand{\reqtype}{\item[Requirement Type:]}
-\newcommand{\reqevent}{\item[Event/BUC/PUC \#:]}
 \newcommand{\reqdesc}{\item[Description:]}
 \newcommand{\reqrat}{\item[Rationale:]}
 \newcommand{\reqorig}{\item[Originator:]}
@@ -141,36 +139,19 @@ The system can be divided into the following components:
 \end{itemize}
 
 \subsection{System Boundaries}
-The alerts system component is responsible for allowing users with commissioner
-permissions to send alerts to any parties interacting with the user interface.
+The system limits itself to the components mentioned before; the front end and backend of the website.
+External APIs that connect to our system are considered as outside the system boundaries.
+This would include the webserver, and weather tracker, among others. 
 
 \section{Critical Assumptions}
 
-\wss{These assumptions that are made about the software or system.  You should
-minimize the number of assumptions that remove potential hazards.  For instance,
-you could assume a part will never fail, but it is generally better to include
-this potential failure mode.}
-
 \begin{itemize}
-    \item It is assumed users will only login to their respective accounts that they
-    have created within the system and not attempt to login to any other user accounts
-    to take advantage of certain permissions the system may allow.
+    \item It is assumed that users will not attempt to maliciously attack the system.
 \end{itemize}
 
 \section{Failure Mode and Effect Analysis}
 
-\wss{Include your FMEA table here. This is the most important part of this document.}
-\wss{The safety requirements in the table do not have to have the prefix SR.
-The most important thing is to show traceability to your SRS. You might trace to
-requirements you have already written, or you might need to add new
-requirements.}
-\wss{If no safety requirement can be devised, other mitigation strategies can be
-entered in the table, including strategies involving providing additional
-documentation, and/or test cases.}\\
-
 \begin{landscape}
-% this removes page number
-\pagenumbering{gobble} 
 % breaks margins
 \vspace*{-3.25cm}
 \hspace*{-3.25cm}
@@ -182,43 +163,43 @@ documentation, and/or test cases.}\\
 \cline{1-6}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
-& RPN & Misinputted user login information should give a warning to the user when
+& SR-7 & Misinputted user login information should give a warning to the user when
 login information does not exist or is incorrect.\\
 \cline{1-6}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
-RPN & Allow captain to resubmit availability that overwrites previously
+SR-1 & Allow captain to resubmit availability that overwrites previously
 submitted availability if submitted before the due date.\\
 \cline{2-6}
 & User reads schedule incorrectly. & User may not attend a game by accident or
 travel to a game at the wrong time. & Schedule is unclear, unreadable, or user
-makes an error. & 22 & Ensure schedule data and structure is visible and
+makes an error. & AC-1 AC-2 & Ensure schedule data and structure is visible and
 readable.\\
 \cline{2-6}
 & Teams availability data have scheduling conflicts. & System cannot make a
-valid schedule. & Availability data has scheduling conflicts. & RPN & Teams
+valid schedule. & Availability data has scheduling conflicts. & SR-8 & Teams
 will be given a warning if their availability data has scheduling conflicts.\\
 \cline{2-6}
 & Captain doesn't respond to another captain's reschedule request. & Captain
 who sent the reschedule request will not know if the opposing captain wants to
 reschedule or not. & System doesn't adequately notify the opposing captain
-about the reschedule request. & RPN & Make sure the captain who needs to
+about the reschedule request. & SR-5 & Make sure the captain who needs to
 accept the request cannot avoid seeing the request notification.\\
 \cline{1-6}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
-unclear or user makes an error. & 17 & Ensure that when assigning a team for a
+unclear or user makes an error. & AP-1 AP-2 & Ensure that when assigning a team for a
 user, the team options to select from are clear and the input section is
 readable.\\
 \cline{1-6}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
 has access to actions they shouldn't use. & Interface lacks security or user
-makes an error. & RPN & Giving an account additional permissions should give
+makes an error. & SR-2 & Giving an account additional permissions should give
 a warning to the user when configuring accounts.\\
 \cline{2-6}
 & All commissioner level accounts are deleted. & There are no accounts left
 that can give commissioner level permissions. & System allows for all
-commissioner accounts to be deleted. & RPN & Do not let users delete a
+commissioner accounts to be deleted. & SR-3 & Do not let users delete a
 commissioner account if there is only one left.\\
 \cline{2-6}
 & User logs in on an account that isn't theirs. & User may make actions that
@@ -227,21 +208,19 @@ their login data. & RPN & Remind users to keep their passwords secret andsecure.
 \cline{1-6}
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and database has incorrect scores. & User inputs the wrong score. &
-RPN & Allow the opposing team's captain to verify the score and contest it if
+SR-4 & Allow the opposing team's captain to verify the score and contest it if
 the score is wrong.\\
 \cline{2-6}
 \cline{1-6}
 \multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
 critical information. & Alert is unclear, unreadable, or user makes an error. &
-RPN & Ensure alert message is visible and readable.\\
+SR-9 & Ensure alert message is visible and readable.\\
 \cline{2-6}
 \hline
 \end{tabularx}
 
 \end{landscape}
-
-\pagenumbering{arabic} 
 
 \section{Safety and Security Requirements}
 
@@ -249,10 +228,7 @@ RPN & Ensure alert message is visible and readable.\\
 rationale design process how and why to fake it.)}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-1
     \reqdesc If the season start availability due date hasn't been reached, a
     captain should be able to resubmit availability data which overwrites
     previous availability data.
@@ -268,10 +244,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-2
     \reqdesc Giving permissions to users must be accompanied by an error that
     warns the user of the severity of the action.
     \reqrat Accidentally giving permissions to users who shouldn't have them
@@ -286,10 +259,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-3
     \reqdesc If there is only one commissioner level account, that account
     cannot be deleted.
     \reqrat Deleting this account would stop any more commissioner level
@@ -304,10 +274,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-    \threeinline
-      {\reqno xx}
-      {\reqtype 0}
-      {\reqevent xx}
+    \reqno SR-4
     \reqdesc All match scores must be visible and contestable by other
     captains once recorded.
     \reqrat Match score correctness is extremely important for a competitive
@@ -323,10 +290,7 @@ rationale design process how and why to fake it.)}
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno xx}
-    {\reqtype 0}
-    {\reqevent xx}
+  \reqno SR-5
   \reqdesc Captains are adequately notified when they receive an alert or a
   reschedule request.
   \reqrat Important information may be shared in alerts, and reschedule
@@ -339,6 +303,73 @@ rationale design process how and why to fake it.)}
     {\reqsatis 3}
     {\reqdissat 3}
   \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-6
+  \reqdesc Users can only access an account with correctly inputted login
+  information that matches the database stored login information.
+  \reqrat Login information stored in the database should correspond to a
+  specific account. The account should only be accessed by the correctly
+  inputted login information details.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Assuming the user has correctly inputted the login details for
+  an account stored in the database, they should be granted access into
+  the corresponding account.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-7
+  \reqdesc Misinputted user login information shall provide a warning to the
+  user, if login information does not exist or does not match the database
+  stored login information.
+  \reqrat Login information stored in the database should match the user
+  inputted login information. Feedback should be provided for the user to
+  understand an error has occured when accessing an account with incorrect
+  login details.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Assuming the user has misinputted the login details for
+  an account stored in the database, they should be given a warning that
+  notifies them about the login information being incorrect or not existing
+  in the database.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-8
+  \reqdesc Teams will be given a warning if their availability data has
+  scheduling conflicts.
+  \reqrat The system should be able to create a valid schedule, in which
+  teams do not have conflicting availability data that schedules games for
+  the same dates and times as other teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Teams should receive a warning about their availability data
+  conflicting on the schedule.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-9
+  \reqdesc Alerts sent to users must be visible and readable.
+  \reqrat User may travel to a game that was postponed or cancelled, or miss
+  out on critical information.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit User receives an alert that is readable and clear enough for them
+  to understand.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
 \end{myreq}
 
 \begin{myreq}
@@ -361,21 +392,31 @@ rationale design process how and why to fake it.)}
 
 \section{Roadmap}
 
-\wss{Which safety requirements will be implemented as part of the capstone timeline?
-Which requirements will be implemented in the future?}
-
 The hazard analysis resulted in new safety and security requirements being
 introduced to the project's already existing requirements located in the
 SRS. Provided the time constraints and current project deadlines, critical
 requirements will be initially addressed with lower priority requirements
 being investigated in the future. The hazard analysis will be used as a guideline
-to ensure the safety and security of the Sandlot platform's users.
+to ensure the safety and security of the Sandlot platform's users.\\\\
+
+Proof of Concept Demonstration (November 11-22):
+\begin{itemize}
+  \item Authentication: SR-6 and SR-7
+  \item Scheduling: SR-1, SRS(22), SR-8
+\end{itemize}
+
+Final Demonstration (Revision 1) (March 24-30):
+\begin{itemize}
+  \item Scheduling: SR-5
+  \item Teams: SRS(17)
+  \item Accounts: SR-2 and SR-3
+  \item Scoring/Standings: SR-4
+  \item Alerts: SR-9
+\end{itemize}
 
 \newpage{}
 
 \section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741}
 
 \input{../Reflection.tex}
 
@@ -548,6 +589,30 @@ to ensure the safety and security of the Sandlot platform's users.
   ways the user didn't intend. This is important as privacy is a growing
   concern and something people value. It can also be financially dangerous or
   even physically dangerous, although that specifically is more rare.
+
+\end{enumerate}
+
+\subsection*{Jung Woo Lee -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  I think coming up with components went very smoothly. There was not much difficulty in figuring out the different sections of our system. As an added bonus, I found it very helpful to map out the future design of our system, and its major parts. This lets us begin to think about how these parts interact with the users and each other.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  There were significant issues with figuring out if certain issues counted as hazards. One example was about scheduling conflicts, and initially we had thought that two captains entering conflicting schedules at the same time should have been the hazard, however, further discussion made us realize this was becoming too implementation specific. After a long discussion, and even debating whether it was a hazard at all, we had come to an agreement on the current hazard in the FMEA table. 
+  \item Which of your listed risks had your team thought of before this
+  deliverable, and which did you think of while doing this deliverable? For
+  the latter ones (ones you thought of while doing the Hazard Analysis), how
+  did they come about?
+  \\\\
+  We had thought about the ‘captains inputting wrong scores’ and ‘users joining the wrong team’. Most of the others we have come up with during the hazard analysis process. How these came about was as the team drew up the system components, we were more clearly able to see how users would interact with each component, or how components would function independently from other components. This allowed us to more readily think of potential problems to the components and make our FMEA table. For example, ‘all commissioner level accounts are deleted’ was able to be thought of as we had thought to make ‘Accounts’ a component of our system. As we thought about how accounts could mess up somehow, it led us to think about the account hierarchy in our system, then to the hazard.
+  \item Other than the risk of physical harm (some projects may not have any
+  appreciable risks of this form), list at least 2 other types of risk in
+  software products. Why are they important to consider?\\\\
+  One kind of risk would be the risks associated with the project. I mean this as an umbrella that includes design, time, compliance, among others that occur during the creation of the software product. These are crucial to consider, as this can often make or break a product just as much as a bad product going to deployment. For example, a product that was made and misses the standards laid out for it would result in a large headache to go back and change, or a subpar system.
+
+Another type would be risks associated with the post-deployment era of a product. More so in terms of maintainability, adaptability, and portability. These can be important to consider if a product is slated to function for a long period of time, and receive adequate support for a long time period, it should be made as risk free as possible in these aspects.
+
 
 \end{enumerate}
 
