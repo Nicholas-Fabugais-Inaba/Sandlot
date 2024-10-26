@@ -10,6 +10,7 @@
 \usepackage{enumitem}
 \usepackage{tcolorbox}
 \usepackage{array}
+\usepackage{afterpage}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -150,15 +151,6 @@ This would include the webserver, and weather tracker, among others.
 
 \section{Failure Mode and Effect Analysis}
 
-\wss{Include your FMEA table here. This is the most important part of this document.}
-\wss{The safety requirements in the table do not have to have the prefix SR.
-The most important thing is to show traceability to your SRS. You might trace to
-requirements you have already written, or you might need to add new
-requirements.}
-\wss{If no safety requirement can be devised, other mitigation strategies can be
-entered in the table, including strategies involving providing additional
-documentation, and/or test cases.}\\
-
 \begin{landscape}
 % breaks margins
 \vspace*{-3.25cm}
@@ -171,7 +163,7 @@ documentation, and/or test cases.}\\
 \cline{1-6}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
-& SR-xx & Misinputted user login information should give a warning to the user when
+& SR-7 & Misinputted user login information should give a warning to the user when
 login information does not exist or is incorrect.\\
 \cline{1-6}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
@@ -185,7 +177,7 @@ makes an error. & 22 & Ensure schedule data and structure is visible and
 readable.\\
 \cline{2-6}
 & Teams availability data have scheduling conflicts. & System cannot make a
-valid schedule. & Availability data has scheduling conflicts. & SR-xx & Teams
+valid schedule. & Availability data has scheduling conflicts. & SR-8 & Teams
 will be given a warning if their availability data has scheduling conflicts.\\
 \cline{2-6}
 & Captain doesn't respond to another captain's reschedule request. & Captain
@@ -219,7 +211,7 @@ the score is wrong.\\
 \multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
 critical information. & Alert is unclear, unreadable, or user makes an error. &
-SR-xx & Ensure alert message is visible and readable.\\
+SR-9 & Ensure alert message is visible and readable.\\
 \cline{2-6}
 \hline
 \end{tabularx}
@@ -307,6 +299,73 @@ rationale design process how and why to fake it.)}
     {\reqsatis 3}
     {\reqdissat 3}
   \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-6
+  \reqdesc Users can only access an account with correctly inputted login
+  information that matches the database stored login information.
+  \reqrat Login information stored in the database should correspond to a
+  specific account. The account should only be accessed by the correctly
+  inputted login information details.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Assuming the user has correctly inputted the login details for
+  an account stored in the database, they should be granted access into
+  the corresponding account.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-7
+  \reqdesc Misinputted user login information shall provide a warning to the
+  user, if login information does not exist or does not match the database
+  stored login information.
+  \reqrat Login information stored in the database should match the user
+  inputted login information. Feedback should be provided for the user to
+  understand an error has occured when accessing an account with incorrect
+  login details.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Assuming the user has misinputted the login details for
+  an account stored in the database, they should be given a warning that
+  notifies them about the login information being incorrect or not existing
+  in the database.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-8
+  \reqdesc Teams will be given a warning if their availability data has
+  scheduling conflicts.
+  \reqrat The system should be able to create a valid schedule, in which
+  teams do not have conflicting availability data that schedules games for
+  the same dates and times as other teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Teams should receive a warning about their availability data
+  conflicting on the schedule.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-9
+  \reqdesc Alerts sent to users must be visible and readable.
+  \reqrat User may travel to a game that was postponed or cancelled, or miss
+  out on critical information.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit User receives an alert that is readable and clear enough for them
+  to understand.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
 \end{myreq}
 
 \section{Roadmap}
