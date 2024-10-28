@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{multirow}
 \usepackage{pdflscape}
+\usepackage{geometry}
 \usepackage{multicol}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
@@ -150,12 +151,15 @@ This would include the webserver, and weather tracker, among others.
 \end{itemize}
 
 \section{Failure Mode and Effect Analysis}
+
+\newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.45in}
+\pagenumbering{gobble}
 \begin{landscape}
 % breaks margins
-\vspace*{-3.25cm}
-\hspace*{-3.25cm}
+%\vspace*{-3.25cm}
+%\hspace*{-3.25cm}
 % adds vertical padding to table
-\def\arraystretch{1.3}
+\def\arraystretch{1.2}
 \begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|}
 \cline{1-6}
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions}\\
@@ -220,6 +224,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{tabularx}
 
 \end{landscape}
+\restoregeometry{}
 
 \section{Safety and Security Requirements}
 
