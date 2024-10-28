@@ -10,7 +10,7 @@
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
+\usepackage[numbers, round]{natbib}
 
 \input{../Comments}
 \input{../Common}
@@ -161,10 +161,21 @@ have been approved by an instructor.
   is done, they will be written.  You can create BibTeX entries for your
   documents and within those entries include a hyperlink to the documents.}
 
-\citet{SRS}
+\begin{thebibliography}{9}
+  \bibitem{SRS} Software Requirements Specification Document (2024)
+  \href{../SRS-Volere/SRS.pdf}{SRS.pdf}
+  \bibitem{MG} Module Guide Document (2024)
+  \href{../Design/SoftArchitecture/MG.pdf}{MG.pdf}
+  \bibitem{MIS} Module Interface Specification Document (2024)
+  \href{../Design/SoftDetailedDes/MIS.pdf}{MIS.pdf}
+  \\
+\end{thebibliography}
 
 \wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+how they relate to your VnV efforts.}\\
+The SRS document has requirements for our project that must be verified, it is
+the most complete list of functional and non-functional requirements that our
+solution needs to achieve.
 
 \section{Plan}
 
