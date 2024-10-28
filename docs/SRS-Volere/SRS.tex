@@ -76,6 +76,7 @@
 \midrule
 Oct. 7, 2024 & 1.0 & TA Feedback\\
 Oct. 11, 2024 & 1.1 & Rev0\\
+Oct. 28, 2024 & 1.2 & Removed unused sections in requirements cards. Renamed requirements; enforcing two letter codes.\\
 \bottomrule
 \end{tabularx}
 
@@ -252,10 +253,7 @@ in the maintaining of the new platform after development is completed.
 \subsection{Implementation Environment of the Current System}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 0}
-    {\reqtype 0}
-    {\reqevent 0}
+  \reqno IECS-1
   \reqdesc The system must be accessible by the internet.
   \reqrat Users must be able to access all functionalities from
   their device.
@@ -265,18 +263,10 @@ in the maintaining of the new platform after development is completed.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 0}
-    {\reqtype 0}
-    {\reqevent 0}
+  \reqno IECS-2
   \reqdesc The system must implement a database.
   \reqrat The system must store information including user login
   information, the season schedule, team composition,
@@ -287,17 +277,21 @@ in the maintaining of the new platform after development is completed.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \reqno IECS-3
+  \reqdesc The system must be hosted on the web.
+  \reqrat Users must be able to access all functionalities from a web browser.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Users can access Sandlot through a web browser.
   \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
+    {\reqsatis 5}
+    {\reqdissat 5}
 \end{myreq}
 
 \subsection{Partner or Collaborative Applications}
-
 Not applicable.
-
 \subsection{Off-the-Shelf Software}
 Not applicable.
 \subsection{Anticipated Workplace Environment}
@@ -305,10 +299,7 @@ Not applicable.
 \subsection{Schedule Constraints}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 0}
-    {\reqtype 0}
-    {\reqevent 0}
+  \reqno SC-1
   \reqdesc The project shall be completed before the final demo.
   \reqrat Project deadline is non-negotiable and the product must
   be completed before the final presentation.
@@ -317,20 +308,12 @@ Not applicable.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \subsection{Budget Constraints}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 0}
-    {\reqtype 0}
-    {\reqevent 0}
+  \reqno BC-1
   \reqdesc The project shall be subject to a \$750 budget.
   \reqrat Resources required for the project must be under a sum total of
   \$750.
@@ -339,20 +322,12 @@ Not applicable.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \subsection{Enterprise Constraints}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 0}
-    {\reqtype 0}
-    {\reqevent 0}
+  \reqno EC-1
   \reqdesc The product shall be made available to the project supervisor.
   \reqrat After project completion, the project supervisor will have
   access to the product for future use. 
@@ -362,11 +337,6 @@ Not applicable.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \section{Naming Conventions and Terminology}
@@ -452,6 +422,13 @@ allow users to view the scores of played games, is not working.
       stored contact information (requires specific access) to site user.\\
       10. User submits alert & Alert Content (in) & Commissioners can submit custom
       alerts to send to any chosen users.\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \begin{center}
+    \begin{tabular}{|m{4cm}|m{4cm}|m{6cm}|}
+      \hline
       11. System sends alert & Alert Content (out) & Send the alert to any user the
       alert must reach.\\
       12. Commissioner inputs admin command & Commissioner Admin Commands (in)
@@ -460,12 +437,13 @@ allow users to view the scores of played games, is not working.
       \hline
     \end{tabular}
   \end{center}
+
 \subsection{Specifying a Business Use Case (BUC)}
 Not applicable as events are simple and described above
 in the work partitioning table.
 
 \subsection{User Type Hierarchy}
-\includegraphics[scale=1.1]{business_data_model.png}
+\includegraphics[scale=1.0]{business_data_model.png}
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
@@ -487,9 +465,8 @@ All necessary parts of this section were covered in section 6.
 \subsection{Functional Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 01}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-1}
     {\reqevent 7}
   \reqdesc System must display the season schedule and standings to all users
   without login.
@@ -501,17 +478,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 02}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-2}
     {\reqevent 2}
   \reqdesc Captains should be able to create a team which is added to the
   Sandlot database.
@@ -524,17 +495,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 03}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-3}
     {\reqevent 2}
   \reqdesc Users should be able to create a new account by providing 
   the necessary information. 
@@ -549,17 +514,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 04}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-4}
     {\reqevent 2}
   \reqdesc Users should be able to change their account information 
   by providing the necessary information.
@@ -572,17 +531,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 05}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-5}
     {\reqevent 2}
   \reqdesc Users should be able delete their account by providing 
   the necessary information.
@@ -594,17 +547,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 06}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-6}
     {\reqevent 8,9}
   \reqdesc Commissioners should be able to send alerts with custom information
   to a specified user or group of user.
@@ -616,17 +563,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 3}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 07}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-7}
     {\reqevent 9}
   \reqdesc Commissioners should be able to update the team information of any
   team, including player list and scores.
@@ -637,17 +578,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 08}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-8}
     {\reqevent 3}
   \reqdesc Before the season starts, captains must have the option to give a
   list of days over the season marking their team's availabilty.
@@ -660,17 +595,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 09}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-9}
     {\reqevent 3}
   \reqdesc Once the season start due date is reached, all captain's
   availability will be used to generate a season schedule.
@@ -682,17 +611,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 10}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-10}
     {\reqevent 6}
   \reqdesc Captains must be able to request a reschedule for upcoming games
   as long as the game is at least 24 hours in the future. Rescheduling
@@ -707,17 +630,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 11}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-11}
     {\reqevent 3}
   \reqdesc When recieving a reschedule request from another captain, the system should
   prompt the captain to either accept the reshedule request and choose a date or 
@@ -732,17 +649,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 12}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-12}
     {\reqevent 3}
   \reqdesc When a captains rechedule request is either accepted or denied the system should
   notify them about about the outcome.
@@ -754,17 +665,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 13}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-13}
     {\reqevent 9}
   \reqdesc Captains should be able to update the team information of only their
   team, including team name, player list and scores.
@@ -777,17 +682,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 14}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-14}
     {\reqevent 9}
   \reqdesc Users should not be able to update the team information of any
   team, including team name, player list and scores.
@@ -798,17 +697,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 15}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-15}
     {\reqevent 9}
   \reqdesc The score of a game should not be able to be updated until after
   the it is completed.
@@ -821,17 +714,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 16}
-    {\reqtype 0}
+  \twoinline
+    {\reqno FR-16}
     {\reqevent 2,3}
   \reqdesc Non-commissioner accounts can only be a member of one team.
   \reqrat To ensure competition is fair and to avoid captains accidentally
@@ -843,20 +730,30 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-1
+  \reqdesc If the season start availability due date hasn't been reached, a
+  captain should be able to resubmit availability data which overwrites
+  previous availability data.
+  \reqrat If the captain makes an error when submitting availability data
+  they should be able to fix their error.
+  \reqorig Alex Verity
+  \reqfit If the captain has submitted data, they shall be able to overwrite
+  it with new data.
   \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
+    {\reqsatis 4}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-15
 \end{myreq}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
 
 \begin{myreq}
-  \threeinline
+  \twoinline
     {\reqno AP-1}
-    {\reqtype 0}
     {\reqevent xx}
   \reqdesc All user input elements should be distinctive such that they can be
   contrasted. 
@@ -868,17 +765,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
+  \twoinline
     {\reqno AP-2}
-    {\reqtype 0}
     {\reqevent xx}
   \reqdesc All user input elements should provide feedback.
   \reqrat Users should be able to know if their inputs are working or not.
@@ -888,17 +779,11 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
+  \twoinline
     {\reqno AP-3}
-    {\reqtype 0}
     {\reqevent xx}
   \reqdesc All images and visuals made for/by Sandlot should be high quality.
   \reqrat Low quality images and visuals are unprofessional, and the solution
@@ -911,15 +796,10 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
+  \twoinline
     {\reqno AP-4}
     {\reqtype 0}
     {\reqevent xx}
@@ -933,19 +813,13 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \subsection{Style Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 20}
-    {\reqtype 0}
+  \twoinline
+    {\reqno STY-1}
     {\reqevent xx}
   \reqdesc The solution should use a consistent style across the entire user
   interface.
@@ -957,20 +831,14 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \section{Usability and Humanity Requirements}
 \subsection{Ease of Use Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 21}
-    {\reqtype 0}
+  \twoinline
+    {\reqno EU-1}
     {\reqevent 7}
   \reqdesc All users must be able to easily find the season schedule.
   \reqrat Many users of Sandlot will not be using it often, and the
@@ -982,11 +850,40 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-7
+  \reqdesc Misinputted user login information shall provide a warning to the
+  user, if login information does not exist or does not match the database
+  stored login information.
+  \reqrat Login information stored in the database should match the user
+  inputted login information. Feedback should be provided for the user to
+  understand an error has occured when accessing an account with incorrect
+  login details.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Assuming the user has misinputted the login details for
+  an account stored in the database, they should be given a warning that
+  notifies them about the login information being incorrect or not existing
+  in the database.
   \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-8
+  \reqdesc Teams will be given a warning if their availability data has
+  scheduling conflicts.
+  \reqrat The system should be able to create a valid schedule, in which
+  teams do not have conflicting availability data that schedules games for
+  the same dates and times as other teams.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Teams should receive a warning about their availability data
+  conflicting on the schedule.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
 \end{myreq}
 
 \subsection{Personalization and Internationalization Requirements}
@@ -995,9 +892,8 @@ Not applicable.
 \subsection{Learning Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 21}
-    {\reqtype 0}
+  \twoinline
+    {\reqno LR-1}
     {\reqevent 7}
   \reqdesc A commissioner should be able to able to learn how to perform all of
   their available actions in a short amount of time.
@@ -1010,17 +906,11 @@ Not applicable.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 21}
-    {\reqtype 0}
+  \twoinline
+    {\reqno LR-2}
     {\reqevent 7}
   \reqdesc A captain should be able to able to learn how to perform all of
   their available actions in a short amount of time.
@@ -1032,17 +922,11 @@ Not applicable.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 21}
-    {\reqtype 0}
+  \twoinline
+    {\reqno LR-3}
     {\reqevent 7}
   \reqdesc A new user should be able to use the basic features (such as viewing
   the league schedule) of the product without having prior knowledge of the product.
@@ -1054,21 +938,31 @@ Not applicable.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \subsection{Understandability and Politeness Requirements}
-\lips
+
+\begin{myreq}
+  \twoinline
+    {\reqno UP-1}
+    {\reqevent xx}
+  \reqdesc Any terminology or symbols used are consistent with the past
+  solution.
+  \reqrat The terminology used should be the same as the past solution to
+  make sure there is little confusion. For example the term off day will be
+  used during scheduling as that is used in the past solution.
+  \reqorig Alex Verity
+  \reqfit 90 percent of users understand terminology used on Sandlot.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
 \subsection{Accessibility Requirements}
 
 \begin{myreq}
-  \threeinline
+  \twoinline
     {\reqno AC-1}
-    {\reqtype 0}
     {\reqevent xx}
   \reqdesc The fonts used should be readable by all users.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
@@ -1079,17 +973,11 @@ Not applicable.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
+  \twoinline
     {\reqno AC-2}
-    {\reqtype 0}
     {\reqevent xx}
   \reqdesc Colours used should be colour blind friendly.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
@@ -1100,19 +988,27 @@ Not applicable.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-9
+  \reqdesc Alerts sent to users must be visible and readable.
+  \reqrat User may travel to a game that was postponed or cancelled, or miss
+  out on critical information.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit User receives an alert that is readable and clear enough for them
+  to understand.
   \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
+    {\reqsatis 3}
+    {\reqdissat 3}
 \end{myreq}
 
 \section{Performance Requirements}
 \subsection{Speed and Latency Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 23}
+  \twoinline
+    {\reqno SL-1}
     {\reqtype 0}
     {\reqevent xx}
   \reqdesc Solution must load quickly and provide smooth user interactions,
@@ -1125,55 +1021,153 @@ Not applicable.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \subsection{Safety-Critical Requirements}
 Not applicable.
 \subsection{Precision or Accuracy Requirements}
-Need to add requirement for viewing accurate standings.
+Not applicable.
+\subsection{Reliability and Availability}
+
+\begin{myreq}
+  \twoinline
+    {\reqno RA-1}
+    {\reqevent xx}
+  \reqdesc All features of the solution will achieve 99 percent uptime.
+  \reqrat The past solution often has features that will break and go down,
+  such as the standings feature, which at the time of writing is down. Our
+  solution should not have these uptime issues.
+  \reqorig Alex Verity
+  \reqfit All features of the solution shall be usable and visible 99 percent
+  of the time.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
 \subsection{Robustness or Fault-Tolerance Requirements}
-Need to add requirement for if disconnected from internet.
+
+\begin{myreq}
+  \twoinline
+    {\reqno RFT-1}
+    {\reqevent xx}
+  \reqdesc The fonts used should be readable by all users.
+  \reqrat Sandlot will have a wide variety of users, and we must make sure the
+  font is an appropriate size for those with reduced vision.
+  \reqorig Alex Verity
+  \reqfit Body text shall have a minimum font size of 16 pixels, and a line 
+  length between 45 and 75 characters for optimal readability across all devices.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
 \subsection{Capacity Requirements}
-Need to add requirement for number of users on the system
-at the same time.
+
+\begin{myreq}
+  \twoinline
+    {\reqno CR-1}
+    {\reqevent xx}
+  \reqdesc Sandlot should function for upwards of 60 teams and 1500 players in
+  the system at once.
+  \reqrat Sandlot should be able to function even if the league increases in
+  population between seasons.
+  \reqorig Alex Verity
+  \reqfit No faults should occur when 60 teams with 25 players each are
+  entered into the system.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \twoinline
+    {\reqno CR-2}
+    {\reqevent xx}
+  \reqdesc Sandlot should function for upwards of 500 concurrent users.
+  \reqrat Sandlot should be able to function even if a large portion of the
+  league including spectators are using the solution.
+  \reqorig Alex Verity
+  \reqfit No faults should occur when 500 users are using the system at once.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
 \subsection{Scalability or Extensibility Requirements}
-Need to add requirement if additional features would be added in
-the future.
+Not applicable.
 \subsection{Longevity Requirements}
-\lips
+Not applicable.
 
 \section{Operational and Environmental Requirements}
 \subsection{Expected Physical Environment}
-\lips
+Not applicable.
 \subsection{Wider Environment Requirements}
-\lips
+Not applicable.
 \subsection{Requirements for Interfacing with Adjacent Systems}
-\lips
+
+\begin{myreq}
+  \twoinline
+    {\reqno IAS-1}
+    {\reqevent xx}
+  \reqdesc Sandlot should function on the last four releases for the five
+  most popular browsers.
+  \reqrat Sandlot should be accessable to a wide variety of users.
+  \reqorig Alex Verity
+  \reqfit The site shall function on the last four releases for the five most
+  popular browsers.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
 \subsection{Productization Requirements}
-\lips
+Not applicable.
 \subsection{Release Requirements}
-\lips
+
+\begin{myreq}
+  \twoinline
+    {\reqno RR-1}
+    {\reqevent xx}
+  \reqdesc Sandlot will be released between league seasons.
+  \reqrat Data will be difficult to transfer to Sandlot mid season, Sandlot
+  will not have that functionality on release.
+  \reqorig Alex Verity
+  \reqfit The solution shall be released between league seasons.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
 
 \section{Maintainability and Support Requirements}
 \subsection{Maintenance Requirements}
-\lips
+
+\begin{myreq}
+  \twoinline
+    {\reqno MR-1}
+    {\reqevent xx}
+  \reqdesc A new season can be started (i.e. saving past standings, reseting
+  teams.) within one hour.
+  \reqrat New seasons should not require a lot of maintenance to reset.
+  \reqorig Alex Verity
+  \reqfit A new season can be started within one hour.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
 \subsection{Supportability Requirements}
-\lips
+Not applicable, however comissioners will support users if they can.
+
 \subsection{Adaptability Requirements}
-\lips
+Not applicable, our solution will run on the web.
 
 \section{Security Requirements}
 \subsection{Access Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 24}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-1}
     {\reqevent 4}
   \reqdesc Only players can join a team.
   \reqrat Users not logged in as a player should not be able to join a team.
@@ -1182,17 +1176,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 25}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-2}
     {\reqevent 3}
   \reqdesc Only captains can create their own teams.
   \reqrat Users not logged in as a captain should not be able to create their
@@ -1202,17 +1190,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 26}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-3}
     {\reqevent 6}
   \reqdesc Only captains can reschedule games for their team.
   \reqrat Users not logged in as a captain should not be able to reschedule games.
@@ -1221,17 +1203,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 27}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-4}
     {\reqevent 10}
   \reqdesc Only commissioners can send a league-wide alert.
   \reqrat Users not logged in as a commissioner should not be able to send a
@@ -1241,17 +1217,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 28}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-5}
     {\reqevent 12}
   \reqdesc Only commissioners can assign teams to a division.
   \reqrat Users not logged in as a commissioner should not be able to assign
@@ -1261,17 +1231,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 29}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-6}
     {\reqevent 12}
   \reqdesc Only commissioners can change any team's composition.
   \reqrat Users not logged in as a commissioner should not be able to change
@@ -1281,17 +1245,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 30}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-7}
     {\reqevent 12}
   \reqdesc Only captains can change their own team's composition.
   \reqrat Users not logged in as a captain should not be able to change
@@ -1301,17 +1259,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 11, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 31}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-8}
     {\reqevent 12}
   \reqdesc Only commissioners can change the season schedule.
   \reqrat Users not logged in as a commissioner should not be able to change
@@ -1321,17 +1273,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 32}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-9}
     {\reqevent 9}
   \reqdesc Only players can see the contact information of their own captain.
   \reqrat A player's email and phone number shall remain anonymous to
@@ -1341,17 +1287,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 33}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-10}
     {\reqevent 9}
   \reqdesc Captains can see the contact information of players on their own team and
   other captains on other teams.
@@ -1363,17 +1303,11 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
 \end{myreq}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 34}
-    {\reqtype 15}
+  \twoinline
+    {\reqno AS-11}
     {\reqevent 9}
   \reqdesc Only commissioners can see the contact information of everyone in the league.
   \reqrat Player and captains shall remain anonymous to
@@ -1384,19 +1318,44 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-2
+  \reqdesc Giving permissions to users must be accompanied by an warning that
+  warns the user of the severity of the action.
+  \reqrat Accidentally giving permissions to users who shouldn't have them
+  could result in unexpected errors.
+  \reqorig Alex Verity
+  \reqfit If permissions are being changed, a warning shall be displayed to
+  the user before updating the permissions.
   \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 10, 2024 
+    {\reqsatis 5}
+    {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-6
+  \reqdesc Users can only access an account with correctly inputted login
+  information that matches the database stored login information.
+  \reqrat Login information stored in the database should correspond to a
+  specific account. The account should only be accessed by the correctly
+  inputted login information details.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Assuming the user has correctly inputted the login details for
+  an account stored in the database, they should be granted access into
+  the corresponding account.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-25
 \end{myreq}
 
 \subsection{Integrity Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 35}
-    {\reqtype 15}
+  \twoinline
+    {\reqno IG-1}
     {\reqevent 5}
   \reqdesc Website must not create conflicts when scheduling games.
   \reqrat The system shall create a schedule for all the teams in the league,
@@ -1408,19 +1367,59 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-3
+  \reqdesc If there is only one commissioner level account, that account
+  cannot be deleted.
+  \reqrat Deleting this account would stop any more commissioner level
+  accounts from being created, soft-locking the system.
+  \reqorig Alex Verity
+  \reqfit If there is only one commissioner level account it shall not be
+  deleted.
   \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 7, 2024 
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+
+\begin{myreq}
+  \reqno SR-4
+  \reqdesc All match scores must be visible and contestable by other
+  captains once recorded.
+  \reqrat Match score correctness is extremely important for a competitive
+  league, if a score is wrong, captains should be able to request that it be
+  fixed.
+  \reqorig Alex Verity
+  \reqfit Any match scores shall have the option to be viewed and contested
+  by captains.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-5
+  \reqdesc Captains are adequately notified when they receive an alert or a
+  reschedule request.
+  \reqrat Important information may be shared in alerts, and reschedule
+  requests that go unanswered may be frustrating for captains. Notifications
+  should reach their intended targets if possible.
+  \reqorig Alex Verity
+  \reqfit Assuming the user hasn't interfered, alerts and reschedule requests
+  shall always be sent to a place the user receives notifications.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
 \end{myreq}
 
 \subsection{Privacy Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 36}
-    {\reqtype 15}
+  \twoinline
+    {\reqno PV-1}
     {\reqevent 1}
   \reqdesc The product shall not reveal contact information to any
   parties without the necessary access.
@@ -1431,11 +1430,20 @@ the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \reqno SR-10
+  \reqdesc Users are reminded to keep their passwords secure.
+  \reqrat If a user accesses another user's account they may do actions
+  without the account owner's permission or that the account owner is unaware
+  of.
+  \reqorig Alex Verity
+  \reqfit A reminder telling users to keep their passwords secret and secure
+  is displayed to the user.
   \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 11, 2024 
+    {\reqsatis 1}
+    {\reqdissat 1}
 \end{myreq}
 
 \subsection{Audit Requirements}
@@ -1447,9 +1455,8 @@ Not applicable.
 \subsection{Cultural Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno 37}
-    {\reqtype 16}
+  \twoinline
+    {\reqno CL-1}
     {\reqevent 1}
   \reqdesc The product shall provide an option to not specify gender.
   \reqrat Users may not associate themselves as male or female.
@@ -1458,12 +1465,7 @@ Not applicable.
   gender.
   \twoinline
     {\reqsatis 5}
-    {\reqdissat 5}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater None
-  \reqhist Created October 11, 2024 
+    {\reqdissat 5} 
 \end{myreq}
 
 \section{Compliance Requirements}
@@ -1505,9 +1507,9 @@ features it has to offer.
 
 \subsection{Limitations in the Anticipated Implementation Environment That May
 Inhibit the New Product}
-\lips
+Not applicable
 \subsection{Follow-Up Problems}
-\lips
+Not applicable
 
 \section{Tasks}
 \subsection{Project Planning}
@@ -1517,20 +1519,33 @@ Inhibit the New Product}
 
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
-\lips
+Not applicable, we plan to begin use of Sandlot between seasons so that
+current season data does not need to be transfered between systems aside from
+archived past season standings.
 
 \subsection{Data That Has to be Modified or Translated for the New System}
-\lips
+
+\begin{myreq}
+  \reqno DMT-1
+  \reqdesc There will exist an archive of past seasons that displays past
+  season standings and results.
+  \reqrat Users may be disappointed if new solution overwrites past season
+  achievements.
+  \reqorig Alex Verity
+  \reqfit Past season standings shall be viewable on Sandlot.
+  \twoinline
+    {\reqsatis 1}
+    {\reqdissat 2}
+\end{myreq}
 
 \section{Costs}
-\lips
+Not applicable
 \section{User Documentation and Training}
 \subsection{User Documentation Requirements}
 
 \begin{myreq}
-  \threeinline
-    {\reqno xx}
-    {\reqtype 0}
+  \twoinline
+    {\reqno UD-1}
     {\reqevent xx}
   \reqdesc There must exist a user guide that informs users of the previous
   system and new users how to use the features of the new system.
@@ -1542,21 +1557,31 @@ Inhibit the New Product}
   \twoinline
     {\reqsatis 3}
     {\reqdissat 1}
-  \twoinline
-  {\reqdep None}
-  {\reqconf None}
-  \reqmater
-  \reqhist
 \end{myreq}
 
 \subsection{Training Requirements}
-\lips
+
+\begin{myreq}
+  \twoinline
+    {\reqno TR-1}
+    {\reqevent xx}
+  \reqdesc There must exist a code walkthrough of the system that infroms
+  future solution admins how the solution functions internally.
+  \reqrat Future Sandlot admins will need to understand the solution in order
+  to fix any possible errors that arise and add any features needed.
+  \reqorig Alex Verity
+  \reqfit There shall exist a code walkthrough that explains all source code
+  of the system.
+  \twoinline
+    {\reqsatis 2}
+    {\reqdissat 1}
+\end{myreq}
 
 \section{Waiting Room}
-\lips
+Not applicable.
 
 \section{Ideas for Solution}
-\lips
+Not applicable.
 
 \newpage{}
 \section*{Appendix --- Reflection}
