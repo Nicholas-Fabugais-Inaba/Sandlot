@@ -296,7 +296,107 @@ the contents of the subsections.}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-FR4\\}
+
+Control: Manual
+					
+Initial State: The system is set up and ready to take in the user's input.
+					
+Input: Valid account information.
+					
+Output: User inputted account information has replaced the previously displayed
+account information.
+
+Test Case Derivation: The account information inputted by the user has already been
+determined to be valid and should not cause the system to run into any errors. The
+user inputted account information, although should be correct, is not required by
+the system to be correct to change the user's previous account information.
+					
+How test will be performed: The tester will be provided valid account information
+that they will input into the system and observe if the system successfully
+accepts the inputted account information. The tester will also observe if the previously
+existing account information has been changed to the information that had been entered
+at the start of the test. At any point during the test, the tester will also observe if
+any errors occur within the system. 
+
+\item{test-FR8\\}
+
+Control: Manual
+					
+Initial State: The system has provided the option for captains to enter their team
+availability data and is ready to take in the user's input.
+					
+Input: Non-conflicting team availability data.
+					
+Output: Captain inputted team availability data is stored in the system.
+
+Test Case Derivation: The team availability data inputted by the captain has been
+determined to not conflict with other availability data already stored in the system.
+					
+How test will be performed: The tester will select the option to enter in team 
+availability data and be provided non-conflicting team availability
+data that they will input into the system. They will then observe if the system successfully
+accepts the inputted team availability data and if any errors occur within the system. 
+					
+\item{test-FR12\\}
+
+Control: Manual
+					
+Initial State: The system has received a captain's reschedule request and is ready to
+notify them about the outcome of their request.
+					
+Input: Captain reschedule request.
+					
+Output: A notification is sent by the system to the captain about the status of their
+reschedule request.
+
+Test Case Derivation: The notification about the status of a captain's reschedule
+request is immediately sent to the captain once the status is confirmed to be either
+accepted or denied by the system.
+					
+How test will be performed: The tester will be provided both a valid and invalid captain
+reschedule request to submit into the system and wait to observe the notification sent
+by the system of the status for the reschedule request. They will then observe if the
+system has both accepted and denied the submitted reschedule requests and if any errors
+occur within the system. 
+
+\item{test-FR16-1\\}
+
+Control: Manual
+					
+Initial State: A captain has created a team.
+					
+Input: Interaction with create a team functionality.
+					
+Output: A prompt displayed by the system to the captain that they have already created
+a team.
+
+Test Case Derivation: Because the system has determined the captain has already created a
+team, the system should not allow the captain to create more than one team.
+					
+How test will be performed: The tester will be provided a captain account that has already
+created a team. They will then attempt to create a team in the system and observe if the
+system prevents them from creating another team or if any errors occur within the system.
+
+\item{test-FR16-2\\}
+
+Control: Manual
+					
+Initial State: A player has joined a team.
+					
+Input: Interaction with join a team functionality.
+					
+Output: A prompt displayed by the system to the player that they have already joined
+a team.
+
+Test Case Derivation: Because the system has determined the player has already joined a
+team, the system should not allow the player to join more than one team.
+					
+How test will be performed: The tester will be provided a player account that has already
+joined a team. They will then attempt to join a team in the system and observe if the
+system prevents them from joining another team or if any errors occur within the system.
+
+\item{test-id2\\}
 
 Control: Manual versus Automatic
 					
@@ -307,20 +407,6 @@ Input:
 Output: \wss{The expected result for the given inputs.  Output is not how you
 are going to return the results of the test.  The output is the expected
 result.}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
 
 Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
