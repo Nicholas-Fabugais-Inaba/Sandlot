@@ -447,17 +447,23 @@ be involved? Be specific.}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-AP3\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+Type: Non-Functional, Dynamic, Manual
 					
-Initial State: 
+Initial State: The solution is opened on a user's web browser.
 					
-Input/Condition: 
+Input/Condition: The user will be asked if the images made for/by Sandlot are viewed at
+a high quality containing no pixelations or blurring at their displayed size.
 					
-Output/Result: 
+Output/Result: The supervisor will state that Sandlot's images are displayed at a high
+quality.
 					
-How test will be performed: 
+How test will be performed: The supervisor will be provided the solution and a set of
+sample inputs for Sandlot. They will then enter in the sample inputs and observe the
+generated outputs from the system.
+
+\wss{Remember to add a usability survey for the supervisor located in the Appendix.}
 					
 \item{test-id2\\}
 
@@ -477,18 +483,56 @@ How test will be performed:
 
 \begin{enumerate}
 
-  \item{test-id1\\}
+  \item{test-SR7\\}
   
-  Type: Functional, Dynamic, Manual, Static etc.
+  Type: Non-Functional, Dynamic, Manual
             
-  Initial State: 
+  Initial State: User is located on the system's login page and the system is ready
+  for the user's inputs.
             
-  Input/Condition: 
+  Input/Condition: Misinputted login information.
             
-  Output/Result: 
+  Output/Result: The system will provide a warning to the user for login information that
+  does not exist or does not match any database stored login information.
             
-  How test will be performed: 
+  How test will be performed: The tester will be provided login information that does not
+  currently exist in the database and they will input the provided information into the
+  system. The tester will observe the output or any errors that may occur in the system.
             
+  \item{test-LR3\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The solution is opened on a user's web browser.
+            
+  Input/Condition: A new user will be asked to navigate to the season schedule on their first
+  time interacting with the solution.
+            
+  Output/Result: A new user is able to successfully navigate to the season schedule on
+  their first time interacting with the solution.
+            
+  How test will be performed: A new user of the system will be provided the solution and
+  will be asked to navigate and view the season schedule.
+
+  \item{test-SR9\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The solution is opened on a user's web browser and a commissioner's web
+  browser.
+            
+  Input/Condition: A user will be sent an alert created by a commissioner and will be asked
+  if the alert is visible and readable.
+            
+  Output/Result: A user is able to successfully see the alert sent by a commissioner and
+  the alert is readable and clear enough for the user to understand.
+            
+  How test will be performed: The supervisor and a tester will be provided the solution and
+  will be asked to view/send an alert. Once the alert is sent/received, the recipient will
+  be asked to observe the alert.
+
+  \wss{Remember to add a usability survey for the supervisor located in the Appendix.}
+
   \item{test-id2\\}
   
   Type: Functional, Dynamic, Manual, Static etc.
@@ -499,7 +543,7 @@ How test will be performed:
             
   Output: 
             
-  How test will be performed: 
+  How test will be performed:
   
   \end{enumerate}
 
@@ -507,17 +551,24 @@ How test will be performed:
 
 \begin{enumerate}
 
-  \item{test-id1\\}
+  \item{test-CR1\\}
   
-  Type: Functional, Dynamic, Manual, Static etc.
+  Type: Non-Functional, Dynamic, Manual
             
-  Initial State: 
+  Initial State: The solution is opened on a user's web browser.
             
-  Input/Condition: 
+  Input/Condition: Sandlot should have 60 teams and 1500 players stored in the system at
+  once.
             
-  Output/Result: 
+  Output/Result: Sandlot should continue to successfully function with no faults when
+  60 teams have 25 players each stored in the system.
             
-  How test will be performed: 
+  How test will be performed: The system will be provided sample inputs for 60 teams and
+  25 players on each team. The tester will then observe the system as they navigate the
+  solution and utilize functionalities such as rescheduling games, and viewing the standings
+  and season schedule.
+
+  \wss{Remember to add a usability survey for the supervisor located in the Appendix.}
             
   \item{test-id2\\}
   
@@ -566,17 +617,22 @@ How test will be performed:
 
 \begin{enumerate}
 
-  \item{test-id1\\}
+  \item{test-MR1\\}
   
-  Type: Functional, Dynamic, Manual, Static etc.
+  Type: Non-Functional, Dynamic, Manual
             
-  Initial State: 
+  Initial State: The solution is opened on a user's web browser.
             
-  Input/Condition: 
+  Input/Condition: A tester will be asked to start a new season within a time constraint
+  of one hour.
             
-  Output/Result: 
+  Output/Result: A new season is successfully started within one hour of the solution
+  being initially opened in the tester's web browser.
             
-  How test will be performed: 
+  How test will be performed: A tester will be provided the solution and asked to start
+  a new season by following a set of instructions. A timer will begin at the same time
+  the solution is opened on the tester's web browser, in which, the tester should be
+  able to start a new season before one hour has passed.
             
   \item{test-id2\\}
   
@@ -596,18 +652,64 @@ How test will be performed:
 
 \begin{enumerate}
 
-  \item{test-id1\\}
+  \item{test-AS4\\}
   
-  Type: Functional, Dynamic, Manual, Static etc.
+  Type: Non-Functional, Dynamic, Manual
             
-  Initial State: 
+  Initial State: The solution is opened on a user's web browser.
             
-  Input/Condition: 
+  Input/Condition: A user's account with commissioner-level permissions will be asked to
+  send a league-wide alert to all users on the platform.
             
-  Output/Result: 
+  Output/Result: A commissioner is able to successfully send an alert to the entire league
+  that any user is able to view themselves when they have the solution opened.
             
-  How test will be performed: 
+  How test will be performed: A tester will be provided a commissioner account, a
+  non-commissioner account, and a sample alert message to send to the entire league
+  through the system. They will then be asked to send the alert via the commissioner
+  account, login to the non-commissioner account, and observe that the alert message
+  was successfully sent to any league users or if any errors had occured. When the tester
+  is logged into the non-commissioner account, they will also be asked if they are
+  able to send an alert or not or if any other errors occur.
+
+  \item{test-AS8\\}
+  
+  Type: Non-Functional, Dynamic, Manual
             
+  Initial State: The solution is opened on a user's web browser.
+            
+  Input/Condition: A user's account with commissioner-level permissions will be asked to
+  change the season schedule on the platform.
+            
+  Output/Result: A commissioner is able to successfully change the season schedule
+  when they have the solution opened.
+            
+  How test will be performed: A tester will be provided a commissioner account, a
+  non-commissioner account, and sample schedule data they will use to change the season
+  schedule. They will then be asked to use the provided schedule data to change the season
+  schedule and observe that the season schedule was successfully changed or if any errors
+  had occured. The tester will then be asked to login to the non-commissioner account and
+  observe if they can change the season schedule or not or if any other errors occur.
+
+  \item{test-SR2\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The solution is opened on a user's web browser.
+            
+  Input/Condition: A user's account is provided permissions that are different from the
+  the account's current permissions.
+            
+  Output/Result: The system provides a warning to the user changing an account's
+  permissions before the permissions are successfully updated.
+            
+  How test will be performed: A tester will be provided an account to change the
+  permissions for and the account itself. They will then be asked to update the account
+  that requires an update to its permissions and observe the warning given by the system
+  or if any errors had occured. The tester will then be asked to login to the account
+  that recently had its permissions change and try out new functionalities that should
+  have been provided with the permission update or if any errors had occured.
+
   \item{test-id2\\}
   
   Type: Functional, Dynamic, Manual, Static etc.
@@ -626,29 +728,21 @@ How test will be performed:
 
 \begin{enumerate}
 
-  \item{test-id1\\}
+  \item{test-CL1\\}
   
-  Type: Functional, Dynamic, Manual, Static etc.
+  Type: Non-Functional, Dynamic, Manual
             
-  Initial State: 
+  Initial State: A user is creating an account for themselves on the solution.
             
-  Input/Condition: 
+  Input/Condition: A user selects a gender option when creating their account.
             
-  Output/Result: 
+  Output/Result: A user is able to select a gender option that does not specify their
+  gender when creating their account.
             
-  How test will be performed: 
-            
-  \item{test-id2\\}
-  
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: 
-            
-  How test will be performed: 
+  How test will be performed: A tester will be provided the solution and will be asked
+  to create a new account. They will then be asked to select the gender option that allows
+  them to not specify their gender and observe if their information is displayed correctly
+  when they are finished creating their account or if any errors had occured.
   
   \end{enumerate}
 
