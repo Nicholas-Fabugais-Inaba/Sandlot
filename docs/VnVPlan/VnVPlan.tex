@@ -296,6 +296,44 @@ the contents of the subsections.}
 
 \begin{enumerate}
 
+  \item{test-FR-3-1\\}
+
+  Control: Manual
+            
+  Initial State: The system is not logged in to an account.
+            
+  Input: User navigates to create an account and enters valid account creation
+  data.
+            
+  Output: The system adds an account to the database and logs in to the new
+  account.
+  
+  Test Case Derivation: If valid account information is given a new account
+  should be created.
+  
+  How test will be performed: Multiple accounts will be added to the system
+  with differing valid account data covering all input fields.
+
+  \item{test-FR-3-2\\}
+
+  Control: Manual
+            
+  Initial State: The system is not logged in to an account.
+            
+  Input: User navigates to create an account and enters invalid account
+  creation data.
+            
+  Output: The system does not create a new account and the user is informed of
+  which data is invalid.
+  
+  Test Case Derivation: If invalid account information is given a new account
+  should not be created and the user should be notified of which data is
+  invalid.
+  
+  How test will be performed: Multiple attempts to create accounts with
+  differing invalid account data will be made, with invalid data each attempt
+  covering different input fields.
+
 \item{test-FR4\\}
 
 Control: Manual
@@ -317,7 +355,26 @@ that they will input into the system and observe if the system successfully
 accepts the inputted account information. The tester will also observe if the previously
 existing account information has been changed to the information that had been entered
 at the start of the test. At any point during the test, the tester will also observe if
-any errors occur within the system. 
+any errors occur within the system.
+
+\item{test-FR-7\\}
+
+Control: Automatic
+
+Initial State: The system is logged into a commissioner level account.
+          
+Input: New team data to replace a current team's data.
+          
+Output: If data is valid, system should replace the old team data with the new
+team data. If the data is invalid, the system should not change the old team
+data and inform the commissioner the data is invalid.
+
+Test Case Derivation: A commissioner level account should be able to change
+any team's data, including player list and scores.
+
+How test will be performed: A set of valid and invalid test cases will be
+submitted to the commissioner's replace team data feature, with the expected
+results compared to the results given by the program.
 
 \item{test-FR8\\}
 
@@ -337,7 +394,43 @@ How test will be performed: The tester will select the option to enter in team
 availability data and be provided non-conflicting team availability
 data that they will input into the system. They will then observe if the system successfully
 accepts the inputted team availability data and if any errors occur within the system. 
-					
+
+\item{test-FR-11-1\\}
+
+Control: Manual
+
+Initial State: There are two captains whose team's are scheduled to play a
+game in the future.
+          
+Input: One captain submits a reschedule request.
+
+Output: The other captain recieves a reschedule request.
+
+Test Case Derivation: A captain should recieve a reschedule request if another
+captain submits a request on a game both captains will be playing.
+
+How test will be performed: The tester will check if a reschedule request is
+successfully sent when a captain requests a reschedule. This will be checked
+for at least 3 different dates and times.
+
+\item{test-FR-11-2\\}
+
+Control: Manual
+
+Initial State: A reschedule request has been sent to a captain.
+          
+Input: A captain accepts or denies a reschedule request.
+
+Output: If accepted, the game is rescheduled to that time. If denied, the
+captain who made the request is notified of the denial.
+
+Test Case Derivation: A captain should be able to accept or deny a reschedule
+request.
+
+How test will be performed: The tester will accept or deny multiple reschedule
+requests on different dates and times and verify the correct output is made by
+the system.
+
 \item{test-FR12\\}
 
 Control: Manual
@@ -359,6 +452,24 @@ reschedule request to submit into the system and wait to observe the notificatio
 by the system of the status for the reschedule request. They will then observe if the
 system has both accepted and denied the submitted reschedule requests and if any errors
 occur within the system. 
+
+\item{test-FR-15\\}
+
+Control: Manual
+
+Initial State: The system will have a game in the schedule that will be played
+in the future. The system is logged in as a captain.
+          
+Input: A score submitted for a game.
+
+Output: No output.
+
+Test Case Derivation: A score should not be entered by a captain until a game
+is played.
+
+How test will be performed: A captain level account will attempt to submit a
+score for a game that has not been played yet. It should not modify the
+standings.
 
 \item{test-FR16-1\\}
 
