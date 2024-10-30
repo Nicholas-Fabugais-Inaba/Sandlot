@@ -296,7 +296,7 @@ the contents of the subsections.}
 
 \begin{enumerate}
 
-  \item{test-FR-3-1\\}
+  \item{test-FR3-1\\}
 
   Control: Manual
             
@@ -314,7 +314,7 @@ the contents of the subsections.}
   How test will be performed: Multiple accounts will be added to the system
   with differing valid account data covering all input fields.
 
-  \item{test-FR-3-2\\}
+  \item{test-FR3-2\\}
 
   Control: Manual
             
@@ -357,7 +357,7 @@ existing account information has been changed to the information that had been e
 at the start of the test. At any point during the test, the tester will also observe if
 any errors occur within the system.
 
-\item{test-FR-7\\}
+\item{test-FR7\\}
 
 Control: Automatic
 
@@ -395,7 +395,7 @@ availability data and be provided non-conflicting team availability
 data that they will input into the system. They will then observe if the system successfully
 accepts the inputted team availability data and if any errors occur within the system. 
 
-\item{test-FR-11-1\\}
+\item{test-FR11-1\\}
 
 Control: Manual
 
@@ -413,7 +413,7 @@ How test will be performed: The tester will check if a reschedule request is
 successfully sent when a captain requests a reschedule. This will be checked
 for at least 3 different dates and times.
 
-\item{test-FR-11-2\\}
+\item{test-FR11-2\\}
 
 Control: Manual
 
@@ -453,7 +453,7 @@ by the system of the status for the reschedule request. They will then observe i
 system has both accepted and denied the submitted reschedule requests and if any errors
 occur within the system. 
 
-\item{test-FR-15\\}
+\item{test-FR15\\}
 
 Control: Manual
 
@@ -558,6 +558,22 @@ be involved? Be specific.}
 
 \begin{enumerate}
 
+  \item{test-AP2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in.
+
+  Input: Inputs associated with each different type of input field in the
+  solution.
+
+  Output: Feedback from each input field.
+
+  How test will be performed: Each possible type of input will be used by the
+  tester and they will monitor the result for feedback. Each input field will
+  be tested with valid and invalid data if applicable, and invalid data should
+  receive feedback that lets the user know the input was invalid.
+
 \item{test-AP3\\}
 
 Type: Non-Functional, Dynamic, Manual
@@ -594,6 +610,22 @@ How test will be performed:
 
 \begin{enumerate}
 
+  \item{test-EU1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in.
+
+  Input: Navigation inputs leading to the full season schedule.
+
+  Output: The season schedule displayed on the screen.
+
+  How test will be performed: At least 5 testers unfamiliar to the system will
+  attempt to navigate to the season schedule. Their number of clicks used and
+  time taken to get to the season schedule will be recorded. The test passes
+  if on average testers take less than 2 clicks and less than one minutes to
+  find the schedule.
+
   \item{test-SR7\\}
   
   Type: Non-Functional, Dynamic, Manual
@@ -609,6 +641,21 @@ How test will be performed:
   How test will be performed: The tester will be provided login information that does not
   currently exist in the database and they will input the provided information into the
   system. The tester will observe the output or any errors that may occur in the system.
+
+  \item{test-LR2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a captain level account.
+
+  Input: Inputs for all features available to captain level accounts.
+
+  Output: The results of using each captain level account feature.
+
+  How test will be performed: A tester will be given a list of tasks to
+  complete including creating a team, modifying team data and submitting a
+  score. The tester will also be given the user manual. If the user can
+  complete all tasks in less than one hour the test is successful.
             
   \item{test-LR3\\}
   
