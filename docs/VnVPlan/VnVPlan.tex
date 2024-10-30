@@ -672,6 +672,21 @@ How test will be performed:
   How test will be performed: A new user of the system will be provided the solution and
   will be asked to navigate and view the season schedule.
 
+  \item{test-AC2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a commissioner level accuont.
+
+  Input: Navigation to each page of the system.
+
+  Output: The colours on screen of each page of the system.
+
+  How test will be performed: Each page of the system will be viewed, and any
+  adjacent colours will be confirmed to have a ratio of at least 4.5:1.
+  Particular attention will be given to input fields and critical information
+  such as schedules.
+
   \item{test-SR9\\}
   
   Type: Non-Functional, Dynamic, Manual
@@ -768,6 +783,10 @@ How test will be performed:
   Output: 
             
   How test will be performed: 
+
+  \item{test-RR1\\}
+
+  No test needed for requirement.
   
   \end{enumerate}
 
@@ -810,6 +829,20 @@ How test will be performed:
 
 \begin{enumerate}
 
+  \item{test-AS3\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a player level account.
+
+  Input: A reschedule request is attempted.
+
+  Output: No output.
+
+  How test will be performed: A player level account will attempt to perform
+  the same actions a captain level account would do to reschedule an upcoming
+  game. If they cannot perform these actions, the test succeeds.
+
   \item{test-AS4\\}
   
   Type: Non-Functional, Dynamic, Manual
@@ -830,6 +863,20 @@ How test will be performed:
   is logged into the non-commissioner account, they will also be asked if they are
   able to send an alert or not or if any other errors occur.
 
+  \item{test-AS7\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a player level account.
+
+  Input: A team data change input is attempted.
+
+  Output: No output.
+
+  How test will be performed: A player level account will attempt to perform
+  the same actions a captain level account would do to change the player list
+  for their team. If they cannot perform these actions, the test succeeds.
+
   \item{test-AS8\\}
   
   Type: Non-Functional, Dynamic, Manual
@@ -848,6 +895,36 @@ How test will be performed:
   schedule and observe that the season schedule was successfully changed or if any errors
   had occured. The tester will then be asked to login to the non-commissioner account and
   observe if they can change the season schedule or not or if any other errors occur.
+
+  \item{test-AS11-1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a player level account.
+
+  Input: A user attempts to view the contact information of a player and
+  a captain not on their team.
+
+  Output: No output.
+
+  How test will be performed: A player level account will attempt to view the
+  contact information of a player and a captain on another team. If they
+  cannot perform these actions, the test succeeds.
+
+  \item{test-AS11-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a captain level account.
+
+  Input: A user attempts to view the contact information of a player not on
+  their team.
+
+  Output: No output.
+
+  How test will be performed: A captain level account will attempt to view the
+  contact information of a player on another team. If they cannot perform
+  these actions, the test succeeds.
 
   \item{test-SR2\\}
   
@@ -868,6 +945,35 @@ How test will be performed:
   that recently had its permissions change and try out new functionalities that should
   have been provided with the permission update or if any errors had occured.
 
+  \item{test-SR3\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a commissioner level account.
+
+  Input: A user attempts to delete their account.
+
+  Output: A warning that you cannot delete the only commissioner level
+  account.
+
+  How test will be performed: A commissioner level account will attempt to
+  delete their account. The test succeeds if they get a warning that their
+  account cannot be deleted since it is the only commissioner level account
+  and the account is not deleted.
+
+  \item{test-SR10\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in.
+
+  Input: A user creates an account.
+
+  Output: A warning to keep your password secure, and a new account is made.
+
+  How test will be performed: A new account will be created. If the user 
+  receives a warning to keep their password secure, the test succeeds.
+
   \item{test-id2\\}
   
   Type: Functional, Dynamic, Manual, Static etc.
@@ -880,7 +986,7 @@ How test will be performed:
             
   How test will be performed: 
   
-  \end{enumerate}
+\end{enumerate}
 
 \subsubsection{Cultural Requirements}
 
@@ -902,7 +1008,35 @@ How test will be performed:
   them to not specify their gender and observe if their information is displayed correctly
   when they are finished creating their account or if any errors had occured.
   
-  \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Migration to the New Product}
+
+\begin{enumerate}
+
+  \item{test-id2\\}
+  
+  Type: Functional, Dynamic, Manual, Static etc.
+            
+  Initial State: 
+            
+  Input: 
+            
+  Output: 
+            
+  How test will be performed: 
+
+\end{enumerate}
+
+\subsubsection{User Documentation and Training}
+
+\begin{enumerate}
+
+  \item{test-TR1\\}
+
+  No test needed for this requirement.
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
