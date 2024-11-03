@@ -314,6 +314,24 @@ the contents of the subsections.}
   How test will be performed: Captain accounts will create multiple
   valid teams with differing data that covers all input fields.
 
+  \item{test-FR2-2\\}
+
+  Control: Manual
+            
+  Initial State: Captain user is logged in.
+            
+  Input: Captain user navigates to team creation and inputs invalid team 
+  information then submits. 
+            
+  Output: No team is added to the database and user is given informative 
+  feedback as to why team submission failed.
+  
+  Test Case Derivation: If invalid team information is submitted, team
+  should not be created and user should be told the reason as to why.
+  
+  How test will be performed: Captain accounts will attempt to create 
+  multiple invalid teams with differing data that covers all input fields. 
+
   \item{test-FR3-1\\}
 
   Control: Manual
@@ -374,6 +392,39 @@ accepts the inputted account information. The tester will also observe if the pr
 existing account information has been changed to the information that had been entered
 at the start of the test. At any point during the test, the tester will also observe if
 any errors occur within the system.
+
+\item{test-FR6-1\\}
+
+Control: 
+
+Initial State: The system is logged into a commissioner level account.
+          
+Input: Valid alert data and chosen target user(s) entered.
+          
+Output: Alerts are stored in the system. Alerts are viewable by target users.
+
+Test Case Derivation: Alerts sent to target user should be able to be 
+seen by those target users.
+
+How test will be performed: Different commissioner level accounts input
+various valid alert data and submit. Target user accounts should be checked
+if the alerts are received.
+
+\item{test-FR6-2\\}
+
+Control: 
+
+Initial State: The system is logged into a commissioner level account.
+          
+Input: Invalid alert data or invalid chosen target user(s) entered.
+          
+Output: User is given informative feedback as to why alert failed to submit.
+
+Test Case Derivation: Invalid alerts should not be sent and user should
+be told as to why they could not be sent.
+
+How test will be performed: Commissioner level account inputs various invalid
+alert data covering all input fields.
 
 \item{test-FR7\\}
 
