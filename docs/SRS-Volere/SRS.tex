@@ -587,14 +587,15 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-8}
     {\reqevent 3}
-  \reqdesc Before the season starts, captains must have the option to give a
-  list of days over the season marking their team's availabilty.
+  \reqdesc Before the season starts, captains must have the option to give
+  their team's availabilty for the season.
   \reqrat Each team will have members who may only be free on certain days of
   the season. This availability will inform the season schedule so that teams
   will have as many people attending each game as possible.
   \reqorig Alex Verity
   \reqfit Before the seaon starts, captains shall be able to view the option to
-  enter their availability and once entered, it shall be stored by the system.
+  enter their availability and once entered, it shall be stored by the system
+  to be used for scheduling.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
@@ -811,8 +812,8 @@ All necessary parts of this section were covered in section 6.
   \reqrat Users should know what section of the site they will be accessing
   when they click on a navigation option so they don't get lost or confused.
   \reqorig Alex Verity
-  \reqfit Navigation options shall be consistently placed across pages and
-  their destination should be visibly written.
+  \reqfit Navigation options shall be placed across all pages and their
+  destination should be visibly written.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
@@ -1115,7 +1116,7 @@ Not applicable.
     {\reqevent xx}
   \reqdesc Sandlot should function on the last four releases for the five
   most popular browsers.
-  \reqrat Sandlot should be accessable to a wide variety of users.
+  \reqrat Sandlot should be accessible to a wide variety of users.
   \reqorig Alex Verity
   \reqfit The site shall function on the last four releases for the five most
   popular browsers.
@@ -1169,13 +1170,14 @@ Not applicable, our solution will run on the web.
 \subsection{Access Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AS-1}
-    {\reqevent 4}
-  \reqdesc Only players can join a team.
-  \reqrat Users not logged in as a player should not be able to join a team.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Player is able to request to join the team their captain created.
+  \reqno AS-1
+  \reqdesc Viewing the league schedule and standings are accessible by any
+  users of the system, logged in or not.
+  \reqrat Viewing the schedule or standings should be accessible by spectators
+  and umpires who will not have accounts in the system.
+  \reqorig Jung Woo Lee
+  \reqfit The league schedule and standings should be visible to all users
+  including those not logged in.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1184,12 +1186,13 @@ Not applicable, our solution will run on the web.
 \begin{myreq}
   \twoinline
     {\reqno AS-2}
-    {\reqevent 3}
-  \reqdesc Only captains can create their own teams.
-  \reqrat Users not logged in as a captain should not be able to create their
-  own team.
+    {\reqevent 9}
+  \reqdesc Players can only see the contact information of their own captain.
+  \reqrat Players may need to contact their captain but but should not have
+  access to every account's information.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Captains are able to create their own teams.
+  \reqfit Players shall not be able to see any contact information outside of
+  their team's captain.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1198,11 +1201,14 @@ Not applicable, our solution will run on the web.
 \begin{myreq}
   \twoinline
     {\reqno AS-3}
-    {\reqevent 6}
-  \reqdesc Only captains can reschedule games for their team.
-  \reqrat Users not logged in as a captain should not be able to reschedule games.
+    {\reqevent 9}
+  \reqdesc Captains can only see the contact information of players on their
+  own team and other team captains.
+  \reqrat Captains may need to contact their players and other team captains
+  but should not have access to every account's information.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Captains are able to request a reschedule for their upcoming game.
+  \reqfit Captains shall not be able to see any contact information outside of
+  players on their team or other team captains.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1211,120 +1217,20 @@ Not applicable, our solution will run on the web.
 \begin{myreq}
   \twoinline
     {\reqno AS-4}
-    {\reqevent 10}
-  \reqdesc Only commissioners can send a league-wide alert.
-  \reqrat Users not logged in as a commissioner should not be able to send a
-  league-wide alert.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to send an alert to the entire league.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-5}
-    {\reqevent 12}
-  \reqdesc Only commissioners can assign teams to a division.
-  \reqrat Users not logged in as a commissioner should not be able to assign
-  teams to a division.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to assign a team to a division.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-6}
-    {\reqevent 12}
-  \reqdesc Only commissioners can change any team's composition.
-  \reqrat Users not logged in as a commissioner should not be able to change
-  a team's composition.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to change any team's composition.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-7}
-    {\reqevent 12}
-  \reqdesc Only captains can change their own team's composition.
-  \reqrat Users not logged in as a captain should not be able to change
-  a team's composition.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Captains are able to change their own team's composition.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-8}
-    {\reqevent 12}
-  \reqdesc Only commissioners can change the season schedule.
-  \reqrat Users not logged in as a commissioner should not be able to change
-  the season's schedule.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to change the season's schedule.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-9}
     {\reqevent 9}
-  \reqdesc Only players can see the contact information of their own captain.
-  \reqrat A player's email and phone number shall remain anonymous to
-  individuals outside the league and everyone else but their captain.
+  \reqdesc Commissioners can see the contact information of everyone in the
+  league.
+  \reqrat Commissioners may need to contact any account in the system.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Contact information for players can only be seen by their own captain.
+  \reqfit Commissioners shall be able to see any account's contact
+  information.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
 \end{myreq}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AS-10}
-    {\reqevent 9}
-  \reqdesc Captains can see the contact information of players on their own team and
-  other captains on other teams.
-  \reqrat A captain's email and phone number shall remain anonymous to
-  individuals outside the league or to players on other teams.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Contact information for captains can only be seen by
-  the players on their own team or other captains from other teams.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-11}
-    {\reqevent 9}
-  \reqdesc Only commissioners can see the contact information of everyone in the league.
-  \reqrat Player and captains shall remain anonymous to
-  individuals outside the league or to players on other teams.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are the only individuals in the league that can see everyone's
-  contact information.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \reqno AS-12
+  \reqno AS-5
   \reqdesc Giving permissions to users must be accompanied by an warning that
   warns the user of the severity of the action.
   \reqrat Accidentally giving permissions to users who shouldn't have them
@@ -1338,7 +1244,7 @@ Not applicable, our solution will run on the web.
 \end{myreq}
 
 \begin{myreq}
-  \reqno AS-13
+  \reqno AS-6
   \reqdesc Users can only access an account with correctly inputted login
   information that matches the database stored login information.
   \reqrat Login information stored in the database should correspond to a
@@ -1352,6 +1258,20 @@ Not applicable, our solution will run on the web.
     {\reqsatis 3}
     {\reqdissat 3}
   \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \twoinline
+    {\reqno AS-7}
+    {\reqevent 12}
+  \reqdesc Only commissioners can assign teams to a division.
+  \reqrat Users not logged in as a commissioner should not be able to assign
+  teams to a division.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to assign a team to a division.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
 \end{myreq}
 
 \subsection{Integrity Requirements}
