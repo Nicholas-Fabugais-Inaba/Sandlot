@@ -71,6 +71,7 @@ in.}
   \midrule 
   SRS & Software Requirements Specification\\
   GSA & Graduate Students Association\\
+  VnV & Verification and Validation\\
   T & Test\\
   \bottomrule
 \end{tabular}\\
@@ -1270,8 +1271,6 @@ How test will be performed:
 
 \section{Appendix}
 
-This is where you can place additional information.
-
 \subsection{Symbolic Parameters}
 
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
@@ -1279,7 +1278,47 @@ Their values are defined in this section for easy maintenance.
 
 \subsection{Usability Survey Questions?}
 
-\wss{This is a section that would be appropriate for some projects.}
+A Google Form will be provided to testers of the system to validate specific
+system tests outlined in the VnV plan. Questions in the Google Form will be
+the following:
+
+\begin{enumerate}
+  \item Were you able to access the system?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Was the system's user interface readable and easy to understand?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Was the system's user interface easy to navigate?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Was the system's user interface easy to use?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item If given inputs, were you able to receive the expected output from
+  the system?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Were there any problems/issues you ran into when interacting with
+  the system? Write them down below.
+  \item Is there anything else about the system you would like us to know?
+  Write your thoughts down below.
+\end{enumerate}
 
 \newpage{}
 \section*{Appendix --- Reflection}
