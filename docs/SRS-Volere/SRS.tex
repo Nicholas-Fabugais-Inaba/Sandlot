@@ -80,6 +80,8 @@ Oct. 28, 2024 & 1.2 & Removed unused sections in requirements cards. Renamed
 requirements; enforcing letter codes. Added requirements developed in hazard
 analysis and wrote new requirements to fill gaps and respond to peer feedback.
 \\
+Nov. 4, 2024 & 1.3 & Modified and added requirements to add coverage. Fixed
+vague requirements and changed requirements based on TA feedback.\\
 \bottomrule
 \end{tabularx}
 
@@ -437,6 +439,9 @@ allow users to view the scores of played games, is not working.
       12. Commissioner inputs admin command & Commissioner Admin Commands (in)
       & Commissioners have the ability to overwrite team composition and
       schedule.\\
+      13. Captain submits game score & Game Score (in)
+      & Captains submit the scores of games they have played into the
+      system.\\
       \hline
     \end{tabular}
   \end{center}
@@ -486,7 +491,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-2}
-    {\reqevent 2}
+    {\reqevent 3}
   \reqdesc Captains should be able to create a team which is added to the
   Sandlot database.
   \reqrat Teams are defined by captains, in charge of scheduling and
@@ -503,7 +508,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-3}
-    {\reqevent 2}
+    {\reqevent 1}
   \reqdesc Users should be able to create a new account by providing 
   the necessary information. 
   \reqrat An account strcuture is necessary to be able to change 
@@ -522,7 +527,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-4}
-    {\reqevent 2}
+    {\reqevent xx}
   \reqdesc Users should be able to change their account information 
   by providing the necessary information.
   \reqrat User information does not stay the same forever, 
@@ -539,7 +544,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-5}
-    {\reqevent 2}
+    {\reqevent xx}
   \reqdesc Users should be able delete their account by providing 
   the necessary information.
   \reqrat If a user wants to quit the league they should be able to
@@ -557,7 +562,7 @@ All necessary parts of this section were covered in section 6.
     {\reqno FR-6}
     {\reqevent 8,9}
   \reqdesc Commissioners should be able to send alerts with custom information
-  to a specified user or group of user.
+  to a specified user or group of users.
   \reqrat Commissioners have the need to notify league members with any new
   information relevant to the league. 
   \reqorig Alex Verity
@@ -587,14 +592,15 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-8}
     {\reqevent 3}
-  \reqdesc Before the season starts, captains must have the option to give a
-  list of days over the season marking their team's availabilty.
+  \reqdesc Before the season starts, captains must have the option to give
+  their team's availabilty for the season.
   \reqrat Each team will have members who may only be free on certain days of
   the season. This availability will inform the season schedule so that teams
   will have as many people attending each game as possible.
   \reqorig Alex Verity
   \reqfit Before the seaon starts, captains shall be able to view the option to
-  enter their availability and once entered, it shall be stored by the system.
+  enter their availability and once entered, it shall be stored by the system
+  to be used for scheduling.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
@@ -620,10 +626,10 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-10}
     {\reqevent 6}
-  \reqdesc Captains must be able to request a reschedule for upcoming games
-  as long as the game is at least 24 hours in the future. Rescheduling
-  involves giving a list of alternate dates which are sent to the opposing
-  team's captain to choose a date and accept.
+  \reqdesc Captains must be able to request a reschedule for their team's
+  upcoming games as long as the game is at least 24 hours in the future.
+  Rescheduling involves giving a list of alternate dates which are sent to
+  the opposing team's captain to choose a date and accept.
   \reqrat Rescheduling is a core feature of the product, and schedule changes
   less than a day from when they are to occur may be too little warning for
   players to prepare for.
@@ -639,16 +645,15 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-11}
     {\reqevent 3}
-  \reqdesc When recieving a reschedule request from another captain, the system should
-  prompt the captain to either accept the reshedule request and choose a date or 
-  deny the request.
-  \reqrat Sometimes a captain may not be able to reschedule a game due to prior commitments
-  or some other external factors. Therefore there should be both an option to accept or deny 
-  any reshedule request.
-  or deny
+  \reqdesc When a captain receives a reschedule request, the system should
+  prompt the captain to either accept the reshedule request and choose a date
+  from the list of alternate dates or deny the request.
+  \reqrat Sometimes a captain may not be able to reschedule a game due to
+  prior commitments or some other external factors. Therefore, there should be
+  both an option to accept or deny any reshedule request.
   \reqorig Casra Ghazanfari
-  \reqfit A captain shall have the option to either accepy or deny any request to 
-  reschedule a game.
+  \reqfit A captain shall have the option to either accepy or deny any request
+  to reschedule a game.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -658,13 +663,13 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-12}
     {\reqevent 3}
-  \reqdesc When a captains rechedule request is either accepted or denied the system should
-  notify them about about the outcome.
-  \reqrat It is important that the sender of the rechedule request is informed about the status of 
-  the request quickly
+  \reqdesc When a captains rechedule request is either accepted or denied the
+  system should notify them about about the outcome.
+  \reqrat It is important that the sender of the rechedule request is informed
+  about the status of the request quickly
   \reqorig Casra Ghazanfari
-  \reqfit A captain who sent a reschedule request shall be notified on the status of the request
-  when it is responded to. 
+  \reqfit A captain who sent a reschedule request shall be notified on the
+  status of the request when it is responded to. 
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -674,8 +679,7 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-13}
     {\reqevent 9}
-  \reqdesc Captains should be able to update the team information of only their
-  team, including team name, player list and scores.
+  \reqdesc Captains should be able to update their team name and player list.
   \reqrat Captains are representatives of their teams and should have the ability
   to control information about their team on a high level. However, they should not
   have the same power as the comissioner and therefore should only be able to change 
@@ -690,13 +694,15 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-14}
-    {\reqevent 9}
-  \reqdesc Users should not be able to update the team information of any
-  team, including team name, player list and scores.
-  \reqrat Users are generally low level users and should not have the ability to
-  make changes that affect their whole team.
-  \reqorig Casra Ghazanfari
-  \reqfit A user shall not have the ability to update team information.
+    {\reqevent 13}
+  \reqdesc Captains should be able to submit scores for a game their team has
+  played after the game has been completed.
+  \reqrat Once a game is completed the system must know what the score was to
+  accurately keep track of standings. The most reliable way to achieve this is
+  a captain submitting it.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The captain should be able to submit a score after their scheduled
+  game time is passed.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -705,15 +711,12 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-15}
-    {\reqevent 9}
-  \reqdesc The score of a game should not be able to be updated until after
-  the it is completed.
-  \reqrat The score of a game is unknown until it is completed having the option to 
-  update the score of the game before it is completed is useless at best and harmful
-  at worst.
-  \reqorig Casra Ghazanfari
-  \reqfit The ability to update the score of a game will only display after the 
-  game has been played.
+    {\reqevent 4}
+  \reqdesc Players should be able to join a team.
+  \reqrat Players need to join a team to get a team schedule and play in the
+  league.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit When a player joins a team they are added to the team's player list.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -722,21 +725,20 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-16}
-    {\reqevent 2,3}
-  \reqdesc Non-commissioner accounts can only be a member of one team.
-  \reqrat To ensure competition is fair and to avoid captains accidentally
-  making extranious teams, users are limited to one team each.
+    {\reqevent 2}
+  \reqdesc Account holders should be able to log in to Sandlot.
+  \reqrat After a user makes an account they will need to access that account
+  to use account related features.
   \reqorig Alex Verity
-  \reqfit Once a team is created by a captain or a team is joined by a player,
-  they shall not be allowed to use the functionality to create a team or join
-  a team.
+  \reqfit When a player enters valid account data the solution logs them in to
+  their account.
   \twoinline
-    {\reqsatis 2}
-    {\reqdissat 2}
+    {\reqsatis 4}
+    {\reqdissat 5}
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-1
+  \reqno FR-17
   \reqdesc If the season start availability due date hasn't been reached, a
   captain should be able to resubmit availability data which overwrites
   previous availability data.
@@ -748,16 +750,92 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 3}
-  \reqhist Created 2024-10-15
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-18
+  \reqdesc Commissioners should be able to edit the league schedule.
+  \reqrat Commissioners have admin level permissions and should be able to
+  modify the schedule to account for unforseen problems.
+  \reqorig Alex Verity
+  \reqfit If the commissioner inputs new schedule data, the schedule is
+  reflects the updates made.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-19
+  \reqdesc Commissioners are able to assign captain level permissions to
+  users.
+  \reqrat Commissioners should be assign captains as captains are needed to
+  create and manage teams.
+  \reqorig Alex Verity
+  \reqfit If the commissioner assigns a user to captain, the user's account
+  will gain captain level permissions.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-20
+  \reqdesc The system must display a schedule that includes all past and
+  future games from all teams on a calendar.
+  \reqrat All users need to know the league's schedule.
+  \reqorig Jung Woo Lee
+  \reqfit The system shall display a shedule that includes all past and
+  future games from all teams on a calendar.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-21
+  \reqdesc The system must display a team schedule for each team that includes
+  all the team's past and future games.
+  \reqrat Users would like to see an individual team's schedule.
+  \reqorig Jung Woo Lee
+  \reqfit For each team, the system shall display a shedule that includes all
+  past and future games from the team.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-22
+  \reqdesc The system must display a schedule that displays all upcoming games
+  within a short time interval specified by the commissioner from the present.
+  \reqrat Users would like to see a schedule focused on the soonest games in
+  the season.
+  \reqorig Jung Woo Lee
+  \reqfit The system shall display a schedule that displays all upcoming games
+  within a short time interval specified by the commissioner from the present.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-23
+  \reqdesc There can be only one captain associated with each team. Players
+  who are captains of other teams do not count towards the one captain limit.
+  \reqrat Based on the league rules, teams are only allowed one captain.
+  \reqorig Jung Woo Lee
+  \reqfit No team can have more than one captain associated with the team.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
 \end{myreq}
 
 \section{Look and Feel Requirements}
 \subsection{Appearance Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AP-1}
-    {\reqevent xx}
+  \reqno AP-1
   \reqdesc All user input elements should be distinctive such that they can be
   contrasted. 
   \reqrat User input should be clear to all users so users know where to enter
@@ -771,9 +849,7 @@ All necessary parts of this section were covered in section 6.
 \end{myreq}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AP-2}
-    {\reqevent xx}
+  \reqno AP-2
   \reqdesc All user input elements should provide feedback.
   \reqrat Users should be able to know if their inputs are working or not.
   \reqorig Alex Verity
@@ -785,9 +861,7 @@ All necessary parts of this section were covered in section 6.
 \end{myreq}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AP-3}
-    {\reqevent xx}
+  \reqno AP-3
   \reqdesc All images and visuals made for/by Sandlot should be high quality.
   \reqrat Low quality images and visuals are unprofessional, and the solution
   should appear professional when possible. Only images made for/by Sandlot
@@ -802,17 +876,14 @@ All necessary parts of this section were covered in section 6.
 \end{myreq}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AP-4}
-    {\reqtype 0}
-    {\reqevent xx}
+  \reqno AP-4
   \reqdesc Navigation should be straightforward, with menus and links easily
   accessible and readable.
   \reqrat Users should know what section of the site they will be accessing
   when they click on a navigation option so they don't get lost or confused.
   \reqorig Alex Verity
-  \reqfit Navigation options shall be consistently placed across pages and
-  their destination should be visibly written.
+  \reqfit Navigation options shall be placed across all pages and their
+  destination should be visibly written.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
@@ -821,16 +892,15 @@ All necessary parts of this section were covered in section 6.
 \subsection{Style Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno STY-1}
-    {\reqevent xx}
-  \reqdesc The solution should use a consistent style across the entire user
-  interface.
+  \reqno STY-1
+  \reqdesc The solution should use the same colours, fonts and buttons across
+  the entire user interface.
   \reqrat To ensure the professionalism of the solution, the style should
   feel unified and consistent to all users.
   \reqorig Alex Verity
-  \reqfit All interface elements shall use consistent fonts, colors, layout
-  grids, and spacing, ensuring a cohesive visual style and branding.
+  \reqfit All interface elements shall use fonts, colors and user input fields
+  that are the same as those used in another section of the solution, ensuring
+  a cohesive visual style and branding.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
@@ -856,7 +926,7 @@ All necessary parts of this section were covered in section 6.
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-7
+  \reqno EU-2
   \reqdesc Misinputted user login information shall provide a warning to the
   user, if login information does not exist or does not match the database
   stored login information.
@@ -875,7 +945,7 @@ All necessary parts of this section were covered in section 6.
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-8
+  \reqno EU-3
   \reqdesc Teams will be given a warning if their availability data has
   scheduling conflicts.
   \reqrat The system should be able to create a valid schedule, in which
@@ -946,11 +1016,9 @@ Not applicable.
 \subsection{Understandability and Politeness Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno UP-1}
-    {\reqevent xx}
-  \reqdesc Any terminology or symbols used are consistent with the past
-  solution.
+  \reqno UP-1
+  \reqdesc Any terminology or symbols used are the same as ones used in the
+  past solution.
   \reqrat The terminology used should be the same as the past solution to
   make sure there is little confusion. For example the term off day will be
   used during scheduling as that is used in the past solution.
@@ -964,9 +1032,7 @@ Not applicable.
 \subsection{Accessibility Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AC-1}
-    {\reqevent xx}
+  \reqno AC-1
   \reqdesc The fonts used should be readable by all users.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
   font is an appropriate size for those with reduced vision.
@@ -979,9 +1045,7 @@ Not applicable.
 \end{myreq}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AC-2}
-    {\reqevent xx}
+  \reqno AC-2
   \reqdesc Colours used should be colour blind friendly.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
   colours are able to be contrasted by all users.
@@ -994,7 +1058,7 @@ Not applicable.
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-9
+  \reqno AC-3
   \reqdesc Alerts sent to users must be visible and readable.
   \reqrat User may travel to a game that was postponed or cancelled, or miss
   out on critical information.
@@ -1010,10 +1074,7 @@ Not applicable.
 \subsection{Speed and Latency Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno SL-1}
-    {\reqtype 0}
-    {\reqevent xx}
+  \reqno SL-1
   \reqdesc Solution must load quickly and provide smooth user interactions,
   ensuring minimal delays when accessing content.
   \reqrat Sandlot will need to be a solution users are not frustrated by to
@@ -1033,9 +1094,7 @@ Not applicable.
 \subsection{Reliability and Availability}
 
 \begin{myreq}
-  \twoinline
-    {\reqno RA-1}
-    {\reqevent xx}
+  \reqno RA-1
   \reqdesc All features of the solution will achieve 99 percent uptime.
   \reqrat The past solution often has features that will break and go down,
   such as the standings feature, which at the time of writing is down. Our
@@ -1051,9 +1110,7 @@ Not applicable.
 \subsection{Robustness or Fault-Tolerance Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno RFT-1}
-    {\reqevent xx}
+  \reqno RFT-1
   \reqdesc The fonts used should be readable by all users.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
   font is an appropriate size for those with reduced vision.
@@ -1068,9 +1125,7 @@ Not applicable.
 \subsection{Capacity Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno CR-1}
-    {\reqevent xx}
+  \reqno CR-1
   \reqdesc Sandlot should function for upwards of 60 teams and 1500 players in
   the system at once.
   \reqrat Sandlot should be able to function even if the league increases in
@@ -1084,9 +1139,7 @@ Not applicable.
 \end{myreq}
 
 \begin{myreq}
-  \twoinline
-    {\reqno CR-2}
-    {\reqevent xx}
+  \reqno CR-2
   \reqdesc Sandlot should function for upwards of 500 concurrent users.
   \reqrat Sandlot should be able to function even if a large portion of the
   league including spectators are using the solution.
@@ -1110,12 +1163,10 @@ Not applicable.
 \subsection{Requirements for Interfacing with Adjacent Systems}
 
 \begin{myreq}
-  \twoinline
-    {\reqno IAS-1}
-    {\reqevent xx}
+  \reqno IAS-1
   \reqdesc Sandlot should function on the last four releases for the five
   most popular browsers.
-  \reqrat Sandlot should be accessable to a wide variety of users.
+  \reqrat Sandlot should be accessible to a wide variety of users.
   \reqorig Alex Verity
   \reqfit The site shall function on the last four releases for the five most
   popular browsers.
@@ -1129,9 +1180,7 @@ Not applicable.
 \subsection{Release Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno RR-1}
-    {\reqevent xx}
+  \reqno RR-1
   \reqdesc Sandlot will be released between league seasons.
   \reqrat Data will be difficult to transfer to Sandlot mid season, Sandlot
   will not have that functionality on release.
@@ -1146,9 +1195,7 @@ Not applicable.
 \subsection{Maintenance Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno MR-1}
-    {\reqevent xx}
+  \reqno MR-1
   \reqdesc A new season can be started (i.e. saving past standings, reseting
   teams.) within one hour.
   \reqrat New seasons should not require a lot of maintenance to reset.
@@ -1169,13 +1216,14 @@ Not applicable, our solution will run on the web.
 \subsection{Access Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AS-1}
-    {\reqevent 4}
-  \reqdesc Only players can join a team.
-  \reqrat Users not logged in as a player should not be able to join a team.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Player is able to request to join the team their captain created.
+  \reqno AS-1
+  \reqdesc Viewing the league schedule and standings are accessible by any
+  users of the system, logged in or not.
+  \reqrat Viewing the schedule or standings should be accessible by spectators
+  and umpires who will not have accounts in the system.
+  \reqorig Jung Woo Lee
+  \reqfit The league schedule and standings should be visible to all users
+  including those not logged in.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1184,12 +1232,13 @@ Not applicable, our solution will run on the web.
 \begin{myreq}
   \twoinline
     {\reqno AS-2}
-    {\reqevent 3}
-  \reqdesc Only captains can create their own teams.
-  \reqrat Users not logged in as a captain should not be able to create their
-  own team.
+    {\reqevent 9}
+  \reqdesc Players can only see the contact information of their own captain.
+  \reqrat Players may need to contact their captain but but should not have
+  access to every account's information.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Captains are able to create their own teams.
+  \reqfit Players shall not be able to see any contact information outside of
+  their team's captain.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1198,11 +1247,14 @@ Not applicable, our solution will run on the web.
 \begin{myreq}
   \twoinline
     {\reqno AS-3}
-    {\reqevent 6}
-  \reqdesc Only captains can reschedule games for their team.
-  \reqrat Users not logged in as a captain should not be able to reschedule games.
+    {\reqevent 9}
+  \reqdesc Captains can only see the contact information of players on their
+  own team and other team captains.
+  \reqrat Captains may need to contact their players and other team captains
+  but should not have access to every account's information.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Captains are able to request a reschedule for their upcoming game.
+  \reqfit Captains shall not be able to see any contact information outside of
+  players on their team or other team captains.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1211,120 +1263,20 @@ Not applicable, our solution will run on the web.
 \begin{myreq}
   \twoinline
     {\reqno AS-4}
-    {\reqevent 10}
-  \reqdesc Only commissioners can send a league-wide alert.
-  \reqrat Users not logged in as a commissioner should not be able to send a
-  league-wide alert.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to send an alert to the entire league.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-5}
-    {\reqevent 12}
-  \reqdesc Only commissioners can assign teams to a division.
-  \reqrat Users not logged in as a commissioner should not be able to assign
-  teams to a division.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to assign a team to a division.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-6}
-    {\reqevent 12}
-  \reqdesc Only commissioners can change any team's composition.
-  \reqrat Users not logged in as a commissioner should not be able to change
-  a team's composition.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to change any team's composition.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-7}
-    {\reqevent 12}
-  \reqdesc Only captains can change their own team's composition.
-  \reqrat Users not logged in as a captain should not be able to change
-  a team's composition.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Captains are able to change their own team's composition.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-8}
-    {\reqevent 12}
-  \reqdesc Only commissioners can change the season schedule.
-  \reqrat Users not logged in as a commissioner should not be able to change
-  the season's schedule.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are able to change the season's schedule.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-9}
     {\reqevent 9}
-  \reqdesc Only players can see the contact information of their own captain.
-  \reqrat A player's email and phone number shall remain anonymous to
-  individuals outside the league and everyone else but their captain.
+  \reqdesc Commissioners can see the contact information of everyone in the
+  league.
+  \reqrat Commissioners may need to contact any account in the system.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Contact information for players can only be seen by their own captain.
+  \reqfit Commissioners shall be able to see any account's contact
+  information.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
 \end{myreq}
 
 \begin{myreq}
-  \twoinline
-    {\reqno AS-10}
-    {\reqevent 9}
-  \reqdesc Captains can see the contact information of players on their own team and
-  other captains on other teams.
-  \reqrat A captain's email and phone number shall remain anonymous to
-  individuals outside the league or to players on other teams.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Contact information for captains can only be seen by
-  the players on their own team or other captains from other teams.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \twoinline
-    {\reqno AS-11}
-    {\reqevent 9}
-  \reqdesc Only commissioners can see the contact information of everyone in the league.
-  \reqrat Player and captains shall remain anonymous to
-  individuals outside the league or to players on other teams.
-  \reqorig Nicholas Fabugais-Inaba
-  \reqfit Commissioners are the only individuals in the league that can see everyone's
-  contact information.
-  \twoinline
-    {\reqsatis 5}
-    {\reqdissat 5}
-\end{myreq}
-
-\begin{myreq}
-  \reqno SR-2
+  \reqno AS-5
   \reqdesc Giving permissions to users must be accompanied by an warning that
   warns the user of the severity of the action.
   \reqrat Accidentally giving permissions to users who shouldn't have them
@@ -1338,7 +1290,7 @@ Not applicable, our solution will run on the web.
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-6
+  \reqno AS-6
   \reqdesc Users can only access an account with correctly inputted login
   information that matches the database stored login information.
   \reqrat Login information stored in the database should correspond to a
@@ -1351,7 +1303,45 @@ Not applicable, our solution will run on the web.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
-  \reqhist Created 2024-10-25
+\end{myreq}
+
+\begin{myreq}
+  \reqno AS-7
+  \reqdesc Captains can join a team that they are not the captain of.
+  \reqrat Captains should be able to join a team they are not a part of, the
+  league allows players to be on multiple teams.
+  \reqorig Jung Woo Lee
+  \reqfit If a captain attempts to join a team they are not the captain of,
+  they will be added to the player list of the team.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno AS-8
+  \reqdesc If a captain is a member of a team they are not the captain of,
+  they only have player level permissions relating to that team.
+  \reqrat Captains should not have captain permissions for any teams other
+  than the team that they are the captain of.
+  \reqorig Alex Verity
+  \reqfit A captain can only do actions available to a player in a team that
+  is not their own.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno AS-9
+  \reqdesc Only commissioners can assign teams to a division.
+  \reqrat Users not logged in as a commissioner should not be able to assign
+  teams to a division.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Commissioners are able to assign a team to a division.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
 \end{myreq}
 
 \subsection{Integrity Requirements}
@@ -1373,7 +1363,7 @@ Not applicable, our solution will run on the web.
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-3
+  \reqno IG-2
   \reqdesc If there is only one commissioner level account, that account
   cannot be deleted.
   \reqrat Deleting this account would stop any more commissioner level
@@ -1388,7 +1378,7 @@ Not applicable, our solution will run on the web.
 
 
 \begin{myreq}
-  \reqno SR-4
+  \reqno IG-3
   \reqdesc All match scores must be visible and contestable by other
   captains once recorded.
   \reqrat Match score correctness is extremely important for a competitive
@@ -1400,11 +1390,10 @@ Not applicable, our solution will run on the web.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
-  \reqhist Created 2024-10-15
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-5
+  \reqno IG-4
   \reqdesc Captains are adequately notified when they receive an alert or a
   reschedule request.
   \reqrat Important information may be shared in alerts, and reschedule
@@ -1436,7 +1425,7 @@ Not applicable, our solution will run on the web.
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-10
+  \reqno PV-2
   \reqdesc Users are reminded to keep their passwords secure.
   \reqrat If a user accesses another user's account they may do actions
   without the account owner's permission or that the account owner is unaware
@@ -1547,9 +1536,7 @@ Not applicable
 \subsection{User Documentation Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno UD-1}
-    {\reqevent xx}
+  \reqno UD-1
   \reqdesc There must exist a user guide that informs users of the previous
   system and new users how to use the features of the new system.
   \reqrat There will be many new users of the system who might not be familiar
@@ -1565,9 +1552,7 @@ Not applicable
 \subsection{Training Requirements}
 
 \begin{myreq}
-  \twoinline
-    {\reqno TR-1}
-    {\reqevent xx}
+  \reqno TR-1
   \reqdesc There must exist a code walkthrough of the system that infroms
   future solution admins how the solution functions internally.
   \reqrat Future Sandlot admins will need to understand the solution in order
