@@ -439,6 +439,9 @@ allow users to view the scores of played games, is not working.
       12. Commissioner inputs admin command & Commissioner Admin Commands (in)
       & Commissioners have the ability to overwrite team composition and
       schedule.\\
+      13. Captain submits game score & Game Score (in)
+      & Captains submit the scores of games they have played into the
+      system.\\
       \hline
     \end{tabular}
   \end{center}
@@ -488,7 +491,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-2}
-    {\reqevent 2}
+    {\reqevent 3}
   \reqdesc Captains should be able to create a team which is added to the
   Sandlot database.
   \reqrat Teams are defined by captains, in charge of scheduling and
@@ -505,7 +508,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-3}
-    {\reqevent 2}
+    {\reqevent 1}
   \reqdesc Users should be able to create a new account by providing 
   the necessary information. 
   \reqrat An account strcuture is necessary to be able to change 
@@ -524,7 +527,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-4}
-    {\reqevent 2}
+    {\reqevent xx}
   \reqdesc Users should be able to change their account information 
   by providing the necessary information.
   \reqrat User information does not stay the same forever, 
@@ -541,7 +544,7 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-5}
-    {\reqevent 2}
+    {\reqevent xx}
   \reqdesc Users should be able delete their account by providing 
   the necessary information.
   \reqrat If a user wants to quit the league they should be able to
@@ -623,10 +626,10 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-10}
     {\reqevent 6}
-  \reqdesc Captains must be able to request a reschedule for upcoming games
-  as long as the game is at least 24 hours in the future. Rescheduling
-  involves giving a list of alternate dates which are sent to the opposing
-  team's captain to choose a date and accept.
+  \reqdesc Captains must be able to request a reschedule for their team's
+  upcoming games as long as the game is at least 24 hours in the future.
+  Rescheduling involves giving a list of alternate dates which are sent to
+  the opposing team's captain to choose a date and accept.
   \reqrat Rescheduling is a core feature of the product, and schedule changes
   less than a day from when they are to occur may be too little warning for
   players to prepare for.
@@ -642,13 +645,12 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-11}
     {\reqevent 3}
-  \reqdesc When recieving a reschedule request from another captain, the system should
-  prompt the captain to either accept the reshedule request and choose a date or 
-  deny the request.
-  \reqrat Sometimes a captain may not be able to reschedule a game due to prior commitments
-  or some other external factors. Therefore there should be both an option to accept or deny 
-  any reshedule request.
-  or deny
+  \reqdesc When a captain receives a reschedule request, the system should
+  prompt the captain to either accept the reshedule request and choose a date
+  from the list of alternate dates or deny the request.
+  \reqrat Sometimes a captain may not be able to reschedule a game due to
+  prior commitments or some other external factors. Therefore there should be
+  both an option to accept or deny any reshedule request.
   \reqorig Casra Ghazanfari
   \reqfit A captain shall have the option to either accepy or deny any request to 
   reschedule a game.
@@ -661,13 +663,13 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-12}
     {\reqevent 3}
-  \reqdesc When a captains rechedule request is either accepted or denied the system should
-  notify them about about the outcome.
-  \reqrat It is important that the sender of the rechedule request is informed about the status of 
-  the request quickly
+  \reqdesc When a captains rechedule request is either accepted or denied the
+  system should notify them about about the outcome.
+  \reqrat It is important that the sender of the rechedule request is informed
+  about the status of the request quickly
   \reqorig Casra Ghazanfari
-  \reqfit A captain who sent a reschedule request shall be notified on the status of the request
-  when it is responded to. 
+  \reqfit A captain who sent a reschedule request shall be notified on the
+  status of the request when it is responded to. 
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -677,8 +679,7 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-13}
     {\reqevent 9}
-  \reqdesc Captains should be able to update the team information of only their
-  team, including team name, player list and scores.
+  \reqdesc Captains should be able to update their team name and player list.
   \reqrat Captains are representatives of their teams and should have the ability
   to control information about their team on a high level. However, they should not
   have the same power as the comissioner and therefore should only be able to change 
@@ -693,13 +694,15 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-14}
-    {\reqevent 9}
-  \reqdesc Users should not be able to update the team information of any
-  team, including team name, player list and scores.
-  \reqrat Users are generally low level users and should not have the ability to
-  make changes that affect their whole team.
-  \reqorig Casra Ghazanfari
-  \reqfit A user shall not have the ability to update team information.
+    {\reqevent 13}
+  \reqdesc Captains should be able to submit scores for a game their team has
+  played after the game has been completed.
+  \reqrat Once a game is completed the system must know what the score was to
+  accurately keep track of standings. The most reliable way to achieve this is
+  a captain submitting it.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit The captain should be able to submit a score after their scheduled
+  game time is passed.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -708,15 +711,27 @@ All necessary parts of this section were covered in section 6.
 \begin{myreq}
   \twoinline
     {\reqno FR-15}
-    {\reqevent 9}
-  \reqdesc The score of a game should not be able to be updated until after
-  the it is completed.
-  \reqrat The score of a game is unknown until it is completed having the option to 
-  update the score of the game before it is completed is useless at best and harmful
-  at worst.
-  \reqorig Casra Ghazanfari
-  \reqfit The ability to update the score of a game will only display after the 
-  game has been played.
+    {\reqevent 4}
+  \reqdesc Players should be able to join a team.
+  \reqrat Players need to join a team to get a team schedule and play in the
+  league.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit When a player joins a team they are added to the team's player list.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \twoinline
+    {\reqno FR-16}
+    {\reqevent 2}
+  \reqdesc Account holders should be able to log in to Sandlot.
+  \reqrat After a user makes an account they will need to access that account
+  to use account related features.
+  \reqorig Alex Verity
+  \reqfit When a player enters valid account data the solution logs them in to
+  their account.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 5}
@@ -732,6 +747,85 @@ All necessary parts of this section were covered in section 6.
   \reqorig Alex Verity
   \reqfit If the captain has submitted data, they shall be able to overwrite
   it with new data.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-18
+  \reqdesc Commissioners should be able to edit the league schedule.
+  \reqrat Commissioners have admin level permissions and should be able to
+  modify the schedule to account for unforseen problems.
+  \reqorig Alex Verity
+  \reqfit If the commissioner inputs new schedule data, the schedule is
+  reflects the updates made.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-19
+  \reqdesc Commissioners are able to assign captain level permissions to
+  users.
+  \reqrat Commissioners should be assign captains as captains are needed to
+  create and manage teams.
+  \reqorig Alex Verity
+  \reqfit If the commissioner assigns a user to captain, the user's account
+  will gain captain level permissions.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-20
+  \reqdesc The system must display a schedule that includes all past and
+  future games from all teams on a calendar.
+  \reqrat All users need to know the league's schedule.
+  \reqorig Jung Woo Lee
+  \reqfit The system shall display a shedule that includes all past and
+  future games from all teams on a calendar.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-21
+  \reqdesc The system must display a team schedule for each team that includes
+  all the team's past and future games.
+  \reqrat Users would like to see an individual team's schedule.
+  \reqorig Jung Woo Lee
+  \reqfit For each team, the system shall display a shedule that includes all
+  past and future games from the team.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-22
+  \reqdesc The system must display a schedule that displays all upcoming games
+  within a short time interval specified by the commissioner from the present.
+  \reqrat Users would like to see a schedule focused on the soonest games in
+  the season.
+  \reqorig Jung Woo Lee
+  \reqfit The system shall display a schedule that displays all upcoming games
+  within a short time interval specified by the commissioner from the present.
+  \twoinline
+    {\reqsatis 4}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno FR-23
+  \reqdesc There can be only one captain associated with each team. Players
+  who are captains of other teams do not count towards the one captain limit.
+  \reqrat Based on the league rules, teams are only allowed one captain.
+  \reqorig Jung Woo Lee
+  \reqfit No team can have more than one captain associated with the team.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 3}
@@ -1212,9 +1306,34 @@ Not applicable, our solution will run on the web.
 \end{myreq}
 
 \begin{myreq}
+  \reqno AS-7
+  \reqdesc Captains can join a team that they are not the captain of.
+  \reqrat Captains should be able to join a team they are not a part of, the
+  league allows players to be on multiple teams.
+  \reqorig Jung Woo Lee
+  \reqfit If a captain attempts to join a team they are not the captain of,
+  they will be added to the player list of the team.
   \twoinline
-    {\reqno AS-7}
-    {\reqevent 12}
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno AS-8
+  \reqdesc If a captain is a member of a team they are not the captain of,
+  they only have player level permissions relating to that team.
+  \reqrat Captains should not have captain permissions for any teams other
+  than the team that they are the captain of.
+  \reqorig Alex Verity
+  \reqfit A captain can only do actions available to a player in a team that
+  is not their own.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno AS-9
   \reqdesc Only commissioners can assign teams to a division.
   \reqrat Users not logged in as a commissioner should not be able to assign
   teams to a division.
