@@ -1101,6 +1101,20 @@ section 6.2 of this VnV plan document.
 
 \begin{enumerate}
 
+  \item{test-SL1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The solution is not loaded, internet connection is stable.
+
+  Input/Condition: The system is started.
+
+  Output/Result: Sandlot loads and displays the homepage within 3 seconds.
+
+  How test will be performed: The system will be timed from not loaded to a
+  fully loaded homepage. This will be recorded 10 times. If the average load
+  time is less than 3 seconds the test is successful.
+
   \item{test-CR1\\}
 
   Type: Non-Functional, Dynamic, Manual
@@ -1118,6 +1132,22 @@ section 6.2 of this VnV plan document.
   solution and utilize functionalities such as rescheduling games, and viewing the standings
   and season schedule. After their observations, the tester will be given
   a usability survey to fill out that is located in section 6.2 of this VnV plan document.
+
+  \item{test-CR2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is online.
+
+  Input/Condition: Sandlot will have 500 users using the system at the same
+  time.
+
+  Output/Result: Sandlot should continue to successfully function with no
+  faults when 500 users are using the system at once.
+
+  How test will be performed: 500 users will be mimicked using a solution like
+  JMeter. All functions on the system would be run through to make sure no
+  faults occur.
 
 \end{enumerate}
 
