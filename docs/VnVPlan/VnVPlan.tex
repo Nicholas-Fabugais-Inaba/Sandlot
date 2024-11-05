@@ -1205,6 +1205,24 @@ section 6.2 of this VnV plan document.
   currently exist in the database and they will input the provided information into the
   system. The tester will observe the output or any errors that may occur in the system.
 
+  \item{test-EU3\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: User is logged into a captain account.
+            
+  Input/Condition: User inputs availability data which causes a schedule conflict.
+            
+  Output/Result: The system will provide a warning to the user informing them that
+  the availability data they've inputted has caused on conflicts with another team's
+  availability data that the scheduler cannot resolve.
+            
+  How test will be performed: The user will be provided a captain account with a set 
+  of availability data. The system will have stored some set of existing availability 
+  data that will cause an unresolvable conflict with the availability data of the user.
+  The user will input the provided availability data to the system and observe the 
+  output or any errors that may occur in the system.
+
   \item{test-LR1\\}
 
   Type: Non-Functional, Dynamic, Manual
