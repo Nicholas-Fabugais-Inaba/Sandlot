@@ -1297,6 +1297,36 @@ inconsistent interface elements will be recorded.
   team they are not in charge of. If they cannot do these actions, the test
   succeeds.
 
+  \item{test-IG1-1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system has received scheduling data.
+
+  Input/Condition: The system is instructed to create the schedule with non-conflicting
+  scheduling data.
+
+  Output: The system creates a schedule without conflicting scheduling data.
+
+  How test will be performed: Sample scheduling data will be provided to the system. The test
+  succeeds if a schedule is created without conflicting scheduling data.
+
+  \item{test-IG1-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system has scheduling data and awaits any reschedule requests.
+
+  Input/Condition: The system is sent a reschedule request.
+
+  Output: The system accepts or denies a reschedule request and either changes the scheduling
+  data or remains the same with no conlflicting scheduling data.
+
+  How test will be performed: Sample scheduling data and a sample reschedule request
+  will be provided to the system. The test succeeds if a reschedule request is either accepted
+  or denied and the schedule is updated or remains the same with no conlflicting scheduling
+  data.
+
   \item{test-IG2\\}
 
   Type: Non-Functional, Dynamic, Manual
@@ -1327,6 +1357,48 @@ inconsistent interface elements will be recorded.
   contest a match score. The test succeeds if they are able to view an option to contest
   a recorded match score since they are a captain level account and they can view and contest
   a recorded match score.
+
+  \item{test-IG4-1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a captain level account.
+
+  Input/Condition: A user awaits a notification from an alert.
+
+  Output: A notification is received by the user about an alert.
+
+  How test will be performed: A captain level account will be sent a sample alert. The test
+  succeeds if they receive a notification about the alert and they should observe if any
+  errors or failures occur.
+
+  \item{test-IG4-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a captain level account.
+
+  Input/Condition: A user awaits a notification from a reschedule request.
+
+  Output: A notification is received by the user about a reschedule request.
+
+  How test will be performed: A captain level account will be sent a sample reschedule request.
+  The test succeeds if they receive a notification about the reschedule request and they
+  should observe if any errors or failures occur.
+
+  \item{test-PV1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in.
+
+  Input/Condition: A user is not logged into an account.
+
+  Output: No contact information is displayed to the user.
+
+  How test will be performed: A user will not be logged into an account and will
+  observe if any contact information can be seen or accessed. If no contact information
+  is revealed to the user, the test succeeds.
 
   \item{test-PV2\\}
 
