@@ -468,7 +468,27 @@ can be modified with the reschedule feature.
   schedule data to submit into the system and wait to observe the updated league schedule
   by the system once the new schedule data is received. They will then observe if the
   system has displayed the correct updated league schedule and if any errors had
-  occured within the system. 
+  occured within the system.
+
+  \item{test-FR21\\}
+
+  Control: Manual
+            
+  Initial State: The system has created a schedule.
+            
+  Input: User navigating to a team's schedule section.
+            
+  Output: The system will display the specified team's schedule.
+
+  Test Case Derivation: Each team should have a schedule that lists all of
+  that team's past and future games. This should be accessible by users who
+  navigate to this section of the system.
+            
+  How test will be performed: Each team's schedule section will be navigated to
+  and compared with the full league schedule. All games on the main schedule
+  that include the specified team should be on the team's schedule. There should
+  not exist any games on the team's schedule where the specified team is not
+  playing.
 
   \item{test-FR22\\}
 
@@ -559,6 +579,41 @@ modification of accounts.
   at the start of the test. At any point during the test, the tester will also observe if
   any errors occur within the system.
 
+  \item{test-FR16-1\\}
+
+  Control: Manual
+            
+  Initial State: The system is not logged in to an account.
+            
+  Input: User navigates to the log in section and enters valid login data for
+  an account that has already been made.
+            
+  Output: The system logs in to the valid account.
+  
+  Test Case Derivation: If valid account information is given when logging in
+  the system should log in as that account.
+  
+  How test will be performed: Multiple accounts will be logged into each with
+  different valid account information and permission levels.
+
+  \item{test-FR16-2\\}
+
+  Control: Manual
+            
+  Initial State: The system is not logged in to an account.
+            
+  Input: User navigates to the log in section and enters invalid login data
+  for an account login.
+            
+  Output: The system warns the user the data used is invalid.
+  
+  Test Case Derivation: If invalid account information is given when logging
+  in the system should not log in to any account and warn the user the data
+  isn't valid.
+  
+  How test will be performed: Multiple invalid logins will be attempted each
+  with different invalid account information.
+
 \end{enumerate}
 
 \subsubsection{Team Structure}
@@ -624,41 +679,24 @@ information being modified.
   submitted to the commissioner's replace team data feature, with the expected
   results compared to the results given by the program.
 
-  \item{test-FR16-1\\}
+  \item{test-FR23\\}
 
   Control: Manual
             
-  Initial State: A captain has created a team.
-            
-  Input: Interaction with create a team functionality.
-            
-  Output: A prompt displayed by the system to the captain that they have already created
-  a team.
+  Initial State: At least one team has been created by a captain.
 
-  Test Case Derivation: Because the system has determined the captain has already created a
-  team, the system should not allow the captain to create more than one team.
-            
-  How test will be performed: The tester will be provided a captain account that has already
-  created a team. They will then attempt to create a team in the system and observe if the
-  system prevents them from creating another team or if any errors occur within the system.
+  Input: A captain level user is made the associated captain of a team that
+  already has an associated captain.
 
-  \item{test-FR16-2\\}
+  Output: Feedback to the user that the team already has a captain in charge.
 
-  Control: Manual
-            
-  Initial State: A player has joined a team.
-            
-  Input: Interaction with join a team functionality.
-            
-  Output: A prompt displayed by the system to the player that they have already joined
-  a team.
+  Test Case Derivation: Only one captain is allowed to be associated with a
+  team due to league rules.
 
-  Test Case Derivation: Because the system has determined the player has already joined a
-  team, the system should not allow the player to join more than one team.
-            
-  How test will be performed: The tester will be provided a player account that has already
-  joined a team. They will then attempt to join a team in the system and observe if the
-  system prevents them from joining another team or if any errors occur within the system.
+  How test will be performed: A team with an associated captain will attempt
+  to have another captain be associated with it. It is important to note that
+  a captain playing for a a different team than the one they are in charge of
+  does not count as being associated, they are just playing for the team.
 
 \end{enumerate}
 
