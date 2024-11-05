@@ -96,7 +96,7 @@ The McMaster GSA softball league's current scheduling and management platform
 is used from the 1st week of May until the last week of August. The website
 creates a season schedule based on the 30-40 teams that are entered into the
 league by their respective captains. If scheduling conflicts or weather concerns
-occur, games are able to be rescheduled by the team captains based on a team's
+occur, games can be rescheduled by the team captains based on a team's
 availability. For the many users interacting with the platform, individuals need
 an intuitive interface that is robust and will allow administrators to easily
 maintain the system, especially when the website experiences problems. The current
@@ -127,7 +127,7 @@ an improved interface.
 The customers for this project include the players, captains, commissioners,
 umpires, and other individuals that may interact with the website. These
 individuals require an easy-to-use platform that allows them to seamlessly
-enter the website and view the season schedule, whether or not they have an
+enter the website and view the season schedule, regardless of whether they have an
 account created. 
 
 \subsection{Other Stakeholders}
@@ -156,7 +156,7 @@ of the website.
   \item [Commissioners]
   \begin{itemize}
     \item User creates an account, logins to their account,
-    can send leage alerts, and assign teams to divisions.
+    can send league alerts, and assign teams to divisions.
     \item User needs to know their login details, and what alerts
     they may need to send to the league.
   \end{itemize}
@@ -183,20 +183,20 @@ of the website.
 \begin{itemize}
   \item [1.]
   
-  Josh Brown is a 26 year old player that has recently joined the McMaster GSA
-  softball league and he is unfamiliar with how the website functions. As someone
+  Josh Brown is a 26-year-old player that has recently joined the McMaster GSA
+  softball league, and he is unfamiliar with how the website functions. As someone
   who understands how technology works though, he is able to navigate the interface
   quite well. However, some links he interacts with give him a 404 page not found
   error. This aggravates Josh as he just wants to understand certain information
   about the softball league, but the website isn't able to provide it to him
   because the links on the website are faulty or other issues occur. Josh, along
   with many others who are new to the league, may be technically literate, but due
-  to the structural integrity of the system, there are many times where users may
+  to the structural integrity of the system, there are many times when users may
   not be able to access certain information because there is either an error or a
   link that leads to nothing.
   \item [2.]
   
-  Ken Phillips is a 58 year old captain for his McMaster GSA softball team and he has
+  Ken Phillips is a 58-year-old captain for his McMaster GSA softball team, and he has
   been using the current website for as long as he can remember. Although he is not
   too familiar with how technology works, he is still able to navigate and utilize the
   website's functionalities as he has used them for quite some time now. Unfortunately,
@@ -306,7 +306,7 @@ Not applicable.
 \begin{myreq}
   \reqno SC-1
   \reqdesc The project shall be completed before the final demo.
-  \reqrat Project deadline is non-negotiable and the product must
+  \reqrat Project deadline is non-negotiable, and the product must
   be completed before the final presentation.
   \reqorig Nicholas Fabugais-Inaba
   \reqfit The product is successfully completed before the final demo.
@@ -365,7 +365,7 @@ team information like player list and past scores.\\\\
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
 \begin{itemize}
-  \item The current solution is a website with url 
+  \item The current solution is a website with URL 
   \url{https://www.gsasoftball.ca/}
   \item There are currently 25-32 teams in the league playing an average of
   100 games a month.
@@ -389,9 +389,9 @@ It is important to note that we will not be using the existing solution other
 than as a feature guide. The current solution is hosted on the web and is
 written in PHP. The current login system does not use a username and password.
 Only captains can log in, and they are emailed an ASCII code which they use to
-access the website to schedule games and submit scores. Commissioners can login
+access the website to schedule games and submit scores. Commissioners can log in
 in the same way as captains and can modify schedules, scores and team
-compositions as needed. Currently the standings functionality, which would
+compositions as needed. Currently, the standings functionality, which would
 allow users to view the scores of played games, is not working.
 \subsection{The Context of the Work}
 \includegraphics[scale=0.6]{6b_context_diagram.png}
@@ -511,7 +511,7 @@ All necessary parts of this section were covered in section 6.
     {\reqevent 1}
   \reqdesc Users should be able to create a new account by providing 
   the necessary information. 
-  \reqrat An account strcuture is necessary to be able to change 
+  \reqrat An account structure is necessary to be able to change 
   what a user of the system can see/do based on who they are. 
   For example, a player and captain should not be able to see/do 
   the same things or 2 players from different teams should not be 
@@ -545,7 +545,7 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-5}
     {\reqevent xx}
-  \reqdesc Users should be able delete their account by providing 
+  \reqdesc Users should be able to delete their account by providing 
   the necessary information.
   \reqrat If a user wants to quit the league they should be able to
   delete any of their personal information at any time.
@@ -567,7 +567,7 @@ All necessary parts of this section were covered in section 6.
   information relevant to the league. 
   \reqorig Alex Verity
   \reqfit When a commissioner enters information to alert league members, the
-  league members recieve a notification with the relevant information.
+  league members receive a notification with the relevant information.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 3}
@@ -593,12 +593,12 @@ All necessary parts of this section were covered in section 6.
     {\reqno FR-8}
     {\reqevent 3}
   \reqdesc Before the season starts, captains must have the option to give
-  their team's availabilty for the season.
+  their team's availability for the season.
   \reqrat Each team will have members who may only be free on certain days of
   the season. This availability will inform the season schedule so that teams
   will have as many people attending each game as possible.
   \reqorig Alex Verity
-  \reqfit Before the seaon starts, captains shall be able to view the option to
+  \reqfit Before the season starts, captains shall be able to view the option to
   enter their availability and once entered, it shall be stored by the system
   to be used for scheduling.
   \twoinline
@@ -626,7 +626,7 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-10}
     {\reqevent 6}
-  \reqdesc Captains must be able to request a reschedule for their team's
+  \reqdesc Captains must be able to request a rescheduling for their team's
   upcoming games as long as the game is at least 24 hours in the future.
   Rescheduling involves giving a list of alternate dates which are sent to
   the opposing team's captain to choose a date and accept.
@@ -634,7 +634,7 @@ All necessary parts of this section were covered in section 6.
   less than a day from when they are to occur may be too little warning for
   players to prepare for.
   \reqorig Alex Verity
-  \reqfit A captain shall have the option to request a reschedule for games
+  \reqfit A captain shall have the option to request a rescheduling for games
   only more than 24 hours in the future.
   \twoinline
     {\reqsatis 4}
@@ -645,14 +645,14 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-11}
     {\reqevent 3}
-  \reqdesc When a captain receives a reschedule request, the system should
-  prompt the captain to either accept the reshedule request and choose a date
-  from the list of alternate dates or deny the request.
+  \reqdesc When a captain receives a rescheduling request, the system should
+  prompt the captain to either accept the request and choose a date
+  from the list of alternate dates, or deny the request.
   \reqrat Sometimes a captain may not be able to reschedule a game due to
   prior commitments or some other external factors. Therefore, there should be
-  both an option to accept or deny any reshedule request.
+  both an option to accept or deny any resheduling request.
   \reqorig Casra Ghazanfari
-  \reqfit A captain shall have the option to either accepy or deny any request
+  \reqfit A captain shall have the option to either accept or deny any request
   to reschedule a game.
   \twoinline
     {\reqsatis 4}
@@ -663,12 +663,12 @@ All necessary parts of this section were covered in section 6.
   \twoinline
     {\reqno FR-12}
     {\reqevent 3}
-  \reqdesc When a captains rechedule request is either accepted or denied the
-  system should notify them about about the outcome.
-  \reqrat It is important that the sender of the rechedule request is informed
+  \reqdesc When a captain's rescheduling request is either accepted or denied the
+  system should notify them about the outcome.
+  \reqrat It is important that the sender of the rescheduling request is informed
   about the status of the request quickly
   \reqorig Casra Ghazanfari
-  \reqfit A captain who sent a reschedule request shall be notified on the
+  \reqfit A captain who sent a rescheduling request shall be notified on the
   status of the request when it is responded to. 
   \twoinline
     {\reqsatis 4}
@@ -682,7 +682,7 @@ All necessary parts of this section were covered in section 6.
   \reqdesc Captains should be able to update their team name and player list.
   \reqrat Captains are representatives of their teams and should have the ability
   to control information about their team on a high level. However, they should not
-  have the same power as the comissioner and therefore should only be able to change 
+  have the same power as the commissioner and therefore should only be able to change 
   information related to their team.
   \reqorig Casra Ghazanfari
   \reqfit A captain shall have the ability to update team information.
@@ -756,9 +756,9 @@ All necessary parts of this section were covered in section 6.
   \reqno FR-18
   \reqdesc Commissioners should be able to edit the league schedule.
   \reqrat Commissioners have admin level permissions and should be able to
-  modify the schedule to account for unforseen problems.
+  modify the schedule to account for unforeseen problems.
   \reqorig Alex Verity
-  \reqfit If the commissioner inputs new schedule data, the schedule is
+  \reqfit If the commissioner inputs new schedule data, the schedule
   reflects the updates made.
   \twoinline
     {\reqsatis 4}
@@ -769,8 +769,8 @@ All necessary parts of this section were covered in section 6.
   \reqno FR-19
   \reqdesc Commissioners are able to assign captain level permissions to
   users.
-  \reqrat Commissioners should be assign captains as captains are needed to
-  create and manage teams.
+  \reqrat Commissioners should be able to assign captains as captains are 
+  needed to create and manage teams.
   \reqorig Alex Verity
   \reqfit If the commissioner assigns a user to captain, the user's account
   will gain captain level permissions.
@@ -785,7 +785,7 @@ All necessary parts of this section were covered in section 6.
   future games from all teams on a calendar.
   \reqrat All users need to know the league's schedule.
   \reqorig Jung Woo Lee
-  \reqfit The system shall display a shedule that includes all past and
+  \reqfit The system shall display a schedule that includes all past and
   future games from all teams on a calendar.
   \twoinline
     {\reqsatis 4}
@@ -798,7 +798,7 @@ All necessary parts of this section were covered in section 6.
   all the team's past and future games.
   \reqrat Users would like to see an individual team's schedule.
   \reqorig Jung Woo Lee
-  \reqfit For each team, the system shall display a shedule that includes all
+  \reqfit For each team, the system shall display a schedule that includes all
   past and future games from the team.
   \twoinline
     {\reqsatis 4}
@@ -932,7 +932,7 @@ All necessary parts of this section were covered in section 6.
   stored login information.
   \reqrat Login information stored in the database should match the user
   inputted login information. Feedback should be provided for the user to
-  understand an error has occured when accessing an account with incorrect
+  understand an error has occurred when accessing an account with incorrect
   login details.
   \reqorig Nicholas Fabugais-Inaba
   \reqfit Assuming the user has misinputted the login details for
@@ -968,14 +968,14 @@ Not applicable.
   \twoinline
     {\reqno LR-1}
     {\reqevent 7}
-  \reqdesc A commissioner should be able to able to learn how to perform all of
+  \reqdesc A commissioner should be able to learn how to perform all of
   their available actions in a short amount of time.
   \reqrat Commissioners will need to make the necessary changes to the 
   product as the league plays out or changes season, and they have the most
   available actions that need to be learned.
   \reqorig Jung Woo Lee
   \reqfit A new commissioner to the product should be able to learn all of their
-  possible actions withing 1 hour.
+  possible actions within 1 hour.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
@@ -985,13 +985,13 @@ Not applicable.
   \twoinline
     {\reqno LR-2}
     {\reqevent 7}
-  \reqdesc A captain should be able to able to learn how to perform all of
+  \reqdesc A captain should be able to learn how to perform all of
   their available actions in a short amount of time.
   \reqrat Captains have certain actions that will be available to them that
   require some learning
   \reqorig Jung Woo Lee
   \reqfit A new captain to the product should be able to learn all of their
-  possible actions withing 1 hour.
+  possible actions within 1 hour.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
@@ -1048,7 +1048,7 @@ Not applicable.
   \reqno AC-2
   \reqdesc Colours used should be colour blind friendly.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
-  colours are able to be contrasted by all users.
+  colours can be contrasted by all users.
   \reqorig Jung Woo Lee
   \reqfit  All colours applied to elements users will interact with must have
   a contrast ratio of at least 4.5:1.
@@ -1182,7 +1182,7 @@ Not applicable.
 \begin{myreq}
   \reqno RR-1
   \reqdesc Sandlot will be released between league seasons.
-  \reqrat Data will be difficult to transfer to Sandlot mid season, Sandlot
+  \reqrat Data will be difficult to transfer to Sandlot mid-season, Sandlot
   will not have that functionality on release.
   \reqorig Alex Verity
   \reqfit The solution shall be released between league seasons.
@@ -1196,7 +1196,7 @@ Not applicable.
 
 \begin{myreq}
   \reqno MR-1
-  \reqdesc A new season can be started (i.e. saving past standings, reseting
+  \reqdesc A new season can be started (i.e. saving past standings, resetting
   teams.) within one hour.
   \reqrat New seasons should not require a lot of maintenance to reset.
   \reqorig Alex Verity
@@ -1207,7 +1207,7 @@ Not applicable.
 \end{myreq}
 
 \subsection{Supportability Requirements}
-Not applicable, however comissioners will support users if they can.
+Not applicable, however commissioners will support users if they can.
 
 \subsection{Adaptability Requirements}
 Not applicable, our solution will run on the web.
@@ -1234,10 +1234,10 @@ Not applicable, our solution will run on the web.
     {\reqno AS-2}
     {\reqevent 9}
   \reqdesc Players can only see the contact information of their own captain.
-  \reqrat Players may need to contact their captain but but should not have
+  \reqrat Players may need to contact their captain but should not have
   access to every account's information.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit Players shall not be able to see any contact information outside of
+  \reqfit Players shall not be able to see any contact information outside
   their team's captain.
   \twoinline
     {\reqsatis 5}
@@ -1277,9 +1277,9 @@ Not applicable, our solution will run on the web.
 
 \begin{myreq}
   \reqno AS-5
-  \reqdesc Giving permissions to users must be accompanied by an warning that
+  \reqdesc Giving permissions to users must be accompanied by a warning that
   warns the user of the severity of the action.
-  \reqrat Accidentally giving permissions to users who shouldn't have them
+  \reqrat Accidentally giving permissions to users who should not have them
   could result in unexpected errors.
   \reqorig Alex Verity
   \reqfit If permissions are being changed, a warning shall be displayed to
@@ -1395,7 +1395,7 @@ Not applicable, our solution will run on the web.
 \begin{myreq}
   \reqno IG-4
   \reqdesc Captains are adequately notified when they receive an alert or a
-  reschedule request.
+  rescheduling request.
   \reqrat Important information may be shared in alerts, and reschedule
   requests that go unanswered may be frustrating for captains. Notifications
   should reach their intended targets if possible.
@@ -1512,7 +1512,7 @@ Not applicable
 \section{Migration to the New Product}
 \subsection{Requirements for Migration to the New Product}
 Not applicable, we plan to begin use of Sandlot between seasons so that
-current season data does not need to be transfered between systems aside from
+current season data does not need to be transferred between systems aside from
 archived past season standings.
 
 \subsection{Data That Has to be Modified or Translated for the New System}
@@ -1553,7 +1553,7 @@ Not applicable
 
 \begin{myreq}
   \reqno TR-1
-  \reqdesc There must exist a code walkthrough of the system that infroms
+  \reqdesc There must exist a code walkthrough of the system that informs
   future solution admins how the solution functions internally.
   \reqrat Future Sandlot admins will need to understand the solution in order
   to fix any possible errors that arise and add any features needed.
@@ -1625,7 +1625,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   so getting experience with them would be beneficial. Finally, Jung Woo will pursue 
   investigating the UI/UX domain knowledge and design of existing scheduling systems hands 
   on because he feels as though he will learn more from the existing system will give 
-  insights into the developers perspective of UI/UX design which will be helpful for us as 
+  insights into the developer's perspective of UI/UX design which will be helpful for us as 
   the developers.
 
 \end{enumerate}
@@ -1643,7 +1643,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   Some pain points experienced were trying to get full coverage when coming up
   with use cases and functional requirements, we have many more questions for
   the supervisor now and will almost certainly need to come back to this
-  document and modify it with new information we recieve. I still don't know
+  document and modify it with new information we receive. I still don't know
   if the use cases provided are well put together or not and will be looking
   heavily at feedback in that area.
   \item How many of your requirements were inspired by speaking to your
@@ -1680,7 +1680,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   
   \item Which of the courses you have taken, or are currently taking, will help
   your team to be successful with your capstone project.\\\\
-  All project based courses are definitely useful to understand project dynamics. Dealing with a team, and performing to certain standards has been taught to us in all of these various courses. Providing deliverables and project scheduling has also been taught to us, such that administrative duties are easier for us to tackle. The databases course will likely help us as our project will most likely be using this in our solution. The user-interface course will help us in creating a human-centred design that is intuitive and clean. This is one of the pitfalls of the current solution, and thus one of the important non-functional requirements. The requirements course will also help us interpret requirements going forward and make use of our work here. And late it will undoubtedly help us revise this document.
+  All project based courses are definitely useful to understand project dynamics. Dealing with a team, and performing to certain standards has been taught to us in all of these various courses. Providing deliverables and project scheduling has also been taught to us, such that administrative duties are easier for us to tackle. The databases course will likely help us as our project will most likely be using this in our solution. The user-interface course will help us in creating a human-centered design that is intuitive and clean. This is one of the pitfalls of the current solution, and thus one of the important non-functional requirements. The requirements course will also help us interpret requirements going forward and make use of our work here. And late it will undoubtedly help us revise this document.
 
 \end{enumerate}
 
@@ -1697,7 +1697,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   did you resolve them?\\\\
   Some of the pain points from this deliverable was the amount of content 
   needed to be covered with all of the different sections. With so many different
-  types of requirements in mind and the number of overlaping requirements, it
+  types of requirements in mind and the number of overlapping requirements, it
   was incredibly difficult to fill in each section or understand why a certain
   type of requirement may not apply to the project. These pain points were resolved
   by brainstorming as a team our own requirements that we would then review
@@ -1738,7 +1738,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   did you resolve them?\\\\
   The biggest pain point during this deliverable was understanding what each section 
   of the document was asking for. Many sections of the document have unintuitive names 
-  that do not accurately describe the information the section should hold. In addition many 
+  that do not accurately describe the information the section should hold. In addition, many 
   of the sections were either inapplicable or very loosely applicable to our project making 
   it difficult to understand which sections we should be tackling.
   \item How many of your requirements were inspired by speaking to your
