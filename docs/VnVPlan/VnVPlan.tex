@@ -413,7 +413,7 @@ modification of accounts.
 
   Control: Manual
 
-  Initial State: System is not logged in to an account.
+  Initial State: System is open on user's browser.
 
   Input: User requests to display the season schedule.
 
@@ -422,14 +422,14 @@ modification of accounts.
   Test Case Derivation: The season schedule should be displayed to all users
   regardless of their access level.
 
-  How test will be performed: Users without accounts will attempt to display
+  How test will be performed: Users will attempt to display
   the season schedule.
 
   \item{test-FR1-2\\}
 
   Control: Manual
 
-  Initial State: System is not logged in to an account.
+  Initial State: System is open on user's browser.
 
   Input: User requests to display the standings.
 
@@ -438,7 +438,7 @@ modification of accounts.
   Test Case Derivation: Standings should be displayed to all users
   regardless of their access level.
 
-  How test will be performed: Users without accounts will attempt to display
+  How test will be performed: Users will attempt to display
   the standings.
 
   \item{test-FR3-1\\}
@@ -1216,6 +1216,32 @@ inconsistent interface elements will be recorded.
 \subsubsection{Security Requirements}
 
 \begin{enumerate}
+
+  \item{test-AS1-1\\}
+
+  Control: Manual
+
+  Initial State: System is not logged in to an account.
+
+  Input: User requests to display the season schedule.
+
+  Output: Season schedule is displayed.
+
+  How test will be performed: Users without accounts will attempt to display
+  the season schedule.
+
+  \item{test-AS1-2\\}
+
+  Control: Manual
+
+  Initial State: System is not logged in to an account.
+
+  Input: User requests to display the standings.
+
+  Output: Standings are displayed.
+
+  How test will be performed: Users without accounts will attempt to display
+  the standings.
 
   \item{test-AS2-1\\}
 
