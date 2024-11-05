@@ -71,6 +71,7 @@ in.}
   \midrule 
   SRS & Software Requirements Specification\\
   GSA & Graduate Students Association\\
+  VnV & Verification and Validation\\
   T & Test\\
   \bottomrule
 \end{tabular}\\
@@ -84,7 +85,11 @@ in.}
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
+This document will outline the various VnV plans for the Sandlot project including
+the system tests and unit tests that will be used to validate the requirements
+created in the SRS document.
+
+\wss{provide an introductory blurb and roadmap of the
   Verification and Validation plan}
 
 \section{General Information}
@@ -166,8 +171,6 @@ have been approved by an instructor.
 \begin{thebibliography}{9}
   \bibitem{SRS} Software Requirements Specification Document (2024)
   \href{../SRS-Volere/SRS.pdf}{SRS.pdf}
-  \bibitem{DP} Development Plan Document (2024)
-  \href{../DevelopmentPlan/DevelopmentPlan.pdf}{DevelopmentPlan.pdf}
   \bibitem{MG} Module Guide Document (2024)
   \href{../Design/SoftArchitecture/MG.pdf}{MG.pdf}
   \bibitem{MIS} Module Interface Specification Document (2024)
@@ -179,21 +182,39 @@ have been approved by an instructor.
 how they relate to your VnV efforts.}\\
 The SRS document has requirements for our project that must be verified, it is
 the most complete list of functional and non-functional requirements that our
-solution needs to achieve.\\
+solution needs to achieve.
 
-The DevelopmentPlan document has information related to plans for automated testing, 
-testing tools, and testing plans 
+The MG and MIS documents also refer heavily to the requirements being tested
+in our VnV plan.
 
 \section{Plan}
 
 \wss{Introduce this section.  You can provide a roadmap of the sections to
   come.}
 
+In this section our plan for verifying all important documents will be
+recorded as well as our plan for verifying the software itself. Documents to
+be verified include the SRS, MIS and MG design documents and the VnV itself.
+
 \subsection{Verification and Validation Team}
 
 \wss{Your teammates.  Maybe your supervisor.
   You should do more than list names.  You should say what each person's role is
   for the project's verification.  A table is a good way to summarize this information.}
+
+\begin{enumerate}
+  \item Casra: Automation Tester\\
+  Will focus on automation testing using GitHub Actions.
+  \item Jung Woo: Non-Functional Tester\\
+  Will focus on non-functional tests listed in section 4.2.
+  \item Alex: Functional Tester\\
+  Will focus on functional tests listed in section 4.1.
+  \item Nicholas: Survey Tester\\
+  Will be in charge of performing surveys needed for any non-functional tests.
+  \item Dr. Jake Nease: Supervisor\\
+  Will help give feedback on all functionality of the solution and gather
+  stakeholders to help test the solution.
+\end{enumerate}
 
 \subsection{SRS Verification Plan}
 
@@ -209,6 +230,15 @@ issue tracker?}
 
 \wss{Maybe create an SRS checklist?}
 
+A meeting with the team and supervisor will be held to verify the SRS document covers all of
+the necessary requirements desired for the system. Each requirement outlined in the SRS will
+be reviewed by the team and supervisor to ensure the requirement appropriately addresses the
+requested functionality.
+
+The SRS document will also be reviewed by another capstone group who will give
+at least six points of feedback on our SRS document. Our team will review the
+feedback and make any changes needed.
+
 \subsection{Design Verification Plan}
 
 \wss{Plans for design verification}
@@ -216,6 +246,14 @@ issue tracker?}
 \wss{The review will include reviews by your classmates}
 
 \wss{Create a checklists?}
+
+A meeting with the team and supervisor will be held to review design documents created
+for the Sandlot project. Both parties will then verify anything outlined in the design
+documents are correctly implemented in the system.
+
+An additional meeting with the team will be held to verify any and all reviews created by
+classmates are either implemented in the system or appropriately addressed by a team member
+with a justification for why a suggestion shall not be implemented.
 
 \subsection{Verification and Validation Plan Verification Plan}
 
@@ -225,6 +263,17 @@ verified.  Techniques for this include review and mutation testing.}
 \wss{The review will include reviews by your classmates}
 
 \wss{Create a checklists?}
+
+The verification and validation plan will be reviewed by another capstone
+group who will give at least six points of feedback on our VnV document. Our
+team will review the feedback and make any changes needed. 
+
+During the writing of the verification and validation plan, any questions or
+concerns for the superviso will be recorded and asked during our next
+scheduled supervisor meeting.
+
+During testing we will use mutation testing to verify test case coverage, and
+any holes found in our coverage will be patched by adding more test cases.
 
 \subsection{Implementation Verification Plan}
 
@@ -239,6 +288,10 @@ verified.  Techniques for this include review and mutation testing.}
 walkthrough.  There is also a possibility of using the final presentation (in
 CAS741) for a partial usability survey.}
 
+Code reviews with the team will be held for all functionalities of the system, utilizing the
+system tests and unit tests outlined in the VnV plan. The team will attempt to identify any
+errors within the system and correct any faults that may occur.
+
 \subsection{Automated Testing and Verification Tools}
 
 \wss{What tools are you using for automated testing.  Likely a unit testing
@@ -249,7 +302,6 @@ CAS741) for a partial usability survey.}
   you select, you should look at the available linters.  There may also be tools
   that verify that coding standards have been respected, like flake9 for
   Python.}
-\cite{SRS}
 
 \wss{If you have already done this in the development plan, you can point to
 that document.}
@@ -277,10 +329,21 @@ as a Rev 0 demo for the supervisor.}
 
 \wss{This section might reference back to the SRS verification section.}
 
+The system will be provided to the supervisor and external testers, gathered by the supervisor,
+to enter given inputs into the system. The given inputs shall produce expected outputs according to
+the system tests created from the SRS. For specific system tests, a usability survey will be
+provided along with the test that must be answered by the individual conducting the test.
+
 \section{System Tests}
 
 \wss{There should be text between all headings, even if it is just a roadmap of
 the contents of the subsections.}
+
+This section will list all test cases for both functional and non-functional
+requirements, split into distinct areas of testing. The goal of the test cases
+is to have full coverage over all possible errors. This section will likely be
+added to in future, as holes in coverage are found and new test cases are
+made.
 
 \subsection{Tests for Functional Requirements}
 
@@ -291,84 +354,149 @@ the contents of the subsections.}
 \wss{Include a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.}
 
-\subsubsection{Area of Testing1}
-
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
-		
-\paragraph{Title for Test}
+
+This section covers tests verifying all functional requirements in our SRS
+document \cite{SRS}. Areas of testing include scheduling, accounts, team
+structure, scoring/standings and alerts. These areas cover all major
+functionality of our solution.
+
+\subsubsection{Scheduling}
+
+This section includes all functional tests related to viewing, creating and
+modifying the league schedule. The schedule includes all future and past
+matches created using each team's availability at the start of the season and
+can be modified with the reschedule feature.
 
 \begin{enumerate}
 
-  \item{test-FR1-1\\}
+  \item{test-FR8\\}
 
   Control: Manual
             
-  Initial State: System is not logged in to an account.
+  Initial State: The system has provided the option for captains to enter their team
+  availability data and is ready to take in the user's input.
             
-  Input: User requests to display the season schedule.
+  Input: Non-conflicting team availability data.
             
-  Output: Season schedule is displayed.
-  
-  Test Case Derivation: The season schedule should be displayed to all users 
-  regardless of their access level. 
-  
-  How test will be performed: Users without accounts will attempt to display
-  the season schedule.
+  Output: Captain inputted team availability data is stored in the system.
 
-  \item{test-FR1-2\\}
+  Test Case Derivation: The team availability data inputted by the captain has been
+  determined to not conflict with other availability data already stored in the system.
+            
+  How test will be performed: The tester will select the option to enter in team 
+  availability data and be provided non-conflicting team availability
+  data that they will input into the system. They will then observe if the system successfully
+  accepts the inputted team availability data and if any errors occur within the system.
+
+  \item{test-FR10\\}
+
+  Control: Manual
+
+  Initial State: There are two captains whose teams are scheduled to play a
+  game in the future.
+            
+  Input: One captain submits a reschedule request.
+
+  Output: The other captain receives a reschedule request.
+
+  Test Case Derivation: A captain should receive a reschedule request if another
+  captain submits a request on a game both captains will be playing.
+
+  How test will be performed: The tester will check if a reschedule request is
+  successfully sent when a captain requests a reschedule. This will be checked
+  for at least 3 different dates and times.
+
+  \item{test-FR11\\}
+
+  Control: Manual
+
+  Initial State: A reschedule request has been sent to a captain.
+            
+  Input: A captain accepts or denies a reschedule request.
+
+  Output: If accepted, the game is rescheduled to that time. If denied, the
+  captain who made the request is notified of the denial.
+
+  Test Case Derivation: A captain should be able to accept or deny a reschedule
+  request.
+
+  How test will be performed: The tester will accept or deny multiple reschedule
+  requests on different dates and times and verify the correct output is made by
+  the system.
+
+  \item{test-FR12\\}
 
   Control: Manual
             
-  Initial State: System is not logged in to an account.
+  Initial State: The system has received a captain's reschedule request and is ready to
+  notify them about the outcome of their request.
             
-  Input: User requests to display the standings.
+  Input: Captain reschedule request.
             
-  Output: Standings are displayed.
-  
-  Test Case Derivation: Standings should be displayed to all users 
-  regardless of their access level. 
-  
-  How test will be performed: Users without accounts will attempt to display
-  the standings.
+  Output: A notification is sent by the system to the captain about the status of their
+  reschedule request.
 
-  \item{test-FR2-1\\}
+  Test Case Derivation: The notification about the status of a captain's reschedule
+  request is immediately sent to the captain once the status is confirmed to be either
+  accepted or denied by the system.
+            
+  How test will be performed: The tester will be provided both a valid and invalid captain
+  reschedule request to submit into the system and wait to observe the notification sent
+  by the system of the status for the reschedule request. They will then observe if the
+  system has both accepted and denied the submitted reschedule requests and if any errors
+  occur within the system. 
 
-  Control: Manual
-            
-  Initial State: Captain user is logged in and subject team has not been 
-  created in system.
-            
-  Input: Captain user navigates to team creation and inputs valid team 
-  information then submits. 
-            
-  Output: Submitted team is added to the database.
-  
-  Test Case Derivation: If valid team information is submitted, team
-  should be created and information reflected in the database.
-  
-  How test will be performed: Captain accounts will create multiple
-  valid teams with differing data that covers all input fields.
-
-  \item{test-FR2-2\\}
+  \item{test-FR18\\}
 
   Control: Manual
             
-  Initial State: Captain user is logged in.
+  Initial State: The system has created a league schedule and is ready to
+  accept new schedule data.
             
-  Input: Captain user navigates to team creation and inputs invalid team 
-  information then submits. 
+  Input: New schedule data.
             
-  Output: No team is added to the database and user is given informative 
-  feedback as to why team submission failed.
-  
-  Test Case Derivation: If invalid team information is submitted, team
-  should not be created and user should be told the reason as to why.
-  
-  How test will be performed: Captain accounts will attempt to create 
-  multiple invalid teams with differing data that covers all input fields. 
+  Output: The updated leage schedule according to the new schedule data inputted.
+
+  Test Case Derivation: The leage schedule is immediately updated and shows the new changes
+  once new schedule data is inputted into the system.
+            
+  How test will be performed: The tester will be provided admin level permissions and sample
+  schedule data to submit into the system and wait to observe the updated league schedule
+  by the system once the new schedule data is received. They will then observe if the
+  system has displayed the correct updated league schedule and if any errors had
+  occured within the system. 
+
+  \item{test-FR22\\}
+
+  Control: Manual
+            
+  Initial State: The system has created a schedule and is ready to display upcoming games from
+  an accepted time interval.
+            
+  Input: Time interval.
+            
+  Output: The upcoming games in a schedule according to the time interval inputted.
+
+  Test Case Derivation: The schedule shows all upcoming games within the inputted time interval
+  that is received by the system.
+            
+  How test will be performed: The tester will be provided a sample time interval to input
+  into the system and wait to observe all of the upcoming games from the displayed schedule.
+  They will then observe if the system has displayed the correct schedule based on the
+  inputted time interval and if any errors had occured within the system. 
+
+\end{enumerate}
+
+\subsubsection{Accounts}
+
+This section includes all functional tests related to the creation, use and
+modification of accounts.
+
+\begin{enumerate}
 
   \item{test-FR3-1\\}
 
@@ -408,311 +536,206 @@ the contents of the subsections.}
   differing invalid account data will be made, with invalid data each attempt
   covering different input fields.
 
-\item{test-FR4\\}
-
-Control: Manual
-					
-Initial State: The system is set up and ready to take in the user's input.
-					
-Input: Valid account information.
-					
-Output: User inputted account information has replaced the previously displayed
-account information.
-
-Test Case Derivation: The account information inputted by the user has already been
-determined to be valid and should not cause the system to run into any errors. The
-user inputted account information, although should be correct, is not required by
-the system to be correct to change the user's previous account information.
-					
-How test will be performed: The tester will be provided valid account information
-that they will input into the system and observe if the system successfully
-accepts the inputted account information. The tester will also observe if the previously
-existing account information has been changed to the information that had been entered
-at the start of the test. At any point during the test, the tester will also observe if
-any errors occur within the system.
-
-\item{test-FR5-1\\}
+  \item{test-FR4\\}
 
   Control: Manual
             
-  Initial State: User is logged into an account.
+  Initial State: The system is set up and ready to take in the user's input.
             
-  Input: User requests to delete their account and provides valid login 
-  information for that account.
+  Input: Valid account information.
             
-  Output: The user is logged out, and their account is deleted.
-  
-  Test Case Derivation: If valid login information is submitted then the 
-  account should be deleted if the user requests to do so because if the user
-  wishes to leave the league they should be able to delete their information 
-  from the system.
-  
-  How test will be performed: Users of all account types will attempt to delete 
-  their account using valid login information.
+  Output: User inputted account information has replaced the previously displayed
+  account information.
 
-  \item{test-FR5-2\\}
+  Test Case Derivation: The account information inputted by the user has already been
+  determined to be valid and should not cause the system to run into any errors. The
+  user inputted account information, although should be correct, is not required by
+  the system to be correct to change the user's previous account information.
+            
+  How test will be performed: The tester will be provided valid account information
+  that they will input into the system and observe if the system successfully
+  accepts the inputted account information. The tester will also observe if the previously
+  existing account information has been changed to the information that had been entered
+  at the start of the test. At any point during the test, the tester will also observe if
+  any errors occur within the system.
+
+\end{enumerate}
+
+\subsubsection{Team Structure}
+
+This section includes all functional tests related to teams and team
+information. This covers team creation, users joining teams, and team
+information being modified.
+
+\begin{enumerate}
+
+  \item{test-FR2-1\\}
 
   Control: Manual
             
-  Initial State: User is logged into an account.
+  Initial State: Captain user is logged in and subject team has not been 
+  created in system.
             
-  Input: User requests to delete their account and provides invalid login 
-  information for that account.
+  Input: Captain user navigates to team creation and inputs valid team 
+  information then submits. 
             
-  Output: The user is not logged out, their account is not deleted, and 
-  the user is told why their request was unsuccessful.
+  Output: Submitted team is added to the database.
   
-  Test Case Derivation: If invalid login information is submitted then the 
-  account should not be deleted because accounts should only be able to be
-  deleted if the security protections in place are satisfied. Additionally, 
-  the user should be informed about why the request failed because if the
-  user requesting account deletion is the proper owner of the account but is
-  facing issues they should be provided information to help them troubleshoot 
-  the issues.
+  Test Case Derivation: If valid team information is submitted, team
+  should be created and information reflected in the database.
   
-  How test will be performed: Users of all account types will attempt to delete 
-  their account using invalid login information.
+  How test will be performed: Captain accounts will create multiple
+  valid teams with differing data that covers all input fields.
 
-\item{test-FR6-1\\}
+  \item{test-FR2-2\\}
 
-Control: 
+  Control: Manual
+            
+  Initial State: Captain user is logged in.
+            
+  Input: Captain user navigates to team creation and inputs invalid team 
+  information then submits. 
+            
+  Output: No team is added to the database and user is given informative 
+  feedback as to why team submission failed.
+  
+  Test Case Derivation: If invalid team information is submitted, team
+  should not be created and user should be told the reason as to why.
+  
+  How test will be performed: Captain accounts will attempt to create 
+  multiple invalid teams with differing data that covers all input fields. 
 
-Initial State: The system is logged into a commissioner level account.
-          
-Input: Valid alert data and chosen target user(s) entered.
-          
-Output: Alerts are stored in the system. Alerts are viewable by target users.
-
-Test Case Derivation: Alerts sent to target user should be able to be 
-seen by those target users.
-
-How test will be performed: Different commissioner level accounts input
-various valid alert data and submit. Target user accounts should be checked
-if the alerts are received.
-
-\item{test-FR6-2\\}
-
-Control: 
-
-Initial State: The system is logged into a commissioner level account.
-          
-Input: Invalid alert data or invalid chosen target user(s) entered.
-          
-Output: User is given informative feedback as to why alert failed to submit.
-
-Test Case Derivation: Invalid alerts should not be sent and user should
-be told as to why they could not be sent.
-
-How test will be performed: Commissioner level account inputs various invalid
-alert data covering all input fields.
-
-\item{test-FR7\\}
-
-Control: Automatic
-
-Initial State: The system is logged into a commissioner level account.
-          
-Input: New team data to replace a current team's data.
-          
-Output: If data is valid, system should replace the old team data with the new
-team data. If the data is invalid, the system should not change the old team
-data and inform the commissioner the data is invalid.
-
-Test Case Derivation: A commissioner level account should be able to change
-any team's data, including player list and scores.
-
-How test will be performed: A set of valid and invalid test cases will be
-submitted to the commissioner's replace team data feature, with the expected
-results compared to the results given by the program.
-
-\item{test-FR8\\}
-
-Control: Manual
-					
-Initial State: The system has provided the option for captains to enter their team
-availability data and is ready to take in the user's input.
-					
-Input: Non-conflicting team availability data.
-					
-Output: Captain inputted team availability data is stored in the system.
-
-Test Case Derivation: The team availability data inputted by the captain has been
-determined to not conflict with other availability data already stored in the system.
-					
-How test will be performed: The tester will select the option to enter in team 
-availability data and be provided non-conflicting team availability
-data that they will input into the system. They will then observe if the system successfully
-accepts the inputted team availability data and if any errors occur within the system. 
-
-\item{test-FR9\\}
+  \item{test-FR7\\}
 
   Control: Automatic
+
+  Initial State: The system is logged into a commissioner level account.
             
-  Initial State: The current seasons due date for inputting availability 
-  has been reached.
+  Input: New team data to replace a current team's data.
             
-  Input: The current season's inputted team availability data.
-            
-  Output: A season schedule is generated by the system and a visual 
-  representation of the schedule is generated and displayed on the website.
-  
-  Test Case Derivation: Players should be able to quickly know when and where 
-  they're playing their games shortly after they've submitted their availability.
-  
-  How test will be performed: A wide set of availability data sets will be 
-  submitted to the schedule generation feature, with the expected results 
-  compared to the results given by the program.
+  Output: If data is valid, system should replace the old team data with the new
+  team data. If the data is invalid, the system should not change the old team
+  data and inform the commissioner the data is invalid.
 
-\item{test-FR10\\}
+  Test Case Derivation: A commissioner level account should be able to change
+  any team's data, including player list and scores.
 
-Control: Manual
+  How test will be performed: A set of valid and invalid test cases will be
+  submitted to the commissioner's replace team data feature, with the expected
+  results compared to the results given by the program.
 
-Initial State: There are two captains whose teams are scheduled to play a
-game in the future.
-          
-Input: One captain submits a reschedule request.
-
-Output: The other captain receives a reschedule request.
-
-Test Case Derivation: A captain should receive a reschedule request if another
-captain submits a request on a game both captains will be playing.
-
-How test will be performed: The tester will check if a reschedule request is
-successfully sent when a captain requests a reschedule. This will be checked
-for at least 3 different dates and times.
-
-\item{test-FR11\\}
-
-Control: Manual
-
-Initial State: A reschedule request has been sent to a captain.
-          
-Input: A captain accepts or denies a reschedule request.
-
-Output: If accepted, the game is rescheduled to that time. If denied, the
-captain who made the request is notified of the denial.
-
-Test Case Derivation: A captain should be able to accept or deny a reschedule
-request.
-
-How test will be performed: The tester will accept or deny multiple reschedule
-requests on different dates and times and verify the correct output is made by
-the system.
-
-\item{test-FR12\\}
-
-Control: Manual
-					
-Initial State: The system has received a captain's reschedule request and is ready to
-notify them about the outcome of their request.
-					
-Input: Captain reschedule request.
-					
-Output: A notification is sent by the system to the captain about the status of their
-reschedule request.
-
-Test Case Derivation: The notification about the status of a captain's reschedule
-request is immediately sent to the captain once the status is confirmed to be either
-accepted or denied by the system.
-					
-How test will be performed: The tester will be provided both a valid and invalid captain
-reschedule request to submit into the system and wait to observe the notification sent
-by the system of the status for the reschedule request. They will then observe if the
-system has both accepted and denied the submitted reschedule requests and if any errors
-occur within the system.
-
-\item{test-FR13-1\\}
+  \item{test-FR16-1\\}
 
   Control: Manual
             
-  Initial State: The User is logged into a captain account.
+  Initial State: A captain has created a team.
             
-  Input: The user requests to update the team information of the team they are 
-  the captain of.
+  Input: Interaction with create a team functionality.
             
-  Output: The system provides the user with a menu to change the team's 
-  information.
-  
-  Test Case Derivation: Captains of teams should be able to update the team 
-  information of their team because certain team information may have changed
-  since the team was created.
-  
-  How test will be performed: Users logged into captain accounts will attempt 
-  to request to update the team information of the team they are the captain of.
+  Output: A prompt displayed by the system to the captain that they have already created
+  a team.
 
-\item{test-FR13-2\\}
+  Test Case Derivation: Because the system has determined the captain has already created a
+  team, the system should not allow the captain to create more than one team.
+            
+  How test will be performed: The tester will be provided a captain account that has already
+  created a team. They will then attempt to create a team in the system and observe if the
+  system prevents them from creating another team or if any errors occur within the system.
+
+  \item{test-FR16-2\\}
 
   Control: Manual
             
-  Initial State: The User is logged into a captain account.
+  Initial State: A player has joined a team.
             
-  Input: The user requests to update the team information of a team they are 
-  not the captain of.
+  Input: Interaction with join a team functionality.
             
-  Output: The system informs the user that they are not the captain of this team 
-  and therefore cannot update this team's information.
-  
-  Test Case Derivation: The team information of a team should only be able to be
-  updated by the captain of that team, not captains of other teams.
-  
-  How test will be performed: Users logged into captain accounts will attempt 
-  to request to update the team information of a team they are not the captain 
-  of.
+  Output: A prompt displayed by the system to the player that they have already joined
+  a team.
 
+  Test Case Derivation: Because the system has determined the player has already joined a
+  team, the system should not allow the player to join more than one team.
+            
+  How test will be performed: The tester will be provided a player account that has already
+  joined a team. They will then attempt to join a team in the system and observe if the
+  system prevents them from joining another team or if any errors occur within the system.
 
-\item{test-FR15\\}
+\end{enumerate}
 
-Control: Manual
+\subsubsection{Scoring/Standings}
 
-Initial State: The system will have a game in the schedule that will be played
-in the future. The system is logged in as a captain.
-          
-Input: A score submitted for a game.
+This section includes all functional tests related to the scoring and
+league standings. It mainly focuses on captains recording the scores of
+matches their team plays.
 
-Output: No output.
+\begin{enumerate}
 
-Test Case Derivation: A score should not be entered by a captain until a game
-is played.
+  \item{test-FR15\\}
 
-How test will be performed: A captain level account will attempt to submit a
-score for a game that has not been played yet. It should not modify the
-standings.
+  Control: Manual
 
-\item{test-FR16-1\\}
+  Initial State: The system will have a game in the schedule that will be played
+  in the future. The system is logged in as a captain.
+            
+  Input: A score submitted for a game.
 
-Control: Manual
-					
-Initial State: A captain has created a team.
-					
-Input: Interaction with create a team functionality.
-					
-Output: A prompt displayed by the system to the captain that they have already created
-a team.
+  Output: No output.
 
-Test Case Derivation: Because the system has determined the captain has already created a
-team, the system should not allow the captain to create more than one team.
-					
-How test will be performed: The tester will be provided a captain account that has already
-created a team. They will then attempt to create a team in the system and observe if the
-system prevents them from creating another team or if any errors occur within the system.
+  Test Case Derivation: A score should not be entered by a captain until a game
+  is played.
 
-\item{test-FR16-2\\}
+  How test will be performed: A captain level account will attempt to submit a
+  score for a game that has not been played yet. It should not modify the
+  standings.
 
-Control: Manual
-					
-Initial State: A player has joined a team.
-					
-Input: Interaction with join a team functionality.
-					
-Output: A prompt displayed by the system to the player that they have already joined
-a team.
+\end{enumerate}
 
-Test Case Derivation: Because the system has determined the player has already joined a
-team, the system should not allow the player to join more than one team.
-					
-How test will be performed: The tester will be provided a player account that has already
-joined a team. They will then attempt to join a team in the system and observe if the
-system prevents them from joining another team or if any errors occur within the system.
+\subsubsection{Alerts}
+
+This section includes all functional tests related to the creation of alerts.
+Alerts can be created by commissioners and send information to any specified
+group of users of the solution.
+
+\begin{enumerate}
+
+  \item{test-FR6-1\\}
+
+  Control: 
+
+  Initial State: The system is logged into a commissioner level account.
+            
+  Input: Valid alert data and chosen target user(s) entered.
+            
+  Output: Alerts are stored in the system. Alerts are viewable by target users.
+
+  Test Case Derivation: Alerts sent to target user should be able to be 
+  seen by those target users.
+
+  How test will be performed: Different commissioner level accounts input
+  various valid alert data and submit. Target user accounts should be checked
+  if the alerts are received.
+
+  \item{test-FR6-2\\}
+
+  Control: 
+
+  Initial State: The system is logged into a commissioner level account.
+            
+  Input: Invalid alert data or invalid chosen target user(s) entered.
+            
+  Output: User is given informative feedback as to why alert failed to submit.
+
+  Test Case Derivation: Invalid alerts should not be sent and user should
+  be told as to why they could not be sent.
+
+  How test will be performed: Commissioner level account inputs various invalid
+  alert data covering all input fields.
+
+\end{enumerate}
+		
+\paragraph{Title for Test}
+
+\begin{enumerate}
 
 \item{test-id2\\}
 
@@ -734,7 +757,7 @@ How test will be performed:
 
 \subsubsection{Area of Testing2}
 
-...
+\wss{blurb}
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -764,22 +787,6 @@ be involved? Be specific.}
 \paragraph{Title for Test}
 
 \begin{enumerate}
-
-  \item{test-AP1\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in.
-
-  Input: Inputs associated with each different type of input field in the
-  solution.
-
-  Output: Feedback from each input field.
-
-  How test will be performed: Each possible type of input will be used by the
-  tester and they will monitor the result for feedback. Each input field will
-  be tested with valid and invalid data if applicable, and invalid data should
-  receive feedback that lets the user know the input was invalid.
 
   \item{test-AP2\\}
 
@@ -1184,6 +1191,21 @@ How test will be performed:
   account cannot be deleted since it is the only commissioner level account
   and the account is not deleted.
 
+  \item{test-IG3\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a captain level account.
+
+  Input: A user attempts to contest a match score.
+
+  Output: An option is visible to the user to contest a recorded match score.
+
+  How test will be performed: A captain level account will attempt to
+  contest a match score. The test succeeds if they are able to view an option to contest
+  a recorded match score since they are a captain level account and they can view and contest
+  a recorded match score.
+
   \item{test-PV2\\}
 
   Type: Non-Functional, Dynamic, Manual
@@ -1399,8 +1421,6 @@ How test will be performed:
 
 \section{Appendix}
 
-This is where you can place additional information.
-
 \subsection{Symbolic Parameters}
 
 The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
@@ -1408,7 +1428,47 @@ Their values are defined in this section for easy maintenance.
 
 \subsection{Usability Survey Questions?}
 
-\wss{This is a section that would be appropriate for some projects.}
+A Google Form will be provided to testers of the system to validate specific
+system tests outlined in the VnV plan. Questions in the Google Form will be
+the following:
+
+\begin{enumerate}
+  \item Were you able to access the system?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Was the system's user interface readable and easy to understand?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Was the system's user interface easy to navigate?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Was the system's user interface easy to use?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item If given inputs, were you able to receive the expected output from
+  the system?
+  \subitem (a) Strongly Agree
+  \subitem (b) Slightly Agree
+  \subitem (c) Neutral
+  \subitem (d) Slightly Disagree
+  \subitem (e) Strongly Disagree
+  \item Were there any problems/issues you ran into when interacting with
+  the system? Write them down below.
+  \item Is there anything else about the system you would like us to know?
+  Write your thoughts down below.
+\end{enumerate}
 
 \newpage{}
 \section*{Appendix --- Reflection}
