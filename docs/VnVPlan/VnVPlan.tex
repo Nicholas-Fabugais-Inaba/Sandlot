@@ -759,6 +759,24 @@ information being modified.
   to request to update the team information of a team they are not the captain
   of.
 
+  \item{test-FR15\\}
+
+  Control: Manual
+
+  Initial State: The system is logged into a player level account.
+            
+  Input: Join team interaction.
+            
+  Output: Player is added to the team. This is reflected in team composition
+  and alerts sent to that team.
+
+  Test Case Derivation: A player who has joined a team should be shown to be a
+  member of that team in the system.
+
+  How test will be performed: Multiple player accounts will attempt to join 
+  different teams. Team compositions will be inspected to see if the player
+  is shown to be a member. 
+
   \item{test-FR16-1\\}
 
   Control: Manual
@@ -1712,6 +1730,28 @@ graduate attribute of Lifelong Learning.
   another revision was necessary to target our FRs and ARs. Ultimately, this process 
   took a good chunk of our time working on the VnV document but was worth it to 
   ensure the robustness of our requirements and their respective tests.
+\end{enumerate}
+
+\subsection*{Nicholas Fabugais-Inaba -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  When writing this deliverable, the things that went well were the organization of tasks
+  amongst each team member. Particularly with the system tests, each team member was given
+  a group of requirements to write system tests for regarding both the functional and
+  non-functional requirements located in the SRS. This allowed us to accomplish our own
+  individual work, while as a team, we were able to discuss the various plans outlined in the
+  Plan section of the VnV document. With the SRS requirements having an adequate amount of
+  details to work from, writing the system tests became very easy to trace back to the SRS
+  requirements.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Some of the pain points from this deliverable were figuring out which tests were not
+  covered by the SRS requirements. This was an issue as certain tests we realized we should
+  include in our VnV plan were not addressed by the previously created SRS requirements.
+  This meant the team had to go back and adjust or add new requirements to the SRS document,
+  where we could then add system tests to appropriately address certain functionalities that
+  would require sufficient testing by a user of the system.
 \end{enumerate}
 
 \end{document}
