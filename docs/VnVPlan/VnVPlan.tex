@@ -1295,6 +1295,41 @@ inconsistent interface elements will be recorded.
   that recently had its permissions change and try out new functionalities that should
   have been provided with the permission update or if any errors had occurred.
 
+  \item{test-AS6-1\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in to an account.
+
+  Input: User navigates to the log in section and enters valid login data for
+  an account that has already been made.
+
+  Output: The system logs in to the valid account.
+
+  Test Case Derivation: If valid account information is given when logging in
+  the system should log in as that account.
+
+  How test will be performed: Multiple accounts will be logged into each with
+  different valid account information and permission levels.
+
+  \item{test-AS6-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in to an account.
+
+  Input: User navigates to the log in section and enters invalid login data
+  for an account login.
+
+  Output: The system warns the user the data used is invalid.
+
+  Test Case Derivation: If invalid account information is given when logging
+  in the system should not log in to any account and warn the user the data
+  isn't valid.
+
+  How test will be performed: Multiple invalid logins will be attempted each
+  with different invalid account information.
+
   \item{test-AS7\\}
   
   Type: Non-Functional, Dynamic, Manual
