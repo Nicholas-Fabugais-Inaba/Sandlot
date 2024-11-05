@@ -35,30 +35,9 @@ Nov. 1, 2024 & 1.1 & Rev0\\
 \bottomrule
 \end{tabularx}
 
-~\\
-\wss{The intention of the VnV plan is to increase confidence in the software.
-However, this does not mean listing every verification and validation technique
-that has ever been devised.  The VnV plan should also be a \textbf{feasible}
-plan. Execution of the plan should be possible with the time and team available.
-If the full plan cannot be completed during the time available, it can either be
-modified to ``fake it'', or a better solution is to add a section describing
-what work has been completed and what work is still planned for the future.}
-
-\wss{The VnV plan is typically started after the requirements stage, but before
-the design stage.  This means that the sections related to unit testing cannot
-initially be completed.  The sections will be filled in after the design stage
-is complete.  the final version of the VnV plan should have all sections filled
-in.}
-
 \newpage
 
 \tableofcontents
-
-\listoftables
-\wss{Remove this section if it isn't needed}
-
-\listoffigures
-\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -77,11 +56,6 @@ in.}
   \bottomrule
 \end{tabular}\\
 
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
-
 \newpage
 
 \pagenumbering{arabic}
@@ -90,15 +64,9 @@ This document will outline the various VnV plans for the Sandlot project includi
 the system tests and unit tests that will be used to validate the requirements
 created in the SRS document.
 
-\wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
-
 \section{General Information}
 
 \subsection{Summary}
-
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
 
 The software being tested is the Sandlot project. Sandlot is a scheduling and
 management platform for the McMaster GSA softball league. Users of the system
@@ -111,23 +79,6 @@ also add new features including account creation and commissioner specific
 permissions like league-wide alerts.
 
 \subsection{Objectives}
-
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
-
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
 
 The main objectives intended to be accomplished are to build confidence in the software
 correctness, demonstrate the requirements created for this project are correctly
@@ -143,31 +94,11 @@ been verified by its implementation teams.
 
 \subsection{Challenge Level and Extras}
 
-\wss{State the challenge level (advanced, general, basic) for your project.
-Your challenge level should exactly match what is included in your problem
-statement.  This should be the challenge level agreed on between you and the
-course instructor.  You can use a pull request to update your challenge level
-(in TeamComposition.csv or Repos.csv) if your plan changes as a result of the
-VnV planning exercise.}
-
-\wss{Summarize the extras (if any) that were tackled by this project.  Extras
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  Extras should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your extras (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
-
 The challenge level of the project is general. The extras that are being used
 are user documentation and a code walkthrough. The challenge level and both extras
 have been approved by an instructor.
 
 \subsection{Relevant Documentation}
-
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
 
 \begin{thebibliography}{9}
   \bibitem{SRS} Software Requirements Specification Document (2024)
@@ -181,8 +112,6 @@ have been approved by an instructor.
   \\
 \end{thebibliography}
 
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}\\
 The SRS document has requirements for our project that must be verified, it is
 the most complete list of functional and non-functional requirements that our
 solution needs to achieve.\\
@@ -198,18 +127,11 @@ in our VnV plan.
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
-
 In this section our plan for verifying all important documents will be
 recorded as well as our plan for verifying the software itself. Documents to
 be verified include the SRS, MIS and MG design documents and the VnV itself.
 
 \subsection{Verification and Validation Team}
-
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
 
 \begin{enumerate}
   \item Casra: Automation Tester\\
@@ -227,18 +149,6 @@ be verified include the SRS, MIS and MG design documents and the VnV itself.
 
 \subsection{SRS Verification Plan}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
-
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
-
 A meeting with the team and supervisor will be held to verify the SRS document covers all of
 the necessary requirements desired for the system. Each requirement outlined in the SRS will
 be reviewed by the team and supervisor to ensure the requirement appropriately addresses the
@@ -250,12 +160,6 @@ feedback and make any changes needed.
 
 \subsection{Design Verification Plan}
 
-\wss{Plans for design verification}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
-
 A meeting with the team and supervisor will be held to review design documents created
 for the Sandlot project. Both parties will then verify anything outlined in the design
 documents are correctly implemented in the system.
@@ -265,13 +169,6 @@ classmates are either implemented in the system or appropriately addressed by a 
 with a justification for why a suggestion shall not be implemented.
 
 \subsection{Verification and Validation Plan Verification Plan}
-
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
 
 The verification and validation plan will be reviewed by another capstone
 group who will give at least six points of feedback on our VnV document. Our
@@ -285,17 +182,6 @@ During testing we will use mutation testing to verify test case coverage, and
 any holes found in our coverage will be patched by adding more test cases.
 
 \subsection{Implementation Verification Plan}
-
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
-
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
-
-\wss{The final class presentation in CAS 741 could be used as a code
-walkthrough.  There is also a possibility of using the final presentation (in
-CAS741) for a partial usability survey.}
 
 Code reviews with the team will be held for all functionalities of the system, utilizing the
 system tests and unit tests outlined in the VnV plan. The team will attempt to identify any
@@ -311,43 +197,10 @@ required.
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
-
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
-
 This was discussed in our development plan document \cite{DP} 
 in the expected technology section.
 
 \subsection{Software Validation Plan}
-
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
-
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
-
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
-
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
-
-\wss{This section might reference back to the SRS verification section.}
 
 The system will be provided to the supervisor and external testers, gathered by the supervisor,
 to enter given inputs into the system. The given inputs shall produce expected outputs according to
@@ -356,9 +209,6 @@ provided along with the test that must be answered by the individual conducting 
 
 \section{System Tests}
 
-\wss{There should be text between all headings, even if it is just a roadmap of
-the contents of the subsections.}
-
 This section will list all test cases for both functional and non-functional
 requirements, split into distinct areas of testing. The goal of the test cases
 is to have full coverage over all possible errors. This section will likely be
@@ -366,18 +216,6 @@ added to in future, as holes in coverage are found and new test cases are
 made.
 
 \subsection{Tests for Functional Requirements}
-
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
-
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
-
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
 
 This section covers tests verifying all functional requirements in our SRS
 document \cite{SRS}. Areas of testing include scheduling, accounts, team
@@ -396,17 +234,17 @@ can be modified with the reschedule feature.
   \item{test-FR8\\}
 
   Control: Manual
-            
+
   Initial State: The system has provided the option for captains to enter their team
   availability data and is ready to take in the user's input.
-            
+
   Input: Non-conflicting team availability data.
-            
+
   Output: Captain inputted team availability data is stored in the system.
 
   Test Case Derivation: The team availability data inputted by the captain has been
   determined to not conflict with other availability data already stored in the system.
-            
+
   How test will be performed: The tester will select the option to enter in team 
   availability data and be provided non-conflicting team availability
   data that they will input into the system. They will then observe if the system successfully
@@ -415,18 +253,18 @@ can be modified with the reschedule feature.
   \item{test-FR9\\}
 
   Control: Automatic
-           
+
   Initial State: The current seasons due date for inputting availability
   has been reached.
-           
+
   Input: The current season's inputted team availability data.
-           
+
   Output: A season schedule is generated by the system and a visual
   representation of the schedule is generated and displayed on the website.
- 
+
   Test Case Derivation: Players should be able to quickly know when and where
   they're playing their games shortly after they've submitted their availability.
- 
+
   How test will be performed: A wide set of availability data sets will be
   submitted to the schedule generation feature, with the expected results
   compared to the results given by the program.
@@ -437,7 +275,7 @@ can be modified with the reschedule feature.
 
   Initial State: There are two captains whose teams are scheduled to play a
   game in the future.
-            
+
   Input: One captain submits a reschedule request.
 
   Output: The other captain receives a reschedule request.
@@ -454,7 +292,7 @@ can be modified with the reschedule feature.
   Control: Manual
 
   Initial State: A reschedule request has been sent to a captain.
-            
+
   Input: A captain accepts or denies a reschedule request.
 
   Output: If accepted, the game is rescheduled to that time. If denied, the
@@ -470,19 +308,19 @@ can be modified with the reschedule feature.
   \item{test-FR12\\}
 
   Control: Manual
-            
+
   Initial State: The system has received a captain's reschedule request and is ready to
   notify them about the outcome of their request.
-            
+
   Input: Captain reschedule request.
-            
+
   Output: A notification is sent by the system to the captain about the status of their
   reschedule request.
 
   Test Case Derivation: The notification about the status of a captain's reschedule
   request is immediately sent to the captain once the status is confirmed to be either
   accepted or denied by the system.
-            
+
   How test will be performed: The tester will be provided both a valid and invalid captain
   reschedule request to submit into the system and wait to observe the notification sent
   by the system of the status for the reschedule request. They will then observe if the
@@ -492,17 +330,17 @@ can be modified with the reschedule feature.
   \item{test-FR18\\}
 
   Control: Manual
-            
+
   Initial State: The system has created a league schedule and is ready to
   accept new schedule data.
-            
+
   Input: New schedule data.
-            
+
   Output: The updated leage schedule according to the new schedule data inputted.
 
   Test Case Derivation: The leage schedule is immediately updated and shows the new changes
   once new schedule data is inputted into the system.
-            
+
   How test will be performed: The tester will be provided admin level permissions and sample
   schedule data to submit into the system and wait to observe the updated league schedule
   by the system once the new schedule data is received. They will then observe if the
@@ -512,31 +350,31 @@ can be modified with the reschedule feature.
   \item{test-FR20\\}
 
   Control: Manual
-            
+
   Initial State: The system has created a season schedule.
-            
+
   Input: Season schedule.
-            
+
   Output: Schedule of all games of all teams during the season in a calendar. 
 
   Test Case Derivation: The overall season schedule should display all games in a calendar.
-            
+
   How test will be performed: The season schedule should resemble a calendar and display all games of the season.
 
   \item{test-FR21\\}
 
   Control: Manual
-            
+
   Initial State: The system has created a schedule.
-            
+
   Input: User navigating to a team's schedule section.
-            
+
   Output: The system will display all games of the specified team's schedule.
 
   Test Case Derivation: Each team should have a schedule that lists all of
   that team's games. This should be accessible by users who navigate to this
   section of the system.
-            
+
   How test will be performed: Each team's schedule section will be navigated to
   and compared with the full league schedule. All games on the main schedule
   that include the specified team should be on the team's schedule. There should
@@ -546,17 +384,17 @@ can be modified with the reschedule feature.
   \item{test-FR22\\}
 
   Control: Manual
-            
+
   Initial State: The system has created a schedule and is ready to display upcoming games from
   an accepted time interval.
-            
+
   Input: Time interval.
-            
+
   Output: The upcoming games in a schedule according to the time interval inputted.
 
   Test Case Derivation: The schedule shows all upcoming games within the inputted time interval
   that is received by the system.
-            
+
   How test will be performed: The tester will be provided a sample time interval to input
   into the system and wait to observe all of the upcoming games from the displayed schedule.
   They will then observe if the system has displayed the correct schedule based on the
@@ -573,72 +411,70 @@ modification of accounts.
 
   \item{test-FR1-1\\}
 
-
   Control: Manual
-           
+
   Initial State: System is not logged in to an account.
-           
+
   Input: User requests to display the season schedule.
-           
+
   Output: Season schedule is displayed.
- 
+
   Test Case Derivation: The season schedule should be displayed to all users
   regardless of their access level.
- 
+
   How test will be performed: Users without accounts will attempt to display
   the season schedule.
 
   \item{test-FR1-2\\}
 
-
   Control: Manual
-           
+
   Initial State: System is not logged in to an account.
-           
+
   Input: User requests to display the standings.
-           
+
   Output: Standings are displayed.
- 
+
   Test Case Derivation: Standings should be displayed to all users
   regardless of their access level.
- 
+
   How test will be performed: Users without accounts will attempt to display
   the standings.
 
   \item{test-FR3-1\\}
 
   Control: Manual
-            
+
   Initial State: The system is not logged in to an account.
-            
+
   Input: User navigates to create an account and enters valid account creation
   data.
-            
+
   Output: The system adds an account to the database and logs in to the new
   account.
-  
+
   Test Case Derivation: If valid account information is given a new account
   should be created.
-  
+
   How test will be performed: Multiple accounts will be added to the system
   with differing valid account data covering all input fields.
 
   \item{test-FR3-2\\}
 
   Control: Manual
-            
+
   Initial State: The system is not logged in to an account.
-            
+
   Input: User navigates to create an account and enters invalid account
   creation data.
-            
+
   Output: The system does not create a new account and the user is informed of
   which data is invalid.
-  
+
   Test Case Derivation: If invalid account information is given a new account
   should not be created and the user should be notified of which data is
   invalid.
-  
+
   How test will be performed: Multiple attempts to create accounts with
   differing invalid account data will be made, with invalid data each attempt
   covering different input fields.
@@ -646,11 +482,11 @@ modification of accounts.
   \item{test-FR4\\}
 
   Control: Manual
-            
+
   Initial State: The system is set up and ready to take in the user's input.
-            
+
   Input: Valid account information.
-            
+
   Output: User inputted account information has replaced the previously displayed
   account information.
 
@@ -658,7 +494,7 @@ modification of accounts.
   determined to be valid and should not cause the system to run into any errors. The
   user inputted account information, although should be correct, is not required by
   the system to be correct to change the user's previous account information.
-            
+
   How test will be performed: The tester will be provided valid account information
   that they will input into the system and observe if the system successfully
   accepts the inputted account information. The tester will also observe if the previously
@@ -669,34 +505,34 @@ modification of accounts.
   \item{test-FR5-1\\}
 
   Control: Manual
-           
+
   Initial State: User is logged into an account.
-           
+
   Input: User requests to delete their account and provides valid login
   information for that account.
-           
+
   Output: The user is logged out, and their account is deleted.
- 
+
   Test Case Derivation: If valid login information is submitted then the
   account should be deleted if the user requests to do so because if the user
   wishes to leave the league they should be able to delete their information
   from the system.
- 
+
   How test will be performed: Users of all account types will attempt to delete
   their account using valid login information.
 
   \item{test-FR5-2\\}
 
   Control: Manual
-           
+
   Initial State: User is logged into an account.
-           
+
   Input: User requests to delete their account and provides invalid login
   information for that account.
-           
+
   Output: The user is not logged out, their account is not deleted, and
   the user is told why their request was unsuccessful.
- 
+
   Test Case Derivation: If invalid login information is submitted then the
   account should not be deleted because accounts should only be able to be
   deleted if the security protections in place are satisfied. Additionally,
@@ -704,59 +540,59 @@ modification of accounts.
   user requesting account deletion is the proper owner of the account but is
   facing issues they should be provided information to help them troubleshoot
   the issues.
- 
+
   How test will be performed: Users of all account types will attempt to delete
   their account using invalid login information.
 
   \item{test-FR16-1\\}
 
   Control: Manual
-            
+
   Initial State: The system is not logged in to an account.
-            
+
   Input: User navigates to the log in section and enters valid login data for
   an account that has already been made.
-            
+
   Output: The system logs in to the valid account.
-  
+
   Test Case Derivation: If valid account information is given when logging in
   the system should log in as that account.
-  
+
   How test will be performed: Multiple accounts will be logged into each with
   different valid account information and permission levels.
 
   \item{test-FR16-2\\}
 
   Control: Manual
-            
+
   Initial State: The system is not logged in to an account.
-            
+
   Input: User navigates to the log in section and enters invalid login data
   for an account login.
-            
+
   Output: The system warns the user the data used is invalid.
-  
+
   Test Case Derivation: If invalid account information is given when logging
   in the system should not log in to any account and warn the user the data
   isn't valid.
-  
+
   How test will be performed: Multiple invalid logins will be attempted each
   with different invalid account information.
 
   \item{test-FR19\\}
 
   Control: Manual
-           
+
   Initial State: The User is logged into a commissioner account.
-           
+
   Input: The user requests to assign captain level permissions to a 
   certain user.
-           
+
   Output: The system assigns captain level permissions to the user.
- 
+
   Test Case Derivation: commissioners should be able to assign captain level
   permissions to users because they control which players are captains.
- 
+
   How test will be performed: Users logged into commissioner accounts will attempt
   to assign captain level permissions to a player level account.
 
@@ -773,36 +609,36 @@ information being modified.
   \item{test-FR2-1\\}
 
   Control: Manual
-            
+
   Initial State: Captain user is logged in and subject team has not been 
   created in system.
-            
+
   Input: Captain user navigates to team creation and inputs valid team 
   information then submits. 
-            
+
   Output: Submitted team is added to the database.
-  
+
   Test Case Derivation: If valid team information is submitted, team
   should be created and information reflected in the database.
-  
+
   How test will be performed: Captain accounts will create multiple
   valid teams with differing data that covers all input fields.
 
   \item{test-FR2-2\\}
 
   Control: Manual
-            
+
   Initial State: Captain user is logged in.
-            
+
   Input: Captain user navigates to team creation and inputs invalid team 
   information then submits. 
-            
+
   Output: No team is added to the database and user is given informative 
   feedback as to why team submission failed.
-  
+
   Test Case Derivation: If invalid team information is submitted, team
   should not be created and user should be told the reason as to why.
-  
+
   How test will be performed: Captain accounts will attempt to create 
   multiple invalid teams with differing data that covers all input fields. 
 
@@ -811,9 +647,9 @@ information being modified.
   Control: Automatic
 
   Initial State: The system is logged into a commissioner level account.
-            
+
   Input: New team data to replace a current team's data.
-            
+
   Output: If data is valid, system should replace the old team data with the new
   team data. If the data is invalid, the system should not change the old team
   data and inform the commissioner the data is invalid.
@@ -828,37 +664,37 @@ information being modified.
   \item{test-FR13-1\\}
 
   Control: Manual
-           
+
   Initial State: The User is logged into a captain account.
-           
+
   Input: The user requests to update the team information of the team they are
   the captain of.
-           
+
   Output: The system provides the user with a menu to change the team's
   information and will save any changes made by the user.
- 
+
   Test Case Derivation: Captains of teams should be able to update the team
   information of their team because certain team information may have changed
   since the team was created.
- 
+
   How test will be performed: Users logged into captain accounts will attempt
   to request to update the team information of the team they are the captain of.
 
   \item{test-FR13-2\\}
 
   Control: Manual
-           
+
   Initial State: The User is logged into a captain account.
-           
+
   Input: The user requests to update the team information of a team they are
   not the captain of.
-           
+
   Output: The system informs the user that they are not the captain of this team
   and therefore cannot update this team's information.
- 
+
   Test Case Derivation: The team information of a team should only be able to be
   updated by the captain of that team, not captains of other teams.
- 
+
   How test will be performed: Users logged into captain accounts will attempt
   to request to update the team information of a team they are not the captain
   of.
@@ -866,38 +702,38 @@ information being modified.
   \item{test-FR14-1\\}
 
   Control: Manual
-           
+
   Initial State: The User is logged into a captain account.
-           
+
   Input: The user requests to submit the score for a game that has been
   completed.
-           
+
   Output: The system provides the user with a menu to submit the game's
   score and will save the score inputted by the user.
- 
+
   Test Case Derivation: Captains of teams should be able to submit the score
   for a game that has been completed because they're responsible for the
   score.
- 
+
   How test will be performed: Users logged into captain accounts will attempt
   to submit a score for a game that has been marked as completed by the system.
 
   \item{test-FR14-2\\}
 
   Control: Manual
-           
+
   Initial State: The User is logged into a captain account.
-           
+
   Input: The user requests to submit the score for a game that has not
   been completed.
-           
+
   Output: The system informs the user that they cannot submit a score
   for this game because it has not been completed.
- 
+
   Test Case Derivation: Captains of teams should not be able to 
   submit the score for a game that has not been completed because 
   the final score for that game has not been determined yet.
- 
+
   How test will be performed: Users logged into captain accounts will attempt
   to submit a score for a game that has not been marked as completed by 
   the system.
@@ -905,18 +741,18 @@ information being modified.
   \item{test-FR14-3\\}
 
   Control: Manual
-           
+
   Initial State: The User is logged into a player account.
-           
+
   Input: The user requests to submit the score for a game that has
   been completed.
-           
+
   Output: The system informs the user that they are not the captain 
   of this team and therefore cannot update the score for this game.
- 
+
   Test Case Derivation: regular players of a team should not be able to 
   submit the score for a game because that is not their responsibility.
- 
+
   How test will be performed: Users logged into player accounts will 
   attempt to submit a score for a game that has been marked as completed 
   by the system.
@@ -926,9 +762,9 @@ information being modified.
   Control: Manual
 
   Initial State: The system is logged into a player level account.
-            
+
   Input: Join team interaction.
-            
+
   Output: Player is added to the team. This is reflected in team composition
   and alerts sent to that team.
 
@@ -942,7 +778,7 @@ information being modified.
   \item{test-FR23\\}
 
   Control: Manual
-            
+
   Initial State: At least one team has been created by a captain.
 
   Input: A captain level user is made the associated captain of a team that
@@ -974,7 +810,7 @@ matches their team plays.
 
   Initial State: The system will have a game in the schedule that will be played
   in the future. The system is logged in as a captain.
-            
+
   Input: A score submitted for a game.
 
   Output: No output.
@@ -1001,9 +837,9 @@ group of users of the solution.
   Control: 
 
   Initial State: The system is logged into a commissioner level account.
-            
+
   Input: Valid alert data and chosen target user(s) entered.
-            
+
   Output: Alerts are stored in the system. Alerts are viewable by target users.
 
   Test Case Derivation: Alerts sent to target user should be able to be 
@@ -1018,9 +854,9 @@ group of users of the solution.
   Control: 
 
   Initial State: The system is logged into a commissioner level account.
-            
+
   Input: Invalid alert data or invalid chosen target user(s) entered.
-            
+
   Output: User is given informative feedback as to why alert failed to submit.
 
   Test Case Derivation: Invalid alerts should not be sent and user should
@@ -1030,59 +866,14 @@ group of users of the solution.
   alert data covering all input fields.
 
 \end{enumerate}
-		
-\paragraph{Title for Test}
-
-\begin{enumerate}
-
-\item{test-id2\\}
-
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
-\end{enumerate}
-
-\subsubsection{Area of Testing2}
-
-\wss{blurb}
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
-
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
-
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
+This section covers tests verifying all non-functional requirements in our SRS
+document \cite{SRS}. Most prominent areas of testing include usability,
+performance, maintainability, security and cultural.
 
 \subsubsection{Look and Feel Requirements}
-		
-\paragraph{Title for Test}
 
 \begin{enumerate}
 
@@ -1098,7 +889,7 @@ be involved? Be specific.}
   maintain and maintain at least a 3:1 contrast ratio with the background.
 
   How test will be performed: Each possible user input element will be checked by 
-  the user to have have a minimum size of 44x44 pixels, maintain and maintain at 
+  the user to have a minimum size of 44x44 pixels, maintain and maintain at 
   least a 3:1 contrast ratio with the background.
 
   \item{test-AP2\\}
@@ -1120,36 +911,19 @@ be involved? Be specific.}
 \item{test-AP3\\}
 
 Type: Non-Functional, Dynamic, Manual
-					
+
 Initial State: The solution is opened on a user's web browser.
-					
+
 Input/Condition: The user will be asked if the images made for/by Sandlot are viewed at
 a high quality containing no pixelations or blurring at their displayed size.
-					
+
 Output/Result: The supervisor will state that Sandlot's images are displayed at a high
 quality.
-					
+
 How test will be performed: The supervisor will be provided the solution and a set of
 sample inputs for Sandlot. They will then enter in the sample inputs and observe the
 generated outputs from the system. After their observations, the supervisor will be given
 a usability survey to fill out that is located in section 6.2 of this VnV plan document.
-					
-\item{test-STY1\\}
-
-Type: Non-Functional, Dynamic, Manual
-					
-Initial State: The system is running and viewable.
-					
-Input/Condition: User will be asked if there are inconsistent colours,
-fonts, or buttons across the interface of the system.
-					
-Output/Result: Supervisor will state that the style is consistent.
-					
-How test will be performed: Reviewer will navigate through all parts
-of the interface and inspect text, colours, and buttons. Any 
-inconsistent interface elements will be recorded. 
-
-\item{test-id2\\}
 
 \item{test-AP4\\}
 
@@ -1166,6 +940,21 @@ How test will be performed: The user will be provided the solution. They will th
 navigate throughout the system and observe its simplicity. After their observations, 
 the supervisor will be given a usability survey to fill out that is located in 
 section 6.2 of this VnV plan document.
+
+\item{test-STY1\\}
+
+Type: Non-Functional, Dynamic, Manual
+					
+Initial State: The system is running and viewable.
+					
+Input/Condition: User will be asked if there are inconsistent colours,
+fonts, or buttons across the interface of the system.
+					
+Output/Result: Supervisor will state that the style is consistent.
+					
+How test will be performed: Reviewer will navigate through all parts
+of the interface and inspect text, colours, and buttons. Any 
+inconsistent interface elements will be recorded. 
 
 \end{enumerate}
 
@@ -1190,20 +979,38 @@ section 6.2 of this VnV plan document.
   find the schedule.
 
   \item{test-EU2\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: User is located on the system's login page and the system is ready
   for the user's inputs.
-            
+
   Input/Condition: Misinputted login information.
-            
+
   Output/Result: The system will provide a warning to the user for login information that
   does not exist or does not match any database stored login information.
-            
+
   How test will be performed: The tester will be provided login information that does not
   currently exist in the database and they will input the provided information into the
   system. The tester will observe the output or any errors that may occur in the system.
+
+  \item{test-EU3\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: User is logged into a captain account.
+            
+  Input/Condition: User inputs availability data which causes a schedule conflict.
+            
+  Output/Result: The system will provide a warning to the user informing them that
+  the availability data they've inputted has caused on conflicts with another team's
+  availability data that the scheduler cannot resolve.
+            
+  How test will be performed: The user will be provided a captain account with a set 
+  of availability data. The system will have stored some set of existing availability 
+  data that will cause an unresolvable conflict with the availability data of the user.
+  The user will input the provided availability data to the system and observe the 
+  output or any errors that may occur in the system.
 
   \item{test-LR1\\}
 
@@ -1237,19 +1044,19 @@ section 6.2 of this VnV plan document.
   complete including creating a team, modifying team data and submitting a
   score. The tester will also be given the user manual. If the user can
   complete all tasks in less than one hour the test is successful.
-            
+
   \item{test-LR3\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The solution is opened on a user's web browser.
-            
+
   Input/Condition: A new user will be asked to navigate to the season schedule on their first
   time interacting with the solution.
-            
+
   Output/Result: A new user is able to successfully navigate to the season schedule on
   their first time interacting with the solution.
-            
+
   How test will be performed: A new user of the system will be provided the solution and
   will be asked to navigate and view the season schedule.
 
@@ -1270,6 +1077,21 @@ section 6.2 of this VnV plan document.
   in the system and record whether they generally do or do not 
   understand the terminology used. 
 
+  \item{test-AC1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The solution is open on the user's browser.
+
+  Input: The user navigates through the website. 
+
+  Output: All body text displayed have a minimum font size of 16 
+  pixels, and a line length between 45 and 75 characters.
+
+  How test will be performed: All possible body text will be checked by 
+  the user to have a minimum font size of 16 pixels, and a line length 
+  between 45 and 75 characters.
+
   \item{test-AC2\\}
 
   Type: Non-Functional, Dynamic, Manual
@@ -1286,140 +1108,81 @@ section 6.2 of this VnV plan document.
   such as schedules.
 
   \item{test-AC3\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The solution is opened on a user's web browser and a commissioner's web
   browser.
-            
+
   Input/Condition: A user will be sent an alert created by a commissioner and will be asked
   if the alert is visible and readable.
-            
+
   Output/Result: A user is able to successfully see the alert sent by a commissioner and
   the alert is readable and clear enough for the user to understand.
-            
+
   How test will be performed: The supervisor and a tester will be provided the solution and
   will be asked to view/send an alert. Once the alert is sent/received, the recipient will
   be asked to observe the alert. After their observations, the supervisor will be given
   a usability survey to fill out that is located in section 6.2 of this VnV plan document.
 
-  \item{test-id2\\}
-  
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: 
-            
-  How test will be performed:
-  
-  \end{enumerate}
+\end{enumerate}
 
 \subsubsection{Performance Requirements}
 
 \begin{enumerate}
 
   \item{test-CR1\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The solution is opened on a user's web browser.
-            
+
   Input/Condition: Sandlot should have 60 teams and 1500 players stored in the system at
   once.
-            
+
   Output/Result: Sandlot should continue to successfully function with no faults when
   60 teams have 25 players each stored in the system.
-            
+
   How test will be performed: The system will be provided sample inputs for 60 teams and
   25 players on each team. The tester will then observe the system as they navigate the
   solution and utilize functionalities such as rescheduling games, and viewing the standings
   and season schedule. After their observations, the tester will be given
   a usability survey to fill out that is located in section 6.2 of this VnV plan document.
-            
-  \item{test-id2\\}
-  
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: 
-            
-  How test will be performed: 
-  
-  \end{enumerate}
+
+\end{enumerate}
 
 \subsubsection{Operational and Environmental Requirements}
-\begin{enumerate}
 
-  \item{test-id1\\}
-  
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input/Condition: 
-            
-  Output/Result: 
-            
-  How test will be performed: 
-            
-  \item{test-id2\\}
-  
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: 
-            
-  How test will be performed: 
+\begin{enumerate}
 
   \item{test-RR1\\}
 
   No test needed for requirement.
-  
-  \end{enumerate}
+
+\end{enumerate}
 
 \subsubsection{Maintainability and Support Requirements}
 
 \begin{enumerate}
 
   \item{test-MR1\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The solution is opened on a user's web browser.
-            
+
   Input/Condition: A tester will be asked to start a new season within a time constraint
   of one hour.
-            
+
   Output/Result: A new season is successfully started within one hour of the solution
   being initially opened in the tester's web browser.
-            
+
   How test will be performed: A tester will be provided the solution and asked to start
   a new season by following a set of instructions. A timer will begin at the same time
   the solution is opened on the tester's web browser, in which, the tester should be
   able to start a new season before one hour has passed.
-            
-  \item{test-id2\\}
   
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: 
-            
-  How test will be performed: 
-  
-  \end{enumerate}
+\end{enumerate}
 
 \subsubsection{Security Requirements}
 
@@ -1456,62 +1219,62 @@ section 6.2 of this VnV plan document.
   in their respective teams. Players should not be able to access the information.
 
   \item{test-AS3-1\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The system is logged in to a captain level account.
-            
+
   Input/Condition: The captain will attempt to access the contact information
   of different players on their team and other captains in the league.
-            
+
   Output/Result: The system will display their contact information.
-            
+
   How test will be performed: The user will attempt to access contact
   information of multiple players on their team and other captains in the
   league. They should be able to access it.
 
   \item{test-AS3-2\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The system is logged in to a captain level account.
-            
+
   Input/Condition: The captain will attempt to access the contact information
   of different players that are not on their team.
-            
+
   Output/Result: The system will not display their contact information.
-            
+
   How test will be performed: The user will attempt to access contact
   information of multiple players who are not on their team. They should not
   be able to access it.
 
   \item{test-AS4\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The system is logged in to a commissioner level account.
-            
+
   Input/Condition: The commissioner will attempt to access the contact
   information of many different players and captains on different teams.
-            
+
   Output/Result: The system will display their contact information.
-            
+
   How test will be performed: The user will attempt to access contact
   information of multiple players and captains on different teams. They should
   be able to access it.
 
   \item{test-AS5\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: The solution is opened on a user's web browser.
-            
-  Input/Condition: A user's account is provided permissions that are different from
+
+  Input/Condition: A user's account is provided permissions that are different from the
   the account's current permissions.
-            
+
   Output/Result: The system provides a warning to the user changing an account's
   permissions before the permissions are successfully updated.
-            
+
   How test will be performed: A tester will be provided an account to change the
   permissions for and the account itself. They will then be asked to update the account
   that requires an update to its permissions and observe the warning given by the system
@@ -1535,17 +1298,17 @@ section 6.2 of this VnV plan document.
   successfully added to the team list.
 
   \item{test-AS8\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
-  Initial State: The system is logged in as a captain of a team is also a
+
+  Initial State: The system is logged in as a captain of a team and is also a
   player on another team.
-            
+
   Input/Condition: The captain attempts to change team information and submit
   scores.
-            
+
   Output/Result: The system should not make any changes.
-            
+
   How test will be performed: A captain who is a player on a team they are not
   in charge of will try to change team information and submit scores for the
   team they are not in charge of. If they cannot do these actions, the test
@@ -1595,18 +1358,6 @@ section 6.2 of this VnV plan document.
   How test will be performed: A new account will be created. If the user 
   receives a warning to keep their password secure, the test succeeds.
 
-  \item{test-id2\\}
-  
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: 
-            
-  How test will be performed: 
-  
 \end{enumerate}
 
 \subsubsection{Cultural Requirements}
@@ -1614,38 +1365,28 @@ section 6.2 of this VnV plan document.
 \begin{enumerate}
 
   \item{test-CL1\\}
-  
+
   Type: Non-Functional, Dynamic, Manual
-            
+
   Initial State: A user is creating an account for themselves on the solution.
-            
+
   Input/Condition: A user selects a gender option when creating their account.
-            
+
   Output/Result: A user is able to select a gender option that does not specify their
   gender when creating their account.
-            
+
   How test will be performed: A tester will be provided the solution and will be asked
   to create a new account. They will then be asked to select the gender option that allows
   them to not specify their gender and observe if their information is displayed correctly
   when they are finished creating their account or if any errors had occured.
-  
+
 \end{enumerate}
 
 \subsubsection{Migration to the New Product}
 
 \begin{enumerate}
 
-  \item{test-id2\\}
-  
-  Type: Functional, Dynamic, Manual, Static etc.
-            
-  Initial State: 
-            
-  Input: 
-            
-  Output: 
-            
-  How test will be performed: 
+  \item{test-\\}
 
 \end{enumerate}
 
@@ -1660,9 +1401,6 @@ section 6.2 of this VnV plan document.
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
-
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
 
 The name of our test cases are each stamped with the requirement number which
 they address. Each requirement in our SRS \cite{SRS} has an associated test to
@@ -1853,8 +1591,6 @@ the following:
 
 \newpage{}
 \section*{Appendix --- Reflection}
-
-\wss{This section is not required for CAS 741}
 
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Lifelong Learning.
