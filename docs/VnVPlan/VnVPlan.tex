@@ -699,6 +699,53 @@ information being modified.
   to request to update the team information of a team they are not the captain
   of.
 
+  \item{test-FR15\\}
+
+  Control: Manual
+
+  Initial State: The system is logged into a player level account.
+
+  Input: Join team interaction.
+
+  Output: Player is added to the team. This is reflected in team composition
+  and alerts sent to that team.
+
+  Test Case Derivation: A player who has joined a team should be shown to be a
+  member of that team in the system.
+
+  How test will be performed: Multiple player accounts will attempt to join 
+  different teams. Team compositions will be inspected to see if the player
+  is shown to be a member. 
+
+  \item{test-FR23\\}
+
+  Control: Manual
+
+  Initial State: At least one team has been created by a captain.
+
+  Input: A captain level user is made the associated captain of a team that
+  already has an associated captain.
+
+  Output: Feedback to the user that the team already has a captain in charge.
+
+  Test Case Derivation: Only one captain is allowed to be associated with a
+  team due to league rules.
+
+  How test will be performed: A team with an associated captain will attempt
+  to have another captain be associated with it. It is important to note that
+  a captain playing for a a different team than the one they are in charge of
+  does not count as being associated, they are just playing for the team.
+
+\end{enumerate}
+
+\subsubsection{Scoring/Standings}
+
+This section includes all functional tests related to the scoring and
+league standings. It mainly focuses on captains recording the scores of
+matches their team plays.
+
+\begin{enumerate}
+
   \item{test-FR14-1\\}
 
   Control: Manual
@@ -756,71 +803,6 @@ information being modified.
   How test will be performed: Users logged into player accounts will 
   attempt to submit a score for a game that has been marked as completed 
   by the system.
-
-  \item{test-FR15\\}
-
-  Control: Manual
-
-  Initial State: The system is logged into a player level account.
-
-  Input: Join team interaction.
-
-  Output: Player is added to the team. This is reflected in team composition
-  and alerts sent to that team.
-
-  Test Case Derivation: A player who has joined a team should be shown to be a
-  member of that team in the system.
-
-  How test will be performed: Multiple player accounts will attempt to join 
-  different teams. Team compositions will be inspected to see if the player
-  is shown to be a member. 
-
-  \item{test-FR23\\}
-
-  Control: Manual
-
-  Initial State: At least one team has been created by a captain.
-
-  Input: A captain level user is made the associated captain of a team that
-  already has an associated captain.
-
-  Output: Feedback to the user that the team already has a captain in charge.
-
-  Test Case Derivation: Only one captain is allowed to be associated with a
-  team due to league rules.
-
-  How test will be performed: A team with an associated captain will attempt
-  to have another captain be associated with it. It is important to note that
-  a captain playing for a a different team than the one they are in charge of
-  does not count as being associated, they are just playing for the team.
-
-\end{enumerate}
-
-\subsubsection{Scoring/Standings}
-
-This section includes all functional tests related to the scoring and
-league standings. It mainly focuses on captains recording the scores of
-matches their team plays.
-
-\begin{enumerate}
-
-  \item{test-FR15\\}
-
-  Control: Manual
-
-  Initial State: The system will have a game in the schedule that will be played
-  in the future. The system is logged in as a captain.
-
-  Input: A score submitted for a game.
-
-  Output: No output.
-
-  Test Case Derivation: A score should not be entered by a captain until a game
-  is played.
-
-  How test will be performed: A captain level account will attempt to submit a
-  score for a game that has not been played yet. It should not modify the
-  standings.
 
 \end{enumerate}
 
