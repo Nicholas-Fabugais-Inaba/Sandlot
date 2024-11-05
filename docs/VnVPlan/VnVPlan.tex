@@ -529,28 +529,13 @@ can be modified with the reschedule feature.
             
   Initial State: The system has created a schedule.
             
-  Input: Specified team.
-            
-  Output: Schedule of all games of the season for a specified team.
-
-  Test Case Derivation: The team schedule should show all the games of a specified team.
-            
-  How test will be performed: A schedule should be generated and each team's schedule checked
-  to see if the view has all games the team is participating in.
-
-  \item{test-FR21\\}
-
-  Control: Manual
-            
-  Initial State: The system has created a schedule.
-            
   Input: User navigating to a team's schedule section.
             
-  Output: The system will display the specified team's schedule.
+  Output: The system will display all games of the specified team's schedule.
 
   Test Case Derivation: Each team should have a schedule that lists all of
-  that team's past and future games. This should be accessible by users who
-  navigate to this section of the system.
+  that team's games. This should be accessible by users who navigate to this
+  section of the system.
             
   How test will be performed: Each team's schedule section will be navigated to
   and compared with the full league schedule. All games on the main schedule
@@ -1388,110 +1373,88 @@ section 6.2 of this VnV plan document.
 
 \begin{enumerate}
 
-  \item{test-AS3\\}
+  \item{test-AS2-1\\}
 
   Type: Non-Functional, Dynamic, Manual
 
   Initial State: The system is logged in to a player level account.
 
-  Input: A reschedule request is attempted.
+  Input/Condition: Player attempts to access the contact information of their 
+  team captain.
 
-  Output: No output.
+  Output/Result: Captain's contact information is displayed.
 
-  How test will be performed: A player level account will attempt to perform
-  the same actions a captain level account would do to reschedule an upcoming
-  game. If they cannot perform these actions, the test succeeds.
+  How test will be performed: Various player level accounts from various teams 
+  will attempt to access the contact information of their respective team
+  captains. Players should be able to access the information.
+
+  \item{test-AS2-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a player level account.
+
+  Input/Condition: Player attempts to access the contact information of a 
+  team captain not in their team.
+
+  Output/Result: Captain's contact information is not displayed.
+
+  How test will be performed: Various player level accounts from various teams 
+  will attempt to access the contact information team captains who are not 
+  in their respective teams. Players should not be able to access the information.
+
+  \item{test-AS3-1\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The system is logged in to a captain level account.
+            
+  Input/Condition: The captain will attempt to access the contact information
+  of different players on their team and other captains in the league.
+            
+  Output/Result: The system will display their contact information.
+            
+  How test will be performed: The user will attempt to access contact
+  information of multiple players on their team and other captains in the
+  league. They should be able to access it.
+
+  \item{test-AS3-2\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The system is logged in to a captain level account.
+            
+  Input/Condition: The captain will attempt to access the contact information
+  of different players that are not on their team.
+            
+  Output/Result: The system will not display their contact information.
+            
+  How test will be performed: The user will attempt to access contact
+  information of multiple players who are not on their team. They should not
+  be able to access it.
 
   \item{test-AS4\\}
   
   Type: Non-Functional, Dynamic, Manual
             
-  Initial State: The solution is opened on a user's web browser.
+  Initial State: The system is logged in to a commissioner level account.
             
-  Input/Condition: A user's account with commissioner-level permissions will be asked to
-  send a league-wide alert to all users on the platform.
+  Input/Condition: The commissioner will attempt to access the contact
+  information of many different players and captains on different teams.
             
-  Output/Result: A commissioner is able to successfully send an alert to the entire league
-  that any user is able to view themselves when they have the solution opened.
+  Output/Result: The system will display their contact information.
             
-  How test will be performed: A tester will be provided a commissioner account, a
-  non-commissioner account, and a sample alert message to send to the entire league
-  through the system. They will then be asked to send the alert via the commissioner
-  account, login to the non-commissioner account, and observe that the alert message
-  was successfully sent to any league users or if any errors had occured. When the tester
-  is logged into the non-commissioner account, they will also be asked if they are
-  able to send an alert or not or if any other errors occur.
+  How test will be performed: The user will attempt to access contact
+  information of multiple players and captains on different teams. They should
+  be able to access it.
 
-  \item{test-AS7\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in to a player level account.
-
-  Input: A team data change input is attempted.
-
-  Output: No output.
-
-  How test will be performed: A player level account will attempt to perform
-  the same actions a captain level account would do to change the player list
-  for their team. If they cannot perform these actions, the test succeeds.
-
-  \item{test-AS8\\}
+  \item{test-AS5\\}
   
   Type: Non-Functional, Dynamic, Manual
             
   Initial State: The solution is opened on a user's web browser.
             
-  Input/Condition: A user's account with commissioner-level permissions will be asked to
-  change the season schedule on the platform.
-            
-  Output/Result: A commissioner is able to successfully change the season schedule
-  when they have the solution opened.
-            
-  How test will be performed: A tester will be provided a commissioner account, a
-  non-commissioner account, and sample schedule data they will use to change the season
-  schedule. They will then be asked to use the provided schedule data to change the season
-  schedule and observe that the season schedule was successfully changed or if any errors
-  had occured. The tester will then be asked to login to the non-commissioner account and
-  observe if they can change the season schedule or not or if any other errors occur.
-
-  \item{test-AS11-1\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in to a player level account.
-
-  Input: A user attempts to view the contact information of a player and
-  a captain not on their team.
-
-  Output: No output.
-
-  How test will be performed: A player level account will attempt to view the
-  contact information of a player and a captain on another team. If they
-  cannot perform these actions, the test succeeds.
-
-  \item{test-AS11-2\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in to a captain level account.
-
-  Input: A user attempts to view the contact information of a player not on
-  their team.
-
-  Output: No output.
-
-  How test will be performed: A captain level account will attempt to view the
-  contact information of a player on another team. If they cannot perform
-  these actions, the test succeeds.
-
-  \item{test-AS12\\}
-  
-  Type: Non-Functional, Dynamic, Manual
-            
-  Initial State: The solution is opened on a user's web browser.
-            
-  Input/Condition: A user's account is provided permissions that are different from the
+  Input/Condition: A user's account is provided permissions that are different from
   the account's current permissions.
             
   Output/Result: The system provides a warning to the user changing an account's
@@ -1500,9 +1463,41 @@ section 6.2 of this VnV plan document.
   How test will be performed: A tester will be provided an account to change the
   permissions for and the account itself. They will then be asked to update the account
   that requires an update to its permissions and observe the warning given by the system
-  or if any errors had occured. The tester will then be asked to login to the account
+  or if any errors had occurred. The tester will then be asked to log in to the account
   that recently had its permissions change and try out new functionalities that should
-  have been provided with the permission update or if any errors had occured.
+  have been provided with the permission update or if any errors had occurred.
+
+  \item{test-AS7\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The system is logged in as a captain of a team. 
+            
+  Input/Condition: Captain user attempts to join a team that they are not a part
+  of.
+            
+  Output/Result: The captain user will be able to join the team.
+            
+  How test will be performed: A captain of a team will attempt to join a
+  team that is not their own. It should be checked if the captain user is
+  successfully added to the team list.
+
+  \item{test-AS8\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The system is logged in as a captain of a team is also a
+  player on another team.
+            
+  Input/Condition: The captain attempts to change team information and submit
+  scores.
+            
+  Output/Result: The system should not make any changes.
+            
+  How test will be performed: A captain who is a player on a team they are not
+  in charge of will try to change team information and submit scores for the
+  team they are not in charge of. If they cannot do these actions, the test
+  succeeds.
 
   \item{test-IG2\\}
 
@@ -1616,6 +1611,11 @@ section 6.2 of this VnV plan document.
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
+
+The name of our test cases are each stamped with the requirement number which
+they address. Each requirement in our SRS \cite{SRS} has an associated test to
+ensure full coverage. If a requirement doesn't require a test it will be
+noted in section 4 above.
 
 \section{Unit Test Description}
 
@@ -1928,6 +1928,53 @@ graduate attribute of Lifelong Learning.
   This meant the team had to go back and adjust or add new requirements to the SRS document,
   where we could then add system tests to appropriately address certain functionalities that
   would require sufficient testing by a user of the system.
+\end{enumerate}
+
+\subsection*{Jung Woo Lee -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  Writing the test cases helped me see how the product would shape to 
+  be, and allowed the team to make crucial changes to the requirements. 
+  They helped me verify if requirements were atomic and self-contained 
+  or not. It also helped understand the nature of some requirements as 
+  I considered the test types: manual vs. automatic and dynamic vs. 
+  static.  
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  There trouble coming up with initial states of some tests in terms of 
+  what to include or exclude. I found that it was easy to overlook a 
+  crucial but obvious detail in this section of the tests. I also had 
+  trouble with thinking of inputs for the tests. One issue was trying 
+  to avoid as much implementation detail as possible. Another was 
+  when tests seemingly had no obvious input. Lastly, considering 
+  invalid cases caused some difficulty, as these are not explicitly 
+  mentioned by the requirements document, so this was the first time 
+  thinking about what should not happen instead of what should happen.
+  These were all resolved either by more thorough thought, discussion 
+  with team members, or looking at examples to gauge how they could be 
+  written.
+\end{enumerate}
+
+\subsection*{Alex Verity -- Reflection}
+
+\begin{enumerate}
+
+  \item What went well while writing this deliverable?\\\\
+  Writing section 4, especially the functional tests, helped fill in a lot of
+  holes in the coverage of the SRS \cite{SRS}. I'm always glad when this
+  happens as I believe it leads to a better final SRS document and I hope a
+  smoother development workload as we have a better grasp on what our final
+  solution will look like.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Writing so many tests was definitely a pain point, as we needed to go back
+  to our SRS and update our requirements. Particularly the functional
+  requirements and access requirements. It is similar to what went well while
+  writing this deliverable but finding more requirements is a double edged
+  sword. We resolved it by filling out the SRS and fixing requirements that
+  needed updating.
+
 \end{enumerate}
 
 \end{document}
