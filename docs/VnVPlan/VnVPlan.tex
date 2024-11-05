@@ -1269,104 +1269,52 @@ How test will be performed:
 
 \begin{enumerate}
 
-  \item{test-AS3\\}
-
+  \item{test-AS3-1\\}
+  
   Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The system is logged in to a captain level account.
+            
+  Input/Condition: The captain will attempt to access the contact information
+  of different players on their team and other captains in the league.
+            
+  Output/Result: The system will display their contact information.
+            
+  How test will be performed: The user will attempt to access contact
+  information of multiple players on their team and other captains in the
+  league. They should be able to access it.
 
-  Initial State: The system is logged in to a player level account.
-
-  Input: A reschedule request is attempted.
-
-  Output: No output.
-
-  How test will be performed: A player level account will attempt to perform
-  the same actions a captain level account would do to reschedule an upcoming
-  game. If they cannot perform these actions, the test succeeds.
+  \item{test-AS3-2\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The system is logged in to a captain level account.
+            
+  Input/Condition: The captain will attempt to access the contact information
+  of different players that are not on their team.
+            
+  Output/Result: The system will not display their contact information.
+            
+  How test will be performed: The user will attempt to access contact
+  information of multiple players who are not on their team. They should not
+  be able to access it.
 
   \item{test-AS4\\}
   
   Type: Non-Functional, Dynamic, Manual
             
-  Initial State: The solution is opened on a user's web browser.
+  Initial State: The system is logged in to a commissioner level account.
             
-  Input/Condition: A user's account with commissioner-level permissions will be asked to
-  send a league-wide alert to all users on the platform.
+  Input/Condition: The commissioner will attempt to access the contact
+  information of many different players and captains on different teams.
             
-  Output/Result: A commissioner is able to successfully send an alert to the entire league
-  that any user is able to view themselves when they have the solution opened.
+  Output/Result: The system will display their contact information.
             
-  How test will be performed: A tester will be provided a commissioner account, a
-  non-commissioner account, and a sample alert message to send to the entire league
-  through the system. They will then be asked to send the alert via the commissioner
-  account, login to the non-commissioner account, and observe that the alert message
-  was successfully sent to any league users or if any errors had occured. When the tester
-  is logged into the non-commissioner account, they will also be asked if they are
-  able to send an alert or not or if any other errors occur.
+  How test will be performed: The user will attempt to access contact
+  information of multiple players and captains on different teams. They should
+  be able to access it.
 
-  \item{test-AS7\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in to a player level account.
-
-  Input: A team data change input is attempted.
-
-  Output: No output.
-
-  How test will be performed: A player level account will attempt to perform
-  the same actions a captain level account would do to change the player list
-  for their team. If they cannot perform these actions, the test succeeds.
-
-  \item{test-AS8\\}
-  
-  Type: Non-Functional, Dynamic, Manual
-            
-  Initial State: The solution is opened on a user's web browser.
-            
-  Input/Condition: A user's account with commissioner-level permissions will be asked to
-  change the season schedule on the platform.
-            
-  Output/Result: A commissioner is able to successfully change the season schedule
-  when they have the solution opened.
-            
-  How test will be performed: A tester will be provided a commissioner account, a
-  non-commissioner account, and sample schedule data they will use to change the season
-  schedule. They will then be asked to use the provided schedule data to change the season
-  schedule and observe that the season schedule was successfully changed or if any errors
-  had occured. The tester will then be asked to login to the non-commissioner account and
-  observe if they can change the season schedule or not or if any other errors occur.
-
-  \item{test-AS11-1\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in to a player level account.
-
-  Input: A user attempts to view the contact information of a player and
-  a captain not on their team.
-
-  Output: No output.
-
-  How test will be performed: A player level account will attempt to view the
-  contact information of a player and a captain on another team. If they
-  cannot perform these actions, the test succeeds.
-
-  \item{test-AS11-2\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in to a captain level account.
-
-  Input: A user attempts to view the contact information of a player not on
-  their team.
-
-  Output: No output.
-
-  How test will be performed: A captain level account will attempt to view the
-  contact information of a player on another team. If they cannot perform
-  these actions, the test succeeds.
-
-  \item{test-AS12\\}
+  \item{test-AS5\\}
   
   Type: Non-Functional, Dynamic, Manual
             
@@ -1384,6 +1332,23 @@ How test will be performed:
   or if any errors had occured. The tester will then be asked to login to the account
   that recently had its permissions change and try out new functionalities that should
   have been provided with the permission update or if any errors had occured.
+
+  \item{test-AS8\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+            
+  Initial State: The system is logged in as a captain of a team is also a
+  player on another team.
+            
+  Input/Condition: The captain attempts to change team information and submit
+  scores.
+            
+  Output/Result: The system should not make any changes.
+            
+  How test will be performed: A captain who is a player on a team they are not
+  in charge of will try to change team information and submit scores for the
+  team they are not in charge of. If they cannot do these actions, the test
+  succeeds.
 
   \item{test-IG2\\}
 
