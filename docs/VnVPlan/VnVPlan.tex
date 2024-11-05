@@ -1298,6 +1298,20 @@ How test will be performed:
   the same actions a captain level account would do to reschedule an upcoming
   game. If they cannot perform these actions, the test succeeds.
 
+  \item{test-AS3\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a player level account.
+
+  Input: A reschedule request is attempted.
+
+  Output: No output.
+
+  How test will be performed: A player level account will attempt to perform
+  the same actions a captain level account would do to reschedule an upcoming
+  game. If they cannot perform these actions, the test succeeds.
+
   \item{test-AS4\\}
   
   Type: Non-Functional, Dynamic, Manual
@@ -1824,6 +1838,32 @@ graduate attribute of Lifelong Learning.
   This meant the team had to go back and adjust or add new requirements to the SRS document,
   where we could then add system tests to appropriately address certain functionalities that
   would require sufficient testing by a user of the system.
+\end{enumerate}
+
+\subsection*{Jung Woo Lee -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  Writing the test cases helped me see how the product would shape to 
+  be, and allowed the team to make crucial changes to the requirements. 
+  They helped me verify if requirements were atomic and self-contained 
+  or not. It also helped understand the nature of some requirements as 
+  I considered the test types: manual vs. automatic and dynamic vs. 
+  static.  
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  There trouble coming up with initial states of some tests in terms of 
+  what to include or exclude. I found that it was easy to overlook a 
+  crucial but obvious detail in this section of the tests. I also had 
+  trouble with thinking of inputs for the tests. One issue was trying 
+  to avoid as much implementation detail as possible. Another was 
+  when tests seemingly had no obvious input. Lastly, considering 
+  invalid cases caused some difficulty, as these are not explicitly 
+  mentioned by the requirements document, so this was the first time 
+  thinking about what should not happen instead of what should happen.
+  These were all resolved either by more thorough thought, discussion 
+  with team members, or looking at examples to gauge how they could be 
+  written.
 \end{enumerate}
 
 \end{document}
