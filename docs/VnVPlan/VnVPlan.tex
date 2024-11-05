@@ -1354,6 +1354,36 @@ How test will be performed:
 
 \begin{enumerate}
 
+  \item{test-AS2-1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a player level account.
+
+  Input/Condition: Player attempts to access the contact information of their 
+  team captain.
+
+  Output/Result: Captain's contact information is displayed.
+
+  How test will be performed: Various player level accounts from various teams 
+  will attempt to access the contact information of their respective team
+  captains. Players should be able to access the information.
+
+  \item{test-AS2-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a player level account.
+
+  Input/Condition: Player attempts to access the contact information of a 
+  team captain not in their team.
+
+  Output/Result: Captain's contact information is not displayed.
+
+  How test will be performed: Various player level accounts from various teams 
+  will attempt to access the contact information team captains who are not 
+  in their respective teams. Players should not be able to access the information.
+
   \item{test-AS3-1\\}
   
   Type: Non-Functional, Dynamic, Manual
@@ -1383,20 +1413,6 @@ How test will be performed:
   How test will be performed: The user will attempt to access contact
   information of multiple players who are not on their team. They should not
   be able to access it.
-
-  \item{test-AS3\\}
-
-  Type: Non-Functional, Dynamic, Manual
-
-  Initial State: The system is logged in to a player level account.
-
-  Input: A reschedule request is attempted.
-
-  Output: No output.
-
-  How test will be performed: A player level account will attempt to perform
-  the same actions a captain level account would do to reschedule an upcoming
-  game. If they cannot perform these actions, the test succeeds.
 
   \item{test-AS4\\}
   
