@@ -1060,6 +1060,23 @@ inconsistent interface elements will be recorded.
   How test will be performed: A new user of the system will be provided the solution and
   will be asked to navigate and view the season schedule.
 
+  \item{test-UP1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is running.
+
+  Input/Condition: User will be asked to navigate through system to 
+  selected areas of text for them to read.
+
+  Output/Result: Users will be able to understand terminology used in
+  the selected tests without difficulty. If 90 percent of users do understand,
+  the test is considered a success.
+
+  How test will be performed: A set of testers will read selected text
+  in the system and record whether they generally do or do not 
+  understand the terminology used. 
+
   \item{test-AC1\\}
 
   Type: Non-Functional, Dynamic, Manual
@@ -1114,6 +1131,20 @@ inconsistent interface elements will be recorded.
 
 \begin{enumerate}
 
+  \item{test-SL1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The solution is not loaded, internet connection is stable.
+
+  Input/Condition: The system is started.
+
+  Output/Result: Sandlot loads and displays the homepage within 3 seconds.
+
+  How test will be performed: The system will be timed from not loaded to a
+  fully loaded homepage. This will be recorded 10 times. If the average load
+  time is less than 3 seconds the test is successful.
+
   \item{test-CR1\\}
 
   Type: Non-Functional, Dynamic, Manual
@@ -1132,11 +1163,44 @@ inconsistent interface elements will be recorded.
   and season schedule. After their observations, the tester will be given
   a usability survey to fill out that is located in section 6.2 of this VnV plan document.
 
+  \item{test-CR2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is online.
+
+  Input/Condition: Sandlot will have 500 users using the system at the same
+  time.
+
+  Output/Result: Sandlot should continue to successfully function with no
+  faults when 500 users are using the system at once.
+
+  How test will be performed: 500 users will be mimicked using a solution like
+  JMeter. All functions on the system would be run through to make sure no
+  faults occur.
+
 \end{enumerate}
 
 \subsubsection{Operational and Environmental Requirements}
 
 \begin{enumerate}
+
+  \item{test-IAS1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: Sandlot is running.
+
+  Input/Condition: User will attempt to access system from multiple 
+  browsers with each of the latest four releases of the product.
+
+  Output/Result: User is able to access and use system from multiple
+  browsers for the latest four releases of the product.
+
+  How test will be performed: Tester will attempt to use product on
+  the five most popular web browsers for each of the latest four 
+  releases of the product. The user should be able to use the product
+  with no issues on each browser for each version of the product.
 
   \item{test-RR1\\}
 
@@ -1291,6 +1355,41 @@ inconsistent interface elements will be recorded.
   that recently had its permissions change and try out new functionalities that should
   have been provided with the permission update or if any errors had occurred.
 
+  \item{test-AS6-1\\}
+  
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in to an account.
+
+  Input: User navigates to the log in section and enters valid login data for
+  an account that has already been made.
+
+  Output: The system logs in to the valid account.
+
+  Test Case Derivation: If valid account information is given when logging in
+  the system should log in as that account.
+
+  How test will be performed: Multiple accounts will be logged into each with
+  different valid account information and permission levels.
+
+  \item{test-AS6-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in to an account.
+
+  Input: User navigates to the log in section and enters invalid login data
+  for an account login.
+
+  Output: The system warns the user the data used is invalid.
+
+  Test Case Derivation: If invalid account information is given when logging
+  in the system should not log in to any account and warn the user the data
+  isn't valid.
+
+  How test will be performed: Multiple invalid logins will be attempted each
+  with different invalid account information.
+
   \item{test-AS7\\}
   
   Type: Non-Functional, Dynamic, Manual
@@ -1323,6 +1422,36 @@ inconsistent interface elements will be recorded.
   team they are not in charge of. If they cannot do these actions, the test
   succeeds.
 
+  \item{test-IG1-1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system has received scheduling data.
+
+  Input/Condition: The system is instructed to create the schedule with non-conflicting
+  scheduling data.
+
+  Output: The system creates a schedule without conflicting scheduling data.
+
+  How test will be performed: Sample scheduling data will be provided to the system. The test
+  succeeds if a schedule is created without conflicting scheduling data.
+
+  \item{test-IG1-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system has scheduling data and awaits any reschedule requests.
+
+  Input/Condition: The system is sent a reschedule request.
+
+  Output: The system accepts or denies a reschedule request and either changes the scheduling
+  data or remains the same with no conlflicting scheduling data.
+
+  How test will be performed: Sample scheduling data and a sample reschedule request
+  will be provided to the system. The test succeeds if a reschedule request is either accepted
+  or denied and the schedule is updated or remains the same with no conlflicting scheduling
+  data.
+
   \item{test-IG2\\}
 
   Type: Non-Functional, Dynamic, Manual
@@ -1353,6 +1482,48 @@ inconsistent interface elements will be recorded.
   contest a match score. The test succeeds if they are able to view an option to contest
   a recorded match score since they are a captain level account and they can view and contest
   a recorded match score.
+
+  \item{test-IG4-1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a captain level account.
+
+  Input/Condition: A user awaits a notification from an alert.
+
+  Output: A notification is received by the user about an alert.
+
+  How test will be performed: A captain level account will be sent a sample alert. The test
+  succeeds if they receive a notification about the alert and they should observe if any
+  errors or failures occur.
+
+  \item{test-IG4-2\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is logged in to a captain level account.
+
+  Input/Condition: A user awaits a notification from a reschedule request.
+
+  Output: A notification is received by the user about a reschedule request.
+
+  How test will be performed: A captain level account will be sent a sample reschedule request.
+  The test succeeds if they receive a notification about the reschedule request and they
+  should observe if any errors or failures occur.
+
+  \item{test-PV1\\}
+
+  Type: Non-Functional, Dynamic, Manual
+
+  Initial State: The system is not logged in.
+
+  Input/Condition: A user is not logged into an account.
+
+  Output: No contact information is displayed to the user.
+
+  How test will be performed: A user will not be logged into an account and will
+  observe if any contact information can be seen or accessed. If no contact information
+  is revealed to the user, the test succeeds.
 
   \item{test-PV2\\}
 
