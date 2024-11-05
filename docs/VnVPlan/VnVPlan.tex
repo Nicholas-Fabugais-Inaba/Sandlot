@@ -72,6 +72,7 @@ in.}
   SRS & Software Requirements Specification\\
   GSA & Graduate Students Association\\
   VnV & Verification and Validation\\
+  CI & Continuous Integration\\
   T & Test\\
   \bottomrule
 \end{tabular}\\
@@ -184,7 +185,13 @@ have been approved by an instructor.
 how they relate to your VnV efforts.}\\
 The SRS document has requirements for our project that must be verified, it is
 the most complete list of functional and non-functional requirements that our
-solution needs to achieve.
+solution needs to achieve.\\
+
+The Development Plan Document contains information about our plans on how to use 
+automated testing and verification tools for the project. Specifically, it discusses
+linting tools, unit testing frameworks, code coverage measuring tools, performance
+measuring tools, and our plans for CI. All of which are important tools used to 
+help us verify and validate our tests.\\
 
 The MG and MIS documents also refer heavily to the requirements being tested
 in our VnV plan.
@@ -318,6 +325,9 @@ that document.}
 
 \wss{The details of this section will likely evolve as you get closer to the
   implementation.}
+
+This was discussed in our development plan document \cite{DP} 
+in the expected technology section.
 
 \subsection{Software Validation Plan}
 
@@ -748,6 +758,23 @@ modification of accounts.
   How test will be performed: Multiple invalid logins will be attempted each
   with different invalid account information.
 
+  \item{test-FR19\\}
+
+  Control: Manual
+           
+  Initial State: The User is logged into a commissioner account.
+           
+  Input: The user requests to assign captain level permissions to a 
+  certain user.
+           
+  Output: The system assigns captain level permissions to the user.
+ 
+  Test Case Derivation: commissioners should be able to assign captain level
+  permissions to users because they control which players are captains.
+ 
+  How test will be performed: Users logged into commissioner accounts will attempt
+  to assign captain level permissions to a player level account.
+
 \end{enumerate}
 
 \subsubsection{Team Structure}
@@ -823,7 +850,7 @@ information being modified.
   the captain of.
            
   Output: The system provides the user with a menu to change the team's
-  information.
+  information and will save any changes made by the user.
  
   Test Case Derivation: Captains of teams should be able to update the team
   information of their team because certain team information may have changed
@@ -832,7 +859,7 @@ information being modified.
   How test will be performed: Users logged into captain accounts will attempt
   to request to update the team information of the team they are the captain of.
 
-\item{test-FR13-2\\}
+  \item{test-FR13-2\\}
 
   Control: Manual
            
@@ -850,6 +877,64 @@ information being modified.
   How test will be performed: Users logged into captain accounts will attempt
   to request to update the team information of a team they are not the captain
   of.
+
+  \item{test-FR14-1\\}
+
+  Control: Manual
+           
+  Initial State: The User is logged into a captain account.
+           
+  Input: The user requests to submit the score for a game that has been
+  completed.
+           
+  Output: The system provides the user with a menu to submit the game's
+  score and will save the score inputted by the user.
+ 
+  Test Case Derivation: Captains of teams should be able to submit the score
+  for a game that has been completed because they're responsible for the
+  score.
+ 
+  How test will be performed: Users logged into captain accounts will attempt
+  to submit a score for a game that has been marked as completed by the system.
+
+  \item{test-FR14-2\\}
+
+  Control: Manual
+           
+  Initial State: The User is logged into a captain account.
+           
+  Input: The user requests to submit the score for a game that has not
+  been completed.
+           
+  Output: The system informs the user that they cannot submit a score
+  for this game because it has not been completed.
+ 
+  Test Case Derivation: Captains of teams should not be able to 
+  submit the score for a game that has not been completed because 
+  the final score for that game has not been determined yet.
+ 
+  How test will be performed: Users logged into captain accounts will attempt
+  to submit a score for a game that has not been marked as completed by 
+  the system.
+
+  \item{test-FR14-3\\}
+
+  Control: Manual
+           
+  Initial State: The User is logged into a player account.
+           
+  Input: The user requests to submit the score for a game that has
+  been completed.
+           
+  Output: The system informs the user that they are not the captain 
+  of this team and therefore cannot update the score for this game.
+ 
+  Test Case Derivation: regular players of a team should not be able to 
+  submit the score for a game because that is not their responsibility.
+ 
+  How test will be performed: Users logged into player accounts will 
+  attempt to submit a score for a game that has been marked as completed 
+  by the system.
 
   \item{test-FR15\\}
 
