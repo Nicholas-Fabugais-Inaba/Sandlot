@@ -26,6 +26,17 @@ and the POC demo.
 
 \wss{What will you be demonstrating}
 
+To be a successful project, the project should be able to intake a set of availabil-
+ity data and generate an optimized schedule based on that data. Additionally,
+it should be able to display this schedule through a basic user interface. The
+main risks for the success of this project are whether we are able to optimize
+schedule generation to a point which satisfies our stakeholders, and our team’s
+lack of domain knowledge on scheduling systems and web development. In or-
+der to demonstrate that these obstacles can be overcome, the goal of this proof
+of concept demonstration is to develop an algorithm to generate highly opti-
+mized schedules based on team availability data. Furthermore these optimized
+schedules should be displayed through a basic UI hosted on a webvserver.
+
 \section{Team Meeting Attendance}
 
 \wss{For each team member how many team meetings have they attended over the
@@ -183,5 +194,26 @@ most TA Feedback issues.
 
 \wss{If your team has additional metrics of productivity, please feel free to
 add them to this report.}
+\begin{itemize}
+
+\item CI
+\subitem Continuous integration will be implemented via GitHub Actions. When a pull request is made, automated
+tests will run against the code being tested.
+\item Unit testing frameworks
+\subitem The pytest framework will be used to create unit tests for the middleware
+code. We chose pytest over other python testing frameworks due to its simplicity, 
+small amount of boilerplate code, and plugins which can add useful functionalities
+like coverage reporting. We plan to incorporate these pytest unit tests as a part
+of our CI plans for the project via Github actions.
+\subitem Testing the database will likely be done using a dummy / development 
+PostgreSQL database prior to making any changes to the production database to 
+ensure that minimal migrations are required during development.
+\item Code coverage measuring tools
+\subitem The Coverage.py Python library will be used to measure the code coverage
+of our middleware program. For the webserver's React code, Jest is included by 
+default when using the "create-react-app" command and will be used to measure 
+the code coverage of the webserver.
+
+\end{itemize}
 
 \end{document}
