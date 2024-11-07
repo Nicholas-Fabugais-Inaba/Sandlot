@@ -10,7 +10,7 @@ comes pre-installed with python
 
 install pipenv using:
     pip install pipenv --user
-check with: pipenv --verison
+check with: pipenv --version
 pipenv version: 2024.4.0
 documentation: https://pipenv.pypa.io/en/latest/installation.html
 
