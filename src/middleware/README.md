@@ -14,6 +14,8 @@ check with: pipenv --verison
 pipenv version: 2024.4.0
 documentation: https://pipenv.pypa.io/en/latest/installation.html
 
+NOTE: if any installation is not working try closing and opening terminal/vscode
+
 install required packages with:
     pipenv install
 
