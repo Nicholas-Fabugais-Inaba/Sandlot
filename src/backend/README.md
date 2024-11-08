@@ -21,3 +21,4 @@ install required packages with:
 
 run fastapi server with:
     fastapi dev main.py
+within the "app" folder
