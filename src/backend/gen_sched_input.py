@@ -58,4 +58,4 @@ game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE)
 print(game_slots)
 print(len(game_slots))
 
-constraints = []
+# Constraint generation code will be in scheduler.py
