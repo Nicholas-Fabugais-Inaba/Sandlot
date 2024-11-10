@@ -1,6 +1,6 @@
 
 from datetime import date, timedelta
-from scheduler import gen_schedule, gen_schedule_random_game_slots
+from scheduler import gen_schedule
 
 
 FIELDS = 3
@@ -9,7 +9,8 @@ START_DATE = date(2024, 5, 1)
 END_DATE = date(2024, 6, 30)
 # END_DATE = date(2024, 8, 31)
 
-tigers = {"name": "Tigers", "offday": 1}
+# OFFDAYS ARE CODED AS 0 BEING MONDAY AND 6 BEING SUNDAY (matching datetime)
+tigers = {"name": "Tigers", "offday": 0}
 cardinals = {"name": "Cardinals", "offday": 2}
 orioles = {"name": "Orioles", "offday": 4}
 jays = {"name": "Blue Jays", "offday": 2}
@@ -62,8 +63,9 @@ print(game_slots)
 print(len(game_slots))
 
 # Constraint generation code will be in scheduler.py
-schedule = gen_schedule(games, game_slots, teams)
+schedule, score = gen_schedule(games, game_slots, teams)
 print(schedule)
+print(score)
 
 # Randomizing game_slots vastly increases runtime, do not randomize game_slots
 # schedule_rand_slots = gen_schedule_random_game_slots(games, game_slots, teams)

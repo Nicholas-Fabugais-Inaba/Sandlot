@@ -1,17 +1,23 @@
 
 from datetime import timedelta
-from random import shuffle
+# from random import shuffle
+from sys import maxsize
 
 # All variables here are global for use in the backtrack scheduler algorithm
 # They should not be changed outside of the function that starts the algorithm (TODO)
 # or the recursive function (backtrack_scheduler)
 games = [] # Get this from gen_sched_input.py, set in function that starts the algorithm (TODO)
 game_slots = []
+teams = []
 
-# Final schedule is a dictionary of games with assigned game slots. Games are keys game slots are values
-schedule = {}
-
+# Hard constraints are a list of functions that return True if the constraint passes
 hard_constraints = []
+# Soft constraints are a list of tuples, the first element is the function and the second is the weight
+soft_constraints = []
+# Final schedule is a dictionary of games with assigned game slots. Games are keys game slots are values
+best_schedule = {}
+# Larger scores are worse, a score of 0 means no soft constraints are violated
+best_score: int = maxsize
 
 MAX_ALLOWED_GAMES_PER_WEEK = 2
 
@@ -51,53 +57,88 @@ def constraint3(game, game_slot, schedule):
                         return False
     return True
 
-# Builds the list of constraints
-def gen_constraints(teams):
-    global hard_constraints
+
+# Constraint 4: Teams should avoid playing on their recorded offday
+def constraint4(game, game_slot, schedule):
+    global teams
+    # Checks each team involved in the game
+    weekday: int = game_slot[2].weekday()
+    for team in game:
+        if teams[team]["offday"] == weekday:
+            return False # ISSUE: If both teams have an offday on this day it will be weighted the same as one team having an offday
+    return True
+
+
+# Builds the list of hard and soft constraints
+def gen_constraints():
+    global hard_constraints, soft_constraints
     hard_constraints = []
+    soft_constraints = []
     hard_constraints.append(constraint1)
     hard_constraints.append(constraint2)
     hard_constraints.append(constraint3)
-    # TODO generate soft constraints for off-days and prefered times
-    # This will use the teams argument to find off days
+    soft_constraints.append((constraint4, 1))
 
 
 # Recusive function that takes an index from the games list that refers to a game
-def backtrack_scheduler(curr_game: int, schedule: dict):
-    global games, game_slots, hard_constraints
+def backtrack_scheduler(curr_game: int, schedule: dict, curr_score: int):
+    global games, game_slots, hard_constraints, soft_constraints, best_schedule, best_score
     # Base case, no more games to assign game_slots
     if curr_game >= len(games):
-        return schedule
+        if curr_score < best_score:
+            best_score = curr_score
+            best_schedule = schedule
+        # If no soft constraints are violated, return the schedule as it is optimal
+        if best_score == 0:
+            return schedule
+        # Else continue searching
+        return False
+    
     game = games[curr_game]
+
     for game_slot in game_slots:
         passesConstraints = True
         for hard_constraint in hard_constraints:
             if not hard_constraint(game, game_slot, schedule):
                 passesConstraints = False
                 break
+
         # If all constraints pass
         if passesConstraints:
+            # Calculate soft constraint score of the current assignment
+            new_score: int = 0
+            for soft_constraint in soft_constraints:
+                if not soft_constraint[0](game, game_slot, schedule):
+                    # If constraint fails, add the weight to the score
+                    new_score += soft_constraint[1]
+            
+            curr_score += new_score
             schedule[game_slot] = game
-            new_schedule = backtrack_scheduler(curr_game + 1, schedule)
+
+            new_schedule = backtrack_scheduler(curr_game + 1, schedule, curr_score)
             # If the returned schedule is valid, pass it back
             if new_schedule:
                 return new_schedule
-            # print("backtracking")
+            
+            # Backtracking requires unassigning game_slot and undoing score
+            curr_score -= new_score
             schedule.pop(game_slot)
     return False
 
 
-def gen_schedule(games_to_sched, game_slots_to_sched, teams):
-    global games, game_slots
+def gen_schedule(games_to_sched, game_slots_to_sched, teams_to_sched):
+    global games, game_slots, teams
     games = games_to_sched
     game_slots = game_slots_to_sched
-    gen_constraints(teams)
-    return backtrack_scheduler(0, {})
+    teams = teams_to_sched
+    gen_constraints()
+    if backtrack_scheduler(0, {}, 0):
+        return best_schedule, best_score
 
-def gen_schedule_random_game_slots(games_to_sched, game_slots_to_sched, teams):
-    global games, game_slots
-    games = games_to_sched
-    game_slots = game_slots_to_sched
-    shuffle(game_slots)
-    gen_constraints(teams)
-    return backtrack_scheduler(0, {})
+# def gen_schedule_random_game_slots(games_to_sched, game_slots_to_sched, teams):
+#     global games, game_slots
+#     games = games_to_sched
+#     game_slots = game_slots_to_sched
+#     shuffle(game_slots)
+#     gen_constraints()
+#     return backtrack_scheduler(0, {}, 0)
