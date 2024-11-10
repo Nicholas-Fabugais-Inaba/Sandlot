@@ -1,12 +1,13 @@
 
 from datetime import date, timedelta
+from scheduler import gen_schedule, gen_schedule_random_game_slots
 
 
 FIELDS = 3
 TIMESLOTS = 3
 START_DATE = date(2024, 5, 1)
-END_DATE = date(2024, 5, 7)
-#END_DATE = date(2024, 8, 31)
+END_DATE = date(2024, 6, 30)
+# END_DATE = date(2024, 8, 31)
 
 tigers = {"name": "Tigers", "offday": 1}
 cardinals = {"name": "Cardinals", "offday": 2}
@@ -18,13 +19,15 @@ teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers}
 
 def gen_games(teams, rounds: int):
     games = []
-    for team1 in teams.keys():
-        for team2 in teams.keys():
-            if team1 != team2:
-                game = {team1, team2}
-                if game not in games:
-                    for i in range(0, rounds):
-                        games.append(game)
+    for i in range(0, rounds):
+        round = []
+        for team1 in teams.keys():
+            for team2 in teams.keys():
+                if team1 != team2:
+                    game = (team1, team2)
+                    if (team1, team2) not in round and (team2, team1) not in round:
+                        round.append(game)
+        games.extend(round)
     return games
 
 
@@ -59,3 +62,9 @@ print(game_slots)
 print(len(game_slots))
 
 # Constraint generation code will be in scheduler.py
+schedule = gen_schedule(games, game_slots, teams)
+print(schedule)
+
+# Randomizing game_slots vastly increases runtime, do not randomize game_slots
+# schedule_rand_slots = gen_schedule_random_game_slots(games, game_slots, teams)
+# print(schedule_rand_slots)
