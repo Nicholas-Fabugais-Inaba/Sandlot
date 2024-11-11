@@ -69,7 +69,7 @@ def get_weekdays(start_date: date, end_date: date):
 
 
 def create_schedule():
-    global teams, schedule, score
+    global teams, schedule, json_schedule, score
     games = gen_games(teams, 2)
     game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
     schedule, score = gen_schedule_w_skip(games, game_slots, teams)
@@ -79,6 +79,7 @@ def create_schedule():
         month = element[2].month
         day = element[2].day
         json_schedule[element[0], element[1], (year, month, day)] = schedule[element]
+    return json_schedule
 
 
 def get_teams():
@@ -87,8 +88,8 @@ def get_teams():
 
 
 def get_schedule():
-    global schedule
-    return schedule
+    global json_schedule
+    return json_schedule
 
 
 def get_score():
