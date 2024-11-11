@@ -9,10 +9,15 @@ export default async function getSchedule(): Promise<any[]> {
 
     // Helper function to format time slots
     const getTimeSlot = (timeSlot: number): [string, string] => {
-      if (timeSlot === 1) return ['17:00:00', '18:30:00']; // 5:00-6:30 PM
-      if (timeSlot === 2) return ['18:30:00', '20:00:00']; // 6:30-8:00 PM
-      if (timeSlot === 3) return ['20:00:00', '21:30:00']; // 8:00-9:30 PM
-      return ['00:00:00', '00:00:00']; // Default (if something goes wrong)
+      if (timeSlot == 1) {
+        return ['17:00:00', '18:30:00']; // 5:00-6:30 PM
+      } else if (timeSlot == 2) {
+        return ['18:30:00', '20:00:00']; // 6:30-8:00 PM
+      } else if (timeSlot == 3) {
+        return ['20:00:00', '21:30:00']; // 8:00-9:30 PM
+      } else {
+        return ['00:00:00', '00:00:00']; // Default (if something goes wrong)
+      }
     };
 
     // Parse and format the games data
@@ -31,6 +36,7 @@ export default async function getSchedule(): Promise<any[]> {
 
       // Get the start and end times for the slot
       const [startTime, endTime] = getTimeSlot(timeSlot);
+      console.log("times: " + startTime, endTime)
 
       // Construct the FullCalendar event object
       return {
