@@ -20,8 +20,8 @@ export default function Calendar({ games }: any) {
         allDaySlot={false}
         expandRows={true}
         weekends={false}
-        slotMinTime="13:00:00" // Slot starts at 1 PM
-        slotMaxTime="23:59:00" // Slot ends at 11 PM
+        slotMinTime="16:00:00" // Slot starts at 4 PM
+        slotMaxTime="22:00:00" // Slot ends at 10 PM
         events={events}
         eventClassNames={[styles.games]} // Apply the CSS module class to events
     />

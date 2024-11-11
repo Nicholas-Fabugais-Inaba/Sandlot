@@ -39,7 +39,7 @@ export default async function getSchedule(): Promise<any[]> {
 
       // Construct the FullCalendar event object
       return {
-        title: `Game: ${team1Name} vs ${team2Name} (Field ${field})`,
+        title: `${team1Name} vs ${team2Name} (Field ${field})`,
         start: `${formattedDate}T${startTime}`,
         end: `${formattedDate}T${endTime}`,
       };
