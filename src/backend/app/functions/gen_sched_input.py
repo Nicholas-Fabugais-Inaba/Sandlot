@@ -40,7 +40,7 @@ teams: dict = {
     9: yankees,
     10: mets,
     11: giants,
-    # 12: cubs,
+    12: cubs,
     # 13: mariners,
     # 14: red_sox,
     # 15: brewers,
@@ -54,7 +54,7 @@ score: int = 0
 
 def gen_games(teams, rounds: int):
     games = []
-    n = 3
+    n = 2
     for i in range(0, rounds):
         round = []
         for team1 in teams.keys():
@@ -66,6 +66,7 @@ def gen_games(teams, rounds: int):
         games.extend(round)
     reordered_games = [games[i + j * n] for i in range(n) for j in range(len(games) // n)]
     return reordered_games
+    # shuffle(games)
     # return games
 
 
@@ -74,6 +75,8 @@ def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date
     n = 6
     for field in range(1, fields + 1):
         for timeslot in range(1, timeslots + 1):
+            if (field == 2 or field == 3) and timeslot == 3:
+                continue
             for day in get_weekdays(start_date, end_date):
                 game_slots.append((field, timeslot, day))
     reordered_game_slots = [game_slots[i + j * n] for i in range(n) for j in range(len(game_slots) // n)]
