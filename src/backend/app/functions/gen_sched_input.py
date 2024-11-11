@@ -1,6 +1,6 @@
 
 from datetime import date, timedelta
-from scheduler import gen_schedule, gen_schedule_w_skip
+from .scheduler import gen_schedule, gen_schedule_w_skip
 from random import shuffle
 
 
@@ -79,6 +79,7 @@ def create_schedule():
         month = element[2].month
         day = element[2].day
         json_schedule[element[0], element[1], (year, month, day)] = schedule[element]
+    return json_schedule
 
 
 def get_teams():
