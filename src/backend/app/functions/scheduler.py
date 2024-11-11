@@ -96,9 +96,9 @@ def backtrack_scheduler_w_skip(curr_game: int, schedule: dict, curr_score: int):
         # Else continue searching
         return False
     
-    print(best_score)
-    if best_score == 1:
-        print(best_schedule)
+    # print(best_score)
+    # if best_score == 1:
+    #     print(best_schedule)
     # time.sleep(0.1)
     
     game = games[curr_game]
@@ -171,10 +171,10 @@ def backtrack_scheduler(curr_game: int, schedule: dict, curr_score: int):
         # Else continue searching
         return False
     
-    print(best_score)
-    if best_score == 1:
-        print(best_schedule)
-    # time.sleep(0.1)
+    # print(best_score)
+    # if best_score == 1:
+    #     print(best_schedule)
+    # # time.sleep(0.1)
     
     game = games[curr_game]
 
