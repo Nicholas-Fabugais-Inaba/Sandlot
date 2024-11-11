@@ -79,7 +79,7 @@ def create_schedule():
         month = element[2].month
         day = element[2].day
         json_schedule[element[0], element[1], (year, month, day)] = schedule[element]
-    return json_schedule, teams
+    return [json_schedule, teams]
 
 
 def get_teams():
