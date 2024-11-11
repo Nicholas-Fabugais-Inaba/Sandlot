@@ -3,28 +3,14 @@ import dayGridPlugin from '@fullcalendar/daygrid' // might be unneccesary packag
 import timeGridPlugin from '@fullcalendar/timegrid' // a plugin
 import styles from '../app/styles.module.css'; // Import the CSS module
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Calendar({ games }: any) {
   const [events, setEvents] = useState(games);
-  
-  // const events = [
-  //   {
-  //     title: 'Game: Tigers vs Dodgers',
-  //     start: '2024-11-08T17:00:00',
-  //     end: '2024-11-08T18:30:00',
-  //   },
-  //   {
-  //     title: 'Game: Mets vs Yankees',
-  //     start: '2024-11-08T17:00:00',
-  //     end: '2024-11-08T18:30:00',
-  //   },
-  //   {
-  //     title: 'Game: Cubs vs Red Sox',
-  //     start: '2024-11-08T17:00:00',
-  //     end: '2024-11-08T18:30:00',
-  //   },
-  // ];
+
+  useEffect(() => {
+    setEvents(games)
+  }, [games]);
 
   return (
     <FullCalendar

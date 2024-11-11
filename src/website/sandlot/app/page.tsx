@@ -9,8 +9,6 @@ import { useState } from 'react';
 
 export default function Home() {
   const [games, setGames] = useState([]);
-  console.log("games:");
-  console.log(games)
 
   return (
     <div className={styles.container}>

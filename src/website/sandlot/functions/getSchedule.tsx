@@ -36,7 +36,6 @@ export default async function getSchedule(): Promise<any[]> {
 
       // Get the start and end times for the slot
       const [startTime, endTime] = getTimeSlot(timeSlot);
-      console.log("times: " + startTime, endTime)
 
       // Construct the FullCalendar event object
       return {
