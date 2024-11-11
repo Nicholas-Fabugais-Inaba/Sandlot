@@ -23,4 +23,9 @@
     padding: 3px;
     border-width: 1px;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: grey; /* Highlight color on hover */
 }
