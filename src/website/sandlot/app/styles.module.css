@@ -11,3 +11,16 @@
     width: 90%;
     height: 90%;
 }
+
+.games {
+    width: 80px;
+    font-size: 12px;
+}
+
+.button {
+    position: absolute;
+    top: 5%;
+    padding: 3px;
+    border-width: 1px;
+    border-radius: 5px;
+}
