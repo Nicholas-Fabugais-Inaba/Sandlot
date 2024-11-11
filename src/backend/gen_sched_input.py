@@ -1,6 +1,7 @@
 
 from datetime import date, timedelta
-from scheduler import gen_schedule
+from scheduler import gen_schedule, gen_schedule_w_skip
+from random import shuffle
 
 
 FIELDS = 3
@@ -15,11 +16,15 @@ cardinals = {"name": "Cardinals", "offday": 2}
 orioles = {"name": "Orioles", "offday": 4}
 jays = {"name": "Blue Jays", "offday": 2}
 dodgers = {"name": "Dodgers", "offday": 3}
-teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers}
+rangers = {"name": "Rangers", "offday": 1}
+astros = {"name": "Astros", "offday": 0}
+angels = {"name": "Angels", "offday": 4}
+teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros, 8: angels}
 
 
 def gen_games(teams, rounds: int):
     games = []
+    n = len(teams)
     for i in range(0, rounds):
         round = []
         for team1 in teams.keys():
@@ -29,15 +34,19 @@ def gen_games(teams, rounds: int):
                     if (team1, team2) not in round and (team2, team1) not in round:
                         round.append(game)
         games.extend(round)
-    return games
+    reordered_games = [games[i + j * n] for i in range(n) for j in range(len(games) // n)]
+    return reordered_games
 
 
-def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date):
+def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date, num_teams: int):
     game_slots = []
-    for day in get_weekdays(start_date, end_date):
-        for field in range(1, fields + 1):
-            for timeslot in range(1, timeslots + 1):
+    n = num_teams
+    for field in range(1, fields + 1):
+        for timeslot in range(1, timeslots + 1):
+            for day in get_weekdays(start_date, end_date):
                 game_slots.append((field, timeslot, day))
+    # reordered_game_slots = [game_slots[i + j * n] for i in range(n) for j in range(len(game_slots) // n)]
+    # return reordered_game_slots
     return game_slots
 
 
@@ -58,12 +67,12 @@ def get_weekdays(start_date: date, end_date: date):
 games = gen_games(teams, 2)
 print(games)
 
-game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE)
+game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
 print(game_slots)
 print(len(game_slots))
 
 # Constraint generation code will be in scheduler.py
-schedule, score = gen_schedule(games, game_slots, teams)
+schedule, score = gen_schedule_w_skip(games, game_slots, teams)
 print(schedule)
 print(score)
 
