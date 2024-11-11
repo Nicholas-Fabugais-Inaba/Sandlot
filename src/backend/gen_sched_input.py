@@ -21,6 +21,10 @@ astros = {"name": "Astros", "offday": 0}
 angels = {"name": "Angels", "offday": 4}
 teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros, 8: angels}
 
+schedule = {}
+json_schedule = {}
+score: int = 0
+
 
 def gen_games(teams, rounds: int):
     games = []
@@ -64,18 +68,29 @@ def get_weekdays(start_date: date, end_date: date):
     return weekdays
 
 
-games = gen_games(teams, 2)
-print(games)
+def create_schedule():
+    global teams, schedule, score
+    games = gen_games(teams, 2)
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+    schedule, score = gen_schedule_w_skip(games, game_slots, teams)
+    json_schedule = {}
+    for element in schedule:
+        year = element[2].year
+        month = element[2].month
+        day = element[2].day
+        json_schedule[element[0], element[1], (year, month, day)] = schedule[element]
 
-game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
-print(game_slots)
-print(len(game_slots))
 
-# Constraint generation code will be in scheduler.py
-schedule, score = gen_schedule_w_skip(games, game_slots, teams)
-print(schedule)
-print(score)
+def get_teams():
+    global teams
+    return teams
 
-# Randomizing game_slots vastly increases runtime, do not randomize game_slots
-# schedule_rand_slots = gen_schedule_random_game_slots(games, game_slots, teams)
-# print(schedule_rand_slots)
+
+def get_schedule():
+    global schedule
+    return schedule
+
+
+def get_score():
+    global score
+    return score
