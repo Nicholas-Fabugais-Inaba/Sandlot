@@ -17,8 +17,9 @@ export default async function getSchedule(): Promise<any[]> {
 
     // Parse and format the games data
     const formattedEvents = Object.entries(gamesData).map(([key, value]: any) => {
+
       // Destructure the key and value
-      const [field, timeSlot, date] = key;
+      const [field, timeSlot, year, month, day] = key.split(",");
       const [team1Id, team2Id] = value;
       
       // Extract the names of the teams from teamsData
@@ -26,7 +27,6 @@ export default async function getSchedule(): Promise<any[]> {
       const team2Name = teamsData[team2Id]?.name || `Team ${team2Id}`;
 
       // Format the date as YYYY-MM-DD
-      const [year, month, day] = date;
       const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
       // Get the start and end times for the slot
