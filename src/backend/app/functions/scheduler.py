@@ -75,7 +75,7 @@ def gen_constraints():
     hard_constraints = []
     soft_constraints = []
     hard_constraints.append(constraint1)
-    hard_constraints.append(constraint2)
+    # hard_constraints.append(constraint2)
     # hard_constraints.append(constraint3)
     # soft_constraints.append((constraint4, 1))
     hard_constraints.append(constraint4)

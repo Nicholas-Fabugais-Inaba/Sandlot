@@ -7,19 +7,44 @@ from random import shuffle
 FIELDS = 3
 TIMESLOTS = 3
 START_DATE = date(2024, 5, 1)
-END_DATE = date(2024, 6, 30)
+END_DATE = date(2024, 5, 3)
 # END_DATE = date(2024, 8, 31)
 
 # OFFDAYS ARE CODED AS 0 BEING MONDAY AND 6 BEING SUNDAY (matching datetime)
 tigers = {"name": "Tigers", "offday": 0}
-cardinals = {"name": "Cardinals", "offday": 2}
-orioles = {"name": "Orioles", "offday": 4}
-jays = {"name": "Blue Jays", "offday": 2}
-dodgers = {"name": "Dodgers", "offday": 3}
-rangers = {"name": "Rangers", "offday": 1}
-astros = {"name": "Astros", "offday": 0}
-angels = {"name": "Angels", "offday": 4}
-teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros, 8: angels}
+cardinals = {"name": "Cardinals", "offday": 1}
+orioles = {"name": "Orioles", "offday": 0}
+jays = {"name": "Blue Jays", "offday": 0}
+dodgers = {"name": "Dodgers", "offday": 0}
+# rangers = {"name": "Rangers", "offday": 1}
+# astros = {"name": "Astros", "offday": 0}
+# angels = {"name": "Angels", "offday": 4}
+# yankees = {"name": "Yankees", "offday": 3}
+# mets = {"name": "Mets", "offday": 1}
+# giants = {"name": "Giants", "offday": 3}
+# cubs = {"name": "Cubs", "offday": 0}
+# mariners = {"name": "Mariners", "offday": 2}
+# red_sox = {"name": "Red Sox", "offday": 4}
+# brewers = {"name": "Brewers", "offday": 2}
+# braves = {"name": "Braves", "offday": 1}
+teams: dict = {
+    1: tigers,
+    2: cardinals,
+    3: orioles,
+    4: jays,
+    5: dodgers,
+    # 6: rangers,
+    # 7: astros,
+    # 8: angels,
+    # 9: yankees,
+    # 10: mets,
+    # 11: giants,
+    # 12: cubs,
+    # 13: mariners,
+    # 14: red_sox,
+    # 15: brewers,
+    # 16: braves
+}
 
 schedule = {}
 json_schedule = {}
