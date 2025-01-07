@@ -453,10 +453,49 @@ in the work partitioning table.
 
 \section{Business Data Model and Data Dictionary}
 \subsection{Business Data Model}
-Need to add.
+\includegraphics[scale=0.8]{7_1_business_diagram.png}
 
 \subsection{Data Dictionary}
-Need to add.
+\begin{center}
+  \begin{tabular}{|m{3cm}|m{8cm}|m{2cm}|}
+    \hline
+    Name & Content & Type\\
+    \hline
+    Player Account & Player identifier + Login details & Class\\
+    \hline
+    Team Account & Team identifier + Login details & Class\\
+    \hline
+    Commissioner Account & Commissioner identifier + Login details & Class\\
+    \hline
+    Team & Team identifier + Team name + Player list + Off day + Preferred
+    time & Class\\
+    \hline
+    League & Season schedule + Team name + Player list & Class\\
+    \hline
+    Season schedule & Game list & Class\\
+    \hline
+    Game list & List of Games & Attribute\\
+    \hline
+    Game & Team identifier + Team identifier + Date + Time & Class\\
+    \hline
+    Date & & Attribute\\
+    \hline
+    Time & & Attribute\\
+    \hline
+    Player identifier & & Attribute\\
+    \hline
+    Team identifier & & Attribute\\
+    \hline
+    Login details & A user defined username and password & Attribute\\
+    \hline
+    Commissioner identifier & See Player identifier & Attribute\\
+    \hline
+    Player list & List of player identifiers & Attribute\\
+    \hline
+    Team list & List of team identifiers & Attribute\\
+    \hline
+  \end{tabular}
+\end{center}
 
 \section{The Scope of the Product}
 All necessary parts of this section were covered in section 6.
