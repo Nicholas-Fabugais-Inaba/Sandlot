@@ -416,14 +416,14 @@ allow users to view the scores of played games, is not working.
       \hline
       Event Name & Input and Output & Summary of BUC\\
       \hline
-      1. User creates an account & Account Data (in) & A player, captain or
+      1. User creates an account & New Account Data (in) & A player, team account, or
       commissioner enters in a username and password along with account details
       including their name, email, phone number, and gender.\\
-      2. User logs in & Login Data (in) & A player, captain or commissioner
+      2. User logs in & Login Data (in) & A player, team account, or commissioner
       enters their username and password and the system grants them access to
       their account.\\
-      3. Captain creates a team & New Team Information (in) & At the
-      start of the season, captains can enter team information such as a team
+      3. Team account is created & New Team Information (in) & At the
+      start of the season, a user can enter team information such as a team
       name. This registers a new team.\\
       4. Player requests to join a team & Team Join Request (in) & At the
       start of the season, players are not assigned to a team and must request
@@ -457,6 +457,9 @@ allow users to view the scores of played games, is not working.
       13. Captain submits game score & Game Score (in)
       & Captains submit the scores of games they have played into the
       system.\\
+      14. User modifies account data & Account Password (if required) (in) \newline
+      New Account Data (in) 
+      & A player, team account, or commissioner modifies their account data (including account deletion)\\
       \hline
     \end{tabular}
   \end{center}
@@ -559,7 +562,7 @@ Not applicable.
     {\reqno FR-3}
     {\reqevent 1}
   \reqdesc Users should be able to create a new account by providing 
-  the necessary information.
+  the necessary information pertaining to their type of account.
   \reqrat An account structure is necessary to be able to change 
   what a user of the system can see/do based on who they are. 
   For example, a player and captain should not be able to see/do 
@@ -567,7 +570,9 @@ Not applicable.
   able to see/do the same things.
   \reqorig Casra Ghazanfari
   \reqfit When a user provides the necessary information 
-  (may or may not include name, email, username, password), 
+  (for players this can include name, email, password, waiver;
+  for team accounts this can include team name, preferred days/times of play,
+  preferred division), 
   an account should be created from that information
   \twoinline
     {\reqsatis 3}
@@ -577,7 +582,7 @@ Not applicable.
 \begin{myreq}
   \twoinline
     {\reqno FR-4}
-    {\reqevent xx}
+    {\reqevent 14}
   \reqdesc Users should be able to change their account information 
   by providing the necessary information.
   \reqrat User information does not stay the same forever, 
@@ -594,7 +599,7 @@ Not applicable.
 \begin{myreq}
   \twoinline
     {\reqno FR-5}
-    {\reqevent xx}
+    {\reqevent 14}
   \reqdesc Users should be able to delete their account by providing 
   the necessary information.
   \reqrat If a user wants to quit the league they should be able to
