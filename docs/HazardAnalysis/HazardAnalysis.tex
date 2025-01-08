@@ -83,7 +83,7 @@ Oct. 23, 2024 & NFI, JL, AV, CG & Rev0\\
 
 \section{Introduction}
 
-Sandlot is intended to be the successor for the current McMaster GSA
+Sandlot is intended to be the successor to the current McMaster GSA
 softball league scheduling and management platform. This project
 will implement the current functionality from the existing system including
 additional features such as a new login system, commissioner admin
@@ -91,7 +91,7 @@ privileges, and an improvement to the robustness, ease of use, and
 maintainability to the platform.
 
 Hazards are conditions of the product system that could lead to undesirable outcomes. 
-In Sandlot, hazards of security, malfunctions, usability, among others will be analyzed.
+In Sandlot, security hazards, malfunctions, and usability will be analyzed.
 
 \section{Scope and Purpose of Hazard Analysis}
 
@@ -114,17 +114,17 @@ are discovered from the analysis.
 The system can be divided into the following components:
 \begin{itemize}
     \item Authentication
-    \subitem This component authenticates user inputted login information with the database
+    \subitem This component authenticates user-inputted login information with the database
     and determines whether a login is successful.
     \item Scheduling
-    \subitem This component generates a schedule based on user inputted availability data. 
+    \subitem This component generates a schedule based on user-inputted availability data. 
     Additionally, it allows for rescheduling events in these schedules after they 
     have been generated.
     \item Accounts
-    \subitem This component allows users to create, delete or edit accounts. Additionally, account types 
-    determine the ways in which a user can interact with the system, its data, and its components.
+    \subitem This component allows users to create, delete, or edit accounts. Additionally, account types 
+    determine how a user can interact with the system, its data, and its components.
     \item Team Structure
-    \subitem This component is a data structure of the system which allows accounts to be grouped together 
+    \subitem This component is a data structure of the system that allows accounts to be grouped 
     such that a group of accounts interact with the system, its data, and its components in the same way as 
     each other. Additionally, accounts can be added/removed from teams, users can request to join a 
     certain team, and teams can be created/deleted.
@@ -140,14 +140,14 @@ The system can be divided into the following components:
 \end{itemize}
 
 \subsection{System Boundaries}
-The system limits itself to the components mentioned before; the front end and backend of the website.
-External APIs that connect to our system are considered as outside the system boundaries.
-This would include the webserver, and weather tracker, among others. 
+The system limits itself to the components mentioned before; the frontend and backend of the website.
+External APIs connecting to our system are considered outside the system boundaries.
+This would include the web server, and weather tracker, among others. 
 
 \section{Critical Assumptions}
 
 \begin{itemize}
-    \item It is assumed that users will not attempt to maliciously attack the system.
+    \item It is assumed that users will not attempt to to attack the system maliciously.
 \end{itemize}
 
 \section{Failure Mode and Effect Analysis}
@@ -171,15 +171,15 @@ login information does not exist or is incorrect.\\
 \cline{1-6}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
-FR-17 & Allow captain to resubmit availability that overwrites previously
+FR-17 & Allow the captain to resubmit availability that overwrites previously
 submitted availability if submitted before the due date.\\
 \cline{2-6}
 & User reads schedule incorrectly. & User may not attend a game by accident or
-travel to a game at the wrong time. & Schedule is unclear, unreadable, or user
-makes an error. & AC-1 AC-2 & Ensure schedule data and structure is visible and
+travel to a game at the wrong time. & Schedule is unclear, unreadable, or the user
+makes an error. & AC-1 AC-2 & Ensure schedule data and structure are visible and
 readable.\\
 \cline{2-6}
-& Teams availability data have scheduling conflicts. & System cannot make a
+& Team's availability data have scheduling conflicts. & System cannot make a
 valid schedule. & Availability data has scheduling conflicts. & EU-3 & Teams
 will be given a warning if their availability data has scheduling conflicts.\\
 \cline{2-6}
@@ -191,12 +191,12 @@ accept the request cannot avoid seeing the request notification.\\
 \cline{1-6}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
-unclear or user makes an error. & AP-1 AP-2 & Ensure that when assigning a team for a
+unclear or the user makes an error. & AP-1 AP-2 & Ensure that when assigning a team for a
 user, the team options to select from are clear and the input section is
 readable.\\
 \cline{1-6}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
-has access to actions they shouldn't use. & Interface lacks security or user
+has access to actions they shouldn't use. & Interface lacks security or the user
 makes an error. & AS-12 & Giving an account additional permissions should give
 a warning to the user when configuring accounts.\\
 \cline{2-6}
@@ -207,18 +207,18 @@ commissioner account if there is only one left.\\
 \cline{2-6}
 & User logs in on an account that isn't theirs. & User may make actions that
 are not desired by the account's owner. & Account owners are not careful with
-their login data. & PV-2 & Remind users to keep their passwords secret andsecure.\\
+their login data. & PV-2 & Remind users to keep their passwords secret and secure.\\
 \cline{1-6}
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
-Standings and database has incorrect scores. & User inputs the wrong score. &
+Standings and the database have incorrect scores. & User inputs the wrong score. &
 IG-3 & Allow the opposing team's captain to verify the score and contest it if
 the score is wrong.\\
 \cline{2-6}
 \cline{1-6}
 \multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
-critical information. & Alert is unclear, unreadable, or user makes an error. &
-AC-3 & Ensure alert message is visible and readable.\\
+critical information. & Alert is unclear, unreadable, or the user makes an error. &
+AC-3 & Ensure the alert message is visible and readable.\\
 \cline{2-6}
 \hline
 \end{tabularx}
@@ -299,7 +299,7 @@ AC-3 & Ensure alert message is visible and readable.\\
   should reach their intended targets if possible.
   \reqorig Alex Verity
   \reqfit Assuming the user hasn't interfered, alerts and reschedule requests
-  shall always be sent to a place the user receives notifications.
+  shall always be sent to a place where the user receives notifications.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
@@ -330,7 +330,7 @@ AC-3 & Ensure alert message is visible and readable.\\
   stored login information.
   \reqrat Login information stored in the database should match the user
   inputted login information. Feedback should be provided for the user to
-  understand an error has occured when accessing an account with incorrect
+  understand an error has occurred when accessing an account with incorrect
   login details.
   \reqorig Nicholas Fabugais-Inaba
   \reqfit Assuming the user has misinputted the login details for
