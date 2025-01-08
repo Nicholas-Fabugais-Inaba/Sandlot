@@ -46,8 +46,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 13, 2025 & 1.0 & TA Feedback\\
+January 15, 2025 & 1.1 & Rev0\\
 \bottomrule
 \end{tabularx}
 
@@ -161,7 +161,22 @@ change.
   hardware on which the software is running.
 \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
   initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+  input parameters.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The constraints
+  on the input parameters.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+  final output data.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The constraints
+  on the output results.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The algorithm
+  used for the season scheduler.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] How scheduling
+  conflicts are to be resolved.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The implementation
+  of displaying the season schedule.
+\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The implementation
+  of displaying the season standings.
 \end{description}
 
 \wss{Anticipated changes relate to changes that would be made in requirements,
@@ -180,7 +195,14 @@ decisions will be changed.
 \begin{description}
 \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
   (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The goal of the
+  system to generate a season schedule.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Output data is
+  displayed to the output device.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Player login information
+  can be defined using parameters defined in the player login module.
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Team login information
+  can be defined using parameters defined in the team login module.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -192,7 +214,12 @@ actually be implemented.
 
 \begin{description}
 \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Player Login Module
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Team Login Module
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Output Format Module
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Season Scheduler Module
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Schedule Display Module
+\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Standings Display Module
 \end{description}
 
 
