@@ -374,7 +374,22 @@ Commissioner: A person who manages the league. They may also play in the
 league. Commissioners have top level permissions on Sandlot, they may edit any
 team information like player list and past scores.\\\\
 
-
+\subsection{Symbolic Constants}
+RESCHED\_NOTICE\_HRS = 24\\
+MIN\_INPUT\_SIZE = 44\\
+MIN\_CONTRAST\_RATIO = 4.5:1\\
+MAX\_NAV\_CLICKS = 2\\
+MAX\_TRAIN\_MINS = 60\\
+MIN\_UNDERSTAND\_PERCENT = 90\\
+MIN\_FONT\_SIZE = 16\\
+MIN\_LINE\_CHARS = 45\\
+MAX\_LINE\_CHARS = 75\\
+MAX\_LOAD\_SECS = 3\\
+MIN\_UPTIME\_PERCENT = 99\\
+MAX\_TEAMS = 60\\
+MAX\_PLAYERS = 25\\
+MAX\_USERS = 500\\
+MAX\_SEASON\_START\_HRS = 1\\
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
@@ -684,8 +699,8 @@ Not applicable.
   less than a day from when they are to occur may be too little warning for
   players to prepare for.
   \reqorig Alex Verity
-  \reqfit A captain shall have the option to request a rescheduling for games
-  only more than 24 hours in the future.
+  \reqfit A captain shall have the option to request rescheduling for games
+  only more than RESCHED\_NOTICE\_HRS (24 hours) in the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -883,12 +898,13 @@ Not applicable.
 
 \begin{myreq}
   \reqno FR-24
-  \reqdesc The system must require the user to sign the league's waiver when they
-  are creating a new account.
-  \reqrat Based on the league's legal requirements, a player must sign a waiver
-  to participate in the league.
+  \reqdesc The system must require the user to sign the league's waiver when
+  they are creating a new account.
+  \reqrat Based on the league's legal requirements, a player must sign a
+  waiver to participate in the league.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit The waiver form is signed by the user when they are creating an account.
+  \reqfit The waiver form is signed by the user when they are creating an
+  account.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 4}
@@ -904,8 +920,9 @@ Not applicable.
   \reqrat User input should be clear to all users so users know where to enter
   inputs.
   \reqorig Alex Verity
-  \reqfit User input elements shall have a minimum size of 44x44
-  pixels, maintain at least a 3:1 contrast ratio with the background.
+  \reqfit User input elements shall have a minimum width and length of
+  MIN\_INPUT\_SIZE (44x44) pixels, maintain at least a MIN\_CONTRAST\_RATIO
+  (4.5:1) contrast ratio with the background.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -916,8 +933,9 @@ Not applicable.
   \reqdesc All user input elements should provide feedback.
   \reqrat Users should be able to know if their inputs are working or not.
   \reqorig Alex Verity
-  \reqfit User input elements shall include distinct visual feedback (e.g., color change or shadow) on hover or
-  click for clear visibility and interactivity.
+  \reqfit User input elements shall include distinct visual feedback (e.g.,
+  color change or shadow) on hover or click for clear visibility and
+  interactivity.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -982,7 +1000,8 @@ Not applicable.
   easy to find and access. 
   \reqorig Alex Verity
   \reqfit On average, a new user shall not take more than one minute to find
-  the schedule, and it should not take more than 2 clicks to access.
+  the schedule, and it should not take more than MAX\_NAV\_CLICKS (2 clicks)
+  to access.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 5}
@@ -1037,8 +1056,8 @@ Not applicable.
   product as the league plays out or changes season, and they have the most
   available actions that need to be learned.
   \reqorig Jung Woo Lee
-  \reqfit A new commissioner to the product should be able to learn all of their
-  possible actions within 1 hour.
+  \reqfit A new commissioner to the product should be able to learn all of
+  their possible actions within MAX\_TRAIN\_MINS (60 minutes).
   \twoinline
     {\reqsatis 3}
     {\reqdissat 2}
@@ -1054,7 +1073,7 @@ Not applicable.
   require some learning
   \reqorig Jung Woo Lee
   \reqfit A new captain to the product should be able to learn all of their
-  possible actions within 1 hour.
+  possible actions within MAX\_TRAIN\_MINS (60 minutes).
   \twoinline
     {\reqsatis 3}
     {\reqdissat 2}
@@ -1064,8 +1083,9 @@ Not applicable.
   \twoinline
     {\reqno LR-3}
     {\reqevent 7}
-  \reqdesc A new user should be able to use the basic features (such as viewing
-  the league schedule) of the product without having prior knowledge of the product.
+  \reqdesc A new user should be able to use the basic features (such as
+  viewing the league schedule) of the product without having prior knowledge
+  of the product.
   \reqrat All users should be able to intuitively perform some actions such as 
   viewing the season schedule.
   \reqorig Jung Woo Lee
@@ -1086,7 +1106,8 @@ Not applicable.
   make sure there is little confusion. For example the term off day will be
   used during scheduling as that is used in the past solution.
   \reqorig Alex Verity
-  \reqfit 90 percent of users understand terminology used on Sandlot.
+  \reqfit MIN\_UNDERSTAND\_PERCENT (90 percent) of users understand
+  terminology used on the Sandlot user interface.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 2}
@@ -1100,8 +1121,9 @@ Not applicable.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
   font is an appropriate size for those with reduced vision.
   \reqorig Alex Verity
-  \reqfit Body text shall have a minimum font size of 16 pixels, and a line 
-  length between 45 and 75 characters for optimal readability across all devices.
+  \reqfit Body text shall have a minimum font size of MIN\_FONT\_SIZE (16)
+  pixels, and a line length between MIN\_LINE\_CHARS (45) and MAX\_LINE\_CHARS
+  (75) characters for optimal readability across all devices.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 4}
@@ -1114,7 +1136,7 @@ Not applicable.
   colours can be contrasted by all users.
   \reqorig Jung Woo Lee
   \reqfit  All colours applied to elements users will interact with must have
-  a contrast ratio of at least 4.5:1.
+  a contrast ratio of at least MIN\_CONTRAST\_RATIO (4.5:1).
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -1143,8 +1165,8 @@ Not applicable.
   \reqrat Sandlot will need to be a solution users are not frustrated by to
   encourage use, and long load times are frustrating.
   \reqorig Alex Verity
-  \reqfit The website shall load in under 3 seconds on a stable internet
-  connection.
+  \reqfit The website shall load in under MAX\_LOAD\_SECS (3 seconds) on a
+  stable internet connection.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 5}
@@ -1163,8 +1185,8 @@ Not applicable.
   such as the standings feature, which at the time of writing is down. Our
   solution should not have these uptime issues.
   \reqorig Alex Verity
-  \reqfit All features of the solution shall be usable and visible 99 percent
-  of the time.
+  \reqfit All features of the solution shall be usable and visible
+  MIN\_UPTIME\_PERCENT (99 percent) of the time.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -1183,8 +1205,8 @@ Not applicable.
   \reqrat Sandlot should be able to function even if the league increases in
   population between seasons.
   \reqorig Alex Verity
-  \reqfit No faults should occur when 60 teams with 25 players each are
-  entered into the system.
+  \reqfit No faults should occur when MAX\_TEAMS (60) teams with
+  MAX\_TEAM\_PLAYERS (25) players each are entered into the system.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
@@ -1196,7 +1218,7 @@ Not applicable.
   \reqrat Sandlot should be able to function even if a large portion of the
   league including spectators are using the solution.
   \reqorig Alex Verity
-  \reqfit No faults should occur when 500 users are using the system at once.
+  \reqfit No faults should occur when MAX\_USERS (500) users are using the system at once.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
@@ -1252,7 +1274,7 @@ Not applicable.
   teams.) within one hour.
   \reqrat New seasons should not require a lot of maintenance to reset.
   \reqorig Alex Verity
-  \reqfit A new season can be started within one hour.
+  \reqfit A new season can be started within MAX\_SEASON\_START\_HRS (1 hour).
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
