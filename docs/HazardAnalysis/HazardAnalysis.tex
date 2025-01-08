@@ -68,6 +68,7 @@
 \midrule
 Oct. 21, 2024 & NFI, JL, AV, CG & TA Feedback\\
 Oct. 23, 2024 & NFI, JL, AV, CG & Rev0\\
+Jan. 7, 2025 & JL & Made changes to reflect changes in SRS; added AS-6 to table\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -166,7 +167,7 @@ This would include the webserver, and weather tracker, among others.
 \cline{1-6}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
-& EU-2 & Misinputted user login information should give a warning to the user when
+& EU-2 AS-6 & Misinputted user login information should give a warning to the user when
 login information does not exist or is incorrect.\\
 \cline{1-6}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
@@ -197,7 +198,7 @@ readable.\\
 \cline{1-6}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
 has access to actions they shouldn't use. & Interface lacks security or user
-makes an error. & AS-12 & Giving an account additional permissions should give
+makes an error. & AS-5 & Giving an account additional permissions should give
 a warning to the user when configuring accounts.\\
 \cline{2-6}
 & All commissioner level accounts are deleted. & There are no accounts left
@@ -245,7 +246,7 @@ AC-3 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-    \reqno AS-12
+    \reqno AS-5
     \reqdesc Giving permissions to users must be accompanied by an error that
     warns the user of the severity of the action.
     \reqrat Accidentally giving permissions to users who shouldn't have them
@@ -307,7 +308,7 @@ AC-3 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-  \reqno AS-13
+  \reqno AS-6
   \reqdesc Users can only access an account with correctly inputted login
   information that matches the database stored login information.
   \reqrat Login information stored in the database should correspond to a
@@ -399,7 +400,7 @@ to ensure the safety and security of the Sandlot platform's users.\\\\
 
 Proof of Concept Demonstration (November 11-22):
 \begin{itemize}
-  \item Authentication: AS-13 and EU-2
+  \item Authentication: AS-6 and EU-2
   \item Scheduling: FR-17, AC-1, AC-2, and EU-3
 \end{itemize}
 
@@ -407,7 +408,7 @@ Final Demonstration (Revision 1) (March 24-30):
 \begin{itemize}
   \item Scheduling: IG-4
   \item Teams: AP-1 and AP-2
-  \item Accounts: AS-12, IG-2, and PV-2
+  \item Accounts: AS-5, IG-2, and PV-2
   \item Scoring/Standings: IG-3
   \item Alerts: AC-3
 \end{itemize}
