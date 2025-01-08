@@ -409,7 +409,7 @@ compositions as needed. Currently, the standings functionality, which would
 allow users to view the scores of played games, is not working.
 
 \subsection{The Context of the Work}
-\includegraphics[scale=0.6]{6b_context_diagram.png}
+\includegraphics[scale=0.6]{6_2_context_diagram.png}
 \subsection{Work Partitioning}
   \begin{center}
     \begin{tabular}{|m{4cm}|m{4cm}|m{6cm}|}
@@ -493,13 +493,13 @@ above.
     \hline
     Game & Team identifier + Team identifier + Date + Time & Class\\
     \hline
-    Date & & Attribute\\
+    Date & *YY/MM/DD* & Attribute\\
     \hline
-    Time & & Attribute\\
+    Time & *HH/MM/SS 24 hour clock*& Attribute\\
     \hline
-    Player identifier & & Attribute\\
+    Player identifier & *Integer between 1 and 10 000* & Attribute\\
     \hline
-    Team identifier & & Attribute\\
+    Team identifier & *Integer between 1 and 1000* & Attribute\\
     \hline
     Login details & *User defined username and password*& Attribute\\
     \hline
