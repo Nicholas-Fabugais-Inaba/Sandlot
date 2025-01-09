@@ -387,6 +387,7 @@ MAX\_TEAMS = 60\\
 MAX\_PLAYERS = 25\\
 MAX\_USERS = 500\\
 MAX\_SEASON\_START\_HRS = 1\\
+BACKUP\_WEEKS = 1\\
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
@@ -1485,6 +1486,31 @@ Not applicable, our solution will run on the web.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 4}
+\end{myreq}
+
+\begin{myreq}
+  \reqno IG-5
+  \reqdesc The system should implement audit logging for system actions.
+  \reqrat The system should log system activities to help troubleshoot issues
+  within the system and make sure the system runs as intended.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Logs are generated after each system action.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno IG-6
+  \reqdesc The system should have data backups at least every BACKUP\_WEEKS weeks.
+  \reqrat The system should complete regularly scheduled data backups in the case
+  where the platform shuts down, making sure data is not lost.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Data backups are completed at least every
+  \\ BACKUP\_WEEKS weeks.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
 \end{myreq}
 
 \subsection{Privacy Requirements}
