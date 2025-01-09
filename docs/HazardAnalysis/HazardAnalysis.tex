@@ -171,7 +171,7 @@ This would include the web server, and weather tracker, among others.
 
 \section{Failure Mode and Effect Analysis}
 
-\newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.45in}
+\newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.20in}
 \pagenumbering{gobble}
 \begin{landscape}
 % breaks margins
@@ -179,68 +179,67 @@ This would include the web server, and weather tracker, among others.
 %\hspace*{-3.25cm}
 % adds vertical padding to table
 \def\arraystretch{1.2}
-\begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|}
-\cline{1-6}
-\textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions}\\
-\cline{1-6}
+\begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|p{1cm}|}
+\cline{1-7}
+\textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions} & \textbf{Ref} \\
+\cline{1-7}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
 & EU-2 AS-6 & Misinputted user login information should give a warning to the user when
-login information does not exist or is incorrect.\\
-\cline{1-6}
+login information does not exist or is incorrect. & HA1\\
+\cline{1-7}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
 FR-17 & Allow the captain to resubmit availability that overwrites previously
-submitted availability if submitted before the due date.\\
-\cline{2-6}
+submitted availability if submitted before the due date. & HA2.1\\
+\cline{2-7}
 & User reads schedule incorrectly. & User may not attend a game by accident or
-travel to a game at the wrong time. & Schedule is unclear, unreadable, or the user
-makes an error. & AC-1 AC-2 & Ensure schedule data and structure are a readable
+travel to a game at the wrong time. & Schedule is unclear, or unreadable. & AC-1 AC-2 & Ensure schedule data and structure are a readable
 font size of at least 16 pixels and the colours have a contrast ratio of at least
-4.5:1.\\
-\cline{2-6}
+4.5:1. & HA2.2\\
+\cline{2-7}
 & Team's availability data have scheduling conflicts. & System cannot make a
 valid schedule. & Availability data has scheduling conflicts. & EU-3 & Teams
-will be given a warning if their availability data has scheduling conflicts.\\
-\cline{2-6}
+will be given a warning if their availability data has scheduling conflicts. & HA2.3\\
+\cline{2-7}
 & Captain doesn't respond to another captain's reschedule request. & Captain
 who sent the reschedule request will not know if the opposing captain wants to
 reschedule or not. & System doesn't adequately notify the opposing captain
 about the reschedule request. & IG-4 & Make sure the captain who needs to
-accept the request cannot avoid seeing the request notification.\\
-\cline{1-6}
+accept the request cannot avoid seeing the request notification. & HA2.4\\
+\cline{1-7}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
-unclear or the user makes an error. & AP-1 AP-2 & Ensure that when assigning a team for a
+unclear. & AP-1 AP-2 & Ensure that when assigning a team for a
 user, the team options to select from are clear and the input section is
-readable.\\
-\cline{1-6}
+readable. & HA3\\
+\cline{1-7}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
-has access to actions they shouldn't use. & Interface lacks security or the user
-makes an error. & AS-5 & Giving an account additional permissions should give
-a warning to the user when configuring accounts.\\
-\cline{2-6}
+has access to actions they shouldn't use. & Interface is unclear to user. & AS-5 & Giving an account additional permissions should give
+a warning to the user when configuring accounts. & HA4.1\\
+\cline{2-7}
 & All commissioner level accounts are deleted. & There are no accounts left
 that can give commissioner level permissions. & System allows for all
 commissioner accounts to be deleted. & IG-2 & Do not let users delete a
-commissioner account if there is only one left.\\
-\cline{2-6}
+commissioner account if there is only one left. & HA4.2\\
+\cline{2-7}
 & User logs in on an account that isn't theirs. & User may make actions that
 are not desired by the account's owner. & Account owners are not careful with
-their login data. & PV-2 & Remind users to keep their passwords secret and secure.\\
-\cline{1-6}
+their login data. & PV-2 & Remind users to keep their passwords secret and secure.
+& HA4.3\\
+\cline{1-7}
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and the database have incorrect scores. & User inputs the wrong score. &
 IG-3 & Allow the opposing team's captain to verify the score and contest it if
-the score is wrong.\\
-\cline{2-6}
-\cline{1-6}
+the score is wrong. & HA5\\
+\cline{2-7}
+\cline{1-7}
 \multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
 critical information. & Alert is unclear, unreadable, or the user makes an error. &
 AC-3 & Ensure the alert message has a readable font size of at least 16 pixels
-and colours with a contrast ratio of at least 4.5:1.\\
-\cline{2-6}
+and colours with a contrast ratio of at least 4.5:1. & HA6\\
+\cline{2-7}
 \hline
 \end{tabularx}
 
