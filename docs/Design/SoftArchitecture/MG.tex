@@ -157,26 +157,34 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
+  \item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
   hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  input parameters.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The constraints
-  on the input parameters.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  final output data.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The constraints
-  on the output results.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The algorithm
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The algorithm
   used for the season scheduler.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] How scheduling
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The constraints
+  on the season schedule.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of a
+  team's season availability data.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] How scheduling
   conflicts are to be resolved.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The implementation
-  of displaying the season schedule.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The implementation
-  of displaying the season standings.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+  season schedule.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+  season standings.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+  create player/team account process and data.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
+  log in process and data.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The process of a
+  player requesting to join a team.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The process of a
+  commissioner making an admin command.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The process of
+  creating an alert.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The process of
+  rescheduling a game.
+  \item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The method by
+  which alerts are sent.
 \end{description}
 
 \wss{Anticipated changes relate to changes that would be made in requirements,
@@ -193,16 +201,14 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
   (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The goal of the
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The system being a web
+  application.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Player, team, and
+  commissioner account structure.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] The goal of the
   system to generate a season schedule.
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Output data is
-  displayed to the output device.
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Player login information
-  can be defined using parameters defined in the player login module.
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Team login information
-  can be defined using parameters defined in the team login module.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
