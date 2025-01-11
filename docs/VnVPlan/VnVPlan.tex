@@ -289,21 +289,37 @@ can be modified with the reschedule feature.
   successfully sent when a captain requests a reschedule. This will be checked
   for at least 3 different dates and times.
 
-  \item{test-FR11\\}
+  \item{test-FR11-1\\}
 
   Control: Manual
 
   Initial State: A reschedule request has been sent to a captain.
 
-  Input: A captain accepts or denies a reschedule request.
+  Input: A captain accepts a reschedule request.
 
-  Output: If accepted, the game is rescheduled to that time. If denied, the
-  captain who made the request is notified of the denial.
+  Output: The game is rescheduled to that time.
 
-  Test Case Derivation: A captain should be able to accept or deny a reschedule
+  Test Case Derivation: A captain should be able to accept a reschedule
   request.
 
-  How test will be performed: The tester will accept or deny multiple reschedule
+  How test will be performed: The tester will accept multiple reschedule
+  requests on different dates and times and verify the correct output is made by
+  the system.
+
+  \item{test-FR11-2\\}
+
+  Control: Manual
+
+  Initial State: A reschedule request has been sent to a captain.
+
+  Input: A captain denies a reschedule request.
+
+  Output: The captain who made the request is notified of the denial.
+
+  Test Case Derivation: A captain should be able to deny a reschedule
+  request.
+
+  How test will be performed: The tester will deny multiple reschedule
   requests on different dates and times and verify the correct output is made by
   the system.
 
