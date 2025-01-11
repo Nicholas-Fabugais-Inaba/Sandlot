@@ -1332,12 +1332,12 @@ inconsistent interface elements will be recorded.
   Output/Result: The system provides a warning to the user changing an account's
   permissions before the permissions are successfully updated.
 
-  How test will be performed: A tester will be provided an account to change the
-  permissions for and the account itself. They will then be asked to update the account
-  that requires an update to its permissions and observe the warning given by the system
-  or if any errors had occurred. The tester will then be asked to log in to the account
-  that recently had its permissions change and try out new functionalities that should
-  have been provided with the permission update or if any errors had occurred.
+  How test will be performed: A tester will be provided 2 accounts. Account 1 will have its
+  permissions changed and account 2 will have the ability to change permissions. They will then
+  use account 2 to update account 1's permissions and observe the warning given by the system
+  or if any errors had occurred. The tester will then be asked to log in to account 1 and try
+  out new functionalities that should have been provided with the permission update or if any
+  errors had occurred.
 
   \item{test-AS6-1\\}
   
