@@ -220,19 +220,17 @@ actually be implemented.
 
 \begin{description}
   \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware Hiding Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mLG}:] Account Login Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Account Creation Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mJR}:] Team Join Request
+  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Account Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mPL}:] Player Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTE}:] Team Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Commissioner Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Structure
   Module
   \item [\refstepcounter{mnum} \mthemnum \label{mS}:] Season Scheduler Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mSD}:] Schedule Display Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Display
-  Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mRS}:] Rescheduler Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mRE}:] Reschedule Module
   \item [\refstepcounter{mnum} \mthemnum \label{mAL}:] Alerts Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Score Submission Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mAD}:] Commissioner Admin
-  Module
   \item [\refstepcounter{mnum} \mthemnum \label{mWA}:] Web Application
   Framework Module
   \item [\refstepcounter{mnum} \mthemnum \label{mUI}:] User Interface Module
@@ -249,18 +247,18 @@ actually be implemented.
 {Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{9}{0.3\textwidth}{Behaviour-Hiding Module} & Account Login Module\\
-& Account Creation Module\\
-& Team Join Request Module\\
-& Schedule Display Module\\
-& Standings Display Module\\
-& Rescheduler Module\\
-& Alerts Module\\ 
-& Commissioner Admin Module\\
+\multirow{9}{0.3\textwidth}{Behaviour-Hiding Module} & Account Module\\
+& Player Module\\
+& Team Module\\
+& Commissioner Module\\
+& Schedule Structure Module\\
+& Standings Structure Module\\
+& Reschedule Module\\
+& Alerts Module\\
 & User Interface Module\\
 \midrule
 
-\multirow{2}{0.3\textwidth}{Software Decision Module} & Season Scheduler 
+\multirow{2}{0.3\textwidth}{Software Decision Module} & Season Scheduler
 Module\\
 & Web Application Framework Module\\
 \bottomrule
@@ -322,103 +320,92 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Account Login Module (\mref{mLG})}
+\subsubsection{Account Module (\mref{mAC})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
+\item[Secrets:]The format of account login data and the processes of account
+creation, deletion, login, and editting.
+\item[Services:]Defines account data structure. Contains functions to allow
+the user to create, delete, login, and edit their \progname{} account.
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Player Module (\mref{mPL})}
+
+\begin{description}
+\item[Secrets:]
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Team Module (\mref{mTE})}
+
+\begin{description}
+\item[Secrets:]The format of a team's data, the process of submitting a game
+score, and access to the reschedule module's functionality.
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object
   [Information to include for leaf modules in the decomposition by secrets tree.]
 \end{description}
 
-\subsubsection{Account Creation Module (\mref{mAC})}
+\subsubsection{Commissioner Module (\mref{mCM})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The format of a commissioner's data, the process of making
+admin commands, and access to the alerts module's functionality.
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Team Join Request Module (\mref{mJR})}
+\subsubsection{Schedule Structure Module (\mref{mSS})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The format of the season schedule data.
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Data Type
 \end{description}
 
-\subsubsection{Schedule Display Module (\mref{mSD})}
+\subsubsection{Standings Structure Module (\mref{mST})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The format of the season standings data.
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Abstract Data Type
 \end{description}
 
-\subsubsection{Standings Display Module (\mref{mST})}
+\subsubsection{Reschedule Module (\mref{mAL})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
-\end{description}
-
-\subsubsection{Rescheduler Module (\mref{mRS})}
-
-\begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The function of a team account to request and accept a game
+reschedule.
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library
 \end{description}
 
 \subsubsection{Alerts Module (\mref{mAL})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
-\end{description}
-
-\subsubsection{Commissioner Admin Module (\mref{mAD})}
-
-\begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The function of a commissioner account to create and send
+alerts.
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library
 \end{description}
 
 \subsubsection{User Interface Module (\mref{mUI})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the account data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The function of displaying the user interface.
+\item[Services:]
+\item[Implemented By:] \progname{}
+\item[Type of Module:] Library
 \end{description}
 
 
@@ -438,27 +425,18 @@ to be implemented.
 \subsubsection{Season Scheduler Module (\mref{mS})}
 
 \begin{description}
-  \item[Secrets:] The design decision based on mathematical theorems, physical
-    facts, or programming considerations. The secrets of this module are
-    \emph{not} described in the SRS.
-  \item[Services:] Includes data structure and algorithms used in the system that
-    do not provide direct interaction with the user. 
-    % Changes in these modules are more likely to be motivated by a desire to
-    % improve performance than by externally imposed changes.
-  \item[Implemented By:] --
+  \item[Secrets:]The algorithm used to generate a season schedule.
+  \item[Services:]
+  \item[Implemented By:] \progname{}
 \end{description}
 
 \subsubsection{Web Application Framework Module (\mref{mWA})}
 
 \begin{description}
-  \item[Secrets:] The design decision based on mathematical theorems, physical
-    facts, or programming considerations. The secrets of this module are
-    \emph{not} described in the SRS.
-  \item[Services:] Includes data structure and algorithms used in the system that
-    do not provide direct interaction with the user. 
-    % Changes in these modules are more likely to be motivated by a desire to
-    % improve performance than by externally imposed changes.
-  \item[Implemented By:] --
+  \item[Secrets:]The framework needed to host the web application on which
+  \progname{} will run.
+  \item[Services:]
+  \item[Implemented By:] \progname{}
 \end{description}
 
 \section{Traceability Matrix} \label{SecTM}
@@ -511,17 +489,19 @@ FR-24 & \\
 \textbf{AC} & \textbf{Modules}\\
 \midrule
 \acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acLogIn} & \mref{mInput}\\
+\acref{acSched} & \mref{mParams}\\
+\acref{acSchedConstraints} & \mref{mVerify}\\
+\acref{acAvailability} & \mref{mOutput}\\
+\acref{acSchedConflicts} & \mref{mVerifyOut}\\
+\acref{acSchedFormat} & \mref{mODEs}\\
+\acref{acStandFormat} & \mref{mEnergy}\\
+\acref{acCreateAccount} & \mref{mControl}\\
+\acref{acJoinRequest} & \mref{mSeqDS}\\
+\acref{acAdmin} & \mref{mSolver}\\
+\acref{acAlertSend} & \mref{mPlot}\\
+\acref{acReschedule} & \\
+\acref{acAlertReceive} & \\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
