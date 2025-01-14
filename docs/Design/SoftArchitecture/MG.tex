@@ -325,7 +325,7 @@ to be implemented.
 \begin{description}
 \item[Secrets:]The format of account login data and the processes of account
 creation, deletion, login, and editting.
-\item[Services:]Defines account data structure. Contains functions to allow
+\item[Services:]Defines an account data structure. Contains functions to allow
 the user to create, delete, login, and edit their \progname{} account.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object
@@ -334,8 +334,10 @@ the user to create, delete, login, and edit their \progname{} account.
 \subsubsection{Player Module (\mref{mPL})}
 
 \begin{description}
-\item[Secrets:]
-\item[Services:]
+\item[Secrets:]The format of a player's data, the process of joining and leaving
+a team.
+\item[Services:]Defines a player data structure. Contains functions to allow the user
+to join and leave a team.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -345,7 +347,8 @@ the user to create, delete, login, and edit their \progname{} account.
 \begin{description}
 \item[Secrets:]The format of a team's data, the process of submitting a game
 score, and access to the reschedule module's functionality.
-\item[Services:]
+\item[Services:]Defines a team data structure. Contains functions to allow the user
+to submit a game score and reschedule a game.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object
   [Information to include for leaf modules in the decomposition by secrets tree.]
@@ -356,7 +359,8 @@ score, and access to the reschedule module's functionality.
 \begin{description}
 \item[Secrets:]The format of a commissioner's data, the process of making
 admin commands, and access to the alerts module's functionality.
-\item[Services:]
+\item[Services:]Defines a commissioner data structure. Contains functions to allow
+the user to perform defined admin commands and send alerts.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Object
 \end{description}
@@ -365,7 +369,7 @@ admin commands, and access to the alerts module's functionality.
 
 \begin{description}
 \item[Secrets:]The format of the season schedule data.
-\item[Services:]
+\item[Services:]Defines a season schedule data structure.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Data Type
 \end{description}
@@ -374,7 +378,7 @@ admin commands, and access to the alerts module's functionality.
 
 \begin{description}
 \item[Secrets:]The format of the season standings data.
-\item[Services:]
+\item[Services:]Defines a season standings data structure.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Abstract Data Type
 \end{description}
@@ -384,7 +388,8 @@ admin commands, and access to the alerts module's functionality.
 \begin{description}
 \item[Secrets:]The function of a team account to request and accept a game
 reschedule.
-\item[Services:]
+\item[Services:]Contains functions to allow the user to request and accept a game
+reschedule.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Library
 \end{description}
@@ -394,7 +399,7 @@ reschedule.
 \begin{description}
 \item[Secrets:]The function of a commissioner account to create and send
 alerts.
-\item[Services:]
+\item[Services:]Contains functions to allow the user to create and send alerts.
 \item[Implemented By:] \progname{}
 \item[Type of Module:] Library
 \end{description}
