@@ -436,7 +436,9 @@ includes regular backups and data integrity checks.
 
 \begin{description}
   \item[Secrets:]The algorithm used to generate a season schedule.
-  \item[Services:]
+  \item[Services:]The algorithm generates a season schedule using each teams
+  availability and a set of constraints as inputs and outputs a schedule of
+  the form of the data structure defined in the schedule structure module.
   \item[Implemented By:] \progname{}
 \end{description}
 
@@ -445,7 +447,9 @@ includes regular backups and data integrity checks.
 \begin{description}
   \item[Secrets:]The framework needed to host the web application on which
   \progname{} will run.
-  \item[Services:]
+  \item[Services:]Defines a framework that will allow all other modules to be
+  hosted on a web application including any other UI libraries or tools
+  needed.
   \item[Implemented By:] \progname{}
 \end{description}
 
