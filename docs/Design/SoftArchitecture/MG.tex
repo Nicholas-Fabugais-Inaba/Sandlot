@@ -224,6 +224,9 @@ actually be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mPL}:] Player Module
   \item [\refstepcounter{mnum} \mthemnum \label{mTE}:] Team Module
   \item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Commissioner Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAS}:] Account Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTS}:] Team Structure Module
   \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Structure
   Module
   \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Structure
@@ -247,10 +250,12 @@ actually be implemented.
 {Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{9}{0.3\textwidth}{Behaviour-Hiding Module} & Account Module\\
+\multirow{11}{0.3\textwidth}{Behaviour-Hiding Module} & Account Module\\
 & Player Module\\
 & Team Module\\
 & Commissioner Module\\
+& Account Structure Module\\
+& Team Structure Module\\
 & Schedule Structure Module\\
 & Standings Structure Module\\
 & Reschedule Module\\
@@ -290,132 +295,147 @@ module. The \emph{Services} field specifies \emph{what} the module will do
 without documenting \emph{how} to do it. For each module, a suggestion for the
 implementing software is given under the \emph{Implemented By} title. If the
 entry is \emph{OS}, this means that the module is provided by the operating
-system or by standard programming language libraries.  \emph{\progname{}} means the
-module will be implemented by the \progname{} software.
+system or by standard programming language libraries.  \emph{\progname{}}
+means the module will be implemented by the \progname{} software.
 
 Only the leaf modules in the hierarchy have to be implemented. If a dash
-(\emph{--}) is shown, this means that the module is not a leaf and will not have
-to be implemented.
+(\emph{--}) is shown, this means that the module is not a leaf and will not
+have to be implemented.
 
 \subsection{Hardware Hiding Modules (\mref{mHH})}
 
 \begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
+  \item[Secrets:]The data structure and algorithm used to implement the
+  virtual hardware.
+  \item[Services:]Serves as a virtual hardware used by the rest of the
   system. This module provides the interface between the hardware and the
   software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
+  \item[Implemented By:] OS
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
 
 \begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
+  \item[Secrets:]The contents of the required behaviours.
+  \item[Services:]Includes programs that provide externally visible behaviour
+  of the system as specified in the software requirements specification (SRS)
   documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
+  hardware-hiding module and the software decision module. The programs in
+  this module will need to change if there are changes in the SRS.
+  \item[Implemented By:] --
 \end{description}
 
 \subsubsection{Account Module (\mref{mAC})}
 
 \begin{description}
-\item[Secrets:]The format of account login data and the processes of account
-creation, deletion, login, and editting.
-\item[Services:]Defines an account data structure. Contains functions to allow
-the user to create, delete, login, and edit their \progname{} account.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object
+  \item[Secrets:]The general functionality of all accounts.
+  \item[Services:]Contains functions to allow the user to create, delete,
+  login, and edit their \progname{} account.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Player Module (\mref{mPL})}
 
 \begin{description}
-\item[Secrets:]The format of a player's data, the process of joining and leaving
-a team.
-\item[Services:]Defines a player data structure. Contains functions to allow the user
-to join and leave a team.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object
+  \item[Secrets:]The functionality of a player account.
+  \item[Services:]Contains functions to allow the user to join and leave a
+  team.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Team Module (\mref{mTE})}
 
 \begin{description}
-\item[Secrets:]The format of a team's data, the process of submitting a game
-score, and access to the reschedule module's functionality.
-\item[Services:]Defines a team data structure. Contains functions to allow the user
-to submit a game score and reschedule a game.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+  \item[Secrets:]The functionality of a team account.
+  \item[Services:]Contains functions to allow the user to submit a game score
+  and access to the Reschedule Module functionality.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
 \end{description}
 
 \subsubsection{Commissioner Module (\mref{mCM})}
 
 \begin{description}
-\item[Secrets:]The format of a commissioner's data, the process of making
-admin commands, and access to the alerts module's functionality.
-\item[Services:]Defines a commissioner data structure. Contains functions to allow
-the user to perform defined admin commands and send alerts.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Object
+  \item[Secrets:]The functionality of a commissioner account.
+  \item[Services:]Contains functions to allow the user to perform defined
+  admin commands and send alerts.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Account Structure Module (\mref{mAS})}
+
+\begin{description}
+  \item[Secrets:]The format of the account data.
+  \item[Services:]Defines a general account data structure for all accounts,
+  inluding player, team, and commissioner accounts.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
+\end{description}
+
+\subsubsection{Team Structure Module (\mref{mTS})}
+
+\begin{description}
+  \item[Secrets:]The format of the team account data.
+  \item[Services:]Defines a team account data structure that inheirits from the
+  account structure module.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
 \end{description}
 
 \subsubsection{Schedule Structure Module (\mref{mSS})}
 
 \begin{description}
-\item[Secrets:]The format of the season schedule data.
-\item[Services:]Defines a season schedule data structure.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Data Type
+  \item[Secrets:]The format of the season schedule data.
+  \item[Services:]Defines a season schedule data structure.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
 \end{description}
 
 \subsubsection{Standings Structure Module (\mref{mST})}
 
 \begin{description}
-\item[Secrets:]The format of the season standings data.
-\item[Services:]Defines a season standings data structure.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Abstract Data Type
+  \item[Secrets:]The format of the season standings data.
+  \item[Services:]Defines a season standings data structure.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
 \end{description}
 
-\subsubsection{Reschedule Module (\mref{mAL})}
+\subsubsection{Reschedule Module (\mref{mRE})}
 
 \begin{description}
-\item[Secrets:]The function of a team account to request and accept a game
-reschedule.
-\item[Services:]Contains functions to allow the user to request and accept a game
-reschedule.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Library
+  \item[Secrets:]The function of a team account to request and accept a game
+  reschedule.
+  \item[Services:]Contains functions to allow the user to request and accept a
+  game reschedule.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Library
 \end{description}
 
 \subsubsection{Alerts Module (\mref{mAL})}
 
 \begin{description}
-\item[Secrets:]The function of a commissioner account to create and send
-alerts.
-\item[Services:]Contains functions to allow the user to create and send alerts.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Library
+  \item[Secrets:]The function of a commissioner account to create and send
+  alerts.
+  \item[Services:]Contains functions to allow the user to create and send alerts.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Library
 \end{description}
 
 \subsubsection{Database Module (\mref{mDB})}
 
 \begin{description}
-\item[Secrets:]The function of storing player, team, commissioner, schedule
-and standings data.
-\item[Services:]Defines and maintains a database that stores all relevant data
-to the \progname{} system. This includes account data for players, teams, and
-commissioners such as contact information and team player lists. It also
-includes full game lists for the schedule and game scores. The maintenance
-includes regular backups and data integrity checks.
-\item[Implemented By:] \progname{}
-\item[Type of Module:] Library
+  \item[Secrets:]The function of storing player, team, commissioner, schedule
+  and standings data.
+  \item[Services:]Defines and maintains a database that stores all relevant data
+  to the \progname{} system. This includes account data for players, teams, and
+  commissioners such as contact information and team player lists. It also
+  includes full game lists for the schedule and game scores. The maintenance
+  includes regular backups and data integrity checks.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Library
 \end{description}
 
 
@@ -423,12 +443,12 @@ includes regular backups and data integrity checks.
 
 \begin{description}
   \item[Secrets:] The design decision based on mathematical theorems, physical
-    facts, or programming considerations. The secrets of this module are
-    \emph{not} described in the SRS.
+  facts, or programming considerations. The secrets of this module are
+  \emph{not} described in the SRS.
   \item[Services:] Includes data structure and algorithms used in the system that
-    do not provide direct interaction with the user. 
-    % Changes in these modules are more likely to be motivated by a desire to
-    % improve performance than by externally imposed changes.
+  do not provide direct interaction with the user. 
+  % Changes in these modules are more likely to be motivated by a desire to
+  % improve performance than by externally imposed changes.
   \item[Implemented By:] --
 \end{description}
 
