@@ -110,6 +110,19 @@ character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+schedule & $S$ & a list of games to be played in a season, see Schedule
+Structure Module \ref{mSS}\\
+game & $G$ & a time, date, location, team1, and team2 that defines a game to
+be played\\
+% team & $T$ & see Team Structure Module \ref{mTS}\\
+% date & $d$ & a date in the format YYYY-MM-DD\\
+start date & $d_s$ & a date that represents the start of the season\\
+end date & $d_e$ & a date that represents the end of the season\\
+time & t & $a$ time in the format HH:MM (24 hour clock)\\
+location & $l$ & an integer representing a field\\
+division & $D$ & an integer indexing a list of teams that play each other in a
+season\\
+
 \bottomrule
 \end{tabular} 
 \end{center}
@@ -962,10 +975,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Season Scheduler Module
 
 \subsection{Uses}
 
+Schedule Structure Module \ref{mSS}
 
 \subsection{Syntax}
 
@@ -978,7 +992,7 @@ Module\\
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+gen\_sched & $D[], d_s, d_e, l[]$ & $S$ & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -1003,11 +1017,46 @@ Module\\
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent gen\_sched():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item output: $out := S_o \in S$ such that:
+\begin{itemize}
+  \item No two games in $S$ should share a date, time, and location:\\
+  $c_1(s:S) = \forall(g_1, g_2 \in s | g_1 \neq g_2 : g_1.date \neq
+  g_2.date \land g_1.time \neq g_2.time \land g_1.location \neq g_2.location)$
+  \item No game's parameters should include the same team twice.\\
+  $c_2(s:S) = \forall (g \in s |: g.team1 \neq g.team2)$
+  \item No team can play more than one game in a day.\\
+  $c_3(s:S) = \forall (g_1, g_2 \in s |g_1 \neq g_2 \land g_1.date =
+  g_2.date : g_1.team1 \neq g_2.team1 \land g_1.team1 \neq g_2.team2 \land
+  g_1.team2 \neq g_2.team1 \land g_1.team2 \neq g_2.team2)$
+  \item Teams in division 1 (A) should all play against every team in division
+  2 (B) once.\\
+  count($s:S$, $t_1:T$, $t_2:T$) = $+(g \in s | (g.team1 = t_1 \land
+  g.team2 = t_2) \lor (g.team1 = t_2 \land g.team2 = t_1) : 1)$\\
+  $c_4(s:S) = \forall (t_1 \in D_1, D_1 \in D |: \forall (t_2 \in D_2 |:$ count$(s, t_1,
+  t_2) = 1))$
+  \item Teams in divisions 3 and onward should only play against teams in
+  their own division.\\
+  $c_5(s:S) = \forall (D_i \in D, i \in \mathbb{N} | i > 2 : \forall (g \in s |:
+  g.team1.division = g.team2.division))$
+  \item All games must be within the start and end dates of the season.\\
+  $c_6(s:S) = \forall (g \in s |: d_s \leq g.date \leq d_e)$
+  \item All constraints should hold for the output schedule $S_o$:\\
+  $C = {c_1, c_2, c_3, c_4, c_5}$\\
+  $\forall(c \in C |: c(S_o) = true)$
+  \item The schedule $S_o$ should also be optimized according the soft
+  constants below:
+  \begin{itemize}
+    \item Minimize the maximum number of games played in a week over the
+    season.
+    $n_ji$ = number of games played by a team in a week\\
+    $m$ = frequency of $n$ occuring over each week of the season\\
+    $f(t) = $
+    \item Minimize the number of games played on a team's scheduled off day
+    according to the team's availability.
+  \end{itemize}
+\end{itemize}
 \end{itemize}
 
 \wss{A module without environment variables or state variables is unlikely to
