@@ -411,7 +411,8 @@ Commissioner
 
 \subsection{Uses}
 
-Account \ref{mAC}
+Account \ref{mAC}\\
+Player \ref{mPL}
 
 \subsection{Syntax}
 
@@ -420,11 +421,16 @@ Account \ref{mAC}
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{2cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+overwrite\_team\_comp & team:$T$, player\_list:P[] & - & - \\
+overwrite\_schedule & sched\_old:$S$, sched\_new:$S$ & - & - \\
+overwrite\_standings & new\_standing:$ST$ & - & - \\
+overwrite\_score & new\_score:$\mathbb{N}$ & - & - \\
+edit\_team\_contact & team:$T$, new\_info:$string$ & - & - \\
+set\_division & team:$T$ division:$D$ & - & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -449,6 +455,13 @@ None
 \noindent \wss{accessProg}():
 \begin{itemize}
 \item transition: \wss{if appropriate} 
+\item output: \wss{if appropriate} 
+\item exception: \wss{if appropriate} 
+\end{itemize}
+
+\noindent overwrite\_team\_comp():
+\begin{itemize}
+\item transition: 
 \item output: \wss{if appropriate} 
 \item exception: \wss{if appropriate} 
 \end{itemize}
