@@ -196,6 +196,7 @@ Account
 
 \subsection{Uses}
 
+account\_structure \ref{mAS} \\
 Database \ref{mDB} \\
 web\_app\_framework \ref{mWA}
 
@@ -210,12 +211,12 @@ web\_app\_framework \ref{mWA}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-create\_account & name:string,email:string,pass:string,num:string & - & - \\
+create\_account & name:string,email:string,pass:string,num:$\mathbb{N}$ & - & - \\
 delete\_account & - & - & - \\
-change\_name & - & - & - \\
-change\_pass & - & - & - \\
-change\_email & - & - & - \\
-change\_num & - & - & - \\
+change\_name & new\_name:string & - & - \\
+change\_pass & new\_pass:string & - & - \\
+change\_email & new\_email:string & - & - \\
+change\_num & new\_num:$\mathbb{N}$ & - & - \\
 account\_login & email:string,pass:string & - & - \\
 \hline
 \end{tabular}
@@ -225,7 +226,7 @@ account\_login & email:string,pass:string & - & - \\
 
 \subsubsection{State Variables}
 
-None
+account: $P$
 
 \subsubsection{Environment Variables}
 
@@ -233,8 +234,6 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
 For every team in the league, each team plays at least twice the amount of games
 as the number of teams in a division.
 
@@ -245,26 +244,40 @@ as the number of teams in a division.
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent create\_account():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: Update the database with the new account information.
 \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
+\noindent delete\_account():
+\begin{itemize}
+\item transition: Update the database to remove the account.
+\end{itemize}
 
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+\noindent change\_name():
+\begin{itemize}
+\item transition: Update the database to change the account's name.
+\end{itemize}
 
-\subsubsection{Local Functions}
+\noindent change\_pass():
+\begin{itemize}
+\item transition: Update the database to change the account's password.
+\end{itemize}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+\noindent change\_email():
+\begin{itemize}
+\item transition: Update the database to change the account's email.
+\end{itemize}
+
+\noindent change\_num():
+\begin{itemize}
+\item transition: Update the database to change the account's phone number.
+\end{itemize}
+
+\noindent account\_login():
+\begin{itemize}
+\item transition: Access is given to the account if the email and password match.
+\end{itemize}
 
 \newpage
 
@@ -281,7 +294,6 @@ Player
 \subsection{Uses}
 
 Account \ref{mAC}
-Account Structure \ref{mAS}
 
 \subsection{Syntax}
 
@@ -304,7 +316,7 @@ leave\_team & - & - & - \\
 
 \subsubsection{State Variables}
 
-player:$P$
+None
 
 \subsubsection{Environment Variables}
 
