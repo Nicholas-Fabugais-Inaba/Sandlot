@@ -114,7 +114,8 @@ schedule & $S$ & a list of games to be played in a season, see Schedule
 Structure Module \ref{mSS}\\
 game & $G$ & a time, date, location, team1, and team2 that defines a game to
 be played\\
-player & $P$ & a player on a team, see Player Module \ref{mPL}\\
+player & $P$ & a player on a team, uses the Account Structure Module
+\ref{mAS}\\
 team & $T$ & see Team Structure Module \ref{mTS}\\
 % date & $d$ & a date in the format YYYY-MM-DD\\
 start date & $d_s$ & a date that represents the start of the season\\
@@ -274,6 +275,7 @@ Player
 \subsection{Uses}
 
 Account \ref{mAC}
+Account Structure \ref{mAS}
 
 \subsection{Syntax}
 
@@ -286,7 +288,7 @@ Account \ref{mAC}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-join\_team & - & - & - \\
+join\_team & team:$T$ & - & - \\
 leave\_team & - & - & - \\
 \hline
 \end{tabular}
@@ -296,7 +298,7 @@ leave\_team & - & - & - \\
 
 \subsubsection{State Variables}
 
-None
+player:$P$
 
 \subsubsection{Environment Variables}
 
@@ -309,19 +311,17 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent join\_team():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: Modify the inputted team's data to include the player and
+update the player's data to include the team.
 \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+\noindent leave\_team():
+\begin{itemize}
+\item transition: Modify the team the player is currently on structure to not
+include the player and update the player's data to not include the team.
+\end{itemize}
 
 \subsubsection{Local Functions}
 
@@ -875,7 +875,7 @@ None
 
 \noindent send\_alert():
 \begin{itemize}
-\item transition: An alert is sent to the players in the inputed player list.
+\item transition: An alert is sent to the players in the inputted player list.
 \end{itemize}
 
 \subsubsection{Local Functions}
