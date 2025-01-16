@@ -112,16 +112,22 @@ natural number & $\mathbb{N}$ & a number without a fractional component in [1, $
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
 schedule & $S$ & a list of games to be played in a season, see Schedule
 Structure Module \ref{mSS}\\
+standings & $ST$ & a team's record in a season including wins, losses,
+ties, forfeits, and point differential, see Standings
+Structure Module \ref{mST}\\
 game & $G$ & a time, date, location, team1, and team2 that defines a game to
 be played\\
-% team & $T$ & see Team Structure Module \ref{mTS}\\
+player & $P$ & a player on a team, see Player Module \ref{mPL}\\
+team & $T$ & see Team Structure Module \ref{mTS}\\
 % date & $d$ & a date in the format YYYY-MM-DD\\
 start date & $d_s$ & a date that represents the start of the season\\
 end date & $d_e$ & a date that represents the end of the season\\
-time & t & $a$ time in the format HH:MM (24 hour clock)\\
+% time & t & $a$ time in the format HH:MM (24 hour clock)\\
 location & $l$ & an integer representing a field\\
 division & $D$ & an integer indexing a list of teams that play each other in a
 season\\
+alert & $A$ & a message to be sent to a list of players, see Alerts Module
+\ref{mAL}\\
 
 \bottomrule
 \end{tabular} 
@@ -173,6 +179,7 @@ Module\\
 \end{table}
 
 \newpage
+~\newpage
 
 \section{MIS of Account Module} \label{mAC}
 
@@ -516,7 +523,11 @@ N/A
 
 \subsubsection{State Variables}
 
-None
+name: string\\
+pass: string\\
+email: string\\
+num: string\\
+team\_id: $\mathbb{N}$
 
 \subsubsection{Environment Variables}
 
@@ -586,7 +597,11 @@ account\_structure \ref{mAS}
 
 \subsubsection{State Variables}
 
-None
+team\_id: $\mathbb{N}$\\
+team\_name: string\\
+div: $D$\\
+players: $P[]$\\
+standing: $ST$
 
 \subsubsection{Environment Variables}
 
@@ -656,7 +671,7 @@ N/A
 
 \subsubsection{State Variables}
 
-None
+games: $G[]$
 
 \subsubsection{Environment Variables}
 
@@ -726,7 +741,11 @@ N/A
 
 \subsubsection{State Variables}
 
-None
+wins: $\mathbb{N}$\\
+losses: $\mathbb{N}$\\ 
+ties: $\mathbb{N}$\\
+forfeits: $\mathbb{N}$\\
+point\_diff: $\mathbb{Z}$
 
 \subsubsection{Environment Variables}
 
@@ -755,10 +774,8 @@ None
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+calc\_score: $\mathbb{N}, \mathbb{N}, \mathbb{N}, \mathbb{N} \rightarrow \mathbb{N}$\\
+calc\_score(wins, losses, ties, forfeits) = $2*wins + ties - forfeits$
 
 \newpage
 
@@ -836,10 +853,6 @@ None
 
 \section{MIS of Alerts Module} \label{mAL}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
-
 \subsection{Module}
 
 Alerts
@@ -859,9 +872,8 @@ web\_app\_framework \ref{mWA}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-create\_alert & msg:string & - & - \\
-send\_alert & - & - & - \\
-select\_target & - & - & - \\
+create\_alert & msg:string, players:$P[]$ & alert:$A$ & - \\
+send\_alert & alert:$A$ & - & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -883,26 +895,22 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent create\_alert():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item output: $A$, an alert created according to the user specifications.
 \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+\noindent send\_alert():
+\begin{itemize}
+\item transition: An alert is sent to the players in the inputed player list.
+\end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+\noindent select\_target():
+\begin{itemize}
+\item output: $P[]$, a list of players to send the alert to
+\end{itemize}
 
 \newpage
 
