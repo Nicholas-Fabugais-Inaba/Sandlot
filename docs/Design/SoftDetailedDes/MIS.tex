@@ -62,7 +62,7 @@ January 15, 2025 & 1.1 & Rev0\\
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \wss{give url}
+See SRS Documentation at \url{https://github.com/Nicholas-Fabugais-Inaba/Sandlot}
 
 \wss{Also add any additional symbols, abbreviations or acronyms}
 
@@ -83,7 +83,7 @@ for design and maintenance purposes.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+found at \url{https://github.com/Nicholas-Fabugais-Inaba/Sandlot}.  
 
 \section{Notation}
 
@@ -173,7 +173,6 @@ Module\\
 \end{table}
 
 \newpage
-~\newpage
 
 \section{MIS of Account Module} \label{mAC}
 
@@ -183,10 +182,12 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Account
 
 \subsection{Uses}
 
+Database \ref{mDB} \\
+web\_app\_framework \ref{mWA}
 
 \subsection{Syntax}
 
@@ -255,10 +256,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Player
 
 \subsection{Uses}
 
+Account \ref{mAC}
 
 \subsection{Syntax}
 
@@ -327,10 +329,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Team
 
 \subsection{Uses}
 
+Account \ref{mAC}
 
 \subsection{Syntax}
 
@@ -399,10 +402,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Commissioner
 
 \subsection{Uses}
 
+Account \ref{mAC}
 
 \subsection{Syntax}
 
@@ -471,10 +475,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+account\_structure
 
 \subsection{Uses}
 
+N/A
 
 \subsection{Syntax}
 
@@ -543,10 +548,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+team\_structure
 
 \subsection{Uses}
 
+account\_structure \ref{mAS}
 
 \subsection{Syntax}
 
@@ -615,10 +621,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+schedule\_structure
 
 \subsection{Uses}
 
+N/A
 
 \subsection{Syntax}
 
@@ -687,10 +694,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+standings\_structure
 
 \subsection{Uses}
 
+N/A
 
 \subsection{Syntax}
 
@@ -759,10 +767,12 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Reschedule
 
 \subsection{Uses}
 
+Team \ref{mTE} \\
+web\_app\_framework \ref{mWA}
 
 \subsection{Syntax}
 
@@ -831,10 +841,11 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Alerts
 
 \subsection{Uses}
 
+web\_app\_framework \ref{mWA}
 
 \subsection{Syntax}
 
@@ -903,10 +914,13 @@ Module\\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Database
 
 \subsection{Uses}
 
+team\_structure \ref{mTS} \\
+schedule\_structure \ref{mSS} \\
+standings\_structure \ref{mST}
 
 \subsection{Syntax}
 
@@ -975,11 +989,11 @@ Module\\
 
 \subsection{Module}
 
-Season Scheduler Module
+season\_scheduler
 
 \subsection{Uses}
 
-Schedule Structure Module \ref{mSS}
+schedule\_structure \ref{mSS}
 
 \subsection{Syntax}
 
@@ -1083,10 +1097,11 @@ gen\_sched & $D[], d_s, d_e, l[]$ & $S$ & - \\
 
 \subsection{Module}
 
-\wss{Short name for the module}
+web\_app\_framework
 
 \subsection{Uses}
 
+N/A
 
 \subsection{Syntax}
 
