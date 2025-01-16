@@ -115,7 +115,7 @@ Structure Module \ref{mSS}\\
 standings & $ST$ & a team's record in a season including wins, losses,
 ties, forfeits, and point differential, see Standings
 Structure Module \ref{mST}\\
-game & $G$ & a time, date, location, team1, and team2 that defines a game to
+game & $G$ & a time, date, location, score, team1, and team2 that defines a game to
 be played\\
 player & $P$ & a player on a team, uses the Account Structure Module
 \ref{mAS}\\
@@ -422,9 +422,9 @@ Season Scheduler \ref{mS}
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 overwrite\_team\_comp & team:$T$, player\_list:P[] & - & - \\
-overwrite\_schedule & sched\_old:$S$, sched\_new:$S$ & - & - \\
+overwrite\_schedule & sched\_new:$S$ & - & - \\
 overwrite\_standings & new\_standing:$ST$ & - & - \\
-overwrite\_game\_score & new\_score:$\mathbb{N}$ & - & - \\
+overwrite\_game\_score & game:G, new\_score:$\mathbb{N}$ & - & - \\
 edit\_team\_contact & team:$T$, new\_info:$string$ & - & - \\
 set\_team\_division & team:$T$ division:$D$ & - & - \\
 add\_division & division:$D$ & - & - \\
@@ -465,16 +465,21 @@ None
 
 \noindent overwrite\_schedule():
 \begin{itemize}
-\item transition: The inputted old schedule is replaced with the inputted new
+\item transition: The current schedule is updated with the inputted new
       schedule.
 \end{itemize}
 
-\noindent overwrite\_schedule():
+\noindent overwrite\_standings():
 \begin{itemize}
-\item transition: The inputted old schedule is replaced with the inputted new
-      schedule.
+\item transition: The current standings are updated with the inputted new
+      standings.
 \end{itemize}
 
+\noindent overwrite\_standings():
+\begin{itemize}
+\item transition: The current standings are updated with the inputted new
+      standings.
+\end{itemize}
 
 \wss{A module without environment variables or state variables is unlikely to
   have a state transition.  In this case a state transition can only occur if
