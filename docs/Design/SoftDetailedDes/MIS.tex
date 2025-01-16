@@ -119,7 +119,9 @@ game & $G$ & a time, date, location, team1, and team2 that defines a game to
 be played\\
 player & $P$ & a player on a team, uses the Account Structure Module
 \ref{mAS}\\
-team & $T$ & see Team Structure Module \ref{mTS}\\
+team & $T$ & a team in the league including a team's id, team's name, team's division,
+list of players on the team, and the team's standing in the league,
+see Team Structure Module \ref{mTS}\\
 % date & $d$ & a date in the format YYYY-MM-DD\\
 start date & $d_s$ & a date that represents the start of the season\\
 end date & $d_e$ & a date that represents the end of the season\\
@@ -347,7 +349,9 @@ Team
 
 \subsection{Uses}
 
-Account \ref{mAC}
+Account \ref{mAC} \\
+team\_structure \ref{mTS} \\
+Reschedule \ref{mRE}
 
 \subsection{Syntax}
 
@@ -369,7 +373,7 @@ submit\_score & team\_1:$\mathbb{N}$,team\_2:$\mathbb{N}$ & - & - \\
 
 \subsubsection{State Variables}
 
-None
+team: $T$
 
 \subsubsection{Environment Variables}
 
@@ -382,26 +386,10 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent submit\_score():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: The team's $ST$ is updated with the new team record.
 \end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
-
-\subsubsection{Local Functions}
-
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
 
 \newpage
 
