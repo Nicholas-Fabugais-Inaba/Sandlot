@@ -211,13 +211,13 @@ web\_app\_framework \ref{mWA}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-create\_account & name:string,email:string,pass:string,num:$\mathbb{N}$ & - & - \\
+create\_account & name:$string$, email:$string$, pass:$string$, num:$\mathbb{N}$ & - & - \\
 delete\_account & - & - & - \\
-change\_name & new\_name:string & - & - \\
-change\_pass & new\_pass:string & - & - \\
-change\_email & new\_email:string & - & - \\
+change\_name & new\_name:$string$ & - & - \\
+change\_pass & new\_pass:$string$ & - & - \\
+change\_email & new\_email:$string$ & - & - \\
 change\_num & new\_num:$\mathbb{N}$ & - & - \\
-account\_login & email:string,pass:string & - & - \\
+account\_login & email:$string$, pass:$string$ & - & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -813,7 +813,7 @@ calc\_score(wins, losses, ties, forfeits) = $2*wins + ties - forfeits$
 
 \wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
 
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\wss{It is also possible to use \LaTeX for hyperlinks to external documents.}
 
 \subsection{Module}
 
@@ -835,7 +835,7 @@ web\_app\_framework \ref{mWA}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-request\_reschedule & - & - & - \\
+request\_reschedule & old\_game:G, new\_game:G & - & - \\
 accept\_reschedule & - & - & - \\
 \hline
 \end{tabular}
@@ -858,11 +858,16 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent request\_reschedule():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: The inputted old game is replaced with the inputted new game that has
+      the new date, time, and location.
+\end{itemize}
+
+\noindent accept\_reschedule():
+\begin{itemize}
+\item transition: If the the rescheduling is accepted, the old game is removed and the
+      new game is added to the schedule.
 \end{itemize}
 
 \wss{A module without environment variables or state variables is unlikely to
