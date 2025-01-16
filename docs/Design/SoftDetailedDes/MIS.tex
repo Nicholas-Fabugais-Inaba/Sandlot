@@ -112,6 +112,9 @@ natural number & $\mathbb{N}$ & a number without a fractional component in [1, $
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
 schedule & $S$ & a list of games to be played in a season, see Schedule
 Structure Module \ref{mSS}\\
+standings & $ST$ & a team's record in a season including wins, losses,
+ties, forfeits, and point differential, see Standings
+Structure Module \ref{mST}\\
 game & $G$ & a time, date, location, team1, and team2 that defines a game to
 be played\\
 player & $P$ & a player on a team, see Player Module \ref{mPL}\\
@@ -176,6 +179,7 @@ Module\\
 \end{table}
 
 \newpage
+~\newpage
 
 \section{MIS of Account Module} \label{mAC}
 
@@ -506,7 +510,11 @@ N/A
 
 \subsubsection{State Variables}
 
-None
+name: string\\
+pass: string\\
+email: string\\
+num: string\\
+team\_id: $\mathbb{N}$
 
 \subsubsection{Environment Variables}
 
@@ -576,7 +584,11 @@ account\_structure \ref{mAS}
 
 \subsubsection{State Variables}
 
-None
+team\_id: $\mathbb{N}$\\
+team\_name: string\\
+div: $D$\\
+players: $P[]$\\
+standing: $ST$
 
 \subsubsection{Environment Variables}
 
@@ -646,7 +658,7 @@ N/A
 
 \subsubsection{State Variables}
 
-None
+games: $G[]$
 
 \subsubsection{Environment Variables}
 
@@ -716,7 +728,11 @@ N/A
 
 \subsubsection{State Variables}
 
-None
+wins: $\mathbb{N}$\\
+losses: $\mathbb{N}$\\ 
+ties: $\mathbb{N}$\\
+forfeits: $\mathbb{N}$\\
+point\_diff: $\mathbb{Z}$
 
 \subsubsection{Environment Variables}
 
@@ -745,10 +761,8 @@ None
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+calc\_score: $\mathbb{N}, \mathbb{N}, \mathbb{N}, \mathbb{N} \rightarrow \mathbb{N}$\\
+calc\_score(wins, losses, ties, forfeits) = $2*wins + ties - forfeits$
 
 \newpage
 
