@@ -405,8 +405,9 @@ Commissioner
 
 \subsection{Uses}
 
-Account \ref{mAC}\\
-Player \ref{mPL}
+Player \ref{mPL}\\
+Alerts \ref{mAL}\\
+Season Scheduler \ref{mS}
 
 \subsection{Syntax}
 
@@ -422,9 +423,11 @@ Player \ref{mPL}
 overwrite\_team\_comp & team:$T$, player\_list:P[] & - & - \\
 overwrite\_schedule & sched\_old:$S$, sched\_new:$S$ & - & - \\
 overwrite\_standings & new\_standing:$ST$ & - & - \\
-overwrite\_score & new\_score:$\mathbb{N}$ & - & - \\
+overwrite\_game\_score & new\_score:$\mathbb{N}$ & - & - \\
 edit\_team\_contact & team:$T$, new\_info:$string$ & - & - \\
-set\_division & team:$T$ division:$D$ & - & - \\
+set\_team\_division & team:$T$ division:$D$ & - & - \\
+add\_division & division:$D$ & - & - \\
+
 \hline
 \end{tabular}
 \end{center}
@@ -455,10 +458,22 @@ None
 
 \noindent overwrite\_team\_comp():
 \begin{itemize}
-\item transition: 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: The player list of the inputted team is updated with the 
+      inputted player list.
 \end{itemize}
+
+\noindent overwrite\_schedule():
+\begin{itemize}
+\item transition: The inputted old schedule is replaced with the inputted new
+      schedule.
+\end{itemize}
+
+\noindent overwrite\_schedule():
+\begin{itemize}
+\item transition: The inputted old schedule is replaced with the inputted new
+      schedule.
+\end{itemize}
+
 
 \wss{A module without environment variables or state variables is unlikely to
   have a state transition.  In this case a state transition can only occur if
