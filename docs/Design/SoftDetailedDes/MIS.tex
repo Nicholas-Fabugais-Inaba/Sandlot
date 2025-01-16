@@ -437,7 +437,7 @@ overwrite\_team\_comp & team:$T$, player\_list:P[] & - & - \\
 overwrite\_schedule & sched\_new:$S$ & - & - \\
 overwrite\_standings & new\_standing:$ST$ & - & - \\
 overwrite\_game\_score & game:G, new\_score:$\mathbb{N}$ & - & - \\
-edit\_team\_contact & team:$T$, new\_info:$string$ & - & - \\
+update\_team\_contact & team:$T$, new\_info:$string$ & - & - \\
 set\_team\_division & team:$T$ division:$D$ & - & - \\
 add\_division & division:$D$ & - & - \\
 
@@ -462,13 +462,6 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
-\begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
-\end{itemize}
-
 \noindent overwrite\_team\_comp():
 \begin{itemize}
 \item transition: The player list of the inputted team is updated with the 
@@ -487,10 +480,27 @@ None
       standings.
 \end{itemize}
 
-\noindent overwrite\_standings():
+\noindent overwrite\_game\_score():
 \begin{itemize}
-\item transition: The current standings are updated with the inputted new
-      standings.
+\item transition: The inputted game's score is updated with the inputted new
+      score.
+\end{itemize}
+
+\noindent update\_team\_contact():
+\begin{itemize}
+\item transition: The inputted team's contact information is updated with the
+      inputted new information.
+\end{itemize}
+
+\noindent set\_team\_division():
+\begin{itemize}
+\item transition: The inputted team's division is updated with the inputted
+      division.
+\end{itemize}
+
+\noindent add\_division():
+\begin{itemize}
+\item transition: The inputted division is added to the league.
 \end{itemize}
 
 \wss{A module without environment variables or state variables is unlikely to
