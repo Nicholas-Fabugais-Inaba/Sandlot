@@ -47,7 +47,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 January 13, 2025 & 1.0 & TA Feedback\\
-January 15, 2025 & 1.1 & Rev0\\
+January 17, 2025 & 1.1 & Rev0\\
 \bottomrule
 \end{tabularx}
 
@@ -74,7 +74,6 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
   \bottomrule
 \end{tabular}\\
 
@@ -187,10 +186,6 @@ change.
   by which alerts are received.
 \end{description}
 
-\wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
-at run-time, like the values of parameters.}
-
 \subsection{Unlikely Changes} \label{SecUchange}
 
 The module design should be as general as possible. However, a general system is
@@ -278,13 +273,6 @@ Module\\
 The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
 between requirements and modules is listed in Table~\ref{TblRT}.
-
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.}
 
 \section{Module Decomposition} \label{SecMD}
 
@@ -555,15 +543,6 @@ the modules. It can be seen that the graph is a directed acyclic graph
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
-\wss{The uses relation is not a data flow diagram.  In the code there will often
-be an import statement in module A when it directly uses module B.  Module B
-provides the services that module A needs.  The code for module A needs to be
-able to see these services (hence the import statement).  Since the uses
-relation is transitive, there is a use relation without an import, but the
-arrows in the diagram typically correspond to the presence of import statement.}
-
-\wss{If module A uses module B, the arrow is directed from A to B.}
-
 \includegraphics[scale=0.7]{9_use_hierarchy_diagram.png}
 
 \begin{figure}[H]
@@ -577,8 +556,7 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \section{User Interfaces}
 
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
+Preliminary design of the user interface can be found in the \href{https://www.figma.com/proto/5YNR4bBk1vqGhvvdioqJnI/Capstone-MG-Sketches?node-id=4-2&p=f&t=sLgjpB9bWIdGXPd8-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1}{Figma}.
 
 \section{Design of Communication Protocols}
 
@@ -601,29 +579,25 @@ making sure the performance of the system is able to accomplish each module's fu
     \end{itemize}
   \item \textbf{Week 2 (January 20-26)}: Core Module Implementation
     \begin{itemize}
-      \item Implement the account module (Name)
-      \item Implement the player, team, and commissioner modules (Name)
-      \item Setup database module for storing different data (Name)
-      \item Create the schedule and standings structure modules (Name)
+      \item Implement the account module (Casra Ghazanfari)
+      \item Implement the player, team, and commissioner modules (Nicholas Fabugais-Inaba)
+      \item Setup database module for storing different data (Casra Ghazanfari)
+      \item Create the schedule and standings structure modules (Jung Woo Lee)
       \item Update season scheduler module to generate an optimal schedule (Alex Verity)
     \end{itemize}
   \item \textbf{Week 3 (January 27-February 2)}: Remaining Modules and Integration
     \begin{itemize}
-      \item Implement alerts module (Name)
-      \item Implement web application framework module (Name)
-      \item Implement reschedule module (Name)
+      \item Implement alerts module (Alex Verity)
+      \item Implement web application framework module (Casra Ghazanfari)
+      \item Implement reschedule module (Jung Woo Lee)
       \item Initial integration testing (All team members)
     \end{itemize}
   \item \textbf{Week 4 (February 3)}: Final Integration and Testing
     \begin{itemize}
-      \item Design and implement the user interface (Name)
+      \item Design and implement the user interface (Nicholas Fabugais-Inaba)
       \item Final integration and comprehensive testing (All team members)
     \end{itemize}
 \end{itemize}
-
-\wss{Schedule of tasks and who is responsible}
-
-\wss{You can point to GitHub if this information is included there}
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
