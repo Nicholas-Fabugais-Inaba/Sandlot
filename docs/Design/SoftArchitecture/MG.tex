@@ -560,7 +560,17 @@ Preliminary design of the user interface can be found in the \href{https://www.f
 
 \section{Design of Communication Protocols}
 
-\wss{If appropriate}
+The design of the communication protocols define how the modules will interact within the system.
+where the system will use both synchronous (for real-time interactions like user authentication)
+and asynchronous (for background operations like logging) communication methods.
+Key technologies will include HTTP/HTTPS for secure data transmission, REST APIs for
+resource access, WebSockets for real-time updates, and message queues (e.g., RabbitMQ)
+for asynchronous communication. Data formats used are JSON for lightweight data exchange
+and XML for structured configuration files. Robust communication is ensured through error
+handling and retry mechanisms, managing issues like network failures and invalid data.
+Security measures include authentication and authorization using tokens (e.g., JWT) and
+encryption via HTTPS. For example, a POST request may be sent by a user to create an account,
+where the Account Module would process and store the data, responding with a corresponding account ID.
 
 \section{Timeline}
 
