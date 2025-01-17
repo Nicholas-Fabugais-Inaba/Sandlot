@@ -624,7 +624,7 @@ None
 \subsubsection{Local Functions}
 
 calc\_score: $\mathbb{N}, \mathbb{N}, \mathbb{N}, \mathbb{N} \rightarrow \mathbb{N}$\\
-calc\_score(wins, losses, ties, forfeits) = $2*wins + ties - forfeits$
+calc\_score(wins, ties) = $2*wins + ties$
 
 \newpage
 
@@ -1028,8 +1028,6 @@ None
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741 projects}
-
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Problem Analysis and Design.
 
@@ -1052,5 +1050,77 @@ graduate attribute of Problem Analysis and Design.
   (LO\_Explores)
 \end{enumerate}
 
+\subsection*{Team Reflection}
+
+  \begin{enumerate}
+    \item Which of your design decisions stemmed from speaking to your client(s)
+    or a proxy (e.g. your peers, stakeholders, potential users)? For those that
+    were not, why, and where did they come from?\\
+
+    Some of the design decisions pertained to the season scheduler module, which had come directly from
+    the supervisor as they had clearly defined both hard constraints, that must be satisfied, and
+    soft constraints, that should be optimized for. Additionally, it was important to have a
+    module that would specifically deal with the scheduling algorithm for the system's extensibility and
+    maintainability purposes. This is because more constraints may be required by the system
+    or clients to be added or removed depending on various circumstances, for example, the league's
+    requirements may change overtime. Furthermore, our team had decided to create structure modules,
+    that were not asked for by the client or a proxy as we believed it would help to simplify the
+    complexity of the system and improve the system's maintainability, defining important parts
+    such as an account or a team.\\
+    
+    \item While creating the design doc, what parts of your other documents (e.g.
+    requirements, hazard analysis, etc), it any, needed to be changed, and why?\\
+    
+    While creating the design doc, no other documents had to be changed to accomodate any
+    design decisions made in the MIS. The requirements identified in the SRS were sufficient
+    enough to guide our team in confidently following through with the design decisions that
+    were made in the MIS.\\
+    
+    \item What are the limitations of your solution?  Put another way, given
+    unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)\\
+    
+    TODO\\
+    
+    \item Give a brief overview of other design solutions you considered.  What
+    are the benefits and tradeoffs of those other designs compared with the chosen
+    design?  From all the potential options, why did you select the documented design?
+    (LO\_Explores)\\
+
+    Other design solutions that were considered were to have a separate account verification module
+    that would deal with the registration of accounts, which would include the signing of waivers,
+    2-factor authentication, and logging into an account. The benefits of this design would be the
+    fact that it would help to separate the concerns of the account module to solely deal with the
+    editing of an account's details, and the creation or deletion of an account, and the account
+    verification module would have dealt with what had been mentioned above. The tradeoffs would
+    be that it would have added more complexity to the system, and would have required more time
+    to implement and test each module. The reason why our team had selected the documented design
+    was because we wanted to make sure that each account would have the same functionality, but
+    the type of account (players, teams, and commissioners) would have different functionalities
+    associated with the module. The structure modules were then selected to account for the
+    core parts of the system including the schedule, standings, accounts, and teams.
+
+\end{enumerate}
+
+\subsection*{Nicholas Fabugais-Inaba -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  When writing this deliverable, the things that went well were the collective brainstorming
+  of the modules in the MG that would then be expanded upon in the MIS. Being able to not only
+  visualize how the modules would operate together, but a general idea of how the system would
+  work as a whole, helped a lot in our identification of the different features our system would
+  need to highlight. Another thing that went well was our distribution of tasks as once we had
+  identified all of the modules in the MG, we were able to each tackle a different module in the
+  MIS.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Some of the pain points from this deliverable were figuring out what subsections would apply to
+  each module as each module whether it was our structure modules or other modules, had varying
+  purposes. This issue was resolved by referring back to what we had written in our MG for each
+  module's secrets and services as that would help identify any functions that the module would
+  have to accomplish for its dedicated tasks. The same resolution was applied to the structure
+  modules as although they did not necessarily have functions as a part of their module, they still
+  had state variables that would define the data structure it pertained to.
+\end{enumerate}
 
 \end{document}
