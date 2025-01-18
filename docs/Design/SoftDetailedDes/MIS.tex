@@ -53,8 +53,8 @@ urlcolor=cyan          % color of external links
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 13, 2025 & 1.0 & TA Feedback\\
+January 15, 2025 & 1.1 & Rev0\\
 \bottomrule
 \end{tabularx}
 
@@ -62,9 +62,7 @@ Date 2 & 1.1 & Notes\\
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \wss{give url}
-
-\wss{Also add any additional symbols, abbreviations or acronyms}
+See SRS Documentation at \url{https://github.com/Nicholas-Fabugais-Inaba/Sandlot}
 
 \newpage
 
@@ -77,16 +75,15 @@ See SRS Documentation at \wss{give url}
 \section{Introduction}
 
 The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+the implemented modules in a platform designed to organize a seasonal
+softball league. It is intended to ease navigation through the platform
+for design and maintenance purposes.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+found at \url{https://github.com/Nicholas-Fabugais-Inaba/Sandlot}.  
 
 \section{Notation}
-
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
 
 The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
@@ -108,6 +105,28 @@ character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+schedule & $S$ & a list of games to be played in a season, see Schedule
+Structure Module \ref{mSS}\\
+standings & $ST$ & a team's record in a season including wins, losses,
+ties, forfeits, and point differential, see Standings
+Structure Module \ref{mST}\\
+game & $G$ & a time, date, location, score, team1, and team2 that defines a game to
+be played\\
+player & $P$ & a player on a team, uses the Account Structure Module
+\ref{mAS}\\
+team & $T$ & a team in the league including a team's id, team's name, team's division,
+list of players on the team, and the team's standing in the league,
+see Team Structure Module \ref{mTS}\\
+% date & $d$ & a date in the format YYYY-MM-DD\\
+start date & $d_s$ & a date that represents the start of the season\\
+end date & $d_e$ & a date that represents the end of the season\\
+% time & t & $a$ time in the format HH:MM (24 hour clock)\\
+location & $l$ & an integer representing a field\\
+division & $D$ & an integer indexing a list of teams that play each other in a
+season\\
+alert & $A$ & a message to be sent to a list of players, see Alerts Module
+\ref{mAL}\\
+
 \bottomrule
 \end{tabular} 
 \end{center}
@@ -131,21 +150,25 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-{Hardware-Hiding} & ~ \\
+{Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{11}{0.3\textwidth}{Behaviour-Hiding Module} & Account Module\\
+& Player Module\\
+& Team Module\\
+& Commissioner Module\\
+& Account Structure Module\\
+& Team Structure Module\\
+& Schedule Structure Module\\
+& Standings Structure Module\\
+& Reschedule Module\\
+& Alerts Module\\
+& Database Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{2}{0.3\textwidth}{Software Decision Module} & Season Scheduler
+Module\\
+& Web Application Framework Module\\
 \bottomrule
 
 \end{tabular}
@@ -154,10 +177,564 @@ The following table is taken directly from the Module Guide document for this pr
 \end{table}
 
 \newpage
-~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
+\section{MIS of Account Module} \label{mAC}
+
+\subsection{Module}
+
+Account
+
+\subsection{Uses}
+
+account\_structure \ref{mAS} \\
+Database \ref{mDB} \\
+web\_app\_framework \ref{mWA}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{3cm} p{9cm} p{2cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+create\_account & name:$string$, email:$string$, pass:$string$, num:$\mathbb{N}$ & - & - \\
+delete\_account & - & - & - \\
+change\_name & new\_name:$string$ & - & - \\
+change\_pass & new\_pass:$string$ & - & - \\
+change\_email & new\_email:$string$ & - & - \\
+change\_num & new\_num:$\mathbb{N}$ & - & - \\
+account\_login & email:$string$, pass:$string$ & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+account: $P$
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+For every team in the league, each team plays at least twice the amount of games
+as the number of teams in a division.
+
+% Every division has the same amount of teams? Not necessarily if number of
+% teams is odd.
+
+% Every team plays the same amount of games? Not necessarily because of above.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent create\_account():
+\begin{itemize}
+\item transition: Update the database with the new account information.
+\end{itemize}
+
+\noindent delete\_account():
+\begin{itemize}
+\item transition: Update the database to remove the account.
+\end{itemize}
+
+\noindent change\_name():
+\begin{itemize}
+\item transition: Update the database to change the account's name.
+\end{itemize}
+
+\noindent change\_pass():
+\begin{itemize}
+\item transition: Update the database to change the account's password.
+\end{itemize}
+
+\noindent change\_email():
+\begin{itemize}
+\item transition: Update the database to change the account's email.
+\end{itemize}
+
+\noindent change\_num():
+\begin{itemize}
+\item transition: Update the database to change the account's phone number.
+\end{itemize}
+
+\noindent account\_login():
+\begin{itemize}
+\item transition: Access is given to the account if the email and password match.
+\end{itemize}
+
+\newpage
+
+\section{MIS of Player Module} \label{mPL}
+
+\subsection{Module}
+
+Player
+
+\subsection{Uses}
+
+Account \ref{mAC}\\
+account\_structure \ref{mAS}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+join\_team & team:$T$ & - & - \\
+leave\_team & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent join\_team():
+\begin{itemize}
+\item transition: Modify the inputted team's data to include the player and
+update the player's data to include the team.
+\end{itemize}
+
+\noindent leave\_team():
+\begin{itemize}
+\item transition: Modify the team the player is currently on structure to not
+include the player and update the player's data to not include the team.
+\end{itemize}
+
+\newpage
+
+\section{MIS of Team Module} \label{mTE}
+
+\subsection{Module}
+
+Team
+
+\subsection{Uses}
+
+Account \ref{mAC} \\
+team\_structure \ref{mTS} \\
+Reschedule \ref{mRE}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{3cm} p{7cm} p{2cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+submit\_score & team\_1:$\mathbb{N}$,team\_2:$\mathbb{N}$ & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+team: $T$
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent submit\_score():
+\begin{itemize}
+\item transition: The team's $ST$ is updated with the new team record.
+\end{itemize}
+
+\newpage
+
+\section{MIS of Commissioner Module} \label{mCM}
+
+\subsection{Module}
+
+Commissioner
+
+\subsection{Uses}
+
+Player \ref{mPL}\\
+Alerts \ref{mAL}\\
+season\_scheduler \ref{mS}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+overwrite\_team\_comp & team:$T$, player\_list:P[] & - & - \\
+overwrite\_schedule & sched\_new:$S$ & - & - \\
+overwrite\_standings & new\_standing:$ST$ & - & - \\
+overwrite\_game\_score & game:G, new\_score:$\mathbb{N}$ & - & - \\
+update\_team\_contact & team:$T$, new\_info:$string$ & - & - \\
+set\_team\_division & team:$T$ division:$D$ & - & - \\
+add\_division & division:$D$ & - & - \\
+
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent overwrite\_team\_comp():
+\begin{itemize}
+\item transition: The player list of the inputted team is updated with the 
+      inputted player list.
+\end{itemize}
+
+\noindent overwrite\_schedule():
+\begin{itemize}
+\item transition: The current schedule is updated with the inputted new
+      schedule.
+\end{itemize}
+
+\noindent overwrite\_standings():
+\begin{itemize}
+\item transition: The current standings are updated with the inputted new
+      standings.
+\end{itemize}
+
+\noindent overwrite\_game\_score():
+\begin{itemize}
+\item transition: The inputted game's score is updated with the inputted new
+      score.
+\end{itemize}
+
+\noindent update\_team\_contact():
+\begin{itemize}
+\item transition: The inputted team's contact information is updated with the
+      inputted new information.
+\end{itemize}
+
+\noindent set\_team\_division():
+\begin{itemize}
+\item transition: The inputted team's division is updated with the inputted
+      division.
+\end{itemize}
+
+\noindent add\_division():
+\begin{itemize}
+\item transition: The inputted division is added to the league.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{As appropriate} \wss{These functions are for the purpose of specification.
+  They are not necessarily something that is going to be implemented
+  explicitly.  Even if they are implemented, they are not exported; they only
+  have local scope.}
+
+\newpage
+
+\section{MIS of Account Structure Module} \label{mAS}
+
+\subsection{Module}
+
+account\_structure
+
+\subsection{Uses}
+
+N/A
+
+\subsection{Syntax}
+
+N/A
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+name: string\\
+pass: string\\
+email: string\\
+num: string\\
+team\_id: $\mathbb{N}$
+
+\subsubsection{Environment Variables}
+
+None
+
+\newpage
+
+\section{MIS of Team Structure Module} \label{mTS}
+
+\subsection{Module}
+
+team\_structure
+
+\subsection{Uses}
+
+account\_structure \ref{mAS}
+
+\subsection{Syntax}
+
+N/A
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+team\_id: $\mathbb{N}$\\
+team\_name: string\\
+div: $D$\\
+players: $P[]$\\
+standing: $ST$
+
+\subsubsection{Environment Variables}
+
+None
+
+\newpage
+
+\section{MIS of Schedule Structure Module} \label{mSS}
+
+\subsection{Module}
+
+schedule\_structure
+
+\subsection{Uses}
+
+N/A
+
+\subsection{Syntax}
+
+N/A
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+games: $G[]$
+
+\subsubsection{Environment Variables}
+
+None
+
+\newpage
+
+\section{MIS of Standings Structure Module} \label{mST}
+
+\subsection{Module}
+
+standings\_structure
+
+\subsection{Uses}
+
+N/A
+
+\subsection{Syntax}
+
+N/A
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+wins: $\mathbb{N}$\\
+losses: $\mathbb{N}$\\ 
+ties: $\mathbb{N}$\\
+forfeits: $\mathbb{N}$\\
+point\_diff: $\mathbb{Z}$
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Local Functions}
+
+calc\_score: $\mathbb{N}, \mathbb{N}, \mathbb{N}, \mathbb{N} \rightarrow \mathbb{N}$\\
+calc\_score(wins, ties) = $2*wins + ties$
+
+\newpage
+
+\section{MIS of Reschedule Module} \label{mRE}
+
+\subsection{Module}
+
+Reschedule
+
+\subsection{Uses}
+
+Team \ref{mTE} \\
+web\_app\_framework \ref{mWA}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+request\_reschedule & old\_game:G, new\_game:G & - & - \\
+accept\_reschedule & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent request\_reschedule():
+\begin{itemize}
+\item transition: The inputted old game is replaced with the inputted new game that has
+      the new date, time, and location.
+\end{itemize}
+
+\noindent accept\_reschedule():
+\begin{itemize}
+\item transition: If the the rescheduling is accepted, the old game is removed and the
+      new game is added to the schedule.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{As appropriate} \wss{These functions are for the purpose of specification.
+  They are not necessarily something that is going to be implemented
+  explicitly.  Even if they are implemented, they are not exported; they only
+  have local scope.}
+
+\newpage
+
+\section{MIS of Alerts Module} \label{mAL}
+
+\subsection{Module}
+
+Alerts
+
+\subsection{Uses}
+
+web\_app\_framework \ref{mWA}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{3cm} p{5cm} p{2cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+create\_alert & msg:string, players:$P[]$ & alert:$A$ & - \\
+send\_alert & alert:$A$ & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent create\_alert():
+\begin{itemize}
+\item output: $A$, an alert created according to the user specifications.
+\end{itemize}
+
+\noindent send\_alert():
+\begin{itemize}
+\item transition: An alert is sent to the players in the inputted player list.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\noindent select\_target():
+\begin{itemize}
+\item output: $P[]$, a list of players to send the alert to
+\end{itemize}
+
+\newpage
+
+\section{MIS of Database Module} \label{mDB}
 
 \wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
 
@@ -165,10 +742,13 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsection{Module}
 
-\wss{Short name for the module}
+Database
 
 \subsection{Uses}
 
+team\_structure \ref{mTS} \\
+schedule\_structure \ref{mSS} \\
+standings\_structure \ref{mST}
 
 \subsection{Syntax}
 
@@ -190,14 +770,179 @@ The following table is taken directly from the Module Guide document for this pr
 
 \subsubsection{State Variables}
 
-\wss{Not all modules will have state variables.  State variables give the module
-  a memory.}
+None
 
 \subsubsection{Environment Variables}
 
-\wss{This section is not necessary for all modules.  Its purpose is to capture
-  when the module has external interaction with the environment, such as for a
-  device driver, screen interface, keyboard, file, etc.}
+None
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent \wss{accessProg}():
+\begin{itemize}
+\item transition: \wss{if appropriate} 
+\item output: \wss{if appropriate} 
+\item exception: \wss{if appropriate} 
+\end{itemize}
+
+\wss{A module without environment variables or state variables is unlikely to
+  have a state transition.  In this case a state transition can only occur if
+  the module is changing the state of another module.}
+
+\wss{Modules rarely have both a transition and an output.  In most cases you
+  will have one or the other.}
+
+\subsubsection{Local Functions}
+
+\wss{As appropriate} \wss{These functions are for the purpose of specification.
+  They are not necessarily something that is going to be implemented
+  explicitly.  Even if they are implemented, they are not exported; they only
+  have local scope.}
+
+\newpage
+
+\section{MIS of Season Scheduler Module} \label{mS}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+season\_scheduler
+
+\subsection{Uses}
+
+schedule\_structure \ref{mSS}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+gen\_sched & $D[], d_s, d_e, l[]$ & $S$ & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+\wss{Try to minimize assumptions and anticipate programmer errors via
+  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent gen\_sched():
+\begin{itemize}
+\item output: $out := S_o \in S$ such that:
+\begin{itemize}
+  \item No two games in $S$ should share a date, time, and location:\\
+  $c_1(s:S) = \forall(g_1, g_2 \in s | g_1 \neq g_2 : g_1.date \neq
+  g_2.date \land g_1.time \neq g_2.time \land g_1.location \neq g_2.location)$
+  \item No game's parameters should include the same team twice.\\
+  $c_2(s:S) = \forall (g \in s |: g.team1 \neq g.team2)$
+  \item No team can play more than one game in a day.\\
+  $c_3(s:S) = \forall (g_1, g_2 \in s |g_1 \neq g_2 \land g_1.date =
+  g_2.date : g_1.team1 \neq g_2.team1 \land g_1.team1 \neq g_2.team2 \land
+  g_1.team2 \neq g_2.team1 \land g_1.team2 \neq g_2.team2)$
+  \item Teams in division 1 (A) should all play against every team in division
+  2 (B) once.\\
+  count($s:S$, $t_1:T$, $t_2:T$) = $+(g \in s | (g.team1 = t_1 \land
+  g.team2 = t_2) \lor (g.team1 = t_2 \land g.team2 = t_1) : 1)$\\
+  $c_4(s:S) = \forall (t_1 \in D_1, D_1 \in D |: \forall (t_2 \in D_2 |:$ count$(s, t_1,
+  t_2) = 1))$
+  \item Teams in divisions 3 and onward should only play against teams in
+  their own division.\\
+  $c_5(s:S) = \forall (D_i \in D, i \in \mathbb{N} | i > 2 : \forall (g \in s |:
+  g.team1.division = g.team2.division))$
+  \item All games must be within the start and end dates of the season.\\
+  $c_6(s:S) = \forall (g \in s |: d_s \leq g.date \leq d_e)$
+  \item All constraints should hold for the output schedule $S_o$:\\
+  $C = {c_1, c_2, c_3, c_4, c_5}$\\
+  $\forall(c \in C |: c(S_o) = true)$
+  \item The schedule $S_o$ should also be optimized according the soft
+  constants below:
+  \begin{itemize}
+    \item Minimize the maximum number of games played in a week over the
+    season.
+    $n_ji$ = number of games played by a team in a week\\
+    $m$ = frequency of $n$ occuring over each week of the season\\
+    $f(t) = $
+    \item Minimize the number of games played on a team's scheduled off day
+    according to the team's availability.
+  \end{itemize}
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\wss{As appropriate} \wss{These functions are for the purpose of specification.
+  They are not necessarily something that is going to be implemented
+  explicitly.  Even if they are implemented, they are not exported; they only
+  have local scope.}
+
+\newpage
+
+\section{MIS of Web Application Framework Module} \label{mWA}
+
+\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+
+\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+
+\subsection{Module}
+
+web\_app\_framework
+
+\subsection{Uses}
+
+N/A
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+\wss{accessProg} & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+
+None
+
+\subsubsection{Environment Variables}
+
+None
 
 \subsubsection{Assumptions}
 
@@ -242,8 +987,6 @@ The following table is taken directly from the Module Guide document for this pr
 
 \section*{Appendix --- Reflection}
 
-\wss{Not required for CAS 741 projects}
-
 The information in this section will be used to evaluate the team members on the
 graduate attribute of Problem Analysis and Design.
 
@@ -266,5 +1009,131 @@ graduate attribute of Problem Analysis and Design.
   (LO\_Explores)
 \end{enumerate}
 
+\subsection*{Team Reflection}
+
+  \begin{enumerate}
+    \item Which of your design decisions stemmed from speaking to your client(s)
+    or a proxy (e.g. your peers, stakeholders, potential users)? For those that
+    were not, why, and where did they come from?\\
+
+    Some of the design decisions pertained to the season scheduler module, which had come directly from
+    the supervisor as they had clearly defined both hard constraints, that must be satisfied, and
+    soft constraints, that should be optimized for. Additionally, it was important to have a
+    module that would specifically deal with the scheduling algorithm for the system's extensibility and
+    maintainability purposes. This is because more constraints may be required by the system
+    or clients to be added or removed depending on various circumstances, for example, the league's
+    requirements may change overtime. Furthermore, our team had decided to create structure modules,
+    that were not asked for by the client or a proxy as we believed it would help to simplify the
+    complexity of the system and improve the system's maintainability, defining important parts
+    such as an account or a team.\\
+    
+    \item While creating the design doc, what parts of your other documents (e.g.
+    requirements, hazard analysis, etc), if any, needed to be changed, and why?\\
+    
+    While creating the design doc, no other documents had to be changed to accomodate any
+    design decisions made in the MIS. The requirements identified in the SRS were sufficient
+    enough to guide our team in confidently following through with the design decisions that
+    were made in the MIS.\\
+    
+    \item What are the limitations of your solution? Put another way, given
+    unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)\\
+    
+    The limitations of our solution are tightly tied to the hardware/software 
+    the system is hosted on. For example, with infinite computing power the 
+    website would be able to support upwards of a million concurrent users, 
+    and have near 100\% availability (ie. minimal downtime). However, we do not
+    have the computing power, or money to buy the computing power necessary to
+    provide these benefits. Importantly its not critical that we provide these
+    benefits for our project because they're only important for large scale
+    projects. Our project is much smaller in scale, and as such we'll be able 
+    to provide the necessary concurrent user count and availability for a 
+    project of our size without the need for unlimited resources.
+    
+    \item Give a brief overview of other design solutions you considered. What
+    are the benefits and tradeoffs of those other designs compared with the chosen
+    design?  From all the potential options, why did you select the documented design?
+    (LO\_Explores)\\
+
+    Other design solutions that were considered were to have a separate account verification module
+    that would deal with the registration of accounts, which would include the signing of waivers,
+    2-factor authentication, and logging into an account. The benefits of this design would be the
+    fact that it would help to separate the concerns of the account module to solely deal with the
+    editing of an account's details, and the creation or deletion of an account, and the account
+    verification module would have dealt with what had been mentioned above. The tradeoffs would
+    be that it would have added more complexity to the system, and would have required more time
+    to implement and test each module. The reason why our team had selected the documented design
+    was because we wanted to make sure that each account would have the same functionality, but
+    the type of account (players, teams, and commissioners) would have different functionalities
+    associated with the module. The structure modules were then selected to account for the
+    core parts of the system including the schedule, standings, accounts, and teams.
+
+\end{enumerate}
+
+\subsection*{Nicholas Fabugais-Inaba -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  When writing this deliverable, the things that went well were the collective brainstorming
+  of the modules in the MG that would then be expanded upon in the MIS. Being able to not only
+  visualize how the modules would operate together, but a general idea of how the system would
+  work as a whole, helped a lot in our identification of the different features our system would
+  need to highlight. Another thing that went well was our distribution of tasks as once we had
+  identified all of the modules in the MG, we were able to each tackle a different module in the
+  MIS.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Some of the pain points from this deliverable were figuring out what subsections would apply to
+  each module as each module whether it was our structure modules or other modules, had varying
+  purposes. This issue was resolved by referring back to what we had written in our MG for each
+  module's secrets and services as that would help identify any functions that the module would
+  have to accomplish for its dedicated tasks. The same resolution was applied to the structure
+  modules as although they did not necessarily have functions as a part of their module, they still
+  had state variables that would define the data structure it pertained to.
+\end{enumerate}
+
+\subsection*{Jung Woo Lee -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  Coming up with the specification math for the scheduling module went very smoothly and working on it 
+  helped to solidify some of our ideas on the contraints that were only in our head or in plain 
+  writing. Futhermore, writing the MIS and thinking at a lower-level helped us refine our thinking on
+  how the solution would behave or what data was required where. Lastly, Both documents were worked 
+  on diligently and efficiently by the team and we were able to complete them to great effect in a 
+  shorter amount of time than the previous documents.  
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  Definitely a large issue I had was defining the modules and separating out their functions as some
+  could initially be seen to have overlapping responsibilities. Discussion and more brainstorming with
+  the team allowed us to better define the modules and come to our current solution. Another was thinking 
+  about the constraints for the specification math where some open questions were discovered and are 
+  left unanswered until our next meeting with our supervisor where it will be cleared up.  
+\end{enumerate}
+
+\subsection*{Casra Ghazanfari -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  Writing the mathematical specification for our scheduling algorithm went well
+  because we already had a portion of its code implemented which allowed us to
+  much more easily translate that existing code into a mathematical 
+  specification than if we were to create the specification before starting
+  any implementation of the module. Additionally, because the scheduling 
+  algorithm is the most mathematically complex module in our system, 
+  having an existing implementation greatly reduced the overall workload of 
+  this deliverable making the overall process of writing this deliverable much
+  easier.
+    
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  The biggest pain point during this deliverable was our team's inexperience
+  using LaTeX for formal mathematical specifications. Due to our inexperience 
+  the most difficult part of this deliverable wasn't creating the mathematical
+  specifications, but instead properly formatting them. We resolved this issue 
+  by spending extra time learning how mathematical specification is done with 
+  LaTeX using online resources. After taking the time to learn, writing the 
+  deliverable became much easier and quicker.
+  
+\end{enumerate}
 
 \end{document}
