@@ -486,33 +486,33 @@ requirements and between the modules and the anticipated changes.
 \toprule
 \textbf{Req.} & \textbf{Modules}\\
 \midrule
-FR-1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-FR-2 & \mref{mInput}, \mref{mParams}\\
-FR-3 & \mref{mVerify}\\
-FR-4 & \mref{mOutput}, \mref{mControl}\\
-FR-5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-FR-6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-FR-7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-FR-8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-FR-9 & \mref{mVerifyOut}\\
-FR-10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-FR-11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
-FR-12 & \\
-FR-13 & \\
-FR-14 & \\
-FR-15 & \\
-FR-16 & \\
-FR-17 & \\
-FR-18 & \\
-FR-19 & \\
-FR-20 & \\
-FR-21 & \\
-FR-22 & \\
-FR-23 & \\
-FR-24 & \\
+FR-1 & \mref{mST}, \mref{mS},\\
+FR-2 & \mref{mTE}, \mref{mDB}\\
+FR-3 & \mref{mAC}, \mref{mAS}\\
+FR-4 & \mref{mAC}, \mref{mAS}\\
+FR-5 & \mref{mAC}, \mref{mAS}\\
+FR-6 & \mref{mCM}, \mref{mAL}\\
+FR-7 & \mref{mTE}, \mref{mCM}\\
+FR-8 & \mref{mPL},\\
+FR-9 & \mref{mS}\\
+FR-10 & \mref{mPL}, \mref{mRE}\\
+FR-11 & \mref{mPL}, \mref{mRE}\\
+FR-12 & \mref{mPL}, \mref{mRE}\\
+FR-13 & \mref{mPL}, \mref{mTE}\\
+FR-14 & \mref{mPL}, \mref{mTE}\\
+FR-15 & \mref{mPL}, \mref{mTE}\\
+FR-16 & \mref{mAC}\\
+FR-17 & \mref{mPL}, \mref{mTE}\\
+FR-18 & \mref{mCM}, \mref{mS}\\
+FR-19 & \mref{mPL}, \mref{mCM}, \mref{mTS}\\
+FR-20 & \mref{mSS}, \mref{mS}\\
+FR-21 & \mref{mTS}, \mref{mSS}, \mref{mS}\\
+FR-22 & \mref{mCM}, \mref{mSS}, \mref{mS}\\
+FR-23 & \mref{mTS}\\
+FR-24 & \mref{mAC}, \mref{mWA}\\
 \bottomrule
 \end{tabular}
-\caption{Trace Between Requirements and Modules}
+\caption{Trace Between Functional Requirements and Modules}
 \label{TblRT}
 \end{table}
 
@@ -523,19 +523,19 @@ FR-24 & \\
 \textbf{AC} & \textbf{Modules}\\
 \midrule
 \acref{acHardware} & \mref{mHH}\\
-\acref{acLogIn} & \mref{mInput}\\
-\acref{acSched} & \mref{mParams}\\
-\acref{acSchedConstraints} & \mref{mVerify}\\
-\acref{acAvailability} & \mref{mOutput}\\
-\acref{acSchedConflicts} & \mref{mVerifyOut}\\
-\acref{acSchedFormat} & \mref{mODEs}\\
-\acref{acStandFormat} & \mref{mEnergy}\\
-\acref{acCreateAccount} & \mref{mControl}\\
-\acref{acJoinRequest} & \mref{mSeqDS}\\
-\acref{acAdmin} & \mref{mSolver}\\
-\acref{acAlertSend} & \mref{mPlot}\\
-\acref{acReschedule} & \\
-\acref{acAlertReceive} & \\
+\acref{acLogIn} & \mref{mAC}, \mref{mAS}, \mref{mWA}, \mref{mDB}\\
+\acref{acSched} & \mref{mS}\\
+\acref{acSchedConstraints} & \mref{mSS}\\
+\acref{acAvailability} & \mref{mPL}, \mref{mWA}, \mref{mDB}\\
+\acref{acSchedConflicts} & \mref{mSS}, \mref{mWA}\\
+\acref{acSchedFormat} & \mref{mSS}, \mref{mWA}\\
+\acref{acStandFormat} & \mref{mST}, \mref{mWA}\\
+\acref{acCreateAccount} & \mref{mPL}, \mref{mTE}, \mref{mWA}, \mref{mDB}\\
+\acref{acJoinRequest} & \mref{mPL}, \mref{mTE}, \mref{mWA}\\
+\acref{acAdmin} & \mref{mCM}, \mref{mWA}\\
+\acref{acAlertSend} & \mref{mAL}, \mref{mWA}\\
+\acref{acReschedule} & \mref{mPL}, \mref{mRE}, \mref{mWA}\\
+\acref{acAlertReceive} & \mref{mAL}, \mref{mWA}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
