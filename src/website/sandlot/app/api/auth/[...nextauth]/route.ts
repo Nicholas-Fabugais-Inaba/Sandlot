@@ -1,15 +1,41 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+// app/api/auth/[...nextauth]/route.ts
 
-// Define NextAuth configuration
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcrypt';
+
+let mockUsers: { id: string; email: string; password: string }[] = [];
+
+async function authenticateUser(email: string, password: string) {
+  // Dynamically use the mockUsers array, which is now updated after registration
+  const user = mockUsers.find((user) => user.email === email);
+
+  if (user) {
+    console.log("Stored password hash:", user.password);  // Log the stored password hash
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    console.log("Password entered:", password);  // Log the password entered by the user
+    console.log("Password match result:", isPasswordMatch);  // Log the result of comparison
+
+    if (isPasswordMatch) {
+      return { id: user.id, email: user.email };
+    } else {
+      console.log("Password mismatch");
+    }
+  } else {
+    console.log("No user found for the given email");
+  }
+
+  return null;  // If no match, return null (will trigger 401 error)
+}
+
+
 const authOptions = {
   providers: [
     CredentialsProvider({
-      // Configure your credentials provider
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
         if (credentials) {
@@ -21,35 +47,11 @@ const authOptions = {
         return null;
       },
     }),
-    // Add other providers if necessary
   ],
   pages: {
-    signIn: '/profile/signin', // Custom sign-in page URL
-    // Add other pages if necessary
+    signIn: '/profile/signin',
   },
 };
 
-// Export the NextAuth handler
-import { NextApiRequest, NextApiResponse } from 'next';
-
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
-  return NextAuth(req, res, authOptions);
-}
-
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  return NextAuth(req, res, authOptions);
-}
-
-async function authenticateUser(email: string, password: string) {
-  // Replace this with your actual user authentication logic
-  const users = [
-    { id: "1", email: "user@example.com", password: "password123" },
-    // Add more users as needed
-  ];
-
-  const user = users.find(user => user.email === email && user.password === password);
-  if (user) {
-    return { id: user.id, email: user.email };
-  }
-  return null;
-}
+export const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

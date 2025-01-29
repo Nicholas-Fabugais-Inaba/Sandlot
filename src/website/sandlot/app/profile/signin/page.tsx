@@ -1,9 +1,10 @@
+// signin/page.tsx
 'use client';
 
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './SignIn.module.css'; // Create this CSS module for custom styles
+import styles from './SignIn.module.css';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,6 @@ export default function SignIn() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const result = await signIn('credentials', {
       redirect: false,
       email,
@@ -21,9 +21,10 @@ export default function SignIn() {
     });
 
     if (result?.error) {
+      console.log("Authentication error:", result.error);  // Log the error here
       setError('Invalid email or password');
     } else {
-      router.push('/profile'); // Redirect to the profile page after success
+      router.push('/profile'); // Redirect after successful login
     }
   };
 

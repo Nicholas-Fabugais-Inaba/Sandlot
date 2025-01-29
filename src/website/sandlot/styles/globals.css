@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.centered-container {
+    display: flex;
+    justify-content: center;   /* Center horizontally */
+    align-items: center;       /* Center vertically */
+    height: 70vh;              /* Full viewport height */
+    text-align: center;        /* Center text inside the container */
+    flex-direction: column;    /* Stack content vertically */
+}
+  
