@@ -4,10 +4,10 @@
 
 .centered-container {
     display: flex;
-    justify-content: center;   /* Center horizontally */
-    align-items: center;       /* Center vertically */
-    height: 70vh;              /* Full viewport height */
-    text-align: center;        /* Center text inside the container */
-    flex-direction: column;    /* Stack content vertically */
+    flex-direction: column;  /* Stack elements vertically */
+    justify-content: center; /* Center elements vertically */
+    align-items: center;     /* Center elements horizontally */
+    height: 70vh;            /* Adjust height */
+    text-align: center;
+    gap: 1.5rem;             /* Adds spacing between elements */
 }
-  

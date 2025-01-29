@@ -1,0 +1,26 @@
+/* SchedulePage.css */
+.fc-timegrid-slot {
+    height: 50px !important;  /* Increase the slot height */
+}
+
+.event-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.event-time {
+    font-size: 0.9rem;
+    margin-bottom: 5px; /* Space between time and title */
+}
+
+.event-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px; /* Space between title and field */
+}
+
+.event-field {
+    font-size: 0.9rem;
+}
