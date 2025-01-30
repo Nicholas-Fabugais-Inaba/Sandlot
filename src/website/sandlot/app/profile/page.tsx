@@ -34,10 +34,10 @@ export default function ProfilePage() {
             You need to be signed in to view this page.
           </h1>
           <div className="flex space-x-4 mt-4">
-            <Button onPress={() => signIn(undefined, { callbackUrl: "/profile" })} className="px-6 py-3">
+            <Button onPress={() => signIn(undefined, { callbackUrl: "/profile" })} className="button">
               Sign In
             </Button>
-            <Button onPress={() => router.push('/profile/register')} className="px-6 py-3">
+            <Button onPress={() => router.push('/profile/register')} className="button">
               Register
             </Button>
           </div>
@@ -54,7 +54,7 @@ export default function ProfilePage() {
       <h1 className={title()}>Profile</h1>
       <div className="centered-container">
         <h2>Welcome, {displayName}!</h2>
-        <Button onPress={() => signOut({ callbackUrl: '/profile/signin' })}>Sign Out</Button>
+        <Button onPress={() => signOut({ callbackUrl: '/profile/signin' })} className="button">Sign Out</Button>
       </div>
     </div>
   );

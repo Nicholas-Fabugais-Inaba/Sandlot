@@ -72,13 +72,16 @@ export default function Register() {
           {error && <p className={styles.error}>{error}</p>}
 
           {accountType === null ? (
-            <div className="flex flex-col items-center justify-center h-[50vh]">
-              <h1 className="text-xl font-semibold text-center">
+            <div className={styles.form}>
+              <h1 className="text-xl font-semibold text-center mt-8">
                 Choose an Account Type:
               </h1>
               <div className="flex space-x-4 mt-4">
-                <Button onPress={() => setAccountType('player')} className="px-6 py-3">Player</Button>
-                <Button onPress={() => setAccountType('team')} className="px-6 py-3">Team</Button>
+                <Button onPress={() => setAccountType('player')} className="button">Player</Button>
+                <Button onPress={() => setAccountType('team')} className="button">Team</Button>
+              </div>
+              <div className="flex justify-center mt-48">
+                <Button onPress={() => router.push('/profile')} className="button">Cancel</Button>
               </div>
             </div>
           ) : (
@@ -96,7 +99,11 @@ export default function Register() {
               {renderForm()}
 
               <div className="flex space-x-4 justify-center">
-                <Button type="submit" className={styles.submitButton}>Register</Button>
+                <Button type="submit" className="button">Register</Button>
+              </div>
+
+              <div className="flex justify-center mt-4">
+                <Button onPress={() => router.push('/profile')} className="button">Cancel</Button>
               </div>
             </form>
           )}

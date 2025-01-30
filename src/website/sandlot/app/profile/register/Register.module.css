@@ -66,21 +66,3 @@
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
-/* Submit Button */
-.submitButton {
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-top: 10px;
-  font-size: 1.1rem;
-  font-family: 'Arial', sans-serif;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.submitButton:hover {
-  background-color: #0056b3;
-}

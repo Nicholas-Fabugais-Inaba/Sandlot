@@ -46,9 +46,20 @@ export default function SignIn() {
               <input className={styles.input} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </div>
             <div className="flex space-x-4 justify-center">
-              <Button type="submit" className={styles.submitButton}>Sign In</Button>
+              <Button type="submit" className="button">Sign In</Button>
             </div>
           </form>
+          <div className={styles.newUserContainer}>
+            <p className={styles.newUserText}>New User?</p>
+            <Button 
+              onPress={() => router.push('/profile/register')} 
+              className="button">
+              Create an Account
+            </Button>
+          </div>
+          <div className="flex justify-center mt-4">
+            <Button onPress={() => router.push('/profile')} className="button">Cancel</Button>
+          </div>
         </div>
       </div>
     </div>
