@@ -3,6 +3,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { title } from "@/components/primitives";
 import { Button } from '@heroui/react';
@@ -16,19 +17,18 @@ export default function SignIn() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch('/api/users/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-      headers: { 'Content-Type': 'application/json' },
+    const result = await signIn('credentials', {
+      redirect: false,  // Prevent automatic redirect
+      email,
+      password,
     });
-
-    if (response.ok) {
-      router.push('/profile');
+  
+    if (result?.error) {
+      setError(result.error);
     } else {
-      const data = await response.json();
-      setError(data.error || 'Login failed');
+      router.push('/profile');  // Redirect to profile page after successful sign-in
     }
-  };
+  };  
 
   return (
     <div>

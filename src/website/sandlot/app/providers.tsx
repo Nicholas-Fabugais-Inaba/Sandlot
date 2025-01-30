@@ -21,14 +21,11 @@ declare module "@react-types/shared" {
   }
 }
 
-// providers.tsx
-export function Providers({ children, themeProps, session }: ProvidersProps) {
+export function Providers({ children, themeProps }: { children: React.ReactNode; themeProps?: any }) {
   const router = useRouter();
 
-  console.log("Session data:", session);  // Log the session here
-
   return (
-    <SessionProvider session={session}>  {/* Pass the session prop here */}
+    <SessionProvider>
       <HeroUIProvider navigate={router.push}>
         <NextThemesProvider {...themeProps}>
           {children}

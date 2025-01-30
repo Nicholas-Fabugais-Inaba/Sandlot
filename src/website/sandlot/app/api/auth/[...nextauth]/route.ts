@@ -9,17 +9,16 @@ async function authenticateUser(email: string, password: string) {
   const user = mockUsers.find((user) => user.email === email);
 
   if (user) {
-    console.log("Stored password hash:", user.password);
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-    console.log("Password match result:", isPasswordMatch);
 
     if (isPasswordMatch) {
-      return { id: user.id, email: user.email };
-    } else {
-      console.log("Password mismatch");
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name || null,
+        teamName: user.teamName || null,
+      };
     }
-  } else {
-    console.log("No user found for the given email");
   }
 
   return null;
@@ -37,15 +36,30 @@ const authOptions = {
         if (credentials) {
           const user = await authenticateUser(credentials.email, credentials.password);
           if (user) {
-            return user;
+            return user; // This returns user info to NextAuth session handler
           }
         }
         return null;
       },
     }),
   ],
+  session: {
+    strategy: 'jwt' as const, // Ensure JWT is used for session handling
+  },
   pages: {
     signIn: '/profile/signin',
+  },
+  callbacks: {
+    async session({ session, user }: { session: any, user: any }) {
+      if (user) {
+        session.user = {
+          ...session.user,
+          name: user.name || null,
+          teamName: user.teamName || null,
+        };
+      }
+      return session;
+    },
   },
 };
 

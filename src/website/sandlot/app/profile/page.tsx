@@ -44,7 +44,7 @@ export default function ProfilePage() {
         </div>
       </div>
     );
-  }  
+  }
 
   // Use player's name or team's name if available
   const displayName = session.user?.name || session.user?.teamName || "User";
@@ -54,7 +54,7 @@ export default function ProfilePage() {
       <h1 className={title()}>Profile</h1>
       <div className="centered-container">
         <h2>Welcome, {displayName}!</h2>
-        <Button onPress={() => signOut()}>Sign Out</Button>
+        <Button onPress={() => signOut({ callbackUrl: '/profile/signin' })}>Sign Out</Button>
       </div>
     </div>
   );
