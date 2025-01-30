@@ -1,57 +1,81 @@
 /* SignIn.module.css */
+/* Container to allow absolute positioning inside */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding: 20px;
-  }
-  
-  .title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .error {
-    color: red;
-    margin-bottom: 15px;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .inputGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .input {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .submitButton {
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submitButton:hover {
-    background-color: #0056b3;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Ensure elements start from top */
+  height: 100vh;
+  padding: 20px;
+  position: relative; /* Needed for absolute positioning inside */
+  gap: 10px; /* Optional: Adjust spacing between elements */
+}
+
+/* Title Styling */
+.title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  text-align: center;
+  z-index: 1; /* Ensure the title stays above other elements */
+}
+
+/* Error Message Styling */
+.error {
+  color: red;
+  font-size: 0.9rem;
+  visibility: visible;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  top: 50px; /* Position error below header */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1; /* Ensure the error stays above the form */
+}
+
+/* Form Styling */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+  align-items: center; /* Centers form inputs */
+  margin-top: 70px; /* Adjust this to control the space below the error message */
+  padding-bottom: 20px; /* Optional: Adds padding to the bottom */
+}
+
+/* Input Group */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Input Fields */
+.input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Submit Button */
+.submitButton {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 1.1rem;
+  font-family: 'Arial', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}

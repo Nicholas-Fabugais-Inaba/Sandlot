@@ -3,18 +3,15 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
-
-let mockUsers: { id: string; email: string; password: string }[] = [];
+import { mockUsers } from '../../users/database';  // Use shared array
 
 async function authenticateUser(email: string, password: string) {
-  // Dynamically use the mockUsers array, which is now updated after registration
   const user = mockUsers.find((user) => user.email === email);
 
   if (user) {
-    console.log("Stored password hash:", user.password);  // Log the stored password hash
+    console.log("Stored password hash:", user.password);
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-    console.log("Password entered:", password);  // Log the password entered by the user
-    console.log("Password match result:", isPasswordMatch);  // Log the result of comparison
+    console.log("Password match result:", isPasswordMatch);
 
     if (isPasswordMatch) {
       return { id: user.id, email: user.email };
@@ -25,9 +22,8 @@ async function authenticateUser(email: string, password: string) {
     console.log("No user found for the given email");
   }
 
-  return null;  // If no match, return null (will trigger 401 error)
+  return null;
 }
-
 
 const authOptions = {
   providers: [

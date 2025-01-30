@@ -1,6 +1,20 @@
+// app/profile/page.tsx
+
 'use client';
 
 import { useSession, signOut, signIn } from 'next-auth/react';
+
+declare module 'next-auth' {
+  interface User {
+    name?: string | null;
+    teamName?: string | null;
+  }
+
+  interface Session {
+    user?: User;
+  }
+}
+
 import { title } from "@/components/primitives";
 import { Button } from '@heroui/react';
 import { useRouter } from 'next/navigation';
@@ -15,9 +29,11 @@ export default function ProfilePage() {
     return (
       <div>
         <h1 className={title()}>Profile</h1>
-        <div className="centered-container">
-          <h1 className="text-xl font-semibold">You need to be signed in to view this page.</h1>
-          <div className="flex space-x-4">
+        <div className="flex flex-col items-center justify-center h-[60vh]">
+          <h1 className="text-xl font-semibold text-center">
+            You need to be signed in to view this page.
+          </h1>
+          <div className="flex space-x-4 mt-4">
             <Button onPress={() => signIn(undefined, { callbackUrl: "/profile" })} className="px-6 py-3">
               Sign In
             </Button>
@@ -28,13 +44,18 @@ export default function ProfilePage() {
         </div>
       </div>
     );
-  }
+  }  
+
+  // Use player's name or team's name if available
+  const displayName = session.user?.name || session.user?.teamName || "User";
 
   return (
     <div>
       <h1 className={title()}>Profile</h1>
-      <h2>Welcome, {session.user?.email}</h2>
-      <Button onPress={() => signOut()}>Sign Out</Button>
+      <div className="centered-container">
+        <h2>Welcome, {displayName}!</h2>
+        <Button onPress={() => signOut()}>Sign Out</Button>
+      </div>
     </div>
   );
 }

@@ -1,21 +1,28 @@
+// app/api/users/login/route.ts
+
 import bcrypt from 'bcrypt';
-
-// Mock database query for users
-let mockUsers: { id: string; email: string; password: string }[] = [];
-
-(async () => {
-  mockUsers = [
-    { id: '1', email: 'john.doe@example.com', password: await bcrypt.hash('password123', 10) },
-    // Add more users if needed
-  ];
-})();
+import { mockUsers } from '../database';  // Use shared array
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function authenticateUser(email: string, password: string) {
   const user = mockUsers.find((user) => user.email === email);
 
-  // Check if the user exists and if the entered password matches the stored hashed password
   if (user && (await bcrypt.compare(password, user.password))) {
     return { id: user.id, name: 'John Doe', email: user.email };
   }
   return null;
+}
+
+export async function POST(req: NextRequest) {
+  const { email, password } = await req.json();
+
+  // Authenticate the user
+  const user = await authenticateUser(email, password);
+
+  if (user) {
+    // Create session or token here (e.g., with NextAuth.js or custom solution)
+    return NextResponse.json({ message: 'Login successful', user });
+  } else {
+    return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 });
+  }
 }
