@@ -35,7 +35,7 @@ class Team(Base):
     __tablename__ = "team"
     id: Mapped[int] = mapped_column(primary_key=True)
     team_name: Mapped[str] = mapped_column(String(50)) # don't know what string limits we should use; also should prolly use constants
-    captain: Mapped[None] = mapped_column()
+    captain: Mapped["Player"] = mapped_column(ForeignKey("player.id"))
     cocaptains: Mapped["Player"] = mapped_column()
     player_list: Mapped["Player"] = mapped_column()
     standing: Mapped[None] = mapped_column()
