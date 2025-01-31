@@ -43,15 +43,19 @@ class Team(Base):
     password: Mapped[str] = mapped_column(String(50))
     division: Mapped[None] = mapped_column()
     offday: Mapped[None] = mapped_column()
-    preferred_times: Mapped[None] = mapped_column()
+    preferred_times: Mapped[str] = mapped_column(default="balanced")
     
 class Game(Base):
     __tablename__ = "game"
     id: Mapped[int] = mapped_column(primary_key=True)
     email_address: Mapped[str]
-    user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
-    user: Mapped["User"] = relationship(back_populates="addresses")
-    def __repr__(self) -> str:
-        return f"Address(id={self.id!r}, email_address={self.email_address!r})"
+    home_team: Mapped[None] = mapped_column()
+    away_team: Mapped[None] = mapped_column()
+    date: Mapped[None] = mapped_column()
+    time: Mapped[None] = mapped_column()
+    field: Mapped[None] = mapped_column()
+    home_team_score: Mapped[None] = mapped_column()
+    away_team_score: Mapped[None] = mapped_column()
+    played: Mapped[bool] = mapped_column()
     
 Base.metadata.create_all(engine)
