@@ -23,13 +23,13 @@ class Base(DeclarativeBase):
 class Player(Base):
     __tablename__ = "player"
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(30))
-    fullname: Mapped[Optional[str]]
-    addresses: Mapped[List["Address"]] = relationship(
-        back_populates="user", cascade="all, delete-orphan"
-    )
-    def __repr__(self) -> str:
-        return f"User(id={self.id!r}, name={self.name!r}, fullname={self.fullname!r})"
+    first_name: Mapped[str] = mapped_column(String(30))
+    last_name: Mapped[str] = mapped_column(String(30))
+    email: Mapped[str] = mapped_column(String(50))
+    password: Mapped[str] = mapped_column(String(50))
+    phone_number: Mapped[str] = mapped_column(String(15))
+    gender: Mapped[str] = mapped_column(String(30))
+    team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
 
 class Team(Base):
     __tablename__ = "team"
