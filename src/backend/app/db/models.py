@@ -34,11 +34,16 @@ class Player(Base):
 class Team(Base):
     __tablename__ = "team"
     id: Mapped[int] = mapped_column(primary_key=True)
-    email_address: Mapped[str]
-    user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
-    user: Mapped["User"] = relationship(back_populates="addresses")
-    def __repr__(self) -> str:
-        return f"Address(id={self.id!r}, email_address={self.email_address!r})"
+    team_name: Mapped[str] = mapped_column(String(50)) # don't know what string limits we should use; also should prolly use constants
+    captain: Mapped[None] = mapped_column()
+    cocaptains: Mapped["Player"] = mapped_column()
+    player_list: Mapped["Player"] = mapped_column()
+    standing: Mapped[None] = mapped_column()
+    email: Mapped[str] = mapped_column(String(50))
+    password: Mapped[str] = mapped_column(String(50))
+    division: Mapped[None] = mapped_column()
+    offday: Mapped[None] = mapped_column()
+    preferred_times: Mapped[None] = mapped_column()
     
 class Game(Base):
     __tablename__ = "game"
