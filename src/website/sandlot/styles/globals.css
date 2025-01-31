@@ -30,3 +30,13 @@
     background-color: #0056b3;
 }
   
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    align-items: center; /* Centers form inputs */
+    margin-top: 70px; /* Adjust this to control the space below the error message */
+    padding-bottom: 20px; /* Optional: Adds padding to the bottom */
+}

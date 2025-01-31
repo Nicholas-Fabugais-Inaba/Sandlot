@@ -1,8 +1,9 @@
 // app/profile/register/page.tsx
+
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';  // To handle the query parameters
 import { title } from "@/components/primitives";
 import { Button } from '@heroui/react';
 import styles from './Register.module.css';
@@ -16,6 +17,8 @@ export default function Register() {
   const [gender, setGender] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();  // Access the query params
+  const callbackUrl = searchParams?.get('callbackUrl') || '/profile';  // Default to '/profile' if no callbackUrl
 
   const handleRegistration = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +29,7 @@ export default function Register() {
     });
 
     if (response.ok) {
-      router.push('/profile');
+      router.push(callbackUrl);  // Redirect to the callbackUrl after successful registration
     } else {
       const data = await response.json();
       setError(data.error || 'Registration failed');
@@ -51,7 +54,6 @@ export default function Register() {
               <option value="other">Other</option>
             </select>
           </div>
-
         </div>
       );
     } else if (accountType === 'team') {
@@ -72,7 +74,7 @@ export default function Register() {
           {error && <p className={styles.error}>{error}</p>}
 
           {accountType === null ? (
-            <div className={styles.form}>
+            <div className="form">
               <h1 className="text-xl font-semibold text-center mt-8">
                 Choose an Account Type:
               </h1>
@@ -81,11 +83,11 @@ export default function Register() {
                 <Button onPress={() => setAccountType('team')} className="button">Team</Button>
               </div>
               <div className="flex justify-center mt-48">
-                <Button onPress={() => router.push('/profile')} className="button">Cancel</Button>
+                <Button onPress={() => router.push(callbackUrl)} className="button">Cancel</Button>
               </div>
             </div>
           ) : (
-            <form className={styles.form} onSubmit={handleRegistration}>
+            <form className="form" onSubmit={handleRegistration}>
               <div className={styles.inputGroup}>
                 <label>Email:</label>
                 <input className={styles.input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -103,7 +105,7 @@ export default function Register() {
               </div>
 
               <div className="flex justify-center mt-4">
-                <Button onPress={() => router.push('/profile')} className="button">Cancel</Button>
+                <Button onPress={() => router.push(callbackUrl)} className="button">Cancel</Button>
               </div>
             </form>
           )}

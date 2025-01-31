@@ -3,6 +3,9 @@
 'use client';
 
 import { useSession, signOut, signIn } from 'next-auth/react';
+import { title } from "@/components/primitives";
+import { Button } from '@heroui/react';
+import { useRouter } from 'next/navigation';
 
 declare module 'next-auth' {
   interface User {
@@ -15,10 +18,6 @@ declare module 'next-auth' {
   }
 }
 
-import { title } from "@/components/primitives";
-import { Button } from '@heroui/react';
-import { useRouter } from 'next/navigation';
-
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -29,7 +28,7 @@ export default function ProfilePage() {
     return (
       <div>
         <h1 className={title()}>Profile</h1>
-        <div className="flex flex-col items-center justify-center h-[60vh]">
+        <div className="centered-container mt-32">
           <h1 className="text-xl font-semibold text-center">
             You need to be signed in to view this page.
           </h1>
