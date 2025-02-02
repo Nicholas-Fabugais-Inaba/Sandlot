@@ -1,16 +1,17 @@
 
 from datetime import date, timedelta
-from scheduler import gen_schedule, gen_schedule_w_skip
+from .scheduler import gen_schedule, gen_schedule_w_skip
+# from scheduler import gen_schedule, gen_schedule_w_skip
 from random import shuffle
 
 
 FIELDS = 3
 TIMESLOTS = 3
-START_DATE = date(2024, 5, 1)
+START_DATE = date(2025, 5, 5)
 # END_DATE = date(2024, 6, 30)
-END_DATE = date(2024, 8, 31)
+END_DATE = date(2025, 8, 20)
 
-GAMES_PER_TEAM = 25
+GAMES_PER_TEAM = 25 # CURRENTLY BROKEN
 
 # OFFDAYS ARE CODED AS 0 BEING MONDAY AND 6 BEING SUNDAY (matching datetime)
 # Division A
@@ -114,13 +115,27 @@ def gen_games_round_robin(teams, games_per_team: int):
 
 def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date, num_teams: int):
     game_slots = []
-    n = num_teams
-    for field in range(1, fields + 1):
-        for timeslot in range(1, timeslots + 1):
-            for day in get_weekdays(start_date, end_date):
-                game_slots.append((field, timeslot, day))
-    # reordered_game_slots = [game_slots[i + j * n] for i in range(n) for j in range(len(game_slots) // n)]
-    # return reordered_game_slots
+    weekdays = get_weekdays(start_date, end_date)
+    
+    # Split weekdays into weeks
+    weeks = []
+    current_week = []
+    for day in weekdays:
+        if day.weekday() == 0 and current_week: # Monday and current_week is not empty
+            weeks.append(current_week)
+            current_week = []
+        current_week.append(day)
+    if current_week:
+        weeks.append(current_week)
+
+    for week in weeks:
+        week_slots = []
+        for field in range(1, fields + 1):
+            for timeslot in range(1, timeslots + 1):
+                for day in week:
+                    week_slots.append((field, timeslot, day))
+        game_slots.append(week_slots)
+
     return game_slots
 
 
@@ -142,8 +157,23 @@ def get_weekdays(start_date: date, end_date: date):
     
     return weekdays
 
+def create_schedule():
+    global teams, schedule, json_schedule, score
+    games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+    schedule, score = gen_schedule_w_skip(games, game_slots, teams)
+    json_schedule = {}
+    for element in schedule:
+        year = element[2].year
+        month = element[2].month
+        day = element[2].day
+        json_schedule[element[0], element[1], (year, month, day)] = schedule[element]
+    return [json_schedule, teams]
 
-games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
+
+
+# games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
+games = gen_games_division(divs, GAMES_PER_TEAM)
 print(games)
 print(len(games))
 
