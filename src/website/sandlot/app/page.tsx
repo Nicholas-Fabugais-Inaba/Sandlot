@@ -1,38 +1,61 @@
-// need to get a beter understanding of client vs. system components
-'use client'
+// app/page.tsx
 
-import styles from './styles.module.css'
-import Calendar from "@/components/calendar";
-import getSchedule from '../functions/getSchedule'
+import { Link } from "@heroui/link";
+import { Snippet } from "@heroui/snippet";
+import { Code } from "@heroui/code";
+import { button as buttonStyles } from "@heroui/theme";
 
-import { useState } from 'react';
+import { siteConfig } from "@/config/site";
+import { title, subtitle } from "@/components/primitives";
+import { GithubIcon } from "@/components/icons";
 
 export default function Home() {
-  const [games, setGames] = useState<any[]>([]); 
-  const [loading, setLoading] = useState(false); // Loading state
-
-  const handleGenerateSchedule = async () => {
-    setLoading(true); // Set loading to true when fetching starts
-    const fetchedGames = await getSchedule();
-    setGames(fetchedGames);
-    setLoading(false); // Set loading to false when fetching is done
-  };
-
   return (
-    <div className={styles.container}>
-        <div 
-          className={styles.button} 
-          onClick={handleGenerateSchedule}
-        >
-          Generate Schedule
+    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <div className="inline-block max-w-xl text-center justify-center">
+        <span className={title()}>Welcome to the&nbsp;</span>
+        <br />
+        <span className={title()}>
+          McMaster GSA
+        </span>
+        <br />
+        <span className={title()}>
+          Softball League
+        </span>
+        <div className={subtitle({ class: "mt-4" })}>
+          Beautiful, fast and modern React UI library.
         </div>
-        
-        {/* Show the loading spinner when loading */}
-        {loading && <div className={styles['loading-spinner']}></div>}  
+      </div>
 
-        <div className={styles.calendar}>
-          <Calendar games={games}></Calendar>
-        </div>
-    </div>
+      <div className="flex gap-3">
+        <Link
+          isExternal
+          className={buttonStyles({
+            color: "primary",
+            radius: "full",
+            variant: "shadow",
+          })}
+          href={siteConfig.links.docs}
+        >
+          Documentation
+        </Link>
+        <Link
+          isExternal
+          className={buttonStyles({ variant: "bordered", radius: "full" })}
+          href={siteConfig.links.github}
+        >
+          <GithubIcon size={20} />
+          GitHub
+        </Link>
+      </div>
+
+      <div className="mt-8">
+        <Snippet hideCopyButton hideSymbol variant="bordered">
+          <span>
+            Get started by editing <Code color="primary">app/page.tsx</Code>
+          </span>
+        </Snippet>
+      </div>
+    </section>
   );
 }
