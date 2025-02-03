@@ -15,8 +15,13 @@ def example_insert_query():
             phone_number="111-111-1111",
             gender="Male",
         )
-        session.add_all([example_player])
-        session.commit()
+        try:
+            session.add_all([example_player])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
 
 # example select query to use as reference
 def example_select_query():
