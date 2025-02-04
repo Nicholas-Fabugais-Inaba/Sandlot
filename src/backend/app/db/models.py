@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from create_engine import create_connection
+from .create_engine import create_connection
 
 engine = create_connection()
 
@@ -17,12 +17,12 @@ class Base(DeclarativeBase):
 class Player(Base):
     __tablename__ = "player"
     id: Mapped[int] = mapped_column(primary_key=True)
-    first_name: Mapped[str] = mapped_column(String(30))
-    last_name: Mapped[str] = mapped_column(String(30))
-    email: Mapped[str] = mapped_column(String(50))
-    password: Mapped[str] = mapped_column(String(50))
-    phone_number: Mapped[str] = mapped_column(String(15))
-    gender: Mapped[str] = mapped_column(String(30))
+    first_name: Mapped[Optional[str]] = mapped_column(String(30))
+    last_name: Mapped[Optional[str]] = mapped_column(String(30))
+    email: Mapped[Optional[str]] = mapped_column(String(50))
+    password: Mapped[Optional[str]] = mapped_column(String(50))
+    phone_number: Mapped[Optional[str]] = mapped_column(String(15))
+    gender: Mapped[Optional[str]] = mapped_column(String(30))
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
 
 class Team(Base):
@@ -51,5 +51,6 @@ class Game(Base):
     home_team_score: Mapped[str] = mapped_column(String(50))
     away_team_score: Mapped[str] = mapped_column(String(50))
     played: Mapped[bool] = mapped_column(String(50))
-    
-Base.metadata.create_all(engine)
+
+# used for creating tables in DB, don't uncomment unless you want to reinitalize DB tables    
+#Base.metadata.create_all(engine)
