@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import schedule
+from .routers.schedule import router as schedule_router
+from .routers.user_router import router as user_rotuer
 
 
 app = FastAPI()
@@ -16,7 +17,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(schedule.router)
+app.include_router(schedule_router, prefix="/schedule")
+app.include_router(user_rotuer, prefix="/user")
 
 
 @app.get("/")

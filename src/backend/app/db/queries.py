@@ -31,3 +31,22 @@ def example_select_query():
         result = session.execute(stmt).all()
         # would return result to whatever route called it in practice
         print(result)
+
+
+# creating account insert query
+def insert_player(name, email, password):
+    engine = create_connection()
+    with Session(engine) as session:
+        account = Player(
+            first_name=name,
+            email=email,
+            password=password,
+        )
+        try:
+            session.add_all([account])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True

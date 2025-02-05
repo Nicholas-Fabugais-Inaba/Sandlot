@@ -10,6 +10,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { title } from "@/components/primitives";
 import { Card } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
+import getSchedule from "../functions/getSchedule";
+import { Event } from "../types";
 
 var events = [
   {
@@ -137,6 +139,7 @@ export default function SchedulePage() {
   const initialView = schedType === 1 || schedType === 2 ? "dayGridMonth" : "timeGridWeek";
   const [view, setView] = useState(initialView);
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
+  const [events, setEvents] = useState<Event[]>();
   
   // const [selectedDates, setSelectedDates] = useState<Date[]>(() => {
   //   // Retrieve saved dates from localStorage
@@ -148,6 +151,14 @@ export default function SchedulePage() {
   //   // Save selectedDates to localStorage whenever it changes
   //   localStorage.setItem('selectedDates', JSON.stringify(selectedDates));
   // }, [selectedDates]);
+      
+  // on page initialization pulls schedule data from backend server and updates events in calendar
+  useEffect(() => {
+    (async () => {
+      let formattedEvents = await getSchedule()
+      setEvents(formattedEvents)
+    })();
+  }, []);
 
   const handleSelectClick = (start: Date | null, field: number) => {
     if (start) {
