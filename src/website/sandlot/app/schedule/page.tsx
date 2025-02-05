@@ -10,29 +10,142 @@ import { title } from "@/components/primitives";
 import { Card } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
 
-const events = [
+var events = [
   {
-    title: "Jays vs Mets",
-    start: "2025-01-29T17:00:00",
-    end: "2025-01-29T18:30:00",
-    field: "Field 1",
+    start: "2025-01-27T17:00:00",
+    end: "2025-01-27T18:30:00",
   },
   {
-    title: "Yankees vs Red Sox",
+    start: "2025-01-27T18:30:00",
+    end: "2025-01-27T20:00:00",
+  },
+  {
+    start: "2025-01-27T20:00:00",
+    end: "2025-01-27T21:30:00",
+  },
+  {
+    start: "2025-01-28T17:00:00",
+    end: "2025-01-28T18:30:00",
+  },
+  {
+    start: "2025-01-28T18:30:00",
+    end: "2025-01-28T20:00:00",
+  },
+  {
+    start: "2025-01-28T20:00:00",
+    end: "2025-01-28T21:30:00",
+  },
+  {
+    start: "2025-01-29T17:00:00",
+    end: "2025-01-29T18:30:00",
+    field1: {
+      home: "Cubs",
+      away: "Mets",
+    },
+    // field2: {
+    //   home: "Jays",
+    //   away: "White Sox",
+    // },
+    // field3: {
+    //   home: "Mariners",
+    //   away: "Reds",
+    // }
+  },
+  {
     start: "2025-01-29T18:30:00",
     end: "2025-01-29T20:00:00",
-    field: "Field 2",
+    field2: {
+      home: "Yankees",
+      away: "Buccanneers Buccanneers",
+    },
+  },
+  {
+    start: "2025-01-29T20:00:00",
+    end: "2025-01-29T21:30:00",
+  },
+  {
+    start: "2025-01-30T17:00:00",
+    end: "2025-01-30T18:30:00",
+  },
+  {
+    start: "2025-01-30T18:30:00",
+    end: "2025-01-30T20:00:00",
+  },
+  {
+    start: "2025-01-30T20:00:00",
+    end: "2025-0130T21:30:00",
+  },
+  {
+    start: "2025-01-31T17:00:00",
+    end: "2025-01-31T18:30:00",
+  },
+  {
+    start: "2025-01-31T18:30:00",
+    end: "2025-01-31T20:00:00",
+  },
+  {
+    start: "2025-01-31T20:00:00",
+    end: "2025-01-31T21:30:00",
   },
 ];
 
+// Helper function to add placeholder events
+const addPlaceholderEvents = (events: any[], schedType: number, schedStart: Date, schedEnd: Date) => {
+  if (schedType === 3) {
+    const currentDate = new Date(schedStart);
+
+    while (currentDate <= schedEnd) {
+      const dayOfWeek = currentDate.getDay();
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Skip weekends (Sunday = 0, Saturday = 6)
+        for(let i = 0; i < 3; i++) {
+          const startDateTime = new Date(currentDate);
+          if (i === 0) {
+            startDateTime.setHours(17, 0, 0, 0); // Set time to 17:00:00
+          } else if (i === 1) {
+            startDateTime.setHours(18, 30, 0, 0); // Set time to 18:30:00
+          } else {
+            startDateTime.setHours(20, 0, 0, 0); // Set time to 20:00:00
+          }
+          const endDateTime = new Date(startDateTime.getTime() + 90 * 60 * 1000); // 90 minutes later
+          const newEvent = {
+            start: startDateTime.toISOString(),
+            end: endDateTime.toISOString(),
+          };
+          events.push(newEvent);
+        }
+      }
+    }
+  } else {
+    return events;
+  }
+};
+
+
+var schedType = 3 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
+var schedStart = new Date("2025-05-05T17:00:00"); // Season start and end dates
+var schedEnd = new Date("2025-08-20T20:00:00");
+
+
 export default function SchedulePage() {
   const [view, setView] = useState("timeGridWeek");
+  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+
+  const handleSelectClick = (start: Date | null) => {
+    if (start) {
+      // alert(`Selected date: ${start}`);
+      setSelectedDates((prevSelectedDates) => [...prevSelectedDates, start]);
+    }
+  };
+
+  const isSelected = (start: Date | null) => {
+    return start ? selectedDates.includes(start) : false;
+  };
 
   return (
     <div>
       <h1 className={title()}>Schedule</h1>
-      <div className="flex flex-col items-center p-6">
-        <Card className="w-full max-w-4xl rounded-2xl shadow-lg p-6 bg-white">
+      <div className="items-center p-6">
+        <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
           <FullCalendar
             plugins={[timeGridPlugin, interactionPlugin]}
             initialView={view}
@@ -49,7 +162,7 @@ export default function SchedulePage() {
             eventColor="transparent"
             height="auto"
             nowIndicator={true} // Shows the current time indicator
-            eventClick={(info) => alert(`Event: ${info.event.title}`)}
+            // eventClick={(info) => alert(`Event: ${info.event.title}`)}
             eventContent={(eventInfo) => {
               const startTime = eventInfo.event.start
                 ? new Date(eventInfo.event.start)
@@ -62,12 +175,139 @@ export default function SchedulePage() {
                     .slice(0, 5)
                 : "";
 
-              return (
-                <div className="event-content flex flex-col p-2 rounded-xl bg-blue-100 text-blue-800">
-                  <div className="font-semibold">{eventInfo.event.title}</div>
-                  <div className="text-sm">{startTime} - {endTime}</div>
-                  <div className="text-xs text-gray-600">{eventInfo.event.extendedProps.field}</div>
+              const isSelectedDate = isSelected(eventInfo.event.start);
+
+
+              return schedType === 0 ? ( // Full Schedule
+                <div className="event-content-grid" key={selectedDates.join(',')}>
+                  {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-orange-100 text-orange-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
+                      <div className="text-sm">{startTime}</div>
+                      <div className="text-sm">{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 1"}</div>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                  {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-cyan-100 text-blue-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
+                      <div className="text-sm">{startTime}</div>
+                      <div className="text-sm">{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 2"}</div>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                  {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-purple-100 text-purple-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
+                      <div className="text-sm">{startTime}</div>
+                      <div className="text-sm">{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 3"}</div>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
+              ) : schedType === 1 ? ( // Team Schedule
+                <>
+                  {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-orange-100 text-orange-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
+                      <div className="text-sm">{startTime} - {endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 1"}</div>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                  {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-cyan-100 text-blue-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
+                      <div className="text-sm">{startTime} - {endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 2"}</div>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                  {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-purple-100 text-purple-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
+                      <div className="text-sm">{startTime} - {endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 3"}</div>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
+                </>
+              ) : schedType === 2 ? ( // Choose game to reschedule
+                <div></div>
+              ) : schedType === 3 ? ( // Choose alternative game days
+                <div className="event-content-grid">
+                  {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
+                      <div className="text-sm">{startTime}</div>
+                      <div className="text-sm">{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 1"}</div>
+                    </div>
+                  ) : (
+                    <div
+                      className={`event-content p-2 rounded-xl ${isSelectedDate ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}
+                      onClick={() => handleSelectClick(eventInfo.event.start)}
+                    >
+                      <div className="font-semibold">{"Click to Select"}</div>
+                      <div className="text-sm"><br />{startTime}<br />{endTime}</div>
+                    </div>
+                  )}
+                  {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
+                      <div className="text-sm">{startTime}</div>
+                      <div className="text-sm">{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 2"}</div>
+                    </div>
+                  ) : (
+                    <div className="event-content p-2 rounded-xl bg-blue-100 text-blue-800">
+                      <div className="font-semibold">{"Click to Select"}</div>
+                      <div className="text-sm"><br />{startTime}<br />{endTime}</div>
+                    </div>
+                  )}
+                  {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
+                    <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
+                      <div className="font-semibold">{"vs"}</div>
+                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
+                      <div className="text-sm">{startTime}</div>
+                      <div className="text-sm">{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 3"}</div>
+                    </div>
+                  ) : (
+                    <div className="event-content p-2 rounded-xl bg-blue-100 text-blue-800">
+                      <div className="font-semibold">{"Click to Select"}</div>
+                      <div className="text-sm"><br />{startTime}<br />{endTime}</div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div></div>
               );
             }}
           />

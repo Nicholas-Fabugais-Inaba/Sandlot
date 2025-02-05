@@ -63,11 +63,11 @@ export default function StandingsPage() {
       <div style={{ marginBottom: "20px" }}>
         <h1 className={title()}>Standings</h1>
       </div>
-      <div>
+      <div style={{ width: "80%", margin: "auto"}}>
         <Table
           aria-label="Example table with client side sorting"
           classNames={{
-            table: "min-h-[400px] w-full",
+            table: "min-h-[400px] w-",
           }}
           sortDescriptor={list.sortDescriptor}
           onSortChange={list.sort}
