@@ -16,30 +16,34 @@
     top: 0 !important;
     bottom: 0 !important;
     box-shadow: none !important;
-    display: flex;
-    align-items: center;
+}
+
+.fc-daygrid-event {
+    top: 0 !important;
+    bottom: 0 !important;
+    box-shadow: none !important;
+}
+
+.event-content-grid {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
 }
 
 .event-content {
     height: 100%;
+    width: 100%;
     display: flex;
+    overflow: hidden;
     flex-direction: column;
-    justify-content: center; /* Ensures content is centered */
     align-items: center;
-    padding: 8px; /* Adjust padding as needed */
+    justify-content: center;
+    text-align: center;
 }
 
-.event-time {
-    font-size: 0.9rem;
-    margin-bottom: 5px; /* Space between time and title */
-}
-
-.event-title {
-    font-size: 1rem;
-    font-weight: bold;
-    margin-bottom: 5px; /* Space between title and field */
-}
-
-.event-field {
-    font-size: 0.9rem;
+.event-team {
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
 }
