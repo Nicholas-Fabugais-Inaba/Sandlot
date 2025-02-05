@@ -8,6 +8,8 @@ import { title } from "@/components/primitives";
 import { Button } from '@heroui/react';
 import styles from './Register.module.css';
 
+import registerPlayer from '@/app/functions/registerPlayer';
+
 export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,20 +22,33 @@ export default function Register() {
   const searchParams = useSearchParams();  // Access the query params
   const callbackUrl = searchParams?.get('callbackUrl') || '/profile';  // Default to '/profile' if no callbackUrl
 
-  const handleRegistration = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const response = await fetch('/api/users/register', {
-      method: 'POST',
-      body: JSON.stringify({ email, password, accountType, teamName, name, gender }),
-      headers: { 'Content-Type': 'application/json' },
-    });
+  // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
+  // const handleRegistration = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   const response = await fetch('/api/users/register', {
+  //     method: 'POST',
+  //     body: JSON.stringify({ email, password, accountType, teamName, name, gender }),
+  //     headers: { 'Content-Type': 'application/json' },
+  //   });
 
-    if (response.ok) {
-      router.push(callbackUrl);  // Redirect to the callbackUrl after successful registration
-    } else {
-      const data = await response.json();
-      setError(data.error || 'Registration failed');
+  //   if (response.ok) {
+  //     router.push(callbackUrl);  // Redirect to the callbackUrl after successful registration
+  //   } else {
+  //     const data = await response.json();
+  //     setError(data.error || 'Registration failed');
+  //   }
+  // };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault(); // default action on submit is to redirect to callbackUrl
+    let newUser = {
+      name: name,
+      email: email,
+      password: password,
     }
+    // TODO: error checking to make sure response is OK on registration
+    await registerPlayer(newUser)
+    router.push(callbackUrl);
   };
 
   const renderForm = () => {
@@ -87,7 +102,7 @@ export default function Register() {
               </div>
             </div>
           ) : (
-            <form className="form" onSubmit={handleRegistration}>
+            <form className="form" onSubmit={(e) => handleRegister(e)}>
               <div className={styles.inputGroup}>
                 <label>Email:</label>
                 <input className={styles.input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
