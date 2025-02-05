@@ -9,6 +9,7 @@ import { Button } from '@heroui/react';
 import styles from './Register.module.css';
 
 import registerPlayer from '@/app/functions/registerPlayer';
+import registerTeam from '@/app/functions/registerTeam';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -41,13 +42,24 @@ export default function Register() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // default action on submit is to redirect to callbackUrl
-    let newUser = {
-      name: name,
-      email: email,
-      password: password,
+    if(accountType == 'player') {
+      let newUser = {
+        name: name,
+        email: email,
+        password: password,
+      }
+      // TODO: error checking to make sure response is OK on registration
+      await registerPlayer(newUser)
     }
-    // TODO: error checking to make sure response is OK on registration
-    await registerPlayer(newUser)
+    else {
+      let newTeam = {
+        team_name: teamName,
+        email: email,
+        password: password
+      }
+      // TODO: error checking to make sure response is OK on registration
+      await registerTeam(newTeam)
+    }
     router.push(callbackUrl);
   };
 
