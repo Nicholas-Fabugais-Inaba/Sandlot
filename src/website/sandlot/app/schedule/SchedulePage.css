@@ -18,6 +18,12 @@
     box-shadow: none !important;
 }
 
+.fc-daygrid-event {
+    top: 0 !important;
+    bottom: 0 !important;
+    box-shadow: none !important;
+}
+
 .event-content-grid {
     height: 100%;
     display: grid;
@@ -27,6 +33,7 @@
 
 .event-content {
     height: 100%;
+    width: 100%;
     display: flex;
     overflow: hidden;
     flex-direction: column;

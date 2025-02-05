@@ -5,11 +5,13 @@
 import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { title } from "@/components/primitives";
 import { Card } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
 import { maxHeaderSize } from "http";
+import { start } from "repl";
 
 var events = [
   {
@@ -126,6 +128,7 @@ const maxSelectedDates = 5; // Maximum number of dates that can be selected when
 var schedType = 3 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
 var schedStart = new Date("2025-05-05T17:00:00"); // Season start and end dates
 var schedEnd = new Date("2025-08-20T20:00:00");
+var currTeam = "Yankees";
 
 interface SelectedDate {
   date: Date;
@@ -133,7 +136,8 @@ interface SelectedDate {
 }
 
 export default function SchedulePage() {
-  const [view, setView] = useState("timeGridWeek");
+  const initialView = schedType === 1 || schedType === 2 ? "dayGridMonth" : "timeGridWeek";
+  const [view, setView] = useState(initialView);
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
   
   // const [selectedDates, setSelectedDates] = useState<Date[]>(() => {
@@ -170,6 +174,9 @@ export default function SchedulePage() {
     }
   };
 
+  const handleTeamClick = (start: Date | null, field: number, team: string) => {
+  }
+
   const isSelected = (start: Date | null, field: number) => {
     return start ? selectedDates.some((selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field) : false;
   };
@@ -185,7 +192,7 @@ export default function SchedulePage() {
       <div className="items-center p-6">
         <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
           <FullCalendar
-            plugins={[timeGridPlugin, interactionPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={view}
             events={events}
             allDaySlot={false}
@@ -254,7 +261,8 @@ export default function SchedulePage() {
                 </div>
               ) : schedType === 1 ? ( // Team Schedule
                 <>
-                  {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
+                  {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
+                    (currTeam === eventInfo.event.extendedProps.field1?.home || currTeam === eventInfo.event.extendedProps.field1?.away) ? (
                     <div className="event-content p-2 rounded-xl bg-orange-100 text-orange-800">
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
                       <div className="font-semibold">{"vs"}</div>
@@ -265,7 +273,8 @@ export default function SchedulePage() {
                   ) : (
                     <div></div>
                   )}
-                  {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
+                  {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
+                    (currTeam === eventInfo.event.extendedProps.field2?.home || currTeam === eventInfo.event.extendedProps.field2?.away) ? (
                     <div className="event-content p-2 rounded-xl bg-cyan-100 text-blue-800">
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
                       <div className="font-semibold">{"vs"}</div>
@@ -276,7 +285,8 @@ export default function SchedulePage() {
                   ) : (
                     <div></div>
                   )}
-                  {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
+                  {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
+                    (currTeam === eventInfo.event.extendedProps.field3?.home || currTeam === eventInfo.event.extendedProps.field3?.away) ? (
                     <div className="event-content p-2 rounded-xl bg-purple-100 text-purple-800">
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
                       <div className="font-semibold">{"vs"}</div>
