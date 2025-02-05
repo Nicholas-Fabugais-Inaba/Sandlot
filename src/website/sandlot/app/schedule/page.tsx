@@ -10,8 +10,6 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { title } from "@/components/primitives";
 import { Card } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
-import { maxHeaderSize } from "http";
-import { start } from "repl";
 
 var events = [
   {
