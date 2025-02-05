@@ -21,6 +21,10 @@ export default function Home() {
     setWeatherDropdownOpen(!isWeatherDropdownOpen);
   };
 
+  const handleRainoutsClick = () => {
+    setActiveSection("rainouts");
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case "parking":
@@ -76,7 +80,27 @@ export default function Home() {
               </ul>
             </Card>
           </div>
-        );        
+        );  
+        case "rainouts":
+          return (
+            <div>
+              <h2 className="text-xl font-bold mb-4">Procedure for Rainouts</h2>
+              <Card className="rounded-2xl shadow-lg p-6 bg-white">
+                <p className="mb-4">
+                  Our current policy is to follow the lead of City of Hamilton Recreation and close fields when the city closes theirs. This may change as we will have equipment designed to deal with at least some of the issues that close city fields (i.e. standing water on infields). The rescheduling of rainouts will be handled by the online procedures for re-scheduling games that is described elsewhere. The most up to date master schedule will always be found on the website (MKL Softball Web Site). The Phoenix also posts up to date schedules once a week on their bulletin board.
+                </p>
+                <p className="mb-4">
+                  I leave the negotiations as to an appropriate replay date to the two captains. Use the online request form to determine what slots are open. If no one has requested the time before you, you will be re-assigned to that date and it will be marked as taken on the schedule. In the case of duplicate requests, it will be first come, first served. The procedure has been automated for your convenience and mine and should not require my intervention. The online procedure automatically notifies both team captains, the commissioner, and the umpiring coordinators by email.
+                </p>
+                <p className="mb-4">
+                  Andy Duncan (x26893)
+                </p>
+                <p className="mb-4">
+                  Curt Heckamen
+                </p>
+              </Card>
+            </div>
+          );          
       default:
         return (
           <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -86,9 +110,6 @@ export default function Home() {
               <span className={title()}>McMaster GSA</span>
               <br />
               <span className={title()}>Softball League</span>
-              <div className={subtitle({ class: "mt-4" })}>
-                Beautiful, fast and modern React UI library.
-              </div>
             </div>
 
             <div className="flex gap-3">
@@ -111,14 +132,6 @@ export default function Home() {
                 <GithubIcon size={20} />
                 GitHub
               </Link>
-            </div>
-
-            <div className="mt-8">
-              <Snippet hideCopyButton hideSymbol variant="bordered">
-                <span>
-                  Get started by editing <Code color="primary">app/page.tsx</Code>
-                </span>
-              </Snippet>
             </div>
 
             {/* Announcements Section */}
@@ -169,8 +182,12 @@ export default function Home() {
               {isWeatherDropdownOpen && (
                 <div className="absolute left-0 top-full mt-2 p-2 bg-white shadow rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
-                    <li>Rainouts</li>
-                    <li>Ainsley Wood Station</li>
+                    <li><button onClick={handleRainoutsClick} className="text-left text-blue-600">Rainouts</button></li>
+                    <li>
+                      <a href="https://tempestwx.com/station/48603/" target="_blank" className="text-blue-600">
+                        Ainsley Wood Station
+                      </a>
+                    </li>
                   </ul>
                 </div>
               )}
