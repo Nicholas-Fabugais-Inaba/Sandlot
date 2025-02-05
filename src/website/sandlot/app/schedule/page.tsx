@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -10,23 +10,20 @@ import { title } from "@/components/primitives";
 import { Card } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
 
-const events = [
-  {
-    title: "Jays vs Mets",
-    start: "2025-01-29T17:00:00",
-    end: "2025-01-29T18:30:00",
-    field: "Field 1",
-  },
-  {
-    title: "Yankees vs Red Sox",
-    start: "2025-01-29T18:30:00",
-    end: "2025-01-29T20:00:00",
-    field: "Field 2",
-  },
-];
+import getSchedule from "../functions/getSchedule";
+import { Event } from "../types";
 
 export default function SchedulePage() {
   const [view, setView] = useState("timeGridWeek");
+  const [events, setEvents] = useState<Event[]>();
+
+  // on page initialization pulls schedule data from backend server and updates events in calendar
+  useEffect(() => {
+    (async () => {
+      let formattedEvents = await getSchedule()
+      setEvents(formattedEvents)
+    })();
+  }, []);
 
   return (
     <div>
