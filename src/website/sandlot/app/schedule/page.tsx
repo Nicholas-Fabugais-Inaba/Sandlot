@@ -2,13 +2,14 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { title } from "@/components/primitives";
 import { Card } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
+import { maxHeaderSize } from "http";
 
 var events = [
   {
@@ -120,25 +121,62 @@ const addPlaceholderEvents = (events: any[], schedType: number, schedStart: Date
   }
 };
 
+const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
 
 var schedType = 3 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
 var schedStart = new Date("2025-05-05T17:00:00"); // Season start and end dates
 var schedEnd = new Date("2025-08-20T20:00:00");
 
+interface SelectedDate {
+  date: Date;
+  field: number;
+}
 
 export default function SchedulePage() {
   const [view, setView] = useState("timeGridWeek");
-  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
+  
+  // const [selectedDates, setSelectedDates] = useState<Date[]>(() => {
+  //   // Retrieve saved dates from localStorage
+  //   const savedDates = localStorage.getItem('selectedDates');
+  //   return savedDates ? JSON.parse(savedDates) : [];
+  // });
 
-  const handleSelectClick = (start: Date | null) => {
+  // useEffect(() => {
+  //   // Save selectedDates to localStorage whenever it changes
+  //   localStorage.setItem('selectedDates', JSON.stringify(selectedDates));
+  // }, [selectedDates]);
+
+  const handleSelectClick = (start: Date | null, field: number) => {
     if (start) {
-      // alert(`Selected date: ${start}`);
-      setSelectedDates((prevSelectedDates) => [...prevSelectedDates, start]);
+      const isDuplicate = selectedDates.some(
+        (selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field
+      );
+      if (isDuplicate) {
+        const newSelectedDates = selectedDates.filter(
+          (selectedDate) => !(selectedDate.date.getTime() === start.getTime() && selectedDate.field === field)
+        );
+        setSelectedDates(newSelectedDates);
+        // alert(`Removed: ${start.toString()} (Field: ${field})`);
+      } else {
+        if (selectedDates.length >= maxSelectedDates) {
+          // alert(`You can only select up to ${maxSelectedDates} dates.`);
+          return;
+        }
+        const newSelectedDates = [...selectedDates, { date: start, field }];
+        setSelectedDates(newSelectedDates);
+        // alert(`Added: ${start.toString()} (Field: ${field})`);
+      }
     }
   };
 
-  const isSelected = (start: Date | null) => {
-    return start ? selectedDates.includes(start) : false;
+  const isSelected = (start: Date | null, field: number) => {
+    return start ? selectedDates.some((selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field) : false;
+  };
+
+  const handleSendRequest = () => {
+    // Implement the logic to send reschedule requests
+    alert('Reschedule request sent!');
   };
 
   return (
@@ -174,9 +212,6 @@ export default function SchedulePage() {
                     .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                     .slice(0, 5)
                 : "";
-
-              const isSelectedDate = isSelected(eventInfo.event.start);
-
 
               return schedType === 0 ? ( // Full Schedule
                 <div className="event-content-grid" key={selectedDates.join(',')}>
@@ -268,11 +303,13 @@ export default function SchedulePage() {
                     </div>
                   ) : (
                     <div
-                      className={`event-content p-2 rounded-xl ${isSelectedDate ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}
-                      onClick={() => handleSelectClick(eventInfo.event.start)}
+                      onClick={() => handleSelectClick(eventInfo.event.start, 1)}
+                      className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 1) ? 
+                        "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}
                     >
                       <div className="font-semibold">{"Click to Select"}</div>
                       <div className="text-sm"><br />{startTime}<br />{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 1"}</div>
                     </div>
                   )}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
@@ -285,9 +322,14 @@ export default function SchedulePage() {
                       <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
                   ) : (
-                    <div className="event-content p-2 rounded-xl bg-blue-100 text-blue-800">
+                    <div
+                      onClick={() => handleSelectClick(eventInfo.event.start, 2)}
+                      className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 2) ? 
+                        "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}
+                    >
                       <div className="font-semibold">{"Click to Select"}</div>
                       <div className="text-sm"><br />{startTime}<br />{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
                   )}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
@@ -300,9 +342,14 @@ export default function SchedulePage() {
                       <div className="text-xs text-gray-600">{"Field 3"}</div>
                     </div>
                   ) : (
-                    <div className="event-content p-2 rounded-xl bg-blue-100 text-blue-800">
+                    <div
+                      onClick={() => handleSelectClick(eventInfo.event.start, 3)}
+                      className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 3) ? 
+                        "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"}`}
+                    >
                       <div className="font-semibold">{"Click to Select"}</div>
                       <div className="text-sm"><br />{startTime}<br />{endTime}</div>
+                      <div className="text-xs text-gray-600">{"Field 3"}</div>
                     </div>
                   )}
                 </div>
@@ -311,6 +358,19 @@ export default function SchedulePage() {
               );
             }}
           />
+          {schedType === 3 && (
+            <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
+              <div className="text-lg font-semibold">
+                Number of alternative dates selected: {selectedDates.length}
+              </div>
+              <button
+                onClick={handleSendRequest}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+              >
+                Send Reschedule Request
+              </button>
+            </div>
+          )}
         </Card>
       </div>
     </div>
