@@ -1,0 +1,17 @@
+/* app/HomePage.css */
+
+/* Set a fixed width for the sidebar */
+.sidebar {
+    height: 32rem; /* Fixed width for the sidebar */
+    width: 16rem; /* Fixed width for the sidebar */
+    flex-shrink: 0; /* Prevent the sidebar from shrinking */
+}
+
+/* Set a fixed width for the directory items */
+.directory-item {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+  

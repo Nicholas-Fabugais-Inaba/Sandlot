@@ -21,11 +21,11 @@ declare module "@react-types/shared" {
   }
 }
 
-export function Providers({ children, themeProps }: { children: React.ReactNode; themeProps?: any }) {
+export function Providers({ children, themeProps, session }: ProvidersProps) {
   const router = useRouter();
 
   return (
-    <SessionProvider>
+    <SessionProvider session={session}>
       <HeroUIProvider navigate={router.push}>
         <NextThemesProvider {...themeProps}>
           {children}
