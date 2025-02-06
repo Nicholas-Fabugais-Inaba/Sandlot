@@ -33,7 +33,7 @@ class Team(Base):
     #cocaptains: Mapped["Player"] = mapped_column()
     #player_list: Mapped["Player"] = mapped_column()
     standing: Mapped[Optional[str]] = mapped_column(String(50))
-    email: Mapped[Optional[str]] = mapped_column(String(50))
+    username: Mapped[Optional[str]] = mapped_column(String(50))
     password: Mapped[Optional[str]] = mapped_column(String(50))
     division: Mapped[Optional[int]] = mapped_column()
     offday: Mapped[Optional[str]] = mapped_column(String(50))
@@ -42,7 +42,6 @@ class Team(Base):
 class Game(Base):
     __tablename__ = "game"
     id: Mapped[int] = mapped_column(primary_key=True)
-    email_address: Mapped[Optional[str]] = mapped_column(String(50))
     home_team: Mapped[Optional[str]] = mapped_column(String(50))
     away_team: Mapped[Optional[str]] = mapped_column(String(50))
     date: Mapped[Optional[str]] = mapped_column(String(50))
