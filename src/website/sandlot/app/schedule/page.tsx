@@ -125,7 +125,8 @@ const addPlaceholderEvents = (events: any[], schedType: number, schedStart: Date
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
 
-var schedType = 0 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
+var schedType = 1 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
+var reschedEnabled = true; // Enable rescheduling feature
 var schedStart = new Date("2025-05-05T17:00:00"); // Season start and end dates
 var schedEnd = new Date("2025-08-20T20:00:00");
 var currTeam = "Yankees";
@@ -139,6 +140,9 @@ export default function SchedulePage() {
   const initialView = schedType === 1 || schedType === 2 ? "dayGridMonth" : "timeGridWeek";
   const [view, setView] = useState(initialView);
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const popupRef = useRef<HTMLDivElement>(null);
   // const [events, setEvents] = useState<Event[]>();
       
   // // on page initialization pulls schedule data from backend server and updates events in calendar
@@ -148,6 +152,24 @@ export default function SchedulePage() {
   //     setEvents(formattedEvents)
   //   })();
   // }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+        closePopup();
+      }
+    };
+
+    if (popupVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [popupVisible]);
 
   const handleSelectClick = (start: Date | null, field: number) => {
     if (start) {
@@ -169,22 +191,13 @@ export default function SchedulePage() {
     }
   };
 
-  const handleTeamClick = (start: Date | null, field: number, teams: any) => {
+  const handleTeamClick = (event: React.MouseEvent, start: Date | null, field: number, teams: any) => {
     if (start && (teams.home === currTeam || teams.away === currTeam)) {
-      // alert(`Match found for ${currTeam} on ${start.toString()}`);
-      const isDuplicate = selectedDates.some(
-        (selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field
-      );
-      if (isDuplicate) {
-        const newSelectedDates = selectedDates.filter(
-          (selectedDate) => !(selectedDate.date.getTime() === start.getTime() && selectedDate.field === field)
-        );
-        setSelectedDates(newSelectedDates);
-      } else {
-        setSelectedDates([{ date: start, field }]);
-      }
+      setPopupPosition({ x: event.pageX, y: event.pageY });
+      setPopupVisible(true);
+      setSelectedDates([{ date: start, field }]);
     }
-  }
+  };
 
   const isSelected = (start: Date | null, field: number) => {
     return start ? selectedDates.some((selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field) : false;
@@ -195,9 +208,21 @@ export default function SchedulePage() {
     alert('Reschedule request sent!');
   };
 
+  const closePopup = () => {
+    setPopupVisible(false);
+    setSelectedDates([]);
+  };
+
   return (
     <div>
       <h1 className={title()}>Schedule</h1>
+      {schedType === 3 ? (
+        <p className="text-2xl font-semibold text-center mt-2">Choose alternate game slots</p>
+      ) : reschedEnabled ? (
+        <p className="text-2xl font-semibold text-center mt-2">Click to reschedule a game</p>
+      ) : (
+        <></>
+      )}
       <div className="items-center p-6">
         <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
           <FullCalendar
@@ -211,17 +236,18 @@ export default function SchedulePage() {
             slotDuration="00:30:00" // Duration of each slot (30 minutes)
             headerToolbar={{
               left: "prev,next today",
-              center: "title",
-              right: "customButton"
+              right: "title"
+              // center: "title",
+              // right: "customButton"
             }}
-            customButtons={{
-              customButton: {
-                text: 'Reschedule Selected',
-                click: () => {
-                  alert('Custom button clicked!');
-                }
-              }
-            }}
+            // customButtons={{
+            //   customButton: {
+            //     text: 'Reschedule Selected',
+            //     click: () => {
+            //       alert('Custom button clicked!');
+            //     }
+            //   }
+            // }}
             eventColor="transparent"
             height="auto"
             nowIndicator={true} // Shows the current time indicator
@@ -327,7 +353,7 @@ export default function SchedulePage() {
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
                     (currTeam === eventInfo.event.extendedProps.field1?.home || currTeam === eventInfo.event.extendedProps.field1?.away) ? (
                     <div
-                      onClick={() => handleTeamClick(eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
+                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
                       className={`event-content p-2 rounded-xl bg-green-100 text-green-800
                         ${isSelected(eventInfo.event.start, 1) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
                     >
@@ -343,10 +369,40 @@ export default function SchedulePage() {
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
                     (currTeam === eventInfo.event.extendedProps.field2?.home || currTeam === eventInfo.event.extendedProps.field2?.away) ? (
                     <div
-                      onClick={() => handleTeamClick(eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
+                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
                       className={`event-content p-2 rounded-xl bg-green-100 text-green-800
                         ${isSelected(eventInfo.event.start, 2) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
                     >
+                      {/* {isSelected(eventInfo.event.start, 2) ? (
+                        <>
+                          <button
+                            onClick={() => {
+                              // Handle reschedule logic here
+                              alert('Reschedule clicked!');
+                            }}
+                            className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2"
+                          >
+                            Reschedule
+                          </button>
+                          <button
+                            onClick={() => {
+                              // Handle back logic here
+                              alert('Back clicked!');
+                            }}
+                            className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                          >
+                            Back
+                          </button>
+                        </>
+                      ) : ( */}
+                        {/* <>
+                          <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
+                          <div className="font-semibold">{"vs"}</div>
+                          <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
+                          <div className="text-sm">{startTime} - {endTime}</div>
+                          <div className="text-xs text-gray-600">{"Field 2"}</div>
+                        </>
+                      )} */}
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
                       <div className="font-semibold">{"vs"}</div>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
@@ -359,7 +415,7 @@ export default function SchedulePage() {
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
                     (currTeam === eventInfo.event.extendedProps.field3?.home || currTeam === eventInfo.event.extendedProps.field3?.away) ? (
                     <div
-                      onClick={() => handleTeamClick(eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
+                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
                       className={`event-content p-2 rounded-xl bg-green-100 text-green-800
                         ${isSelected(eventInfo.event.start, 3) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
                     >
@@ -441,7 +497,7 @@ export default function SchedulePage() {
               );
             }}
           />
-          {schedType === 2 && (
+          {/* {schedType === 2 && (
             <div className="mt-6 p-4 border-t border-gray-200 flex justify-end">
               <button
                 onClick={handleSendRequest}
@@ -450,7 +506,7 @@ export default function SchedulePage() {
                 Reschedule Selected
               </button>
             </div>
-          )}
+          )} */}
           {schedType === 3 && (
             <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
               <div className="text-lg font-semibold">
@@ -466,6 +522,31 @@ export default function SchedulePage() {
           )}
         </Card>
       </div>
+      {popupVisible && (
+        <div
+          ref={popupRef}
+          style={{ position: 'absolute', top: popupPosition.y, left: popupPosition.x, zIndex: 1000 }}
+          className="popup-box p-4 bg-white border border-gray-300 rounded-lg shadow-lg"
+        >
+          <div className="flex flex-col items-center">
+            <button
+              onClick={() => {
+                handleSendRequest();
+                closePopup();
+              }}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
+            >
+              Reschedule
+            </button>
+            <button
+              onClick={closePopup}
+              className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
