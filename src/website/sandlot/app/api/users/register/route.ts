@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import { mockUsers } from '../database'; // Mock storage
 
 async function registerUser(email: string, password: string, accountType: "player" | "team", name?: string, teamName?: string, gender?: string) {
-  // Check if email already exists
   const existingUser = mockUsers.find(user => user.email === email);
   if (existingUser) {
     throw new Error('Email is already registered');
@@ -34,12 +33,10 @@ export async function POST(req: Request) {
   try {
     const { email, password, accountType, name, teamName, gender } = await req.json();
 
-    // Ensure required fields are provided
     if (!email || !password || !accountType) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Validate account-specific fields
     if (accountType === 'team' && !teamName) {
       return NextResponse.json({ error: 'Team name is required for team registration' }, { status: 400 });
     }
@@ -52,7 +49,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Gender is required for player registration' }, { status: 400 });
     }
 
-    // Register the user
     const newUser = await registerUser(email, password, accountType, name, teamName, gender);
     return NextResponse.json({ message: 'Registration successful', user: newUser }, { status: 200 });
   } catch (error) {

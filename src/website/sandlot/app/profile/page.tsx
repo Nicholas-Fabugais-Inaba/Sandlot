@@ -11,6 +11,7 @@ declare module 'next-auth' {
   interface User {
     name?: string | null;
     teamName?: string | null;
+    accountType: "player" | "team";
   }
 
   interface Session {

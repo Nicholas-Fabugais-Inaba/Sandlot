@@ -6,7 +6,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { title } from "@/components/primitives";
 import { Input, Modal, Button } from "@heroui/react";
-import { useRouter } from "next/navigation"; // Add to navigate for Sign In/Register
+import { useRouter } from "next/navigation";
 
 interface Team {
   id: string;
@@ -23,14 +23,23 @@ interface CustomUser {
 }
 
 export default function TeamPage() {
-  const { data: session, status } = useSession(); // Using `status` to check session loading
+  const { data: session, status } = useSession();
   const [teams, setTeams] = useState<Team[]>([]);
   const [userTeam, setUserTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [teamName, setTeamName] = useState<string>(""); 
   const [showModal, setShowModal] = useState(false);
-  const router = useRouter(); // Add router for navigation
+  const router = useRouter();
+
+  const accountType = (session?.user as CustomUser)?.accountType;
+
+  useEffect(() => {
+    if (session) {
+      console.log("Session data:", session);  // Debugging log
+      console.log("Account type:", accountType);  // Debugging log
+    }
+  }, [session, accountType]);
 
   const fetchTeams = useCallback(async () => {
     setLoading(true);
@@ -38,22 +47,22 @@ export default function TeamPage() {
       const res = await fetch("/api/teams");
       if (!res.ok) throw new Error("Failed to fetch teams");
       const data = await res.json();
+      console.log("Fetched teams:", data);  // Debugging log
       setTeams(data.teams);
 
-      if ((session?.user as unknown as CustomUser).accountType === "team") {
-        if (session && session.user) {
-          const teamRes = await fetch(`/api/teams/my-team?email=${session.user.email}`);
-          if (!teamRes.ok) throw new Error("Failed to fetch user team");
-          const teamData = await teamRes.json();
-          setUserTeam(teamData.team);
-        }
+      if (accountType === "team") {
+        const teamRes = await fetch(`/api/teams/my-team?email=${session?.user?.email}`);
+        if (!teamRes.ok) throw new Error("Failed to fetch user team");
+        const teamData = await teamRes.json();
+        console.log("User team data:", teamData);  // Debugging log
+        setUserTeam(teamData.team);
       }
     } catch (error) {
       console.error("Error fetching teams:", error);
     } finally {
       setLoading(false);
     }
-  }, [session]);
+  }, [accountType, session]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -94,12 +103,14 @@ export default function TeamPage() {
           </h1>
           <div className="flex space-x-4 mt-4">
             <Button
-              onPress={() => router.push(`/profile/signin?callbackUrl=/team`)} // Dynamic callback URL
+              onPress={() => router.push(`/profile/signin?callbackUrl=/team`)}
               className="button"
             >
               Sign In
             </Button>
-            <Button onPress={() => router.push(`/profile/register?callbackUrl=/team`)} className="button">
+            <Button
+              onPress={() => router.push(`/profile/register?callbackUrl=/team`)} className="button"
+            >
               Register
             </Button>
           </div>
@@ -108,33 +119,33 @@ export default function TeamPage() {
     );
   }
 
-  return (
-    <div>
-      <h1 className={title()}>Team</h1>
-      
-      {((session?.user as unknown as CustomUser)?.accountType === "player") ? (
-        <div>
-          <h2>Available Teams</h2>
-          {teams.map((team) => (
-            <div key={team.id} className="p-4 border mb-2 rounded">
-              <p>{team.teamName}</p> {/* Display team name here */}
-              <Button
-                disabled={actionLoading}
-                onPress={() => {
-                  if (session?.user) {
-                    handleAction(`/api/teams/${team.id}/join`, { playerEmail: session.user.email }, "Join request sent!");
-                  }
-                }}
-              >
-                Request to Join
-              </Button>
-            </div>
-          ))}
-        </div>
-      ) : ((session?.user as unknown as CustomUser)?.accountType === "team") ? (
-        userTeam ? (
+  const renderView = () => {
+    switch (accountType) {
+      case "player":
+        return (
           <div>
-            <h2>{userTeam.teamName} Roster</h2> {/* Display team name here */}
+            <h2>Available Teams</h2>
+            {teams.map((team) => (
+              <div key={team.id} className="p-4 border mb-2 rounded">
+                <p>{team.teamName}</p>
+                <Button
+                  disabled={actionLoading}
+                  onPress={() => {
+                    if (session?.user) {
+                      handleAction(`/api/teams/${team.id}/join`, { playerEmail: session.user.email }, "Join request sent!");
+                    }
+                  }}
+                >
+                  Request to Join
+                </Button>
+              </div>
+            ))}
+          </div>
+        );
+      case "team":
+        return userTeam ? (
+          <div>
+            <h2>{userTeam.teamName} Roster</h2>
             <ul>
               {userTeam.players.map((player) => (
                 <li key={player.id}>{player.name}</li>
@@ -194,8 +205,16 @@ export default function TeamPage() {
               </Button>
             </Modal>
           </div>
-        )
-      ) : null}
+        );
+      default:
+        return <p>No valid account type found. Please contact support.</p>; // Add this fallback message
+    }
+  };
+
+  return (
+    <div>
+      <h1 className={title()}>Team</h1>
+      {renderView()}
     </div>
   );
 }
