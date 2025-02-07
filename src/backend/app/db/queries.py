@@ -51,12 +51,11 @@ def insert_player(name, email, password):
             session.commit()
     return True
 
-def insert_team(name, email, password):
+def insert_team(name, password):
     engine = create_connection()
     with Session(engine) as session:
         account = Team(
             team_name=name,
-            email=email,
             password=password,
         )
         try:
@@ -67,3 +66,11 @@ def insert_team(name, email, password):
         else:
             session.commit()
     return True
+
+def get_credentials(email1):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Player.password).where(Player.email == email1)
+        result = session.execute(stmt).first()
+        if(result):
+            return result[0]

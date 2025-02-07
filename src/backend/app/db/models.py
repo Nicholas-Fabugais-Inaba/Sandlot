@@ -33,7 +33,6 @@ class Team(Base):
     #cocaptains: Mapped["Player"] = mapped_column()
     #player_list: Mapped["Player"] = mapped_column()
     standing: Mapped[Optional[str]] = mapped_column(String(50))
-    email: Mapped[Optional[str]] = mapped_column(String(50))
     password: Mapped[Optional[str]] = mapped_column(String(50))
     division: Mapped[Optional[int]] = mapped_column()
     offday: Mapped[Optional[str]] = mapped_column(String(50))
