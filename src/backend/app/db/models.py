@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from .create_engine import create_connection
+from create_engine import create_connection
 
 engine = create_connection()
 
@@ -19,7 +19,7 @@ class Player(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     first_name: Mapped[Optional[str]] = mapped_column(String(30))
     last_name: Mapped[Optional[str]] = mapped_column(String(30))
-    email: Mapped[Optional[str]] = mapped_column(String(50))
+    email: Mapped[Optional[str]] = mapped_column(String(50), unique=True)
     password: Mapped[Optional[str]] = mapped_column(String(50))
     phone_number: Mapped[Optional[str]] = mapped_column(String(15))
     gender: Mapped[Optional[str]] = mapped_column(String(30))
@@ -28,29 +28,28 @@ class Player(Base):
 class Team(Base):
     __tablename__ = "team"
     id: Mapped[int] = mapped_column(primary_key=True)
-    team_name: Mapped[str] = mapped_column(String(50)) # don't know what string limits we should use; also should prolly use constants
-    captain: Mapped["Player"] = mapped_column(ForeignKey("player.id"))
+    team_name: Mapped[Optional[str]] = mapped_column(String(50)) # don't know what string limits we should use; also should prolly use constants
+    captain: Mapped[Optional["Player"]] = mapped_column(ForeignKey("player.id"))
     #cocaptains: Mapped["Player"] = mapped_column()
     #player_list: Mapped["Player"] = mapped_column()
-    standing: Mapped[str] = mapped_column(String(50))
-    email: Mapped[str] = mapped_column(String(50))
-    password: Mapped[str] = mapped_column(String(50))
-    division: Mapped[int] = mapped_column()
-    offday: Mapped[str] = mapped_column(String(50))
-    preferred_times: Mapped[str] = mapped_column(String(50), default="balanced")
+    standing: Mapped[Optional[str]] = mapped_column(String(50))
+    username: Mapped[Optional[str]] = mapped_column(String(50), unique=True)
+    password: Mapped[Optional[str]] = mapped_column(String(50))
+    division: Mapped[Optional[int]] = mapped_column()
+    offday: Mapped[Optional[int]] = mapped_column()
+    preferred_times: Mapped[Optional[str]] = mapped_column(String(50), default="balanced")
     
 class Game(Base):
     __tablename__ = "game"
     id: Mapped[int] = mapped_column(primary_key=True)
-    email_address: Mapped[str] = mapped_column(String(50))
-    home_team: Mapped[str] = mapped_column(String(50))
-    away_team: Mapped[str] = mapped_column(String(50))
-    date: Mapped[str] = mapped_column(String(50))
-    time: Mapped[str] = mapped_column(String(50))
-    field: Mapped[str] = mapped_column(String(50))
-    home_team_score: Mapped[str] = mapped_column(String(50))
-    away_team_score: Mapped[str] = mapped_column(String(50))
-    played: Mapped[bool] = mapped_column(String(50))
+    home_team: Mapped[Optional[str]] = mapped_column(String(50))
+    away_team: Mapped[Optional[str]] = mapped_column(String(50))
+    date: Mapped[Optional[str]] = mapped_column(String(50))
+    time: Mapped[Optional[str]] = mapped_column(String(50))
+    field: Mapped[Optional[str]] = mapped_column(String(50))
+    home_team_score: Mapped[Optional[str]] = mapped_column(String(50))
+    away_team_score: Mapped[Optional[str]] = mapped_column(String(50))
+    played: Mapped[Optional[bool]] = mapped_column()
 
 # used for creating tables in DB, don't uncomment unless you want to reinitalize DB tables    
-#Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)

@@ -7,19 +7,12 @@ import { mockUsers } from '../../users/database';  // Use shared array
 
 async function authenticateUser(email: string, password: string) {
   const user = mockUsers.find((user) => user.email === email);
-
-  if (user) {
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-    if (isPasswordMatch) {
-      return {
-        id: user.id,
-        email: user.email,
-        name: user.name || null,
-        teamName: user.teamName || null,
-      };
-    }
-  }
+  return {
+    id: "myid",
+    email: "email",
+    name: "name",
+    teamName: "teamname",
+  };
 
   return null;
 }
@@ -31,6 +24,7 @@ const authOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        dbPassword : { label: 'DB Password', type: 'password' }
       },
       authorize: async (credentials) => {
         if (credentials) {

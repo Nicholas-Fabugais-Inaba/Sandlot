@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers.schedule import router as schedule_router
+from .routers.schedule_router import router as schedule_router
 from .routers.user_router import router as user_rotuer
 
 
