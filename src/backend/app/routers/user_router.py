@@ -13,5 +13,5 @@ async def create_player_account(newUser: user):
 
 @router.post("/create_team", response_model=None)
 async def create_team_account(newTeam: team):
-    response = insert_team(newTeam.team_name, newTeam.email, newTeam.password)
+    response = insert_team(newTeam.team_name, newTeam.username, newTeam.password, newTeam.preferred_division, newTeam.preferred_offday, newTeam.preferred_time)
     return response

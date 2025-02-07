@@ -51,13 +51,16 @@ def insert_player(name, email, password):
             session.commit()
     return True
 
-def insert_team(name, email, password):
+def insert_team(team_name, username, password, preferred_division, preferred_offday, preferred_time):
     engine = create_connection()
     with Session(engine) as session:
         account = Team(
-            team_name=name,
-            email=email,
+            team_name=team_name,
+            username=username,
             password=password,
+            preferred_division=preferred_division,
+            offday=preferred_offday, 
+            preferred_time=preferred_time
         )
         try:
             session.add_all([account])

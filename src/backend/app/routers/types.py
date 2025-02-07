@@ -7,5 +7,8 @@ class user(BaseModel):
 
 class team(BaseModel):
     team_name: str
-    email: str
+    username: str
     password: str
+    preferred_division: int
+    preferred_offday: int
+    preferred_time: int
