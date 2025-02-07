@@ -70,3 +70,11 @@ def insert_team(team_name, username, password, preferred_division, preferred_off
         else:
             session.commit()
     return True
+
+def get_credentials(email1):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Player.password).where(Player.email == email1)
+        result = session.execute(stmt).first()
+        if(result):
+            return result[0]
