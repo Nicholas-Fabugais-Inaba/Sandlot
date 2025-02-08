@@ -3,6 +3,7 @@ from datetime import date, timedelta
 from .scheduler import gen_schedule, gen_schedule_w_skip
 # from scheduler import gen_schedule, gen_schedule_w_skip
 from random import shuffle
+from ..db.queries import get_all_teams
 
 
 FIELDS = 3
@@ -50,15 +51,33 @@ phillies = {"name": "Phillies", "offday": 1}
 pirates = {"name": "Pirates", "offday": 2}
 mariners = {"name": "Mariners", "offday": 3}
 
-teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros,
-               8: angels, 9: rockies, 10: royals, 11: cubs, 12: padres, 13: white_sox, 14: guardians,
-               15: braves, 16: giants, 17: brewers, 18: nationals, 19: rays, 20: marlins, 21: yankees,
-               22: red_sox, 23: diamondbacks, 24: mets, 25: reds, 26: phillies, 27: pirates, 28: mariners}
+teams = {}
+div_a = {}
+div_b = {}
+div_c = {}
+div_d = {}
+Teams = get_all_teams()
+for i in range(len(Teams)):
+    teams[Teams[i]["id"]] = {"name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+    if Teams[i]["division"] == 0:
+        div_a[Teams[i]["id"]] = teams[Teams[i]["id"]]
+    elif Teams[i]["division"] == 1:
+        div_b[Teams[i]["id"]] = teams[Teams[i]["id"]]
+    elif Teams[i]["division"] == 2:
+        div_c[Teams[i]["id"]] = teams[Teams[i]["id"]]
+    elif Teams[i]["division"] == 3:
+        div_d[Teams[i]["id"]] = teams[Teams[i]["id"]]
+    
 
-div_a = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros}
-div_b = {8: angels, 9: rockies, 10: royals, 11: cubs, 12: padres, 13: white_sox, 14: guardians}
-div_c = {15: braves, 16: giants, 17: brewers, 18: nationals, 19: rays, 20: marlins, 21: yankees}
-div_d = {22: red_sox, 23: diamondbacks, 24: mets, 25: reds, 26: phillies, 27: pirates, 28: mariners}
+# teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros,
+#                8: angels, 9: rockies, 10: royals, 11: cubs, 12: padres, 13: white_sox, 14: guardians,
+#                15: braves, 16: giants, 17: brewers, 18: nationals, 19: rays, 20: marlins, 21: yankees,
+#                22: red_sox, 23: diamondbacks, 24: mets, 25: reds, 26: phillies, 27: pirates, 28: mariners}
+
+# div_a = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros}
+# div_b = {8: angels, 9: rockies, 10: royals, 11: cubs, 12: padres, 13: white_sox, 14: guardians}
+# div_c = {15: braves, 16: giants, 17: brewers, 18: nationals, 19: rays, 20: marlins, 21: yankees}
+# div_d = {22: red_sox, 23: diamondbacks, 24: mets, 25: reds, 26: phillies, 27: pirates, 28: mariners}
 
 divs = [div_a, div_b, div_c, div_d]
 
@@ -172,7 +191,7 @@ def create_schedule():
 
 
 
-# games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
+# # games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
 games = gen_games_division(divs, GAMES_PER_TEAM)
 print(games)
 print(len(games))
@@ -182,7 +201,7 @@ game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
 print(game_slots)
 print(len(game_slots))
 
-# Constraint generation code will be in scheduler.py
+# # Constraint generation code will be in scheduler.py
 schedule, score = gen_schedule_w_skip(games, game_slots, teams)
 print(schedule)
 print(score)

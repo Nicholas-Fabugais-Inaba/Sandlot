@@ -84,3 +84,11 @@ def get_team(login_username):
         stmt = select(Team.team_name, Team.username, Team.password, Team.division, Team.offday, Team.preferred_division, Team.preferred_time).where(Team.username == login_username)
         result = session.execute(stmt).mappings().first()
         return result
+
+# currently a special query specifically for the scheduler, not to be used from frontend yet  
+def get_all_teams():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Team.id, Team.team_name, Team.division, Team.offday)
+        result = session.execute(stmt).mappings().all()
+        return result
