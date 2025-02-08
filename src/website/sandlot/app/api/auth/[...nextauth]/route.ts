@@ -38,13 +38,13 @@ const authOptions: NextAuthOptions = {
     signIn: '/profile/signin',
   },
   callbacks: {
-    async session({ session, user }: { session: Session; user: User }) {
-      if (user) {
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (token) {
         session.user = {
           ...session.user,
-          name: user.name,
-          role: user.role,
-          teamName: user.teamName,
+          name: token.name ?? '',
+          role: typeof token.role === 'string' ? token.role : '',
+          teamName: typeof token.teamName === 'string' ? token.teamName : '',
         };
       }
       return session;
