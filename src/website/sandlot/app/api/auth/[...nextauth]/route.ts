@@ -2,6 +2,7 @@
 
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -48,7 +49,17 @@ const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async jwt({ token, user }: { token: JWT; user?: any }) {
+      if (user) {
+        token.name = user.name;
+        token.email = user.email;
+        token.role = user.role;
+        token.teamName = user.teamName;
+      }
+      return token;
+    },
   },
+  secret: process.env.NEXTAUTH_SECRET, // Ensure you have this set in your .env file
 };
 
 export const handler = NextAuth(authOptions);
