@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from .create_engine import create_connection
-from .models import Player, Team
+from .models import Player, Team, Game
 
 # example insert query to use as reference
 def example_insert_query():
@@ -92,3 +92,22 @@ def get_all_teams():
         stmt = select(Team.id, Team.team_name, Team.division, Team.offday)
         result = session.execute(stmt).mappings().all()
         return result
+    
+def insert_game(home_team, away_team, date, time, field):
+    engine = create_connection()
+    with Session(engine) as session:
+        game = Game(
+            home_team=home_team,
+            away_team=away_team,
+            date=date,
+            time=time,
+            field=field, 
+        )
+        try:
+            session.add_all([game])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
