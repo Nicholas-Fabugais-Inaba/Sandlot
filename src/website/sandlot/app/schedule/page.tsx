@@ -13,7 +13,7 @@ import "./SchedulePage.css";  // Custom styles
 import getSchedule from "../functions/getSchedule";
 import { Event } from "../types";
 
-var events = [
+var events = [ // If schedType is 3, need placeholders with nothing. If schedType is 1, only list games with currTeam.
   {
     start: "2025-01-27T17:00:00",
     end: "2025-01-27T18:30:00",
@@ -29,6 +29,10 @@ var events = [
   {
     start: "2025-01-28T17:00:00",
     end: "2025-01-28T18:30:00",
+    field1: {
+      home: "Yankees",
+      away: "Mariners",
+    },
   },
   {
     start: "2025-01-28T18:30:00",
@@ -43,23 +47,23 @@ var events = [
     end: "2025-01-29T18:30:00",
     field1: {
       home: "Cubs",
-      away: "Mets",
+      away: "Astros",
     },
     field2: {
       home: "Jays",
       away: "White Sox",
     },
-    field3: {
-      home: "Mariners",
-      away: "Reds",
-    }
+    // field3: {
+    //   home: "Mariners",
+    //   away: "Reds",
+    // }
   },
   {
     start: "2025-01-29T18:30:00",
     end: "2025-01-29T20:00:00",
     field2: {
       home: "Yankees",
-      away: "Buccanneers Buccanneers",
+      away: "Red Sox",
     },
   },
   {
@@ -81,6 +85,10 @@ var events = [
   {
     start: "2025-01-31T17:00:00",
     end: "2025-01-31T18:30:00",
+    field3: {
+      home: "Yankees",
+      away: "Mariners",
+    },
   },
   {
     start: "2025-01-31T18:30:00",
@@ -125,11 +133,13 @@ const addPlaceholderEvents = (events: any[], schedType: number, schedStart: Date
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
 
-var schedType = 1 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
-var reschedEnabled = true; // Enable rescheduling feature
+var schedType = 3 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
+var teamAccount = true; // Enable rescheduling feature
+var commissioner = false; // User is a commissioner
 var schedStart = new Date("2025-05-05T17:00:00"); // Season start and end dates
 var schedEnd = new Date("2025-08-20T20:00:00");
 var currTeam = "Yankees";
+var reschedTeam = "Mets";
 
 interface SelectedDate {
   date: Date;
@@ -192,7 +202,8 @@ export default function SchedulePage() {
   };
 
   const handleTeamClick = (event: React.MouseEvent, start: Date | null, field: number, teams: any) => {
-    if (start && (teams.home === currTeam || teams.away === currTeam)) {
+    // If the user is either a commissioner or the game selected is one the logged in team is playing in
+    if (start && (commissioner || (teamAccount && (teams.home === currTeam || teams.away === currTeam)))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
       setSelectedDates([{ date: start, field }]);
@@ -208,6 +219,16 @@ export default function SchedulePage() {
     alert('Reschedule request sent!');
   };
 
+  const hasGameThisSlot = (event: any) => {
+    const { field1, field2, field3 } = event.extendedProps;
+  
+    const checkTeams = (field: any) => {
+      return field?.home === currTeam || field?.away === currTeam || field?.home === reschedTeam || field?.away === reschedTeam;
+    };
+  
+    return checkTeams(field1) || checkTeams(field2) || checkTeams(field3);
+  };
+
   const closePopup = () => {
     setPopupVisible(false);
     setSelectedDates([]);
@@ -218,7 +239,7 @@ export default function SchedulePage() {
       <h1 className={title()}>Schedule</h1>
       {schedType === 3 ? (
         <p className="text-2xl font-semibold text-center mt-2">Choose alternate game slots</p>
-      ) : reschedEnabled ? (
+      ) : teamAccount || commissioner ? (
         <p className="text-2xl font-semibold text-center mt-2">Click to reschedule a game</p>
       ) : (
         <></>
@@ -267,7 +288,11 @@ export default function SchedulePage() {
               return schedType === 0 ? ( // Full Schedule
                 <div className="event-content-grid" key={selectedDates.join(',')}>
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
-                    <div className="event-content p-2 rounded-xl bg-orange-100 text-orange-800">
+                    <div
+                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
+                      className={`event-content p-2 rounded-xl bg-orange-100 text-orange-800
+                        ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : "border-2 border-orange-100"}`}
+                    >
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
                       <div className="font-semibold">{"vs"}</div>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
@@ -279,7 +304,11 @@ export default function SchedulePage() {
                     <div></div>
                   )}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
-                    <div className="event-content p-2 rounded-xl bg-cyan-100 text-blue-800">
+                    <div
+                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
+                      className={`event-content p-2 rounded-xl bg-cyan-100 text-blue-800
+                        ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : "border-2 border-cyan-100"}`}
+                    >
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
                       <div className="font-semibold">{"vs"}</div>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
@@ -291,7 +320,11 @@ export default function SchedulePage() {
                     <div></div>
                   )}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
-                    <div className="event-content p-2 rounded-xl bg-purple-100 text-purple-800">
+                    <div
+                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
+                      className={`event-content p-2 rounded-xl bg-purple-100 text-purple-800
+                        ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : "border-2 border-purple-100"}`}
+                    >
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
                       <div className="font-semibold">{"vs"}</div>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
@@ -307,127 +340,121 @@ export default function SchedulePage() {
                 <>
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
                     (currTeam === eventInfo.event.extendedProps.field1?.home || currTeam === eventInfo.event.extendedProps.field1?.away) ? (
-                    <div
-                      className="event-content p-2 rounded-xl bg-orange-100 text-orange-800"
-                    >
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
-                      <div className="text-sm">{startTime} - {endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 1"}</div>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
+                      <div
+                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
+                        className={`event-content p-2 rounded-xl bg-orange-100 text-orange-800
+                          ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : "border-2 border-orange-100"}`}
+                      >
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
+                        <div className="font-semibold">{"vs"}</div>
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
+                        <div className="text-sm">{startTime} - {endTime}</div>
+                        <div className="text-xs text-gray-600">{"Field 1"}</div>
+                      </div>
+                    ) : null}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
                     (currTeam === eventInfo.event.extendedProps.field2?.home || currTeam === eventInfo.event.extendedProps.field2?.away) ? (
-                    <div
-                      className="event-content p-2 rounded-xl bg-cyan-100 text-blue-800"
-                    >
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
-                      <div className="text-sm">{startTime} - {endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 2"}</div>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
+                      <div
+                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
+                        className={`event-content p-2 rounded-xl bg-cyan-100 text-blue-800
+                          ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : "border-2 border-cyan-100"}`}
+                      >
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
+                        <div className="font-semibold">{"vs"}</div>
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
+                        <div className="text-sm">{startTime} - {endTime}</div>
+                        <div className="text-xs text-gray-600">{"Field 2"}</div>
+                      </div>
+                    ) : null}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
                     (currTeam === eventInfo.event.extendedProps.field3?.home || currTeam === eventInfo.event.extendedProps.field3?.away) ? (
-                    <div
-                      className="event-content p-2 rounded-xl bg-purple-100 text-purple-800"
-                    >
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
-                      <div className="text-sm">{startTime} - {endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 3"}</div>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
+                      <div
+                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
+                        className={`event-content p-2 rounded-xl bg-purple-100 text-purple-800
+                          ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : "border-2 border-purple-100"}`}
+                      >
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
+                        <div className="font-semibold">{"vs"}</div>
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
+                        <div className="text-sm">{startTime} - {endTime}</div>
+                        <div className="text-xs text-gray-600">{"Field 3"}</div>
+                      </div>
+                    ) : null}
                 </>
               ) : schedType === 2 ? ( // Select game to reschedule
                 <>
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
                     (currTeam === eventInfo.event.extendedProps.field1?.home || currTeam === eventInfo.event.extendedProps.field1?.away) ? (
-                    <div
-                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
-                      className={`event-content p-2 rounded-xl bg-green-100 text-green-800
-                        ${isSelected(eventInfo.event.start, 1) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
-                    >
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
-                      <div className="text-sm">{startTime} - {endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 1"}</div>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
+                      <div
+                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
+                        className={`event-content p-2 rounded-xl bg-green-100 text-green-800
+                          ${isSelected(eventInfo.event.start, 1) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
+                      >
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
+                        <div className="font-semibold">{"vs"}</div>
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
+                        <div className="text-sm">{startTime} - {endTime}</div>
+                        <div className="text-xs text-gray-600">{"Field 1"}</div>
+                      </div>
+                    ) : null}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
                     (currTeam === eventInfo.event.extendedProps.field2?.home || currTeam === eventInfo.event.extendedProps.field2?.away) ? (
-                    <div
-                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
-                      className={`event-content p-2 rounded-xl bg-green-100 text-green-800
-                        ${isSelected(eventInfo.event.start, 2) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
-                    >
-                      {/* {isSelected(eventInfo.event.start, 2) ? (
-                        <>
-                          <button
-                            onClick={() => {
-                              // Handle reschedule logic here
-                              alert('Reschedule clicked!');
-                            }}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2"
-                          >
-                            Reschedule
-                          </button>
-                          <button
-                            onClick={() => {
-                              // Handle back logic here
-                              alert('Back clicked!');
-                            }}
-                            className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                          >
-                            Back
-                          </button>
-                        </>
-                      ) : ( */}
-                        {/* <>
-                          <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
-                          <div className="font-semibold">{"vs"}</div>
-                          <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
-                          <div className="text-sm">{startTime} - {endTime}</div>
-                          <div className="text-xs text-gray-600">{"Field 2"}</div>
-                        </>
-                      )} */}
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
-                      <div className="text-sm">{startTime} - {endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 2"}</div>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
+                      <div
+                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
+                        className={`event-content p-2 rounded-xl bg-green-100 text-green-800
+                          ${isSelected(eventInfo.event.start, 2) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
+                      >
+                        {/* {isSelected(eventInfo.event.start, 2) ? (
+                          <>
+                            <button
+                              onClick={() => {
+                                // Handle reschedule logic here
+                                alert('Reschedule clicked!');
+                              }}
+                              className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2"
+                            >
+                              Reschedule
+                            </button>
+                            <button
+                              onClick={() => {
+                                // Handle back logic here
+                                alert('Back clicked!');
+                              }}
+                              className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                            >
+                              Back
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
+                            <div className="font-semibold">{"vs"}</div>
+                            <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
+                            <div className="text-sm">{startTime} - {endTime}</div>
+                            <div className="text-xs text-gray-600">{"Field 2"}</div>
+                          </>
+                        )} */}
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
+                        <div className="font-semibold">{"vs"}</div>
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
+                        <div className="text-sm">{startTime} - {endTime}</div>
+                        <div className="text-xs text-gray-600">{"Field 2"}</div>
+                      </div>
+                    ) : null}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
                     (currTeam === eventInfo.event.extendedProps.field3?.home || currTeam === eventInfo.event.extendedProps.field3?.away) ? (
-                    <div
-                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
-                      className={`event-content p-2 rounded-xl bg-green-100 text-green-800
-                        ${isSelected(eventInfo.event.start, 3) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
-                    >
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
-                      <div className="text-sm">{startTime} - {endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 3"}</div>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
+                      <div
+                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
+                        className={`event-content p-2 rounded-xl bg-green-100 text-green-800
+                          ${isSelected(eventInfo.event.start, 3) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
+                      >
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
+                        <div className="font-semibold">{"vs"}</div>
+                        <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
+                        <div className="text-sm">{startTime} - {endTime}</div>
+                        <div className="text-xs text-gray-600">{"Field 3"}</div>
+                      </div>
+                    ) : null}
                 </>
               ) : schedType === 3 ? ( // Choose alternative game days
                 <div className="event-content-grid">
@@ -440,7 +467,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 1"}</div>
                     </div>
-                  ) : (
+                  ) : !hasGameThisSlot(eventInfo.event) ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 1)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 1) ? 
@@ -450,6 +477,8 @@ export default function SchedulePage() {
                       <div className="text-sm"><br />{startTime}<br />{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 1"}</div>
                     </div>
+                  ) : (
+                    <div></div>
                   )}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
                     <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
@@ -460,7 +489,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
-                  ) : (
+                  ) : !hasGameThisSlot(eventInfo.event) ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 2)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 2) ? 
@@ -470,6 +499,8 @@ export default function SchedulePage() {
                       <div className="text-sm"><br />{startTime}<br />{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
+                  ) : (
+                    <div></div>
                   )}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
                     <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
@@ -480,7 +511,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 3"}</div>
                     </div>
-                  ) : (
+                  ) : !hasGameThisSlot(eventInfo.event) ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 3)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 3) ? 
@@ -490,12 +521,12 @@ export default function SchedulePage() {
                       <div className="text-sm"><br />{startTime}<br />{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 3"}</div>
                     </div>
+                  ) : (
+                    <div></div>
                   )}
                 </div>
-              ) : (
-                <div></div>
-              );
-            }}
+              ) : null}
+            }
           />
           {/* {schedType === 2 && (
             <div className="mt-6 p-4 border-t border-gray-200 flex justify-end">
@@ -532,11 +563,18 @@ export default function SchedulePage() {
             <button
               onClick={() => {
                 handleSendRequest();
-                closePopup();
               }}
               className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
             >
               Reschedule
+            </button>
+            <button
+              onClick={() => {
+                alert("Submit score");
+              }}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
+            >
+              Submit Score
             </button>
             <button
               onClick={closePopup}
