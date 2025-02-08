@@ -9,7 +9,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { title } from "@/components/primitives";
-import { Card } from "@heroui/react";  // Import NextUI Card
+import { Card, user } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
 import getSchedule from "../functions/getSchedule";
 import { Event } from "../types";
@@ -134,27 +134,33 @@ const addPlaceholderEvents = (events: any[], schedType: number, schedStart: Date
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
 
-var schedType = 3 // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
-var teamAccount = true; // Enable rescheduling feature
-var commissioner = false; // User is a commissioner
 var schedStart = new Date("2025-05-05T17:00:00"); // Season start and end dates
 var schedEnd = new Date("2025-08-20T20:00:00");
 var currTeam = "Yankees";
-var reschedTeam = "Mets";
 
 interface SelectedDate {
   date: Date;
   field: number;
 }
 
+interface RescheduleGame {
+  date: Date;
+  field: number;
+  home: string;
+  away: string;
+}
+
 export default function SchedulePage() {
-  const initialView = schedType === 1 || schedType === 2 ? "dayGridMonth" : "timeGridWeek";
-  const [view, setView] = useState(initialView);
+  const [view, setView] = useState("timeGridWeek");
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
+  const [rescheduleGame, setRescheduleGame] = useState<RescheduleGame>();
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const popupRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<FullCalendar>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
   // const [events, setEvents] = useState<Event[]>();
       
   // // on page initialization pulls schedule data from backend server and updates events in calendar
@@ -165,13 +171,21 @@ export default function SchedulePage() {
   //   })();
   // }, []);
 
-  // Fetch session data to get user role
+  // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
       if (session) {
         setUserRole(session.user?.role || null);
+        if (session.user?.role === "player" || session.user?.role === "team") {
+          setSchedType(1);
+          setView("dayGridMonth");
+        }
+        else if (session.user?.role === "commissioner" || session.user?.role === "role") {
+          setSchedType(0);
+        }
       }
+      setLoading(false); // Set loading to false after fetching session
     };
 
     fetchSession();
@@ -217,10 +231,32 @@ export default function SchedulePage() {
 
   const handleTeamClick = (event: React.MouseEvent, start: Date | null, field: number, teams: any) => {
     // If the user is either a commissioner or the game selected is one the logged in team is playing in
-    if (start && (commissioner || (teamAccount && (teams.home === currTeam || teams.away === currTeam)))) {
+    if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home === currTeam || teams.away === currTeam)))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
-      setSelectedDates([{ date: start, field }]);
+      setRescheduleGame({ date: start, field: field, home: teams.home, away: teams.away });
+    }
+  };
+
+  const handleRescheduleClick = () => {
+    setSchedType(3);
+    setView("timeGridWeek");
+    setPopupVisible(false);
+    if (calendarRef.current) {
+      calendarRef.current.getApi().changeView("timeGridWeek"); // Force calendar to change view
+    }
+  };
+
+  const handleReturnClick = () => {
+    if (userRole === "player" || userRole === "team" || userRole === "role") {
+      setSchedType(1);
+      setView("dayGridMonth");
+      if (calendarRef.current) {
+        calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
+      }
+    }
+    else {
+      setSchedType(0);
     }
   };
 
@@ -237,7 +273,7 @@ export default function SchedulePage() {
     const { field1, field2, field3 } = event.extendedProps;
   
     const checkTeams = (field: any) => {
-      return field?.home === currTeam || field?.away === currTeam || field?.home === reschedTeam || field?.away === reschedTeam;
+      return field?.home === rescheduleGame?.home || field?.away === rescheduleGame?.home || field?.home === rescheduleGame?.away || field?.away === rescheduleGame?.away;
     };
   
     return checkTeams(field1) || checkTeams(field2) || checkTeams(field3);
@@ -245,15 +281,19 @@ export default function SchedulePage() {
 
   const closePopup = () => {
     setPopupVisible(false);
-    setSelectedDates([]);
+    setRescheduleGame(undefined);
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading indicator while fetching session
+  }
 
   return (
     <div>
       <h1 className={title()}>Schedule</h1>
       {schedType === 3 ? (
         <p className="text-2xl font-semibold text-center mt-2">Choose alternate game slots</p>
-      ) : teamAccount || commissioner ? (
+      ) : userRole === "team" || userRole === "commissioner" ? (
         <p className="text-2xl font-semibold text-center mt-2">Click to reschedule a game</p>
       ) : (
         <></>
@@ -261,6 +301,7 @@ export default function SchedulePage() {
       <div className="items-center p-6">
         <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
           <FullCalendar
+            ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={view}
             events={events}
@@ -418,36 +459,6 @@ export default function SchedulePage() {
                         className={`event-content p-2 rounded-xl bg-green-100 text-green-800
                           ${isSelected(eventInfo.event.start, 2) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
                       >
-                        {/* {isSelected(eventInfo.event.start, 2) ? (
-                          <>
-                            <button
-                              onClick={() => {
-                                // Handle reschedule logic here
-                                alert('Reschedule clicked!');
-                              }}
-                              className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2"
-                            >
-                              Reschedule
-                            </button>
-                            <button
-                              onClick={() => {
-                                // Handle back logic here
-                                alert('Back clicked!');
-                              }}
-                              className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                            >
-                              Back
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
-                            <div className="font-semibold">{"vs"}</div>
-                            <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
-                            <div className="text-sm">{startTime} - {endTime}</div>
-                            <div className="text-xs text-gray-600">{"Field 2"}</div>
-                          </>
-                        )} */}
                         <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
                         <div className="font-semibold">{"vs"}</div>
                         <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
@@ -555,14 +566,22 @@ export default function SchedulePage() {
           {schedType === 3 && (
             <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
               <div className="text-lg font-semibold">
-                Number of alternative dates selected: {selectedDates.length}
+                Number of alternative dates selected: {selectedDates.length}/{maxSelectedDates}
               </div>
-              <button
-                onClick={handleSendRequest}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-              >
-                Send Reschedule Request
-              </button>
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleSendRequest}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                >
+                  Send Reschedule Request
+                </button>
+                <button
+                  onClick={handleReturnClick} // Set schedType back to 0 to return to the full schedule view
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                >
+                  Back to Schedule
+                </button>
+              </div>
             </div>
           )}
         </Card>
@@ -575,21 +594,19 @@ export default function SchedulePage() {
         >
           <div className="flex flex-col items-center">
             <button
-              onClick={() => {
-                handleSendRequest();
-              }}
+              onClick={handleRescheduleClick}
               className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
             >
               Reschedule
             </button>
-            <button
+            {/* <button
               onClick={() => {
                 alert("Submit score");
               }}
               className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
             >
               Submit Score
-            </button>
+            </button> */}
             <button
               onClick={closePopup}
               className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg"
