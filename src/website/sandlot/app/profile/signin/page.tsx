@@ -8,12 +8,10 @@ import { useRouter, useSearchParams } from 'next/navigation';  // To handle the 
 import { title } from "@/components/primitives";
 import { Button } from '@heroui/react';
 import styles from './SignIn.module.css';
-import authenticateAccount from '@/app/functions/authenticateAccount';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [dbPassword, setDBPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();  // Access the query params
