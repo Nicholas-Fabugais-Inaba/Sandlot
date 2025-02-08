@@ -1,34 +1,27 @@
 // app/api/auth/[...nextauth]/route.ts
 
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
-import { mockUsers } from '../../users/database';  // Use shared array
+import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-async function authenticateUser(email: string, password: string) {
-  const user = mockUsers.find((user) => user.email === email);
-  return {
-    id: "myid",
-    email: "email",
-    name: "name",
-    teamName: "teamname",
-  };
-
-  return null;
-}
-
-const authOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
+      // The name to display on the sign-in form (e.g. 'Sign in with...')
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
-        dbPassword : { label: 'DB Password', type: 'password' }
       },
       authorize: async (credentials) => {
         if (credentials) {
-          const user = await authenticateUser(credentials.email, credentials.password);
+          // Fetch user data from your database
+          const user = await {
+            id: "id",
+            name: "temp_name",
+            email: "email.com",
+            role: "role",
+            teamName: "teamName",
+          }
           if (user) {
             return user; // This returns user info to NextAuth session handler
           }
@@ -38,18 +31,19 @@ const authOptions = {
     }),
   ],
   session: {
-    strategy: 'jwt' as const, // Ensure JWT is used for session handling
+    strategy: 'jwt', // Ensure JWT is used for session handling
   },
   pages: {
     signIn: '/profile/signin',
   },
   callbacks: {
-    async session({ session, user }: { session: any, user: any }) {
+    async session({ session, user }: { session: Session; user: User }) {
       if (user) {
         session.user = {
           ...session.user,
-          name: user.name || null,
-          teamName: user.teamName || null,
+          name: user.name,
+          role: user.role,
+          teamName: user.teamName,
         };
       }
       return session;
