@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { getSession, signOut, signIn } from 'next-auth/react';
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -153,6 +154,7 @@ export default function SchedulePage() {
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const popupRef = useRef<HTMLDivElement>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
   // const [events, setEvents] = useState<Event[]>();
       
   // // on page initialization pulls schedule data from backend server and updates events in calendar
@@ -162,6 +164,18 @@ export default function SchedulePage() {
   //     setEvents(formattedEvents)
   //   })();
   // }, []);
+
+  // Fetch session data to get user role
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      if (session) {
+        setUserRole(session.user?.role || null);
+      }
+    };
+
+    fetchSession();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
