@@ -3,22 +3,50 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import { mockUsers } from '../database'; // Mock storage
+import { createTeam } from '../../teams/create/route'; // Import the team creation function
 
-async function registerUser(email: string, password: string, accountType: "player" | "team", name?: string, teamName?: string, gender?: string) {
+async function registerUser(
+  email: string, 
+  password: string, 
+  accountType: "player" | "team", 
+  name?: string, 
+  teamName?: string, 
+  gender?: string
+) {
   const existingUser = mockUsers.find(user => user.email === email);
   if (existingUser) {
     throw new Error('Email is already registered');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const userId = Date.now().toString(); // Unique ID generation for both player and team
+  const userId = Date.now().toString();
 
   if (accountType === 'team') {
-    const teamId = `team-${userId}`; // Generate a unique team ID using userId
-    const newTeam = { id: teamId, email, password: hashedPassword, teamName, accountType };
-    mockUsers.push(newTeam);
-    console.log('Team registered:', newTeam);
-    return newTeam;
+    if (!teamName) {
+      throw new Error('Team name is required for team registration');
+    }
+
+    // Create the team
+    let newTeam;
+    try {
+      newTeam = await createTeam({ teamName: teamName, captainEmail: email });
+      console.log('Team created successfully:', newTeam);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        throw new Error('Error creating team: ' + error.message);
+      } else {
+        throw new Error('Error creating team: Unknown error');
+      }
+    }
+    
+
+    // After the team is created, create the user for the team
+    const newUser = { id: userId, email, password: hashedPassword, teamName, accountType };
+    mockUsers.push(newUser);
+    console.log('Team registered:', newUser);
+
+    return newUser;
+
   } else if (accountType === 'player') {
     const newPlayer = { id: userId, email, password: hashedPassword, name, gender, accountType };
     mockUsers.push(newPlayer);

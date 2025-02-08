@@ -5,7 +5,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { title } from "@/components/primitives";
-import { Input, Modal, Button } from "@heroui/react";
+import { Input, Modal, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 interface Team {
@@ -29,7 +29,7 @@ export default function TeamPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [teamName, setTeamName] = useState<string>(""); 
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);  // Modal visibility
   const router = useRouter();
 
   const accountType = (session?.user as CustomUser)?.accountType;
@@ -47,22 +47,28 @@ export default function TeamPage() {
       const res = await fetch("/api/teams");
       if (!res.ok) throw new Error("Failed to fetch teams");
       const data = await res.json();
-      console.log("Fetched teams:", data);  // Debugging log
+      console.log("Fetched teams:", data); // Debugging log
       setTeams(data.teams);
-
+  
+      // If account type is "team" and they haven't created a team yet:
       if (accountType === "team") {
         const teamRes = await fetch(`/api/teams/my-team?email=${session?.user?.email}`);
-        if (!teamRes.ok) throw new Error("Failed to fetch user team");
-        const teamData = await teamRes.json();
-        console.log("User team data:", teamData);  // Debugging log
-        setUserTeam(teamData.team);
+        
+        if (teamRes.ok) {
+          const teamData = await teamRes.json();
+          console.log("User team data:", teamData); // Debugging log
+          setUserTeam(teamData.team);
+        } else {
+          // No team exists for this account, prompt to create one
+          setUserTeam(null);  // Set userTeam to null to show "Create Team" UI
+        }
       }
     } catch (error) {
       console.error("Error fetching teams:", error);
     } finally {
       setLoading(false);
     }
-  }, [accountType, session]);
+  }, [accountType, session]);  
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -103,13 +109,14 @@ export default function TeamPage() {
           </h1>
           <div className="flex space-x-4 mt-4">
             <Button
-              onPress={() => router.push(`/profile/signin?callbackUrl=/team`)}
+              onPress={() => router.push("/profile/signin?callbackUrl=/team")}
               className="button"
             >
               Sign In
             </Button>
             <Button
-              onPress={() => router.push(`/profile/register?callbackUrl=/team`)} className="button"
+              onPress={() => router.push("/profile/register?callbackUrl=/team")}
+              className="button"
             >
               Register
             </Button>
@@ -120,6 +127,10 @@ export default function TeamPage() {
   }
 
   const renderView = () => {
+    if (loading) {
+      return <p>Loading teams...</p>;  // Show loading state while fetching
+    }
+  
     switch (accountType) {
       case "player":
         return (
@@ -143,16 +154,36 @@ export default function TeamPage() {
           </div>
         );
       case "team":
-        return userTeam ? (
-          <div>
-            <h2>{userTeam.teamName} Roster</h2>
-            <ul>
-              {userTeam.players.map((player) => (
-                <li key={player.id}>{player.name}</li>
-              ))}
-            </ul>
-            <h2>Pending Requests</h2>
-            {userTeam.joinRequests.length > 0 ? (
+        return (
+          <div className="flex">
+            {/* Left side: Table of Players */}
+            <div className="w-3/5 mr-4">
+            {userTeam ? (
+              <>
+                <h2 className="text-xl font-bold text-left mb-2">{userTeam.teamName} Roster</h2>
+                <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
+                  <TableHeader>
+                    <TableColumn>Name</TableColumn>
+                  </TableHeader>
+                  <TableBody>
+                    {userTeam.players.map((player) => (
+                      <TableRow key={player.id}>
+                        <TableCell>{player.name}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </>
+            ) : (
+              <p>You don't have a team yet. Please create one!</p>
+            )}
+
+            </div>
+  
+            {/* Right side: Buttons */}
+            <div className="w-2/5">
+            <h2 className="text-xl font-bold mb-2">Pending Requests</h2>
+            {userTeam?.joinRequests?.length ? (
               userTeam.joinRequests.map((request) => (
                 <div key={request.id} className="p-4 border mb-2 rounded">
                   <p>{request.name}</p>
@@ -181,39 +212,19 @@ export default function TeamPage() {
             ) : (
               <p>No pending requests.</p>
             )}
-          </div>
-        ) : (
-          <div>
-            <p>You have not created a team yet.</p>
-            <Button disabled={actionLoading} onPress={() => setShowModal(true)}>Create Team</Button>
-            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-              <h2>Create a Team</h2>
-              <Input
-                value={teamName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTeamName(e.target.value)}
-                placeholder="Enter team name"
-              />
-              <Button
-                disabled={actionLoading || !teamName}
-                onPress={() => {
-                  handleAction("/api/teams/create", { teamName }, "Team created!");
-                  setShowModal(false);
-                  setTeamName("");
-                }}
-              >
-                Submit
-              </Button>
-            </Modal>
+            </div>
           </div>
         );
       default:
-        return <p>No valid account type found. Please contact support.</p>; // Add this fallback message
+        return <p>No valid account type found. Please contact support.</p>;
     }
-  };
+  };  
 
   return (
     <div>
-      <h1 className={title()}>Team</h1>
+      <div style={{ marginBottom: "20px" }}>
+        <h1 className={title()}>Team</h1>
+      </div>
       {renderView()}
     </div>
   );
