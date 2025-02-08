@@ -351,7 +351,7 @@ def gen_constraints():
 
 def initialize_weeks_played(num_teams, num_weeks):
     # Initialize the weeks_played dictionary
-    for team in range(1, num_teams + 1):
+    for team in range(num_teams):
         weeks_played[team] = {week: 0 for week in range(0, num_weeks)}
 
     return weeks_played

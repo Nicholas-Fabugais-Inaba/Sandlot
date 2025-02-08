@@ -58,16 +58,15 @@ div_c = {}
 div_d = {}
 Teams = get_all_teams()
 for i in range(len(Teams)):
-    teams[Teams[i]["id"]] = {"name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+    teams[i] = {"name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
     if Teams[i]["division"] == 0:
-        div_a[Teams[i]["id"]] = teams[Teams[i]["id"]]
+        div_a[i] = teams[i]
     elif Teams[i]["division"] == 1:
-        div_b[Teams[i]["id"]] = teams[Teams[i]["id"]]
+        div_b[i] = teams[i]
     elif Teams[i]["division"] == 2:
-        div_c[Teams[i]["id"]] = teams[Teams[i]["id"]]
+        div_c[i] = teams[i]
     elif Teams[i]["division"] == 3:
-        div_d[Teams[i]["id"]] = teams[Teams[i]["id"]]
-    
+        div_d[i] = teams[i]
 
 # teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros,
 #                8: angels, 9: rockies, 10: royals, 11: cubs, 12: padres, 13: white_sox, 14: guardians,
