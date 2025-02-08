@@ -3,7 +3,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcrypt';
-import { mockUsers } from '../../users/database';  // Use shared array
+import { mockUsers } from '../users/database';  // Use shared array
 
 async function authenticateUser(email: string, password: string) {
   const user = mockUsers.find((user) => user.email === email);
