@@ -21,12 +21,6 @@ export default function SignIn() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    let sendEmail = {
-      email: email
-    }
-    // const temp = await authenticateAccount(sendEmail);
-    // setDBPassword(temp)
-    //console.log("this is the password: " + dbPassword)
     const result = await signIn('credentials', {
       redirect: false,  // Prevent automatic redirect
       email,

@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from ..db.queries import insert_player, insert_team, get_credentials
-from .types import NewUser, NewTeam, sendData
+from ..db.queries import insert_player, insert_team, get_player
+from .types import NewUser, NewTeam, loginData
 
 
 router = APIRouter(tags=["user"])
@@ -16,10 +16,7 @@ async def create_team_account(newTeam: NewTeam):
     response = insert_team(newTeam.team_name, newTeam.username, newTeam.password, newTeam.preferred_division, newTeam.preferred_offday, newTeam.preferred_time)
     return response
 
-@router.post("/login", response_model=object)
-async def get_account_credentials(data: sendData):
-    print(data.email)
-    response = get_credentials(data.email)
-    if(response):
-        print(response)
-        return response
+@router.post("/get_player", response_model=object)
+async def get_player_account(data: loginData):
+    response = dict(get_player(data.email))
+    return response

@@ -71,10 +71,9 @@ def insert_team(team_name, username, password, preferred_division, preferred_off
             session.commit()
     return True
 
-def get_credentials(email1):
+def get_player(login_email):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Player.password).where(Player.email == email1)
-        result = session.execute(stmt).first()
-        if(result):
-            return result[0]
+        stmt = select(Player.first_name, Player.last_name, Player.email, Player.phone_number, Player.gender).where(Player.email == login_email)
+        result = session.execute(stmt).mappings().first()
+        return result

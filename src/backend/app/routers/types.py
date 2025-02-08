@@ -13,6 +13,5 @@ class NewTeam(BaseModel):
     preferred_offday: int
     preferred_time: int
 
-class sendData(BaseModel):
+class loginData(BaseModel):
     email: str
-
