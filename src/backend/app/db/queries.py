@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from .create_engine import create_connection
-from .models import Player
+from .models import Player, Team
 
 # example insert query to use as reference
 def example_insert_query():
@@ -50,3 +50,31 @@ def insert_player(name, email, password):
         else:
             session.commit()
     return True
+
+def insert_team(team_name, username, password, preferred_division, preferred_offday, preferred_time):
+    engine = create_connection()
+    with Session(engine) as session:
+        account = Team(
+            team_name=team_name,
+            username=username,
+            password=password,
+            preferred_division=preferred_division,
+            offday=preferred_offday, 
+            preferred_time=preferred_time
+        )
+        try:
+            session.add_all([account])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_credentials(email1):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Player.password).where(Player.email == email1)
+        result = session.execute(stmt).first()
+        if(result):
+            return result[0]
