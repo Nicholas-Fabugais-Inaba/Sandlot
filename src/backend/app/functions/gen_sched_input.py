@@ -15,42 +15,6 @@ END_DATE = date(2025, 8, 20)
 GAMES_PER_TEAM = 25 # CURRENTLY BROKEN
 
 # OFFDAYS ARE CODED AS 0 BEING MONDAY AND 6 BEING SUNDAY (matching datetime)
-# Division A
-tigers = {"name": "Tigers", "offday": 0}
-cardinals = {"name": "Cardinals", "offday": 2}
-orioles = {"name": "Orioles", "offday": 4}
-jays = {"name": "Blue Jays", "offday": 2}
-dodgers = {"name": "Dodgers", "offday": 3}
-rangers = {"name": "Rangers", "offday": 1}
-astros = {"name": "Astros", "offday": 0}
-
-# Division B
-angels = {"name": "Angels", "offday": 4}
-rockies = {"name": "Rockies", "offday": 2}
-royals = {"name": "Royals", "offday": 0}
-cubs = {"name": "Cubs", "offday": 3}
-padres = {"name": "Padres", "offday": 3}
-white_sox = {"name": "White Sox", "offday": 1}
-guardians = {"name": "Guardians", "offday": 2}
-
-# Division C
-braves = {"name": "Braves", "offday": 1}
-giants = {"name": "Giants", "offday": 0}
-brewers = {"name": "Brewers", "offday": 4}
-nationals = {"name": "Nationals", "offday": 3}
-rays = {"name": "Rays", "offday": 4}
-marlins = {"name": "Marlins", "offday": 2}
-yankees = {"name": "Yankees", "offday": 1}
-
-# Division D
-red_sox = {"name": "Red Sox", "offday": 2}
-diamondbacks = {"name": "Diamondbacks", "offday": 3}
-mets = {"name": "Mets", "offday": 4}
-reds = {"name": "Reds", "offday": 0}
-phillies = {"name": "Phillies", "offday": 1}
-pirates = {"name": "Pirates", "offday": 2}
-mariners = {"name": "Mariners", "offday": 3}
-
 teams = {}
 div_a = {}
 div_b = {}
@@ -58,7 +22,7 @@ div_c = {}
 div_d = {}
 Teams = get_all_teams()
 for i in range(len(Teams)):
-    teams[i] = {"name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+    teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
     if Teams[i]["division"] == 0:
         div_a[i] = teams[i]
     elif Teams[i]["division"] == 1:
@@ -67,16 +31,6 @@ for i in range(len(Teams)):
         div_c[i] = teams[i]
     elif Teams[i]["division"] == 3:
         div_d[i] = teams[i]
-
-# teams: dict = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros,
-#                8: angels, 9: rockies, 10: royals, 11: cubs, 12: padres, 13: white_sox, 14: guardians,
-#                15: braves, 16: giants, 17: brewers, 18: nationals, 19: rays, 20: marlins, 21: yankees,
-#                22: red_sox, 23: diamondbacks, 24: mets, 25: reds, 26: phillies, 27: pirates, 28: mariners}
-
-# div_a = {1: tigers, 2: cardinals, 3: orioles, 4: jays, 5: dodgers, 6: rangers, 7: astros}
-# div_b = {8: angels, 9: rockies, 10: royals, 11: cubs, 12: padres, 13: white_sox, 14: guardians}
-# div_c = {15: braves, 16: giants, 17: brewers, 18: nationals, 19: rays, 20: marlins, 21: yankees}
-# div_d = {22: red_sox, 23: diamondbacks, 24: mets, 25: reds, 26: phillies, 27: pirates, 28: mariners}
 
 divs = [div_a, div_b, div_c, div_d]
 
@@ -204,7 +158,3 @@ print(len(game_slots))
 schedule, score = gen_schedule_w_skip(games, game_slots, teams)
 print(schedule)
 print(score)
-
-# Randomizing game_slots vastly increases runtime, do not randomize game_slots
-# schedule_rand_slots = gen_schedule_random_game_slots(games, game_slots, teams)
-# print(schedule_rand_slots)
