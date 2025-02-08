@@ -3,6 +3,7 @@
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
+import authenticateAccount from "@/app/functions/authenticateAccount";
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -16,12 +17,13 @@ const authOptions: NextAuthOptions = {
       authorize: async (credentials) => {
         if (credentials) {
           // Fetch user data from your database
-          const user = await {
-            id: "id",
-            name: "temp_name",
-            email: "email.com",
-            role: "role",
-            teamName: "teamName",
+          const player = await authenticateAccount({ email: credentials.email })
+          const user = {
+            id: "temp_id",
+            name: player.first_name,
+            email: player.email,
+            role: "player",
+            teamName: "team_name",
           }
           if (user) {
             return user; // This returns user info to NextAuth session handler
