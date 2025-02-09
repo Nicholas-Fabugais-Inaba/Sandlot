@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from .create_engine import create_connection
-from .models import Player
+from .models import Player, Team
 
 # example insert query to use as reference
 def example_insert_query():
@@ -31,3 +31,56 @@ def example_select_query():
         result = session.execute(stmt).all()
         # would return result to whatever route called it in practice
         print(result)
+
+
+# creating account insert query
+def insert_player(name, email, password):
+    engine = create_connection()
+    with Session(engine) as session:
+        account = Player(
+            first_name=name,
+            email=email,
+            password=password,
+        )
+        try:
+            session.add_all([account])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def insert_team(team_name, username, password, preferred_division, preferred_offday, preferred_time):
+    engine = create_connection()
+    with Session(engine) as session:
+        account = Team(
+            team_name=team_name,
+            username=username,
+            password=password,
+            preferred_division=preferred_division,
+            offday=preferred_offday, 
+            preferred_time=preferred_time
+        )
+        try:
+            session.add_all([account])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_player(login_email):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender).where(Player.email == login_email)
+        result = session.execute(stmt).mappings().first()
+        return result
+    
+def get_team(login_username):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Team.team_name, Team.username, Team.password, Team.division, Team.offday, Team.preferred_division, Team.preferred_time).where(Team.username == login_username)
+        result = session.execute(stmt).mappings().first()
+        return result

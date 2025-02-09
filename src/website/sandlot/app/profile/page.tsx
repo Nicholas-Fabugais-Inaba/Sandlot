@@ -2,27 +2,29 @@
 
 'use client';
 
-import { useSession, signOut, signIn } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { getSession, signOut, signIn } from 'next-auth/react';
+import { Session } from 'next-auth'; // Import Session from next-auth
 import { title } from "@/components/primitives";
 import { Button } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 
-declare module 'next-auth' {
-  interface User {
-    name?: string | null;
-    teamName?: string | null;
-  }
-
-  interface Session {
-    user?: User;
-  }
-}
-
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
 
-  if (status === 'loading') return <div>Loading...</div>;
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+      setLoading(false);
+    };
+
+    fetchSession();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
 
   if (!session) {
     return (
