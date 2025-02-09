@@ -4,9 +4,9 @@
 
 import { useEffect, useState } from 'react';
 import { getSession, signOut, signIn } from 'next-auth/react';
-import { Session } from 'next-auth'; // Import Session from next-auth
+import { Session } from 'next-auth'; 
 import { title } from "@/components/primitives";
-import { Button } from '@heroui/react';
+import { Button, Card, CardHeader, CardBody, CardFooter, Divider } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
@@ -47,15 +47,53 @@ export default function ProfilePage() {
     );
   }
 
-  // Use player's name or team's name if available
   const displayName = session.user?.name || session.user?.teamName || "User";
+  const userRole = session.user?.role;
+  const userGender = session.user?.gender || "Not specified";
+  const userTeam = session.user?.teamName || "Not assigned to a team";
 
   return (
     <div>
+      {/* Profile Header with Welcome Message */}
       <h1 className={title()}>Profile</h1>
-      <div className="centered-container">
-        <h2>Welcome, {displayName}!</h2>
-        <Button onPress={() => signOut({ callbackUrl: '/profile/signin' })} className="button">Sign Out</Button>
+      <div className="text-center mb-8">
+        <p className="text-lg mt-2">
+          Welcome {displayName}!
+        </p>
+        <p>
+          Manage your account details here
+        </p>
+      </div>
+
+      {/* Main Content Layout */}
+      <div className="flex justify-between">
+        {/* Left side: Profile Card */}
+        <div className="w-3/5 mr-8">
+          <h2 className="text-xl font-semibold mb-4">Account Info</h2>
+          <Card className="max-w-full">
+            <CardBody>
+              <p><strong>Name:</strong> {displayName}</p>
+              <p><strong>Role:</strong> {userRole}</p>
+              <p><strong>Gender:</strong> {userGender}</p>
+              <p><strong>Team:</strong> {userTeam}</p>
+            </CardBody>
+          </Card>
+        </div>
+
+        {/* Right side: Buttons */}
+        <div className="w-2/5">
+          <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
+          <Button className="button mb-4 w-full" onPress={() => alert('Change Name')}>Change Name</Button>
+          <Button className="button mb-4 w-full" onPress={() => alert('Change Gender')}>Change Gender</Button>
+          <Button className="button mb-4 w-full" onPress={() => alert('Change Password')}>Change Password</Button>
+          <Button className="button mb-4 w-full" onPress={() => alert('Change Email')}>Change Email</Button>
+        </div>
+      </div>
+      {/* Sign Out Button */}
+      <div className="flex justify-center mt-8">
+        <Button onPress={() => signOut({ callbackUrl: '/profile/signin' })} className="button">
+          Sign Out
+        </Button>
       </div>
     </div>
   );

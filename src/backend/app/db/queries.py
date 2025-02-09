@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select
 from .create_engine import create_connection
 from .models import Player, Team, Game
@@ -51,13 +51,14 @@ def insert_player(name, email, password):
             session.commit()
     return True
 
-def insert_team(team_name, username, password, preferred_division, preferred_offday, preferred_time):
+def insert_team(team_name, username, password, division, preferred_division, preferred_offday, preferred_time):
     engine = create_connection()
     with Session(engine) as session:
         account = Team(
             team_name=team_name,
             username=username,
             password=password,
+            division=division,
             preferred_division=preferred_division,
             offday=preferred_offday, 
             preferred_time=preferred_time
@@ -115,7 +116,26 @@ def insert_game(home_team, away_team, date, time, field):
 def get_all_games():
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Game.id, Game.home_team, Game.away_team, Game.date, Game.time, Game.field, Game.home_team_score, Game.away_team_score, Game.played)
+        home_team_alias = aliased(Team, name="home_team")
+        away_team_alias = aliased(Team, name="away_team")
+
+        stmt = (
+            select(
+                Game.id,
+                Game.date,
+                Game.time,
+                Game.field,
+                Game.home_team_score,
+                Game.away_team_score,
+                Game.played,
+                home_team_alias.id.label("home_team_id"),
+                home_team_alias.team_name.label("home_team_name"),
+                away_team_alias.id.label("away_team_id"),
+                away_team_alias.team_name.label("away_team_name")
+            )
+            .join(home_team_alias, Game.home_team_id == home_team_alias.id)
+            .join(away_team_alias, Game.away_team_id == away_team_alias.id)
+        )
         result = session.execute(stmt).mappings().all()
         return result
     
@@ -125,3 +145,47 @@ def get_team_games(team_id):
         stmt = select(Game.id, Game.home_team, Game.away_team, Game.date, Game.time, Game.field, Game.home_team_score, Game.away_team_score, Game.played).where(Game.home_team == team_id | Game.away_team == team_id)
         result = session.execute(stmt).mappings().all()
         return result
+
+# temporary query
+def insert_mock_player(first_name, last_name, email, password, phone_number, gender, team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        account = Player(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password,
+            phone_number=phone_number,
+            gender=gender,
+            team_id=team_id,
+        )
+        try:
+            session.add_all([account])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def insert_mock_game(home_team, away_team, date, time, field, home_team_score, away_team_score, played):
+    engine = create_connection()
+    with Session(engine) as session:
+        game = Game(
+            home_team_id=home_team,
+            away_team_id=away_team,
+            date=date,
+            time=time,
+            field=field,
+            home_team_score=home_team_score,
+            away_team_score=away_team_score,
+            played=played
+        )
+        try:
+            session.add_all([game])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
