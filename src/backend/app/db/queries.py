@@ -125,3 +125,44 @@ def get_team_games(team_id):
         stmt = select(Game.id, Game.home_team, Game.away_team, Game.date, Game.time, Game.field, Game.home_team_score, Game.away_team_score, Game.played).where(Game.home_team == team_id | Game.away_team == team_id)
         result = session.execute(stmt).mappings().all()
         return result
+
+# temporary query
+def insert_mock_player(first_name, last_name, email, password, phone_number, gender, team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        account = Player(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password,
+            phone_number=phone_number,
+            gender=gender,
+            team_id=team_id,
+        )
+        try:
+            session.add_all([account])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def insert_mock_game(home_team, away_team, date, time, field, home_team_score, away_team_score, played):
+    engine = create_connection()
+    with Session(engine) as session:
+        game = Game(
+            home_team=home_team,
+            away_team=away_team,
+            date=date,
+            time=time,
+            field=field, 
+        )
+        try:
+            session.add_all([game])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
