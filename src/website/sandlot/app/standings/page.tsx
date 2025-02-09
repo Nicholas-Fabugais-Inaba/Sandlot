@@ -2,7 +2,7 @@
 
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -17,7 +17,8 @@ import { useAsyncList } from "@react-stately/data";
 import { title } from "@/components/primitives";
 
 export default function StandingsPage() {
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [sortDescriptors, setSortDescriptors] = useState<Record<string, { column: keyof Team; direction: "ascending" | "descending" }>>({});
 
   interface Team {
     name: string;
@@ -26,19 +27,16 @@ export default function StandingsPage() {
     ties: number;
     forfeits: number;
     differential: number;
-    division: string; // 🆕 Added division field
+    division: string;
   }
 
   let list = useAsyncList<Team>({
     async load({ signal }) {
-      let res = await fetch("https://swapi.py4e.com/api/people/?search", {
-        signal,
-      });
+      let res = await fetch("https://swapi.py4e.com/api/people/?search", { signal });
       let json = await res.json();
 
       setIsLoading(false);
 
-      // Mock Data (Replace this with actual fetched data)
       return {
         items: [
           { name: "Team A", wins: 10, losses: 2, ties: 1, forfeits: 0, differential: 20, division: "Division A" },
@@ -47,13 +45,25 @@ export default function StandingsPage() {
           { name: "Team D", wins: 8, losses: 4, ties: 2, forfeits: 0, differential: 15, division: "Division A" },
           { name: "Team E", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division B" },
           { name: "Team F", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division B" },
+          { name: "Team G", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division C" },
+          { name: "Team H", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division C" },
+          { name: "Team I", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division D" },
+          { name: "Team J", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division D" },
         ],
       };
     },
-  });
+  });  
 
-  // 🆕 Extract unique divisions
+  // Extract unique divisions
   const uniqueDivisions = Array.from(new Set(list.items.map((team) => team.division)));
+
+  // Function to handle sorting within a division
+  const handleSort = (division: string, sortDescriptor: { column: keyof Team; direction: "ascending" | "descending" }) => {
+    setSortDescriptors((prev) => ({
+      ...prev,
+      [division]: sortDescriptor, // Directly update the sortDescriptor state
+    }));
+  };  
 
   return (
     <div>
@@ -61,41 +71,60 @@ export default function StandingsPage() {
         <h1 className={title()}>Standings</h1>
       </div>
 
-      {/* 🆕 Render a separate table for each division */}
-      {uniqueDivisions.map((division) => (
-        <div key={division} className="mb-6">
-          <h2 className="text-xl font-bold text-left mb-2">{division}</h2>
-          <Table
-            aria-label={`Standings for ${division}`}
-            classNames={{ table: "w-full" }}
-          >
-            <TableHeader>
-              <TableColumn key="name" allowsSorting>Name</TableColumn>
-              <TableColumn key="wins" allowsSorting>Wins</TableColumn>
-              <TableColumn key="losses" allowsSorting>Losses</TableColumn>
-              <TableColumn key="ties" allowsSorting>Ties</TableColumn>
-              <TableColumn key="forfeits" allowsSorting>Forfeits</TableColumn>
-              <TableColumn key="differential" allowsSorting>Diff</TableColumn>
-            </TableHeader>
-            <TableBody
-              isLoading={isLoading}
-              items={list.items.filter((team) => team.division === division)}
-              loadingContent={<Spinner label="Loading..." />}
+      {/* Render a separate table for each division */}
+      {uniqueDivisions.map((division) => {
+        const sortedTeams = [...list.items.filter((team) => team.division === division)];
+        const sortDescriptor = sortDescriptors[division]; 
+        
+        if (sortDescriptor) {
+          sortedTeams.sort((a, b) => {
+            let first = a[sortDescriptor.column];
+            let second = b[sortDescriptor.column];
+
+            if (typeof first === "number" && typeof second === "number") {
+              return sortDescriptor.direction === "ascending" ? first - second : second - first;
+            }
+
+            if (typeof first === "string" && typeof second === "string") {
+              return sortDescriptor.direction === "ascending" ? first.localeCompare(second) : second.localeCompare(first);
+            }
+
+            return 0;
+          });
+        }
+
+        return (
+          <div key={division} className="mb-6">
+            <h2 className="text-xl font-bold text-left mb-2">{division}</h2>
+            <Table
+              aria-label={`Standings for ${division}`}
+              classNames={{ table: "w-full" }}
+              sortDescriptor={sortDescriptors[division]} // Ensure correct state is used
+              onSortChange={(sort) => handleSort(division, sort as { column: keyof Team; direction: "ascending" | "descending" })}
             >
-              {(item) => (
-                <TableRow key={item.name} className="py-2">
-                  <TableCell className="py-2">{item.name}</TableCell>
-                  <TableCell className="py-2">{item.wins}</TableCell>
-                  <TableCell className="py-2">{item.losses}</TableCell>
-                  <TableCell className="py-2">{item.ties}</TableCell>
-                  <TableCell className="py-2">{item.forfeits}</TableCell>
-                  <TableCell className="py-2">{item.differential}</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      ))}
+              <TableHeader>
+                {["name", "wins", "losses", "ties", "forfeits", "differential"].map((key) => (
+                  <TableColumn key={key} allowsSorting>
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </TableColumn>
+                ))}
+              </TableHeader>
+              <TableBody isLoading={isLoading} items={sortedTeams} loadingContent={<Spinner label="Loading..." />}>
+                {(item) => (
+                  <TableRow key={item.name} className="py-2">
+                    <TableCell className="py-2">{item.name}</TableCell>
+                    <TableCell className="py-2">{item.wins}</TableCell>
+                    <TableCell className="py-2">{item.losses}</TableCell>
+                    <TableCell className="py-2">{item.ties}</TableCell>
+                    <TableCell className="py-2">{item.forfeits}</TableCell>
+                    <TableCell className="py-2">{item.differential}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        );
+      })}
     </div>
   );
 }
