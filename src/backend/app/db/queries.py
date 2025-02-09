@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select
 from .create_engine import create_connection
-from .models import Player, Team, Game
+from .models import Player, Team, Game, RescheduleRequest
 
 # example insert query to use as reference
 def example_insert_query():
@@ -189,3 +189,56 @@ def insert_mock_game(home_team, away_team, date, time, field, home_team_score, a
         else:
             session.commit()
     return True
+
+def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5):
+    engine = create_connection()
+    with Session(engine) as session:
+        request = RescheduleRequest(
+            requester_id=requester_id,
+            receiver_id=receiver_id,
+            game_id=game_id,
+            option1=option1,
+            option2=option2,
+            option3=option3,
+            option4=option4,
+            option5=option5
+        )
+        try:
+            session.add_all([request])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_reschedule_requests(team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        requester_alias = aliased(Team, name="requesting_team")
+        reciever_alias = aliased(Team, name="recieving_team")
+
+        stmt = (
+            select(
+                RescheduleRequest.id, 
+                RescheduleRequest.game_id, 
+                RescheduleRequest.option1, 
+                RescheduleRequest.option2, 
+                RescheduleRequest.option3, 
+                RescheduleRequest.option4, 
+                RescheduleRequest.option5,
+                requester_alias.id.label("requester_id"),
+                requester_alias.team_name.label("requester_team_name"),
+                reciever_alias.id.label("reciever_id"),
+                reciever_alias.team_name.label("reciever_team_name"),
+                Game.date,
+                Game.time,
+                Game.field
+            )
+            .join(requester_alias, Team.id == requester_alias.id)
+            .join(reciever_alias, Team.id == reciever_alias.id)
+            .join(Game, Game.id == RescheduleRequest.game_id)
+            .where(requester_alias.id == team_id | reciever_alias.id == team_id)
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
