@@ -161,7 +161,7 @@ export default function SchedulePage() {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
-  // const [events, setEvents] = useState<Event[]>();
+  const [events, setEvents] = useState<Event[]>();
       
   // // on page initialization pulls schedule data from backend server and updates events in calendar
   // useEffect(() => {
@@ -185,8 +185,14 @@ export default function SchedulePage() {
           setSchedType(0);
         }
       }
-      setLoading(false); // Set loading to false after fetching session
     };
+
+    (async () => {
+      let formattedEvents = await getSchedule()
+      setEvents(formattedEvents)
+    })();
+
+    setLoading(false); // Set loading to false after fetching session
 
     fetchSession();
   }, []);
