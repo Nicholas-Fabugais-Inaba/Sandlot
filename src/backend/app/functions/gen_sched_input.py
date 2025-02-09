@@ -172,7 +172,6 @@ def gen_mock_schedule():
     send_schedule_to_db(schedule, score, t)
 
 
-# # games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
 # games = gen_games_division(divs, GAMES_PER_TEAM)
 # print(games)
 # print(len(games))
@@ -187,3 +186,5 @@ def gen_mock_schedule():
 # schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
 # print(schedule)
 # print(score)
+
+# send_schedule_to_db(schedule, score, t)
