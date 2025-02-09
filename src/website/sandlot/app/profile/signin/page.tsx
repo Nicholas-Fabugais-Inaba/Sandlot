@@ -10,7 +10,7 @@ import { Button } from '@heroui/react';
 import styles from './SignIn.module.css';
 
 export default function SignIn() {
-  const [email, setEmail] = useState('');
+  const [userID, setUserID] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function SignIn() {
     e.preventDefault();
     const result = await signIn('credentials', {
       redirect: false,  // Prevent automatic redirect
-      email,
+      userID,
       password,
     });
 
@@ -40,8 +40,8 @@ export default function SignIn() {
           {error && <p className={styles.error}>{error}</p>}
           <form className="form" onSubmit={handleSignIn}>
             <div className={styles.inputGroup}>
-              <label>Email:</label>
-              <input className={styles.input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <label>Email or Team Username:</label>
+              <input className={styles.input} type="text" value={userID} onChange={(e) => setUserID(e.target.value)} required />
             </div>
             <div className={styles.inputGroup}>
               <label>Password:</label>

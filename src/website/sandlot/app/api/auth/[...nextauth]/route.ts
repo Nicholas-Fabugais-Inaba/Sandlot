@@ -1,68 +1,71 @@
 // app/api/auth/[...nextauth]/route.ts
 
-import NextAuth, { NextAuthOptions, DefaultSession, Session } from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
-import { mockUsers } from '../../users/database';
-
-declare module 'next-auth' {
-  interface User {
-    id: string;
-    email: string;
-    name?: string | null;
-    teamName?: string | null;
-    accountType: "player" | "team";
-  }
-
-  interface Session extends DefaultSession {
-    user?: User;
-  }
-}
-
-interface CustomSession extends Session {
-  user?: CustomUser;
-}
-
-interface CustomUser {
-  id: string;
-  email: string;
-  name?: string | null;
-  teamName?: string | null;
-  accountType: "player" | "team";
-}
-
-async function authenticateUser(email: string, password: string) {
-  const user = mockUsers.find((user) => user.email === email);
-
-  if (user) {
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-
-    if (isPasswordMatch) {
-      console.log('Authenticated user:', user);  // Debugging log
-      return {
-        id: user.id,
-        email: user.email,
-        name: user.name || null,
-        teamName: user.teamName || null,
-        accountType: user.accountType,
-      };
-    }
-  }
-
-  return null;
-}
+import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
+import getPlayer from "@/app/functions/getPlayer";
+import getTeam from "@/app/functions/getTeam";
 
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
+      // The name to display on the sign-in form (e.g. 'Sign in with...')
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        userID: { label: 'User ID', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
         if (credentials) {
-          const user = await authenticateUser(credentials.email, credentials.password);
+          // Fetch user data from your database
+          let user = {
+            id: "temp_id",
+            name: "temp_name",
+            email: "temp_email",
+            role: "temp_role",
+            gender: "temp_gender",
+            teamName: "temp_team_name",
+            username: "temp_username",
+            division: "temp_division",
+            offday: "temp_offday",
+            preferred_division: "temp_preferred_division",
+            preferred_time: "temp_preferred_time",
+          }
+          // TODO: if statments here are poor, should have better way of checking for email/password or player/team
+          const regex = /[@]/;
+          if (regex.test(credentials.userID)) {
+            const player = await getPlayer({ email: credentials.userID })
+            user = {
+              id: "temp_id",
+              name: player.first_name,
+              email: player.email,
+              role: "player",
+              gender: player.gender,
+              teamName: "team_name",
+              username: "temp_username",
+              division: "temp_division",
+              offday: "temp_offday",
+              preferred_division: "temp_preferred_division",
+              preferred_time: "temp_preferred_time",
+            }
+          }
+          else if(credentials.userID != "admin") {
+            const team = await getTeam({ username: credentials.userID })
+            user = {
+              id: "temp_id",
+              name: "temp_name",
+              email: "temp_email",
+              role: "team",
+              gender: "temp_gender",
+              teamName: team.team_name,
+              username: team.username,
+              division: team.division,
+              offday: team.offday,
+              preferred_division: team.preferred_division,
+              preferred_time: team.preferred_time,
+            }
+          }
+          
           if (user) {
             return user;
           }
@@ -72,39 +75,35 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: 'jwt', // Ensure JWT is used for session handling
   },
   pages: {
     signIn: '/profile/signin',
   },
   callbacks: {
-    async session({ session, token }: { session: CustomSession, token: any }) {
-      console.log("Session callback token:", token);
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user = {
           ...session.user,
-          id: token.id || "",
-          email: token.email || "",
-          name: token.name || null,
-          teamName: token.teamName || null,
-          accountType: token.accountType as "player" | "team",
+          name: token.name ?? '',
+          role: typeof token.role === 'string' ? token.role : '',
+          teamName: typeof token.teamName === 'string' ? token.teamName : '',
         };
       }
       console.log("Session callback session:", session);  // Debugging log
       return session;
     },
-    async jwt({ token, user }: { token: any, user?: CustomUser }) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
-        token.id = user.id;
+        token.name = user.name;
         token.email = user.email;
-        token.name = user.name || null;
-        token.teamName = user.teamName || null;
-        token.accountType = user.accountType;
+        token.role = user.role;
+        token.teamName = user.teamName;
       }
-      console.log("JWT callback token:", token);  // Debugging log
       return token;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET, // Ensure you have this set in your .env file
 };
 
 export const handler = NextAuth(authOptions);

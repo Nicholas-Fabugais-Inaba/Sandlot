@@ -14,13 +14,7 @@ interface Team {
   teamName: string;
   players: { id: string; name: string; email: string }[];
   joinRequests: { id: string; name: string; email: string }[];
-}
-
-interface CustomUser {
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  accountType: "player" | "team";
+  captain: { id: string; name: string; email: string }; // Add captain info
 }
 
 // Define the interface for the body parameter in handleAction
@@ -35,18 +29,14 @@ export default function TeamPage() {
   const [userTeam, setUserTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [teamName, setTeamName] = useState<string>(""); 
-  const [showModal, setShowModal] = useState(false);  // Modal visibility
   const router = useRouter();
-
-  const accountType = (session?.user as CustomUser)?.accountType;
 
   useEffect(() => {
     if (session) {
-      console.log("Session data:", session);  // Debugging log
-      console.log("Account type:", accountType);  // Debugging log
+      console.log("Session data:", session);
+      console.log("Account type:", session.user.role);
     }
-  }, [session, accountType]);
+  }, [session, session?.user.role]);
 
   const fetchTeams = useCallback(async () => {
     setLoading(true);
@@ -54,18 +44,16 @@ export default function TeamPage() {
       const res = await fetch("/api/teams");
       if (!res.ok) throw new Error("Failed to fetch teams");
       const data = await res.json();
-      console.log("Fetched teams:", data); // Debugging log
+      console.log("Fetched teams:", data);
       setTeams(data.teams);
   
-      // If account type is "team" and they haven't created a team yet:
-      if (accountType === "team") {
+      if (session?.user.role === "team") {
         const teamRes = await fetch(`/api/teams/my-team?email=${session?.user?.email}`);
       
         if (teamRes.ok) {
           const teamData = await teamRes.json();
           console.log("User team data:", teamData);
       
-          // Fetch full details for each join request
           const joinRequestsWithDetails = await Promise.all(
             teamData.team.joinRequests.map(async (request: { id: string; name: string; email: string }) => {
               const userRes = await fetch(`/api/users?email=${request.email}`);
@@ -75,9 +63,16 @@ export default function TeamPage() {
               }
               return { id: request.id, name: request.name, email: request.email };
             })
-          );
+          );          
       
           setUserTeam({ ...teamData.team, joinRequests: joinRequestsWithDetails });
+        }
+      } else if (session?.user.role === "player") {
+        // Get player-specific data if player is authenticated
+        const playerTeamRes = await fetch(`/api/teams/player-team?email=${session?.user.email}`);
+        if (playerTeamRes.ok) {
+          const playerTeamData = await playerTeamRes.json();
+          setUserTeam(playerTeamData.team);
         }
       }      
     } catch (error) {
@@ -85,7 +80,7 @@ export default function TeamPage() {
     } finally {
       setLoading(false);
     }
-  }, [accountType, session]);  
+  }, [session?.user.role, session]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -93,12 +88,16 @@ export default function TeamPage() {
     }
   }, [status, fetchTeams]);
 
-  // Updated handleAction function with proper typing for body
-  const handleAction = async (url: string, body?: JoinRequestBody, successMessage?: string) => {
+  const handleAction = async (
+    url: string,
+    method: "POST" | "DELETE",
+    body?: object,
+    successMessage?: string
+  ) => {
     setActionLoading(true);
     try {
       const res = await fetch(url, {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
         body: body ? JSON.stringify(body) : undefined,
       });
@@ -123,136 +122,151 @@ export default function TeamPage() {
     }
   };  
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-
+  if (status === "loading") return <p>Loading...</p>;
   if (!session) {
     return (
       <div>
         <h1 className={title()}>Team</h1>
         <div className="centered-container mt-32">
-          <h1 className="text-xl font-semibold text-center">
-            You need to be signed in to view this page.
-          </h1>
+          <h1 className="text-xl font-semibold text-center">You need to be signed in to view this page.</h1>
           <div className="flex space-x-4 mt-4">
-            <Button
-              onPress={() => router.push("/profile/signin?callbackUrl=/team")}
-              className="button"
-            >
-              Sign In
-            </Button>
-            <Button
-              onPress={() => router.push("/profile/register?callbackUrl=/team")}
-              className="button"
-            >
-              Register
-            </Button>
+            <Button onPress={() => router.push("/profile/signin?callbackUrl=/team")} className="button">Sign In</Button>
+            <Button onPress={() => router.push("/profile/register?callbackUrl=/team")} className="button">Register</Button>
           </div>
         </div>
       </div>
     );
   }
 
-  const renderView = () => {
-    switch (accountType) {
-      case "player":
-        return (
-          <div>
-            <h2 style={{ marginBottom: "20px" }} className="text-xl font-semibold text-center">Available Teams</h2>
-            {teams.map((team) => (
+  return (
+    <div>
+      <h1 className={title()}>Team</h1>
+      
+      {/* Player View: Available Teams */}
+      {session.user.role === "player" && !userTeam ? (
+        <div>
+          <h2 className="text-xl font-semibold text-center mb-4 mt-4">Available Teams</h2>
+          {teams.length ? (
+            teams.map((team) => (
               <div key={team.id} className="p-4 border mb-2 rounded">
                 <p>{team.teamName}</p>
                 <Button
                   disabled={actionLoading}
                   className="button"
-                  onPress={() => {
-                    if (session?.user) {
-                      handleAction(`/api/teams/${team.id}/join`, { playerEmail: session.user.email, captainEmail: "" }, "Join request sent!");
-                    }
-                  }}
+                  onPress={() => handleAction(
+                    `/api/teams/${team.id}/join`,
+                    "POST",
+                    { playerEmail: session.user.email },
+                    "Join request sent!"
+                  )}
                 >
                   Request to Join
                 </Button>
               </div>
+            ))
+          ) : (
+            <p>No available teams at the moment.</p>
+          )}
+        </div>
+      ) : session.user.role === "player" && userTeam ? (
+        // Player View After Join Request Accepted
+        <div className="flex">
+          {/* Left Section: Team Roster */}
+          <div className="w-3/5 mr-4">
+            <h2 className="text-xl font-bold mb-2">{userTeam.teamName}'s Roster</h2>
+            <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
+              <TableHeader>
+                <TableColumn>Name</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {userTeam.players.length ? (
+                  userTeam.players.map((player) => (
+                    <TableRow key={player.id}>
+                      <TableCell>{player.name}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow><TableCell>No players yet</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Right Section: Team Info (Captain's Info and Leave Team) */}
+          <div className="w-2/5">
+            <h2 className="text-xl font-bold mb-2">{userTeam.teamName}'s Info</h2>
+            <Button
+              onPress={() => alert(`Captain's Info: ${userTeam.captain.name} (${userTeam.captain.email})`)}
+              className="button mb-4"
+            >
+              Captain's Info
+            </Button>
+            <Button
+              onPress={() => handleAction(
+                `/api/teams/${userTeam.id}/leave`,
+                "POST",
+                { playerEmail: session.user.email },
+                "You have left the team"
+              )}
+              className="button"
+            >
+              Leave Team
+            </Button>
+          </div>
+        </div>
+      ) : session.user.role === "team" ? (
+        // Team View: Team Roster and Pending Requests
+        <div className="flex">
+          <div className="w-3/5 mr-4">
+            <h2 className="text-xl font-bold mb-2">{session.user.teamName || "Your Team"}'s Roster</h2>
+            <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
+              <TableHeader>
+                <TableColumn>Name</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {(userTeam?.players?.length ? userTeam.players : [{ id: "1", name: "Player 1" }, { id: "2", name: "Player 2" }]).map((player) => (
+                  <TableRow key={player.id}>
+                    <TableCell>{player.name}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          
+          <div className="w-2/5">
+            <h2 className="text-xl font-bold mb-2">Pending Requests</h2>
+            {(userTeam?.joinRequests?.length ? userTeam.joinRequests : [{ email: "request@domain.com", name: "John Doe" }]).map((request) => (
+              <div key={request.email} className="p-4 border mb-2 rounded">
+                <p>{request.name} ({request.email})</p>
+                <Button
+                  disabled={actionLoading}
+                  className="button mr-2"
+                  onPress={() => handleAction(
+                    `/api/teams/${session.user.teamName}/accept`,
+                    "POST",
+                    { playerEmail: request.email },
+                    "Player added!"
+                  )}
+                >
+                  Accept
+                </Button>
+                <Button
+                  disabled={actionLoading}
+                  className="button"
+                  onPress={() => handleAction(
+                    `/api/teams/${session.user.teamName}/deny`,
+                    "POST",
+                    { playerEmail: request.email },
+                    "Request denied."
+                  )}
+                >
+                  Deny
+                </Button>
+              </div>
             ))}
           </div>
-        );
-      case "team":
-        return (
-          <div className="flex">
-            {/* Left side: Table of Players */}
-            <div className="w-3/5 mr-4">
-            {userTeam ? (
-              <>
-                <h2 className="text-xl font-bold text-left mb-2">{userTeam.teamName} Roster</h2>
-                <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
-                  <TableHeader>
-                    <TableColumn>Name</TableColumn>
-                  </TableHeader>
-                  <TableBody>
-                    {userTeam.players.map((player) => (
-                      <TableRow key={player.id}>
-                        <TableCell>{player.name}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </>
-            ) : (
-              <p>Loading team data...</p>
-            )}
-
-            </div>
-  
-            {/* Right side: Buttons */}
-            <div className="w-2/5">
-              <h2 className="text-xl font-bold mb-2">Pending Requests</h2>
-              {userTeam?.joinRequests?.length ? (
-                userTeam.joinRequests.map((request) => (
-                  <div key={request.email} className="p-4 border mb-2 rounded">
-                    <p>{request.name} (Email: {request.email})</p> {/* Display Name and Email */}
-                    <Button
-                      disabled={actionLoading}
-                      className="button mr-2"
-                      onPress={() => {
-                        if (session?.user) {
-                          handleAction(`/api/teams/${userTeam.id}/accept`, { playerEmail: request.email, captainEmail: session.user.email }, "Player added!");
-                        }
-                      }}
-                    >
-                      Accept
-                    </Button>
-                    <Button
-                      disabled={actionLoading}
-                      className="button"
-                      onPress={() => {
-                        if (session?.user) {
-                          handleAction(`/api/teams/${userTeam.id}/deny`, { playerEmail: request.email, captainEmail: session.user.email }, "Request denied.");
-                        }
-                      }}
-                    >
-                      Deny
-                    </Button>
-                  </div>
-                ))
-              ) : (
-                <p>No pending requests.</p>
-              )}
-            </div>
-          </div>
-        );
-      default:
-        return <p>No valid account type found. Please contact support.</p>;
-    }
-  };  
-
-  return (
-    <div>
-      <div style={{ marginBottom: "20px" }}>
-        <h1 className={title()}>Team</h1>
-      </div>
-      {renderView()}
+        </div>
+      ) : null}
     </div>
-  );
+  );  
 }
