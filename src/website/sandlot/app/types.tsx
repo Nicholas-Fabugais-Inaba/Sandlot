@@ -2,14 +2,17 @@ export type Event = {
     start: Date;
     end: Date;
     field1?: {
+        id: number
         home: string;
         away: string;
     };
     field2?: {
+        id: number
         home: string;
         away: string;
     };
     field3?: {
+        id: number
         home: string;
         away: string;
     };

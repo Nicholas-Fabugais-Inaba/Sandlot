@@ -144,6 +144,7 @@ interface SelectedDate {
 }
 
 interface RescheduleGame {
+  id: number;
   date: Date;
   field: number;
   home: string;
@@ -240,7 +241,7 @@ export default function SchedulePage() {
     if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home === currTeam || teams.away === currTeam)))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
-      setRescheduleGame({ date: start, field: field, home: teams.home, away: teams.away });
+      setRescheduleGame({ id: teams.id, date: start, field: field, home: teams.home, away: teams.away });
     }
   };
 

@@ -48,6 +48,7 @@ export default async function getSchedule(): Promise<Event[]> {
         eventsTemp[dateTime] = {
           ...eventsTemp[dateTime],
           field1: {
+            id: game.id,
             home: game.home_team_name,
             away: game.away_team_name
           }
@@ -57,6 +58,7 @@ export default async function getSchedule(): Promise<Event[]> {
         eventsTemp[dateTime] = {
           ...eventsTemp[dateTime],
           field2: {
+            id: game.id,
             home: game.home_team_name,
             away: game.away_team_name
           }
@@ -66,6 +68,7 @@ export default async function getSchedule(): Promise<Event[]> {
         eventsTemp[dateTime] = {
           ...eventsTemp[dateTime],
           field3: {
+            id: game.id,
             home: game.home_team_name,
             away: game.away_team_name
           }
