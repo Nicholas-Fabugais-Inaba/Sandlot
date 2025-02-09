@@ -1,55 +1,89 @@
 import axios from 'axios';
-import { Event } from '../types';
+import { Game, Event } from '../types';
+import { Dictionary } from '@fullcalendar/core/internal';
 
 const APIHOST = `127.0.0.1:8000`;
 
 export default async function getSchedule(): Promise<Event[]> {
   try {
-    const response = await axios.get(`http://${APIHOST}/schedule/get`);
-    const [gamesData, teamsData] = response.data;
+    const response = await axios.get(`http://${APIHOST}/schedule/get_all_games`);
 
-    // Helper function to format time slots
-    const getTimeSlot = (timeSlot: number): [string, string] => {
-      if (timeSlot == 1) {
-        return ['17:00:00', '18:30:00']; // 5:00-6:30 PM
-      } else if (timeSlot == 2) {
-        return ['18:30:00', '20:00:00']; // 6:30-8:00 PM
-      } else if (timeSlot == 3) {
-        return ['20:00:00', '21:30:00']; // 8:00-9:30 PM
-      } else {
-        return ['00:00:00', '00:00:00']; // Default (if something goes wrong)
+    console.log(response.data)
+    var eventsTemp: { [key: string]: Event} = {}
+
+    for (const game of response.data) {
+      var dateTime : string = game.date + game.time;
+
+      // If the event doesn't exist, initialize it with start and end dates
+      if (!(dateTime in eventsTemp)) {
+        var start = new Date(game.date);
+        var end = new Date(game.date);
+        if (game.time === "1") {
+          start.setHours(17);
+          end.setHours(18);
+          end.setMinutes(30);
+        } else if (game.time === "2") {
+          start.setHours(18);
+          start.setMinutes(30);
+          end.setHours(20);
+        }
+        else if (game.time === "3") {
+          start.setHours(20);
+          end.setHours(21);
+          end.setMinutes(30);
+        }
+        else if (game.time === "4") {
+          start.setHours(21);
+          end.setMinutes(30);
+          end.setHours(23)
+        }
+        eventsTemp[dateTime] = {
+          start: start,
+          end: end
+        };
       }
-    };
 
-    // Parse and format the games data
-    const formattedEvents = Object.entries(gamesData).map(([key, value]: any) => {
+      // Add the field property to the event
+      if (game.field === "1") {
+        eventsTemp[dateTime] = {
+          ...eventsTemp[dateTime],
+          field1: {
+            home: game.home_team,
+            away: game.away_team
+          }
+        }
+      }
+      else if (game.field === "2") {
+        eventsTemp[dateTime] = {
+          ...eventsTemp[dateTime],
+          field2: {
+            home: game.home_team,
+            away: game.away_team
+          }
+        }
+      }
+      else if (game.field === "3") {
+        eventsTemp[dateTime] = {
+          ...eventsTemp[dateTime],
+          field3: {
+            home: game.home_team,
+            away: game.away_team
+          }
+        }
+      }
+    }
 
-      // Destructure the key and value
-      const [field, timeSlot, year, month, day] = key.split(",");
-      const [team1Id, team2Id] = value;
-      
-      // Extract the names of the teams from teamsData
-      const team1Name = teamsData[team1Id]?.name || `Team ${team1Id}`;
-      const team2Name = teamsData[team2Id]?.name || `Team ${team2Id}`;
+    // Convert the dictionary to an array of events
+    const formattedEvents: Event[] = [];
+    for (const key in eventsTemp) {
+      if (eventsTemp.hasOwnProperty(key)) {
+        formattedEvents.push(eventsTemp[key]);
+      }
+    }
 
-      // Format the date as YYYY-MM-DD
-      const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-      // Get the start and end times for the slot
-      const [startTime, endTime] = getTimeSlot(timeSlot);
-
-      // Construct the FullCalendar event object
-      // TODO: properly format events
-      const event: Event = {
-        title: `${team1Name} vs ${team2Name}`,
-        start: `${formattedDate}T${startTime}`,
-        end: `${formattedDate}T${endTime}`,
-        field: `Field ${field}`,
-      };
-      return event
-    });
-
+    console.log(formattedEvents)
     return formattedEvents;
+
   } catch (error) {
     console.error("Error fetching schedule:", error);
     return [];
