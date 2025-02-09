@@ -8,6 +8,8 @@ export default async function getSchedule(): Promise<Event[]> {
   try {
     const response = await axios.get(`http://${APIHOST}/schedule/get_all_games`);
 
+    console.log(response.data)
+
     var eventsTemp: { [key: string]: Event} = {}
 
     for (const game of response.data) {

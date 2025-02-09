@@ -14,10 +14,12 @@ async def get_schedule():
 
 @router.get("/get_all_games", response_model=list)
 async def get_scheduled_games():
-    games = list(get_all_games())
+    games = get_all_games()
+    games = [dict(row) for row in games]
     return games
 
 @router.post("/get_team_games", response_model=list)
 async def team_games(team_id: str):
-    games = list(get_team_games(team_id))
+    games = get_team_games(team_id)
+    games = [dict(row) for row in games]
     return games
