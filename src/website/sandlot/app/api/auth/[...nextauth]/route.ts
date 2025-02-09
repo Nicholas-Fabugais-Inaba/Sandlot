@@ -91,6 +91,7 @@ const authOptions: NextAuthOptions = {
           name: token.name ?? '',
           role: typeof token.role === 'string' ? token.role : '',
           teamName: typeof token.teamName === 'string' ? token.teamName : '',
+          team_id: typeof token.team_id === 'number' ? token.team_id : 0,
         };
       }
       return session;
@@ -101,6 +102,7 @@ const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.role = user.role;
         token.teamName = user.teamName;
+        token.team_id = user.team_id;
       }
       return token;
     },
