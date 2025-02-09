@@ -5,6 +5,8 @@ from .scheduler import gen_schedule, gen_schedule_w_skip, send_schedule_to_db
 from random import shuffle
 from ..db.queries import get_all_teams
 
+from ..db.mock_data import insert_mock_schedule
+
 
 FIELDS = 3
 TIMESLOTS = 3
@@ -20,17 +22,17 @@ div_a = {}
 div_b = {}
 div_c = {}
 div_d = {}
-Teams = get_all_teams()
-for i in range(len(Teams)):
-    teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
-    if Teams[i]["division"] == 0:
-        div_a[i] = teams[i]
-    elif Teams[i]["division"] == 1:
-        div_b[i] = teams[i]
-    elif Teams[i]["division"] == 2:
-        div_c[i] = teams[i]
-    elif Teams[i]["division"] == 3:
-        div_d[i] = teams[i]
+# Teams = get_all_teams()
+# for i in range(len(Teams)):
+#     teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+#     if Teams[i]["division"] == 0:
+#         div_a[i] = teams[i]
+#     elif Teams[i]["division"] == 1:
+#         div_b[i] = teams[i]
+#     elif Teams[i]["division"] == 2:
+#         div_c[i] = teams[i]
+#     elif Teams[i]["division"] == 3:
+#         div_d[i] = teams[i]
 
 divs = [div_a, div_b, div_c, div_d]
 
@@ -50,9 +52,8 @@ def gen_games_round_robin_old(teams, rounds: int):
     reordered_games = [games[i + j * n] for i in range(n) for j in range(len(games) // n)]
     return reordered_games
 
-def gen_games_division(teams, games_per_team: int):
+def gen_games_division(divs, games_per_team: int):
     games = []
-    n = len(teams)
     for div in divs:
         div_games = gen_games_round_robin(div, games_per_team)
         games.extend(div_games)
@@ -129,6 +130,7 @@ def get_weekdays(start_date: date, end_date: date):
     
     return weekdays
 
+
 def create_schedule():
     global teams, schedule, json_schedule, score
     games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
@@ -143,6 +145,34 @@ def create_schedule():
     return [json_schedule, teams]
 
 
+def gen_mock_schedule():
+    teams = {}
+    div_a = {}
+    div_b = {}
+    div_c = {}
+    div_d = {}
+    Teams = get_all_teams()
+    for i in range(len(Teams)):
+        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+        if Teams[i]["division"] == 0:
+            div_a[i] = teams[i]
+        elif Teams[i]["division"] == 1:
+            div_b[i] = teams[i]
+        elif Teams[i]["division"] == 2:
+            div_c[i] = teams[i]
+        elif Teams[i]["division"] == 3:
+            div_d[i] = teams[i]
+
+    divs = [div_a, div_b, div_c, div_d]
+
+    games = gen_games_division(divs, GAMES_PER_TEAM)
+
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+
+    schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
+
+    send_schedule_to_db(schedule, score, t)
+
 
 # games = gen_games_division(divs, GAMES_PER_TEAM)
 # print(games)
@@ -153,9 +183,13 @@ def create_schedule():
 # print(game_slots)
 # print(len(game_slots))
 
+
 # # # Constraint generation code will be in scheduler.py
 # schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
 # print(schedule)
 # print(score)
 
 # send_schedule_to_db(schedule, score, t)
+
+# insert_mock_schedule()
+#gen_mock_schedule()

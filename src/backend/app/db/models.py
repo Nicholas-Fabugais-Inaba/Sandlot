@@ -29,7 +29,7 @@ class Team(Base):
     __tablename__ = "team"
     id: Mapped[int] = mapped_column(primary_key=True)
     team_name: Mapped[Optional[str]] = mapped_column(String(50)) # don't know what string limits we should use; also should prolly use constants
-    captain_id: Mapped[Optional["Player"]] = mapped_column(ForeignKey("player.id"))
+    captain_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
     #cocaptains: Mapped["Player"] = mapped_column()
     #player_list: Mapped["Player"] = mapped_column()
     standing: Mapped[Optional[str]] = mapped_column(String(50))
@@ -43,14 +43,20 @@ class Team(Base):
 class Game(Base):
     __tablename__ = "game"
     id: Mapped[int] = mapped_column(primary_key=True)
-    home_team: Mapped[Optional[str]] = mapped_column(String(50))
-    away_team: Mapped[Optional[str]] = mapped_column(String(50))
-    date: Mapped[Optional[str]] = mapped_column(String(50))
+    home_team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    away_team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    date: Mapped[Optional[str]] = mapped_column(String(50)) # should be datetime eventually
     time: Mapped[Optional[str]] = mapped_column(String(50))
     field: Mapped[Optional[str]] = mapped_column(String(50))
-    home_team_score: Mapped[Optional[str]] = mapped_column(String(50))
-    away_team_score: Mapped[Optional[str]] = mapped_column(String(50))
-    played: Mapped[Optional[bool]] = mapped_column()
+    home_team_score: Mapped[Optional[int]] = mapped_column()
+    away_team_score: Mapped[Optional[int]] = mapped_column()
+    played: Mapped[Optional[bool]] = mapped_column(default=False)
 
-# used for creating tables in DB, don't uncomment unless you want to reinitalize DB tables    
-Base.metadata.create_all(engine)
+    home_team = relationship("Team", foreign_keys=[home_team_id], backref="home_games")
+    away_team = relationship("Team", foreign_keys=[away_team_id], backref="away_games")
+
+# function which creates defined models as tables in DB
+def create_tables():
+    Base.metadata.create_all(engine)
+
+#create_tables()

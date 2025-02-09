@@ -2,7 +2,8 @@
 import datetime
 from sys import maxsize
 import time
-from ..db.queries import insert_game
+from ..db.queries import insert_mock_game
+import random
 
 # All variables here are global for use in the backtrack scheduler algorithm
 # They should not be changed outside of the function that starts the algorithm (TODO)
@@ -392,5 +393,9 @@ def gen_schedule(games_to_sched, game_slots_to_sched, teams_to_sched):
 
 
 def send_schedule_to_db(schedule: dict, score: int, teams: dict):
+    demo_day = datetime.date(2025, 6, 23)
     for gameslot, game in schedule.items():
-        insert_game(teams[game[0]]["id"], teams[game[1]]["id"], gameslot[2], gameslot[1], gameslot[0])
+        if(gameslot[2] < demo_day):
+            insert_mock_game(int(teams[game[0]]["id"]), int(teams[game[1]]["id"]), gameslot[2], gameslot[1], gameslot[0], random.randint(1, 8), random.randint(1, 8), True)
+        else:
+            insert_mock_game(int(teams[game[0]]["id"]), int(teams[game[1]]["id"]), gameslot[2], gameslot[1], gameslot[0], 0, 0, False)
