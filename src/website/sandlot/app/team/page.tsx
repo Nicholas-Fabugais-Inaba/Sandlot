@@ -5,32 +5,31 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { title } from "@/components/primitives";
-import { Input, Modal, Button } from "@heroui/react";
-import { useRouter } from "next/navigation"; // Add to navigate for Sign In/Register
+import { Input, Modal, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
+import { useRouter } from "next/navigation";
 
 interface Team {
   id: string;
   teamName: string;
-  players: { id: string; name: string }[];
-  joinRequests: { id: string; name: string }[];
-}
-
-interface CustomUser {
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  accountType: "player" | "team";
+  players: { id: string; name: string; email: string }[];
+  joinRequests: { id: string; name: string; email: string }[];
+  captain: { id: string; name: string; email: string }; // Add captain info
 }
 
 export default function TeamPage() {
-  const { data: session, status } = useSession(); // Using `status` to check session loading
+  const { data: session, status } = useSession();
   const [teams, setTeams] = useState<Team[]>([]);
   const [userTeam, setUserTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
-  const [teamName, setTeamName] = useState<string>(""); 
-  const [showModal, setShowModal] = useState(false);
-  const router = useRouter(); // Add router for navigation
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      console.log("Session data:", session);
+      console.log("Account type:", session.user.role);
+    }
+  }, [session, session?.user.role]);
 
   const fetchTeams = useCallback(async () => {
     setLoading(true);
@@ -38,14 +37,35 @@ export default function TeamPage() {
       const res = await fetch("/api/teams");
       if (!res.ok) throw new Error("Failed to fetch teams");
       const data = await res.json();
+      console.log("Fetched teams:", data);
       setTeams(data.teams);
-
-      if ((session?.user as unknown as CustomUser).accountType === "team") {
-        if (session && session.user) {
-          const teamRes = await fetch(`/api/teams/my-team?email=${session.user.email}`);
-          if (!teamRes.ok) throw new Error("Failed to fetch user team");
+  
+      if (session?.user.role === "team") {
+        const teamRes = await fetch(`/api/teams/my-team?email=${session?.user?.email}`);
+      
+        if (teamRes.ok) {
           const teamData = await teamRes.json();
-          setUserTeam(teamData.team);
+          console.log("User team data:", teamData);
+      
+          const joinRequestsWithDetails = await Promise.all(
+            teamData.team.joinRequests.map(async (request: { id: string; name: string; email: string }) => {
+              const userRes = await fetch(`/api/users?email=${request.email}`);
+              if (userRes.ok) {
+                const userData = await userRes.json();
+                return { id: userData.id, name: userData.name, email: request.email };
+              }
+              return { id: request.id, name: request.name, email: request.email };
+            })
+          );          
+      
+          setUserTeam({ ...teamData.team, joinRequests: joinRequestsWithDetails });
+        }
+      } else if (session?.user.role === "player") {
+        // Get player-specific data if player is authenticated
+        const playerTeamRes = await fetch(`/api/teams/player-team?email=${session?.user.email}`);
+        if (playerTeamRes.ok) {
+          const playerTeamData = await playerTeamRes.json();
+          setUserTeam(playerTeamData.team);
         }
       }
     } catch (error) {
@@ -53,7 +73,7 @@ export default function TeamPage() {
     } finally {
       setLoading(false);
     }
-  }, [session]);
+  }, [session?.user.role, session]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -61,11 +81,16 @@ export default function TeamPage() {
     }
   }, [status, fetchTeams]);
 
-  const handleAction = async (url: string, body?: object, successMessage?: string) => {
+  const handleAction = async (
+    url: string,
+    method: "POST" | "DELETE",
+    body?: object,
+    successMessage?: string
+  ) => {
     setActionLoading(true);
     try {
       const res = await fetch(url, {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
         body: body ? JSON.stringify(body) : undefined,
       });
@@ -80,28 +105,16 @@ export default function TeamPage() {
     }
   };
 
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-
+  if (status === "loading") return <p>Loading...</p>;
   if (!session) {
     return (
       <div>
         <h1 className={title()}>Team</h1>
         <div className="centered-container mt-32">
-          <h1 className="text-xl font-semibold text-center">
-            You need to be signed in to view this page.
-          </h1>
+          <h1 className="text-xl font-semibold text-center">You need to be signed in to view this page.</h1>
           <div className="flex space-x-4 mt-4">
-            <Button
-              onPress={() => router.push(`/profile/signin?callbackUrl=/team`)} // Dynamic callback URL
-              className="button"
-            >
-              Sign In
-            </Button>
-            <Button onPress={() => router.push(`/profile/register?callbackUrl=/team`)} className="button">
-              Register
-            </Button>
+            <Button onPress={() => router.push("/profile/signin?callbackUrl=/team")} className="button">Sign In</Button>
+            <Button onPress={() => router.push("/profile/register?callbackUrl=/team")} className="button">Register</Button>
           </div>
         </div>
       </div>
@@ -112,90 +125,131 @@ export default function TeamPage() {
     <div>
       <h1 className={title()}>Team</h1>
       
-      {((session?.user as unknown as CustomUser)?.accountType === "player") ? (
+      {/* Player View: Available Teams */}
+      {session.user.role === "player" && !userTeam ? (
         <div>
-          <h2>Available Teams</h2>
-          {teams.map((team) => (
-            <div key={team.id} className="p-4 border mb-2 rounded">
-              <p>{team.teamName}</p> {/* Display team name here */}
-              <Button
-                disabled={actionLoading}
-                onPress={() => {
-                  if (session?.user) {
-                    handleAction(`/api/teams/${team.id}/join`, { playerEmail: session.user.email }, "Join request sent!");
-                  }
-                }}
-              >
-                Request to Join
-              </Button>
-            </div>
-          ))}
+          <h2 className="text-xl font-semibold text-center mb-4 mt-4">Available Teams</h2>
+          {teams.length ? (
+            teams.map((team) => (
+              <div key={team.id} className="p-4 border mb-2 rounded">
+                <p>{team.teamName}</p>
+                <Button
+                  disabled={actionLoading}
+                  className="button"
+                  onPress={() => handleAction(
+                    `/api/teams/${team.id}/join`,
+                    "POST",
+                    { playerEmail: session.user.email },
+                    "Join request sent!"
+                  )}
+                >
+                  Request to Join
+                </Button>
+              </div>
+            ))
+          ) : (
+            <p>No available teams at the moment.</p>
+          )}
         </div>
-      ) : ((session?.user as unknown as CustomUser)?.accountType === "team") ? (
-        userTeam ? (
-          <div>
-            <h2>{userTeam.teamName} Roster</h2> {/* Display team name here */}
-            <ul>
-              {userTeam.players.map((player) => (
-                <li key={player.id}>{player.name}</li>
-              ))}
-            </ul>
-            <h2>Pending Requests</h2>
-            {userTeam.joinRequests.length > 0 ? (
-              userTeam.joinRequests.map((request) => (
-                <div key={request.id} className="p-4 border mb-2 rounded">
-                  <p>{request.name}</p>
-                  <Button
-                    disabled={actionLoading}
-                    onPress={() => {
-                      if (session?.user) {
-                        handleAction(`/api/teams/my-team/accept`, { playerEmail: request.id, captainEmail: session.user.email }, "Player added!");
-                      }
-                    }}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    disabled={actionLoading}
-                    onPress={() => {
-                      if (session?.user) {
-                        handleAction(`/api/teams/my-team/deny`, { playerEmail: request.id, captainEmail: session.user.email }, "Request denied.");
-                      }
-                    }}
-                  >
-                    Deny
-                  </Button>
-                </div>
-              ))
-            ) : (
-              <p>No pending requests.</p>
-            )}
+      ) : session.user.role === "player" && userTeam ? (
+        // Player View After Join Request Accepted
+        <div className="flex">
+          {/* Left Section: Team Roster */}
+          <div className="w-3/5 mr-4">
+            <h2 className="text-xl font-bold mb-2">{userTeam.teamName}'s Roster</h2>
+            <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
+              <TableHeader>
+                <TableColumn>Name</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {userTeam.players.length ? (
+                  userTeam.players.map((player) => (
+                    <TableRow key={player.id}>
+                      <TableCell>{player.name}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow><TableCell>No players yet</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
-        ) : (
-          <div>
-            <p>You have not created a team yet.</p>
-            <Button disabled={actionLoading} onPress={() => setShowModal(true)}>Create Team</Button>
-            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-              <h2>Create a Team</h2>
-              <Input
-                value={teamName}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTeamName(e.target.value)}
-                placeholder="Enter team name"
-              />
-              <Button
-                disabled={actionLoading || !teamName}
-                onPress={() => {
-                  handleAction("/api/teams/create", { teamName }, "Team created!");
-                  setShowModal(false);
-                  setTeamName("");
-                }}
-              >
-                Submit
-              </Button>
-            </Modal>
+
+          {/* Right Section: Team Info (Captain's Info and Leave Team) */}
+          <div className="w-2/5">
+            <h2 className="text-xl font-bold mb-2">{userTeam.teamName}'s Info</h2>
+            <Button
+              onPress={() => alert(`Captain's Info: ${userTeam.captain.name} (${userTeam.captain.email})`)}
+              className="button mb-4"
+            >
+              Captain's Info
+            </Button>
+            <Button
+              onPress={() => handleAction(
+                `/api/teams/${userTeam.id}/leave`,
+                "POST",
+                { playerEmail: session.user.email },
+                "You have left the team"
+              )}
+              className="button"
+            >
+              Leave Team
+            </Button>
           </div>
-        )
+        </div>
+      ) : session.user.role === "team" ? (
+        // Team View: Team Roster and Pending Requests
+        <div className="flex">
+          <div className="w-3/5 mr-4">
+            <h2 className="text-xl font-bold mb-2">{session.user.teamName || "Your Team"}'s Roster</h2>
+            <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
+              <TableHeader>
+                <TableColumn>Name</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {(userTeam?.players?.length ? userTeam.players : [{ id: "1", name: "Player 1" }, { id: "2", name: "Player 2" }]).map((player) => (
+                  <TableRow key={player.id}>
+                    <TableCell>{player.name}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          
+          <div className="w-2/5">
+            <h2 className="text-xl font-bold mb-2">Pending Requests</h2>
+            {(userTeam?.joinRequests?.length ? userTeam.joinRequests : [{ email: "request@domain.com", name: "John Doe" }]).map((request) => (
+              <div key={request.email} className="p-4 border mb-2 rounded">
+                <p>{request.name} ({request.email})</p>
+                <Button
+                  disabled={actionLoading}
+                  className="button mr-2"
+                  onPress={() => handleAction(
+                    `/api/teams/${session.user.teamName}/accept`,
+                    "POST",
+                    { playerEmail: request.email },
+                    "Player added!"
+                  )}
+                >
+                  Accept
+                </Button>
+                <Button
+                  disabled={actionLoading}
+                  className="button"
+                  onPress={() => handleAction(
+                    `/api/teams/${session.user.teamName}/deny`,
+                    "POST",
+                    { playerEmail: request.email },
+                    "Request denied."
+                  )}
+                >
+                  Deny
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
       ) : null}
     </div>
-  );
+  );  
 }
