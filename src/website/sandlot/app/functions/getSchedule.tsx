@@ -9,31 +9,30 @@ export default async function getSchedule(): Promise<Event[]> {
     const response = await axios.get(`http://${APIHOST}/schedule/get_all_games`);
 
     console.log(response.data)
-
     var eventsTemp: { [key: string]: Event} = {}
 
     for (const game of response.data) {
-      var dateTime : string = `${game.date, game.time}`;
+      var dateTime : string = game.date + game.time;
 
       // If the event doesn't exist, initialize it with start and end dates
       if (!(dateTime in eventsTemp)) {
         var start = new Date(game.date);
         var end = new Date(game.date);
-        if (game.time === 1) {
+        if (game.time === "1") {
           start.setHours(17);
           end.setHours(18);
           end.setMinutes(30);
-        } else if (game.time === 2) {
+        } else if (game.time === "2") {
           start.setHours(18);
           start.setMinutes(30);
           end.setHours(20);
         }
-        else if (game.time === 3) {
+        else if (game.time === "3") {
           start.setHours(20);
           end.setHours(21);
           end.setMinutes(30);
         }
-        else if (game.time === 4) {
+        else if (game.time === "4") {
           start.setHours(21);
           end.setMinutes(30);
           end.setHours(23)
@@ -45,7 +44,7 @@ export default async function getSchedule(): Promise<Event[]> {
       }
 
       // Add the field property to the event
-      if (game.field === 1) {
+      if (game.field === "1") {
         eventsTemp[dateTime] = {
           ...eventsTemp[dateTime],
           field1: {
@@ -54,7 +53,7 @@ export default async function getSchedule(): Promise<Event[]> {
           }
         }
       }
-      else if (game.field === 2) {
+      else if (game.field === "2") {
         eventsTemp[dateTime] = {
           ...eventsTemp[dateTime],
           field2: {
@@ -63,7 +62,7 @@ export default async function getSchedule(): Promise<Event[]> {
           }
         }
       }
-      else if (game.field === 3) {
+      else if (game.field === "3") {
         eventsTemp[dateTime] = {
           ...eventsTemp[dateTime],
           field3: {
@@ -82,6 +81,7 @@ export default async function getSchedule(): Promise<Event[]> {
       }
     }
 
+    console.log(formattedEvents)
     return formattedEvents;
 
   } catch (error) {
