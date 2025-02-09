@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class NewPlayer(BaseModel):
     name: str
@@ -24,7 +25,7 @@ class RescheduleRequest(BaseModel):
     receiver_id: int
     game_id: int
     option1: str
-    option2: str
-    option3: str
-    option4: str
-    option5: str
+    option2: Optional[str]
+    option3: Optional[str]
+    option4: Optional[str]
+    option5: Optional[str]
