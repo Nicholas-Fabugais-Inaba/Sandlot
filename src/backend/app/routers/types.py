@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class NewUser(BaseModel):
+class NewPlayer(BaseModel):
     name: str
     email: str
     password: str
@@ -13,6 +13,8 @@ class NewTeam(BaseModel):
     preferred_offday: int
     preferred_time: int
 
-class sendData(BaseModel):
+class PlayerLoginData(BaseModel):
     email: str
 
+class TeamLoginData(BaseModel):
+    username: str
