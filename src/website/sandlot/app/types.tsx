@@ -4,17 +4,23 @@ export type Event = {
     field1?: {
         id: number
         home: string;
+        home_id: number;
         away: string;
+        away_id: number;
     };
     field2?: {
         id: number
         home: string;
+        home_id: number;
         away: string;
+        away_id: number;
     };
     field3?: {
         id: number
         home: string;
+        home_id: number;
         away: string;
+        away_id: number;
     };
 }
 

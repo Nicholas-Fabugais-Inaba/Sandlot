@@ -50,7 +50,9 @@ export default async function getSchedule(): Promise<Event[]> {
           field1: {
             id: game.id,
             home: game.home_team_name,
-            away: game.away_team_name
+            home_id: game.home_team_id,
+            away: game.away_team_name,
+            away_id: game.away_team_id
           }
         }
       }
@@ -60,7 +62,9 @@ export default async function getSchedule(): Promise<Event[]> {
           field2: {
             id: game.id,
             home: game.home_team_name,
-            away: game.away_team_name
+            home_id: game.home_team_id,
+            away: game.away_team_name,
+            away_id: game.away_team_id
           }
         }
       }
@@ -70,7 +74,9 @@ export default async function getSchedule(): Promise<Event[]> {
           field3: {
             id: game.id,
             home: game.home_team_name,
-            away: game.away_team_name
+            home_id: game.home_team_id,
+            away: game.away_team_name,
+            away_id: game.away_team_id
           }
         }
       }
