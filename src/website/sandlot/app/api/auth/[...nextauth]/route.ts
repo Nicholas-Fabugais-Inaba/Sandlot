@@ -3,7 +3,8 @@
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
-import authenticateAccount from "@/app/functions/authenticateAccount";
+import getPlayer from "@/app/functions/getPlayer";
+import getTeam from "@/app/functions/getTeam";
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -11,20 +12,60 @@ const authOptions: NextAuthOptions = {
       // The name to display on the sign-in form (e.g. 'Sign in with...')
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        userID: { label: 'User ID', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
         if (credentials) {
           // Fetch user data from your database
-          const player = await authenticateAccount({ email: credentials.email })
-          const user = {
+          let user = {
             id: "temp_id",
-            name: player.first_name,
-            email: player.email,
-            role: "player",
-            teamName: "team_name",
+            name: "temp_name",
+            email: "temp_email",
+            role: "temp_role",
+            gender: "temp_gender",
+            teamName: "temp_team_name",
+            username: "temp_username",
+            division: "temp_division",
+            offday: "temp_offday",
+            preferred_division: "temp_preferred_division",
+            preferred_time: "temp_preferred_time",
           }
+          // TODO: if statments here are poor, should have better way of checking for email/password or player/team
+          const regex = /[@]/;
+          if (regex.test(credentials.userID)) {
+            const player = await getPlayer({ email: credentials.userID })
+            user = {
+              id: "temp_id",
+              name: player.first_name,
+              email: player.email,
+              role: "player",
+              gender: player.gender,
+              teamName: "team_name",
+              username: "temp_username",
+              division: "temp_division",
+              offday: "temp_offday",
+              preferred_division: "temp_preferred_division",
+              preferred_time: "temp_preferred_time",
+            }
+          }
+          else if(credentials.userID != "admin") {
+            const team = await getTeam({ username: credentials.userID })
+            user = {
+              id: "temp_id",
+              name: "temp_name",
+              email: "temp_email",
+              role: "team",
+              gender: "temp_gender",
+              teamName: team.team_name,
+              username: team.username,
+              division: team.division,
+              offday: team.offday,
+              preferred_division: team.preferred_division,
+              preferred_time: team.preferred_time,
+            }
+          }
+          
           if (user) {
             return user; // This returns user info to NextAuth session handler
           }

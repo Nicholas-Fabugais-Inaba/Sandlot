@@ -21,7 +21,7 @@ async def get_player_account(data: PlayerLoginData):
     response = dict(get_player(data.email))
     return response
 
-@router.post("get_team", response_model=object)
+@router.post("/get_team", response_model=object)
 async def get_team_account(data: TeamLoginData):
     response = dict(get_team(data.username))
     return response

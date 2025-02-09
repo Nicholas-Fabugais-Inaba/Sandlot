@@ -8,6 +8,11 @@ declare module "next-auth" {
       role: string;
       gender: string;
       teamName: string;
+      username: string;
+      division: string;
+      offday: string;
+      preferred_division: string;
+      preferred_time: string;
     };
   }
 
@@ -17,5 +22,10 @@ declare module "next-auth" {
     role: string;
     gender: string;
     teamName: string;
+    username: string;
+    division: string;
+    offday: string;
+    preferred_division: string;
+    preferred_time: string;
   }
 }
