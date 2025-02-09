@@ -1,6 +1,6 @@
 
 from datetime import date, timedelta
-from .scheduler import gen_schedule, gen_schedule_w_skip
+from .scheduler import gen_schedule, gen_schedule_w_skip, send_schedule_to_db
 # from scheduler import gen_schedule, gen_schedule_w_skip
 from random import shuffle
 from ..db.queries import get_all_teams
@@ -144,7 +144,6 @@ def create_schedule():
 
 
 
-# # games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
 # games = gen_games_division(divs, GAMES_PER_TEAM)
 # print(games)
 # print(len(games))
@@ -158,3 +157,5 @@ def create_schedule():
 # schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
 # print(schedule)
 # print(score)
+
+# send_schedule_to_db(schedule, score, t)
