@@ -30,13 +30,14 @@ const authOptions: NextAuthOptions = {
             offday: "temp_offday",
             preferred_division: "temp_preferred_division",
             preferred_time: "temp_preferred_time",
+            team_id: 0,
           }
           // TODO: if statments here are poor, should have better way of checking for email/password or player/team
           const regex = /[@]/;
           if (regex.test(credentials.userID)) {
             const player = await getPlayer({ email: credentials.userID })
             user = {
-              id: "temp_id",
+              id: player.id,
               name: player.first_name,
               email: player.email,
               role: "player",
@@ -47,12 +48,13 @@ const authOptions: NextAuthOptions = {
               offday: "temp_offday",
               preferred_division: "temp_preferred_division",
               preferred_time: "temp_preferred_time",
+              team_id: player.team_id,
             }
           }
           else if(credentials.userID != "admin") {
             const team = await getTeam({ username: credentials.userID })
             user = {
-              id: "temp_id",
+              id: team.id,
               name: "temp_name",
               email: "temp_email",
               role: "team",
@@ -63,6 +65,7 @@ const authOptions: NextAuthOptions = {
               offday: team.offday,
               preferred_division: team.preferred_division,
               preferred_time: team.preferred_time,
+              team_id: team.id,
             }
           }
           
