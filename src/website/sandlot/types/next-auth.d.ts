@@ -13,6 +13,7 @@ declare module "next-auth" {
       offday: string;
       preferred_division: string;
       preferred_time: string;
+      team_id: number;
     };
   }
 
@@ -27,5 +28,6 @@ declare module "next-auth" {
     offday: string;
     preferred_division: string;
     preferred_time: string;
+    team_id: number;
   }
 }

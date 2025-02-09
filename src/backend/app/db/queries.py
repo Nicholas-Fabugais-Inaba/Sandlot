@@ -75,14 +75,14 @@ def insert_team(team_name, username, password, division, preferred_division, pre
 def get_player(login_email):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender).where(Player.email == login_email)
+        stmt = select(Player.id, Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender, Player.team_id).where(Player.email == login_email)
         result = session.execute(stmt).mappings().first()
         return result
     
 def get_team(login_username):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Team.team_name, Team.username, Team.password, Team.division, Team.offday, Team.preferred_division, Team.preferred_time).where(Team.username == login_username)
+        stmt = select(Team.id, Team.team_name, Team.username, Team.password, Team.division, Team.offday, Team.preferred_division, Team.preferred_time).where(Team.username == login_username)
         result = session.execute(stmt).mappings().first()
         return result
 
