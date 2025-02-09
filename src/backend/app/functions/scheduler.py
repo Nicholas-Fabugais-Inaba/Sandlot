@@ -2,6 +2,7 @@
 import datetime
 from sys import maxsize
 import time
+from ..db.queries import insert_game
 
 # All variables here are global for use in the backtrack scheduler algorithm
 # They should not be changed outside of the function that starts the algorithm (TODO)
@@ -366,7 +367,7 @@ def gen_schedule_w_skip(games_to_sched, game_slots_to_sched, teams_to_sched):
     initialize_weeks_played(len(teams), len(game_slots))
     print("starting schedule generation")
     if backtrack_scheduler_w_skip(0, {}, 0):
-        return best_schedule, best_score
+        return best_schedule, best_score, teams
     
 
 def gen_schedule_w_skip_timeout(games_to_sched, game_slots_to_sched, teams_to_sched):
@@ -377,7 +378,7 @@ def gen_schedule_w_skip_timeout(games_to_sched, game_slots_to_sched, teams_to_sc
     start_time = datetime.datetime.now()
     gen_constraints()
     if backtrack_scheduler_w_skip(0, {}, 0):
-        return best_schedule, best_score
+        return best_schedule, best_score, teams
     
     
 def gen_schedule(games_to_sched, game_slots_to_sched, teams_to_sched):
@@ -388,3 +389,8 @@ def gen_schedule(games_to_sched, game_slots_to_sched, teams_to_sched):
     gen_constraints()
     if backtrack_scheduler(0, {}, 0):
         return best_schedule, best_score
+
+
+def send_schedule_to_db(schedule: dict, score: int, teams: dict):
+    for gameslot, game in schedule.items():
+        insert_game(teams[game[0]]["id"], teams[game[1]]["id"], gameslot[2], gameslot[1], gameslot[0])

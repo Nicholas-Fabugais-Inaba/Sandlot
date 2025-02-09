@@ -145,16 +145,16 @@ def create_schedule():
 
 
 # # games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
-games = gen_games_division(divs, GAMES_PER_TEAM)
-print(games)
-print(len(games))
+# games = gen_games_division(divs, GAMES_PER_TEAM)
+# print(games)
+# print(len(games))
 
 
-game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
-print(game_slots)
-print(len(game_slots))
+# game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+# print(game_slots)
+# print(len(game_slots))
 
-# # Constraint generation code will be in scheduler.py
-schedule, score = gen_schedule_w_skip(games, game_slots, teams)
-print(schedule)
-print(score)
+# # # Constraint generation code will be in scheduler.py
+# schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
+# print(schedule)
+# print(score)
