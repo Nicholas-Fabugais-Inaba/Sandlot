@@ -18,3 +18,13 @@ class PlayerLoginData(BaseModel):
 
 class TeamLoginData(BaseModel):
     username: str
+
+class RescheduleRequest(BaseModel):
+    requester_id: int
+    receiver_id: int
+    game_id: int
+    option1: str
+    option2: str
+    option3: str
+    option4: str
+    option5: str
