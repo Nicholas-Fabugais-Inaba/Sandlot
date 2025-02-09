@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from .create_engine import create_connection
-from .models import Player, Team
+from .models import Player, Team, Game
 
 # example insert query to use as reference
 def example_insert_query():
@@ -71,10 +71,57 @@ def insert_team(team_name, username, password, preferred_division, preferred_off
             session.commit()
     return True
 
-def get_credentials(email1):
+def get_player(login_email):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Player.password).where(Player.email == email1)
-        result = session.execute(stmt).first()
-        if(result):
-            return result[0]
+        stmt = select(Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender).where(Player.email == login_email)
+        result = session.execute(stmt).mappings().first()
+        return result
+    
+def get_team(login_username):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Team.team_name, Team.username, Team.password, Team.division, Team.offday, Team.preferred_division, Team.preferred_time).where(Team.username == login_username)
+        result = session.execute(stmt).mappings().first()
+        return result
+
+# currently a special query specifically for the scheduler, not to be used from frontend yet  
+def get_all_teams():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Team.id, Team.team_name, Team.division, Team.offday)
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def insert_game(home_team, away_team, date, time, field):
+    engine = create_connection()
+    with Session(engine) as session:
+        game = Game(
+            home_team=home_team,
+            away_team=away_team,
+            date=date,
+            time=time,
+            field=field, 
+        )
+        try:
+            session.add_all([game])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_all_games():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Game.id, Game.home_team, Game.away_team, Game.date, Game.time, Game.field, Game.home_team_score, Game.away_team_score, Game.played)
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def get_team_games(team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Game.id, Game.home_team, Game.away_team, Game.date, Game.time, Game.field, Game.home_team_score, Game.away_team_score, Game.played).where(Game.home_team == team_id | Game.away_team == team_id)
+        result = session.execute(stmt).mappings().all()
+        return result

@@ -20,9 +20,9 @@ export default function Register() {
   const [gender, setGender] = useState('');
   const [error, setError] = useState('');
   const [teamUsername, setTeamUsername] = useState('');
-  const [preferredOffday, setPreferredOffday] = useState<number | "">("");
-  const [preferredTime, setPreferredTime] = useState<number | "">("");
-  const [preferredDivision, setPreferredDivision] = useState<number | "">("");
+  const [preferredOffday, setPreferredOffday] = useState<number>(0); // defaulted to 0 instead of  || "" because it was causing typing problems in the backend
+  const [preferredTime, setPreferredTime] = useState<number>(0);
+  const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
   const searchParams = useSearchParams();  // Access the query params
   const callbackUrl = searchParams?.get('callbackUrl') || '/profile';  // Default to '/profile' if no callbackUrl
