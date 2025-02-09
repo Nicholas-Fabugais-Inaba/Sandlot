@@ -5,6 +5,8 @@ from .scheduler import gen_schedule, gen_schedule_w_skip, send_schedule_to_db
 from random import shuffle
 from ..db.queries import get_all_teams
 
+from ..db.mock_data import insert_mock_schedule
+
 
 FIELDS = 3
 TIMESLOTS = 3
@@ -188,3 +190,6 @@ def gen_mock_schedule():
 # print(score)
 
 # send_schedule_to_db(schedule, score, t)
+
+# insert_mock_schedule()
+gen_mock_schedule()

@@ -1,4 +1,4 @@
-from queries import insert_team, insert_mock_player
+from .queries import insert_team, insert_mock_player
 from pydantic import BaseModel
 
 class MockTeam(BaseModel):
@@ -340,8 +340,8 @@ mock_players = [
     MockPlayer(first_name="Stella", last_name="Whitmore", email="stella.whitmore@email.com", password="WhitmoreS13", phone_number="(646)-555-0285", gender="Female", team_id=26),
     MockPlayer(first_name="Xavier", last_name="Lennox", email="xavier.lennox@email.com", password="LennoxX14", phone_number="(503) 555-0392", gender="Male", team_id=27),
     MockPlayer(first_name="Violet", last_name="Stratton", email="violet.stratton@email.com", password="StrattonV15", phone_number="(415)-555-0558", gender="Female", team_id=28),
-    MockPlayer(first_name="Dominic", last_name="Langley", email="dominic.langley@email.com", password="LangleyD16", phone_number="(702)-555-0747", gender="Male", team_id=29),
-    MockPlayer(first_name="Hazel", last_name="Beaumont", email="hazel.beaumont@email.com", password="BeaumontH17", phone_number="(917)-555-0239", gender="Female", team_id=30),
+    MockPlayer(first_name="Dominic", last_name="Langley", email="dominic.langley@email.com", password="LangleyD16", phone_number="(702)-555-0747", gender="Male", team_id=28),
+    MockPlayer(first_name="Hazel", last_name="Beaumont", email="hazel.beaumont@email.com", password="BeaumontH17", phone_number="(917)-555-0239", gender="Female", team_id=28),
 ]
 
 Teams = [tigers, cardinals, orioles, jays, dodgers, rangers, astros, angels, rockies, royals, cubs, padres, white_sox, guardians, braves, giants, brewers, nationals, rays, marlins, yankees, red_sox, diamondbacks, mets, reds, phillies, pirates, mariners]

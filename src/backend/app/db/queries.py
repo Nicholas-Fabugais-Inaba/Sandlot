@@ -51,13 +51,14 @@ def insert_player(name, email, password):
             session.commit()
     return True
 
-def insert_team(team_name, username, password, preferred_division, preferred_offday, preferred_time):
+def insert_team(team_name, username, password, division, preferred_division, preferred_offday, preferred_time):
     engine = create_connection()
     with Session(engine) as session:
         account = Team(
             team_name=team_name,
             username=username,
             password=password,
+            division=division,
             preferred_division=preferred_division,
             offday=preferred_offday, 
             preferred_time=preferred_time
@@ -152,11 +153,14 @@ def insert_mock_game(home_team, away_team, date, time, field, home_team_score, a
     engine = create_connection()
     with Session(engine) as session:
         game = Game(
-            home_team=home_team,
-            away_team=away_team,
+            home_team_id=home_team,
+            away_team_id=away_team,
             date=date,
             time=time,
-            field=field, 
+            field=field,
+            home_team_score=home_team_score,
+            away_team_score=away_team_score,
+            played=played
         )
         try:
             session.add_all([game])
