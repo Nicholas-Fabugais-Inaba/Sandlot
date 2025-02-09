@@ -15,6 +15,8 @@ import "./SchedulePage.css";  // Custom styles
 import getSchedule from "../functions/getSchedule";
 import { Event } from "../types";
 
+import createRR from "../functions/createRR";
+
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
 
 interface SelectedDate {
@@ -23,7 +25,7 @@ interface SelectedDate {
 }
 
 interface RescheduleGame {
-  id: number;
+  game_id: number;
   date: Date;
   field: number;
   home_id: number;
@@ -117,7 +119,7 @@ export default function SchedulePage() {
     if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId)))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
-      setRescheduleGame({ id: teams.id, date: start, field: field, home_id: teams.home_id, away_id: teams.away_id });
+      setRescheduleGame({ game_id: teams.id, date: start, field: field, home_id: teams.home_id, away_id: teams.away_id });
     }
   };
 
@@ -147,9 +149,19 @@ export default function SchedulePage() {
     return start ? selectedDates.some((selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field) : false;
   };
 
-  const handleSendRequest = () => {
-    // Implement the logic to send reschedule requests
-    alert('Reschedule request sent!');
+  const handleSendRequest = async () => {
+    const RRdata = {
+      requester_id: userTeamId,
+      receiver_id: rescheduleGame?.home_id === userTeamId ? rescheduleGame?.away_id : rescheduleGame?.home_id,
+      game_id: rescheduleGame?.game_id,
+      option1: selectedDates[0]?.date.toISOString() || "",
+      option2: selectedDates[1]?.date.toISOString() || "",
+      option3: selectedDates[2]?.date.toISOString() || "",
+      option4: selectedDates[3]?.date.toISOString() || "",
+      option5: selectedDates[4]?.date.toISOString() || "",
+    }
+    console.log(RRdata);
+    await createRR(RRdata)
   };
 
   const hasGameThisSlot = (event: any) => {
