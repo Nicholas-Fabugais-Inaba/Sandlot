@@ -1,6 +1,6 @@
 export type Event = {
-    start: string;
-    end: string;
+    start: Date;
+    end: Date;
     field1?: {
         home: string;
         away: string;
@@ -16,5 +16,13 @@ export type Event = {
 }
 
 export type Game = {
-    
+    id: number;
+    home_team: string;
+    away_team: string;
+    date: string;
+    time: string;
+    field: string;
+    home_team_score: string;
+    away_team_score: string;
+    played: boolean;
 }
