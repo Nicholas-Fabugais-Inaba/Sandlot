@@ -20,7 +20,7 @@ import createRR from "../functions/createRR";
 import { form } from "@heroui/theme";
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
-const currDate = new Date("2025-06-10");
+const currDate = new Date("2025-06-20");
 const currNextDate = new Date("2025-06-11");
 
 interface SelectedDate {
@@ -177,6 +177,7 @@ export default function SchedulePage() {
   };
 
   const handleSendRequest = async () => {
+    handleReturnClick();
     const RRdata = {
       requester_id: userTeamId,
       receiver_id: rescheduleGame?.home_id === userTeamId ? rescheduleGame?.away_id : rescheduleGame?.home_id,
@@ -231,6 +232,7 @@ export default function SchedulePage() {
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
             initialView={view}
+            initialDate={currDate}
             events={events}
             allDaySlot={false}
             weekends={false}

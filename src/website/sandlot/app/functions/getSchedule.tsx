@@ -3,7 +3,7 @@ import { Game, Event } from '../types';
 import { get } from 'http';
 
 const APIHOST = `127.0.0.1:8000`;
-const currDate = new Date("2025-06-10");
+const currDate = new Date("2025-06-20");
 const seasonStart = new Date("2025-05-05");
 const seasonEnd = new Date("2025-08-20");
 
