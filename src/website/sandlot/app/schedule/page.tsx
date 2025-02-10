@@ -21,7 +21,7 @@ import { form } from "@heroui/theme";
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
 const currDate = new Date("2025-06-20");
-const currNextDate = new Date("2025-06-11");
+const currNextDate = new Date("2025-06-21");
 
 interface SelectedDate {
   date: Date;
@@ -129,7 +129,7 @@ export default function SchedulePage() {
 
   const handleTeamClick = (event: React.MouseEvent, start: Date | null, field: number, teams: any) => {
     // If the user is either a commissioner or the game selected is one the logged in team is playing in
-    if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId) && start > currNextDate))) {
+    if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId)))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
       setRescheduleGame({ game_id: teams.id, date: start, field: field, home_id: teams.home_id, away_id: teams.away_id });
@@ -137,6 +137,9 @@ export default function SchedulePage() {
   };
 
   const handleRescheduleClick = () => {
+    if (rescheduleGame && rescheduleGame?.date < currDate) {
+      return;
+    }
     setSchedType(3);
     setLoading(true);
     setView("timeGridWeek");
@@ -524,18 +527,19 @@ export default function SchedulePage() {
           <div className="flex flex-col items-center">
             <button
               onClick={handleRescheduleClick}
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
+              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currDate ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
+              disabled={rescheduleGame && rescheduleGame.date < currDate}
             >
               Reschedule
             </button>
-            {/* <button
+            <button
               onClick={() => {
                 alert("Submit score");
               }}
               className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
             >
               Submit Score
-            </button> */}
+            </button>
             <button
               onClick={closePopup}
               className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg"

@@ -147,7 +147,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
       startDate.setDate(startDate.getDate() + 1);
       continue;
     }
-    
+    console.log(startDate)
     startDate.setHours(17);
     startDate.setMinutes(0);
 
