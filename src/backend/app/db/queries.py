@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, aliased
-from sqlalchemy import select, or_
+from sqlalchemy import select, update, or_
 from .create_engine import create_connection
 from .models import Player, Team, Game, RescheduleRequest
 
@@ -328,3 +328,8 @@ def get_standings():
         result = session.execute(stmt).mappings().all()
         return result
 
+def insert_scores(game_id, home_team_score, away_team_score):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
+        result = session.execute(stmt).mappings().first()
