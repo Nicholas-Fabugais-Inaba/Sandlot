@@ -98,8 +98,8 @@ def insert_game(home_team, away_team, date, time, field):
     engine = create_connection()
     with Session(engine) as session:
         game = Game(
-            home_team=home_team,
-            away_team=away_team,
+            home_team_id=home_team,
+            away_team_id=away_team,
             date=date,
             time=time,
             field=field, 
@@ -268,3 +268,31 @@ def get_reschedule_requests(team_id):
         )
         result = session.execute(stmt).mappings().all()
         return result
+    
+def delete_reschedule_request(request_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(RescheduleRequest).where(RescheduleRequest.id == request_id)
+        result = session.execute(stmt).mappings().first()
+        try:
+            session.delete([result])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return True
+    
+def delete_game(game_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Game).where(Game.id == game_id)
+        result = session.execute(stmt).mappings().first()
+        try:
+            session.delete([result])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return True
