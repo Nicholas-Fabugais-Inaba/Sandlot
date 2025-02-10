@@ -1,0 +1,23 @@
+.column-name {
+    width: 30%; /* Adjust the width as needed */
+  }
+  
+  .column-wins {
+    width: 10%; /* Adjust the width as needed */
+  }
+  
+  .column-losses {
+    width: 10%; /* Adjust the width as needed */
+  }
+  
+  .column-ties {
+    width: 10%; /* Adjust the width as needed */
+  }
+  
+  .column-forfeits {
+    width: 10%; /* Adjust the width as needed */
+  }
+  
+  .column-differential {
+    width: 30%; /* Adjust the width as needed */
+  }

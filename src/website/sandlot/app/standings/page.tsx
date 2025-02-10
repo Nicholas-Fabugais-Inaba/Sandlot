@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -15,10 +15,14 @@ import {
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
 import { title } from "@/components/primitives";
+import { getSession} from 'next-auth/react'
+import getStandings from "../functions/getStandings";
+
 
 export default function StandingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [sortDescriptors, setSortDescriptors] = useState<Record<string, { column: keyof Team; direction: "ascending" | "descending" }>>({});
+  const [teams, setTeams] = useState<Team[]>([]);
 
   interface Team {
     name: string;
@@ -30,32 +34,46 @@ export default function StandingsPage() {
     division: string;
   }
 
-  let list = useAsyncList<Team>({
-    async load({ signal }) {
-      let res = await fetch("https://swapi.py4e.com/api/people/?search", { signal });
-      let json = await res.json();
+  // let list = useAsyncList<Team>({
+  //   async load({ signal }) {
+  //     let res = await fetch("https://swapi.py4e.com/api/people/?search", { signal });
+  //     let json = await res.json();
 
-      setIsLoading(false);
+  //     setIsLoading(false);
 
-      return {
-        items: [
-          { name: "Team A", wins: 10, losses: 2, ties: 1, forfeits: 0, differential: 20, division: "Division A" },
-          { name: "Team B", wins: 8, losses: 4, ties: 2, forfeits: 0, differential: 15, division: "Division A" },
-          { name: "Team C", wins: 10, losses: 2, ties: 1, forfeits: 0, differential: 20, division: "Division A" },
-          { name: "Team D", wins: 8, losses: 4, ties: 2, forfeits: 0, differential: 15, division: "Division A" },
-          { name: "Team E", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division B" },
-          { name: "Team F", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division B" },
-          { name: "Team G", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division C" },
-          { name: "Team H", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division C" },
-          { name: "Team I", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division D" },
-          { name: "Team J", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division D" },
-        ],
-      };
-    },
-  });  
+  //     return {
+  //       items: [
+  //         { name: "Team A", wins: 10, losses: 2, ties: 1, forfeits: 0, differential: 20, division: "Division A" },
+  //         { name: "Team B", wins: 8, losses: 4, ties: 2, forfeits: 0, differential: 15, division: "Division A" },
+  //         { name: "Team C", wins: 10, losses: 2, ties: 1, forfeits: 0, differential: 20, division: "Division A" },
+  //         { name: "Team D", wins: 8, losses: 4, ties: 2, forfeits: 0, differential: 15, division: "Division A" },
+  //         { name: "Team E", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division B" },
+  //         { name: "Team F", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division B" },
+  //         { name: "Team G", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division C" },
+  //         { name: "Team H", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division C" },
+  //         { name: "Team I", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division D" },
+  //         { name: "Team J", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division D" },
+  //       ],
+  //     };
+  //   },
+  // }); 
+  
+  useEffect(() => {
+  
+      (async () => {
+        let standings = await getStandings()
+        console.log(standings)
+        console.log(standings[0])
+        // console.log(list)
+        setTeams(standings)
+      })();
+  
+      setIsLoading(false); // Set loading to false after fetching session
+  
+    }, []);
 
   // Extract unique divisions
-  const uniqueDivisions = Array.from(new Set(list.items.map((team) => team.division)));
+  const uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
 
   // Function to handle sorting within a division
   const handleSort = (division: string, sortDescriptor: { column: keyof Team; direction: "ascending" | "descending" }) => {
@@ -73,7 +91,7 @@ export default function StandingsPage() {
 
       {/* Render a separate table for each division */}
       {uniqueDivisions.map((division) => {
-        const sortedTeams = [...list.items.filter((team) => team.division === division)];
+        const sortedTeams = [...teams.filter((team) => team.division === division)];
         const sortDescriptor = sortDescriptors[division]; 
         
         if (sortDescriptor) {
