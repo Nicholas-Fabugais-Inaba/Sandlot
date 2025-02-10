@@ -3,10 +3,14 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { title } from "@/components/primitives";
 import { Input, Modal, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { Session } from 'next-auth'; 
+import { getSession} from 'next-auth/react';
+
+
 
 // Define the interface for Team and User data
 interface Team {
@@ -24,19 +28,30 @@ interface JoinRequestBody {
 }
 
 export default function TeamPage() {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
+  const [session, setSession] = useState<Session | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
   const [userTeam, setUserTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const router = useRouter();
 
+  // useEffect(() => {
+  //   if (session) {
+  //     console.log("Session data:", session);
+  //     console.log("Account type:", session.user.role);
+  //   }
+  // }, [session, session?.user.role]);
+
   useEffect(() => {
-    if (session) {
-      console.log("Session data:", session);
-      console.log("Account type:", session.user.role);
-    }
-  }, [session, session?.user.role]);
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+      setLoading(false);
+    };
+
+    fetchSession();
+  }, []);
 
   const fetchTeams = useCallback(async () => {
     setLoading(true);
@@ -83,10 +98,10 @@ export default function TeamPage() {
   }, [session?.user.role, session]);
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (loading) {
       fetchTeams();
     }
-  }, [status, fetchTeams]);
+  }, [loading, fetchTeams]);
 
   const handleAction = async (
     url: string,
@@ -122,7 +137,8 @@ export default function TeamPage() {
     }
   };  
 
-  if (status === "loading") return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>;
+
   if (!session) {
     return (
       <div>

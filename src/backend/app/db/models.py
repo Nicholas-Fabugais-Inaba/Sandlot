@@ -51,7 +51,7 @@ class Game(Base):
     home_team_score: Mapped[Optional[int]] = mapped_column()
     away_team_score: Mapped[Optional[int]] = mapped_column()
     played: Mapped[Optional[bool]] = mapped_column(default=False)
-
+    # forfeit: Mapped[Optional[int]] = mapped_column()
     home_team = relationship("Team", foreign_keys=[home_team_id], backref="home_games")
     away_team = relationship("Team", foreign_keys=[away_team_id], backref="away_games")
 
@@ -62,14 +62,19 @@ class RescheduleRequest(Base):
     receiver_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
     game_id: Mapped[Optional[int]] = mapped_column(ForeignKey("game.id"))
     option1: Mapped[Optional[str]] = mapped_column(String(50))
+    option1_field: Mapped[Optional[str]] = mapped_column(String(50))
     option2: Mapped[Optional[str]] = mapped_column(String(50))
+    option2_field: Mapped[Optional[str]] = mapped_column(String(50))
     option3: Mapped[Optional[str]] = mapped_column(String(50))
+    option3_field: Mapped[Optional[str]] = mapped_column(String(50))
     option4: Mapped[Optional[str]] = mapped_column(String(50))
+    option4_field: Mapped[Optional[str]] = mapped_column(String(50))
     option5: Mapped[Optional[str]] = mapped_column(String(50))
+    option5_field: Mapped[Optional[str]] = mapped_column(String(50))
     accepted: Mapped[Optional[bool]] = mapped_column()
 
 # function which creates defined models as tables in DB
 def create_tables():
     Base.metadata.create_all(engine)
 
-#create_tables()
+# create_tables()

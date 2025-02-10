@@ -7,136 +7,21 @@ import { getSession, signOut, signIn } from 'next-auth/react';
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { title } from "@/components/primitives";
 import { Card, user } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
 import getSchedule from "../functions/getSchedule";
+import { getTeamSchedule, addEmptyEvents } from "../functions/getSchedule";
 import { Event } from "../types";
 
-var events = [ // If schedType is 3, need placeholders with nothing. If schedType is 1, only list games with currTeam.
-  {
-    start: "2025-01-27T17:00:00",
-    end: "2025-01-27T18:30:00",
-  },
-  {
-    start: "2025-01-27T18:30:00",
-    end: "2025-01-27T20:00:00",
-  },
-  {
-    start: "2025-01-27T20:00:00",
-    end: "2025-01-27T21:30:00",
-  },
-  {
-    start: "2025-01-28T17:00:00",
-    end: "2025-01-28T18:30:00",
-    field1: {
-      home: "Yankees",
-      away: "Mariners",
-    },
-  },
-  {
-    start: "2025-01-28T18:30:00",
-    end: "2025-01-28T20:00:00",
-  },
-  {
-    start: "2025-01-28T20:00:00",
-    end: "2025-01-28T21:30:00",
-  },
-  {
-    start: "2025-01-29T17:00:00",
-    end: "2025-01-29T18:30:00",
-    field1: {
-      home: "Cubs",
-      away: "Astros",
-    },
-    field2: {
-      home: "Jays",
-      away: "White Sox",
-    },
-    // field3: {
-    //   home: "Mariners",
-    //   away: "Reds",
-    // }
-  },
-  {
-    start: "2025-01-29T18:30:00",
-    end: "2025-01-29T20:00:00",
-    field2: {
-      home: "Yankees",
-      away: "Red Sox",
-    },
-  },
-  {
-    start: "2025-01-29T20:00:00",
-    end: "2025-01-29T21:30:00",
-  },
-  {
-    start: "2025-01-30T17:00:00",
-    end: "2025-01-30T18:30:00",
-  },
-  {
-    start: "2025-01-30T18:30:00",
-    end: "2025-01-30T20:00:00",
-  },
-  {
-    start: "2025-01-30T20:00:00",
-    end: "2025-0130T21:30:00",
-  },
-  {
-    start: "2025-01-31T17:00:00",
-    end: "2025-01-31T18:30:00",
-    field3: {
-      home: "Yankees",
-      away: "Mariners",
-    },
-  },
-  {
-    start: "2025-01-31T18:30:00",
-    end: "2025-01-31T20:00:00",
-  },
-  {
-    start: "2025-01-31T20:00:00",
-    end: "2025-01-31T21:30:00",
-  },
-];
-
-// Helper function to add placeholder events
-const addPlaceholderEvents = (events: any[], schedType: number, schedStart: Date, schedEnd: Date) => {
-  if (schedType === 3) {
-    const currentDate = new Date(schedStart);
-
-    while (currentDate <= schedEnd) {
-      const dayOfWeek = currentDate.getDay();
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Skip weekends (Sunday = 0, Saturday = 6)
-        for(let i = 0; i < 3; i++) {
-          const startDateTime = new Date(currentDate);
-          if (i === 0) {
-            startDateTime.setHours(17, 0, 0, 0); // Set time to 17:00:00
-          } else if (i === 1) {
-            startDateTime.setHours(18, 30, 0, 0); // Set time to 18:30:00
-          } else {
-            startDateTime.setHours(20, 0, 0, 0); // Set time to 20:00:00
-          }
-          const endDateTime = new Date(startDateTime.getTime() + 90 * 60 * 1000); // 90 minutes later
-          const newEvent = {
-            start: startDateTime.toISOString(),
-            end: endDateTime.toISOString(),
-          };
-          events.push(newEvent);
-        }
-      }
-    }
-  } else {
-    return events;
-  }
-};
+import createRR from "../functions/createRR";
+import { form } from "@heroui/theme";
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
-
-var schedStart = new Date("2025-05-05T17:00:00"); // Season start and end dates
-var schedEnd = new Date("2025-08-20T20:00:00");
-var currTeam = "Yankees";
+const currDate = new Date("2025-06-20");
+const currNextDate = new Date("2025-06-11");
 
 interface SelectedDate {
   date: Date;
@@ -144,11 +29,11 @@ interface SelectedDate {
 }
 
 interface RescheduleGame {
-  id: number;
+  game_id: number;
   date: Date;
   field: number;
-  home: string;
-  away: string;
+  home_id: number;
+  away_id: number;
 }
 
 export default function SchedulePage() {
@@ -160,17 +45,10 @@ export default function SchedulePage() {
   const popupRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<FullCalendar>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
   const [events, setEvents] = useState<Event[]>();
-      
-  // // on page initialization pulls schedule data from backend server and updates events in calendar
-  // useEffect(() => {
-  //   (async () => {
-  //     let formattedEvents = await getSchedule()
-  //     setEvents(formattedEvents)
-  //   })();
-  // }, []);
 
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
@@ -178,20 +56,33 @@ export default function SchedulePage() {
       const session = await getSession();
       if (session) {
         setUserRole(session.user?.role || null);
+        setUserTeamId(session.user?.team_id || null);
         if (session.user?.role === "player" || session.user?.role === "team") {
           setSchedType(1);
           setView("dayGridMonth");
+          if (calendarRef.current) {
+            calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
+          }
         }
         else if (session.user?.role === "commissioner" || session.user?.role === "role") {
           setSchedType(0);
         }
+
+        if (session.user?.role === "player" || session.user?.role === "team") {
+          (async () => {
+            let formattedEvents = await getTeamSchedule(session.user?.team_id);
+            setEvents(formattedEvents)
+          })();
+        }
+      }
+      if (events === undefined) {
+        (async () => {
+          let formattedEvents = await getSchedule()
+          setEvents(formattedEvents)
+        })()
       }
     };
-
-    (async () => {
-      let formattedEvents = await getSchedule()
-      setEvents(formattedEvents)
-    })();
+    
 
     setLoading(false); // Set loading to false after fetching session
 
@@ -238,29 +129,43 @@ export default function SchedulePage() {
 
   const handleTeamClick = (event: React.MouseEvent, start: Date | null, field: number, teams: any) => {
     // If the user is either a commissioner or the game selected is one the logged in team is playing in
-    if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home === currTeam || teams.away === currTeam)))) {
+    if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId) && start > currNextDate))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
-      setRescheduleGame({ id: teams.id, date: start, field: field, home: teams.home, away: teams.away });
+      setRescheduleGame({ game_id: teams.id, date: start, field: field, home_id: teams.home_id, away_id: teams.away_id });
     }
   };
 
   const handleRescheduleClick = () => {
     setSchedType(3);
+    setLoading(true);
     setView("timeGridWeek");
+    (async () => {
+      let formattedEvents = await getSchedule();
+      formattedEvents = addEmptyEvents(formattedEvents);
+      console.log("Here", formattedEvents);
+      setEvents(formattedEvents)
+    })();
     setPopupVisible(false);
     if (calendarRef.current) {
       calendarRef.current.getApi().changeView("timeGridWeek"); // Force calendar to change view
     }
+    setLoading(false);
   };
 
   const handleReturnClick = () => {
     if (userRole === "player" || userRole === "team" || userRole === "role") {
       setSchedType(1);
+      setLoading(true);
+      (async () => {
+        let formattedEvents = await getTeamSchedule(userTeamId? userTeamId : 0);
+        setEvents(formattedEvents);
+      })();
       setView("dayGridMonth");
       if (calendarRef.current) {
         calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
       }
+      setLoading(false);
     }
     else {
       setSchedType(0);
@@ -271,16 +176,32 @@ export default function SchedulePage() {
     return start ? selectedDates.some((selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field) : false;
   };
 
-  const handleSendRequest = () => {
-    // Implement the logic to send reschedule requests
-    alert('Reschedule request sent!');
+  const handleSendRequest = async () => {
+    handleReturnClick();
+    const RRdata = {
+      requester_id: userTeamId,
+      receiver_id: rescheduleGame?.home_id === userTeamId ? rescheduleGame?.away_id : rescheduleGame?.home_id,
+      game_id: rescheduleGame?.game_id,
+      option1: selectedDates[0]?.date.toISOString() || "",
+      option2: selectedDates[1]?.date.toISOString() || "",
+      option3: selectedDates[2]?.date.toISOString() || "",
+      option4: selectedDates[3]?.date.toISOString() || "",
+      option5: selectedDates[4]?.date.toISOString() || "",
+      option1_field: selectedDates[0]?.field.toString() || "",
+      option2_field: selectedDates[1]?.field.toString() || "",
+      option3_field: selectedDates[2]?.field.toString() || "",
+      option4_field: selectedDates[3]?.field.toString() || "",
+      option5_field: selectedDates[4]?.field.toString() || "",
+    }
+    console.log(RRdata);
+    await createRR(RRdata)
   };
 
   const hasGameThisSlot = (event: any) => {
     const { field1, field2, field3 } = event.extendedProps;
   
     const checkTeams = (field: any) => {
-      return field?.home === rescheduleGame?.home || field?.away === rescheduleGame?.home || field?.home === rescheduleGame?.away || field?.away === rescheduleGame?.away;
+      return field?.home_id === rescheduleGame?.home_id || field?.away === rescheduleGame?.home_id || field?.home_id === rescheduleGame?.away_id || field?.away_id === rescheduleGame?.away_id;
     };
   
     return checkTeams(field1) || checkTeams(field2) || checkTeams(field3);
@@ -309,8 +230,9 @@ export default function SchedulePage() {
         <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
           <FullCalendar
             ref={calendarRef}
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
             initialView={view}
+            initialDate={currDate}
             events={events}
             allDaySlot={false}
             weekends={false}
@@ -401,7 +323,7 @@ export default function SchedulePage() {
               ) : schedType === 1 ? ( // Team Schedule
                 <>
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
-                    (currTeam === eventInfo.event.extendedProps.field1?.home || currTeam === eventInfo.event.extendedProps.field1?.away) ? (
+                    (userTeamId === eventInfo.event.extendedProps.field1?.home_id || userTeamId === eventInfo.event.extendedProps.field1?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
                         className={`event-content p-2 rounded-xl bg-orange-100 text-orange-800
@@ -415,7 +337,7 @@ export default function SchedulePage() {
                       </div>
                     ) : null}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
-                    (currTeam === eventInfo.event.extendedProps.field2?.home || currTeam === eventInfo.event.extendedProps.field2?.away) ? (
+                    (userTeamId === eventInfo.event.extendedProps.field2?.home_id || userTeamId === eventInfo.event.extendedProps.field2?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
                         className={`event-content p-2 rounded-xl bg-cyan-100 text-blue-800
@@ -429,7 +351,7 @@ export default function SchedulePage() {
                       </div>
                     ) : null}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
-                    (currTeam === eventInfo.event.extendedProps.field3?.home || currTeam === eventInfo.event.extendedProps.field3?.away) ? (
+                    (userTeamId === eventInfo.event.extendedProps.field3?.home_id || userTeamId === eventInfo.event.extendedProps.field3?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
                         className={`event-content p-2 rounded-xl bg-purple-100 text-purple-800
@@ -446,7 +368,7 @@ export default function SchedulePage() {
               ) : schedType === 2 ? ( // Select game to reschedule
                 <>
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
-                    (currTeam === eventInfo.event.extendedProps.field1?.home || currTeam === eventInfo.event.extendedProps.field1?.away) ? (
+                    (userTeamId === eventInfo.event.extendedProps.field1?.home_id || userTeamId === eventInfo.event.extendedProps.field1?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
                         className={`event-content p-2 rounded-xl bg-green-100 text-green-800
@@ -460,7 +382,7 @@ export default function SchedulePage() {
                       </div>
                     ) : null}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
-                    (currTeam === eventInfo.event.extendedProps.field2?.home || currTeam === eventInfo.event.extendedProps.field2?.away) ? (
+                    (userTeamId === eventInfo.event.extendedProps.field2?.home_id || userTeamId === eventInfo.event.extendedProps.field2?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
                         className={`event-content p-2 rounded-xl bg-green-100 text-green-800
@@ -474,7 +396,7 @@ export default function SchedulePage() {
                       </div>
                     ) : null}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
-                    (currTeam === eventInfo.event.extendedProps.field3?.home || currTeam === eventInfo.event.extendedProps.field3?.away) ? (
+                    (userTeamId === eventInfo.event.extendedProps.field3?.home_id || userTeamId === eventInfo.event.extendedProps.field3?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
                         className={`event-content p-2 rounded-xl bg-green-100 text-green-800
@@ -499,7 +421,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 1"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) ? (
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start && eventInfo.event.start > currNextDate ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 1)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 1) ? 
@@ -521,7 +443,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) ? (
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start && eventInfo.event.start > currNextDate ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 2)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 2) ? 
@@ -543,7 +465,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 3"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) ? (
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start && eventInfo.event.start > currNextDate ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 3)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 3) ? 

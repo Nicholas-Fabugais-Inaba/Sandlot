@@ -4,17 +4,23 @@ export type Event = {
     field1?: {
         id: number
         home: string;
+        home_id: number;
         away: string;
+        away_id: number;
     };
     field2?: {
         id: number
         home: string;
+        home_id: number;
         away: string;
+        away_id: number;
     };
     field3?: {
         id: number
         home: string;
+        home_id: number;
         away: string;
+        away_id: number;
     };
 }
 
@@ -28,4 +34,14 @@ export type Game = {
     home_team_score: string;
     away_team_score: string;
     played: boolean;
+}
+
+export type Standings = {
+    team_name: string;
+    wins: number;
+    losses: number;
+    ties: number;
+    forfeits: number;
+    differential: number;
+    division: string;
 }
