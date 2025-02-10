@@ -8,6 +8,7 @@ import CustomModal from "./CustomModal";  // Import Custom Modal
 import "./AcceptRescheduleRequest.css";  // Custom styles
 
 import getRR from "../functions/getRR";
+import acceptRR from "../functions/acceptRR";
 
 interface RescheduleRequest {
   id: string;

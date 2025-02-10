@@ -47,11 +47,14 @@ export default async function getRR(team_id: any): Promise<any> {
 
       formmattedRequests.push({
         id: response.data[i].id,
+        game_id: response.data[i].game_id,
         originalDate: new Date(response.data[i].date),
+        originalField: response.data[i].field,
         proposedDates: proposedDates,
         proposedFields: proposedFields,
         home: response.data[i].reciever_team_name,
         away: response.data[i].requester_team_name,
+
       })
     }
   }
