@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, aliased
-from sqlalchemy import select, or_, delete
+from sqlalchemy import select, or_, delete, update
 from .create_engine import create_connection
 from .models import Player, Team, Game, RescheduleRequest
 
@@ -279,12 +279,19 @@ def delete_reschedule_request(request_id):
     with Session(engine) as session:
         stmt = delete(RescheduleRequest).where(RescheduleRequest.id == request_id)
         session.execute(stmt)
+        session.commit()
     
-def delete_game(game_id):
+def update_game(game_id, new_date, new_time, new_field):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = delete(Game).where(Game.id == game_id)
-        session.execute(stmt)
+        stmt = update(Game).where(Game.id == game_id).values(date=new_date, time=new_time, field=new_field)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
 
 def get_standings():
     engine = create_connection()
