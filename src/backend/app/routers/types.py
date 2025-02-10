@@ -29,3 +29,6 @@ class RescheduleRequest(BaseModel):
     option3: Optional[str]
     option4: Optional[str]
     option5: Optional[str]
+
+class TeamID(BaseModel):
+    team_id: int

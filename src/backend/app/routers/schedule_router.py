@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from ..functions.gen_sched_input import create_schedule
 from ..db.queries import get_all_games, get_team_games, insert_reschedule_request, get_reschedule_requests
-from .types import RescheduleRequest
+from .types import RescheduleRequest, TeamID
 
 
 router = APIRouter(tags=["schedule"])
@@ -20,8 +20,8 @@ async def get_scheduled_games():
     return games
 
 @router.post("/get_team_games", response_model=list)
-async def team_games(team_id: str):
-    games = get_team_games(team_id)
+async def team_games(data: TeamID):
+    games = get_team_games(data.team_id)
     games = [dict(row) for row in games]
     return games
 
