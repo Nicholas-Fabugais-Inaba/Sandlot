@@ -210,7 +210,7 @@ def insert_mock_game(home_team, away_team, date, time, field, home_team_score, a
             session.commit()
     return True
 
-def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5):
+def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5, option1_field, option2_field, option3_field, option4_field, option5_field):
     engine = create_connection()
     with Session(engine) as session:
         request = RescheduleRequest(
@@ -221,7 +221,12 @@ def insert_reschedule_request(requester_id, receiver_id, game_id, option1, optio
             option2=option2,
             option3=option3,
             option4=option4,
-            option5=option5
+            option5=option5,
+            option1_field=option1_field,
+            option2_field=option2_field,
+            option3_field=option3_field,
+            option4_field=option4_field,
+            option5_field=option5_field
         )
         try:
             session.add_all([request])

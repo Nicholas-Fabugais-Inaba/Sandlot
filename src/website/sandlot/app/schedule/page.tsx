@@ -186,6 +186,11 @@ export default function SchedulePage() {
       option3: selectedDates[2]?.date.toISOString() || "",
       option4: selectedDates[3]?.date.toISOString() || "",
       option5: selectedDates[4]?.date.toISOString() || "",
+      option1_field: selectedDates[0]?.field.toString() || "",
+      option2_field: selectedDates[1]?.field.toString() || "",
+      option3_field: selectedDates[2]?.field.toString() || "",
+      option4_field: selectedDates[3]?.field.toString() || "",
+      option5_field: selectedDates[4]?.field.toString() || "",
     }
     console.log(RRdata);
     await createRR(RRdata)

@@ -27,10 +27,29 @@ export default async function getRR(team_id: any): Promise<any> {
       if(response.data[i].option5 != "") {
         proposedDates.push(new Date(response.data[i].option5))
       }
+
+      let proposedFields = []
+      if(response.data[i].option1_field != "") {
+        proposedFields.push(response.data[i].option1_field)
+      }
+      if(response.data[i].option2_field != "") {
+        proposedFields.push(response.data[i].option2_field)
+      }
+      if(response.data[i].option3_field != "") {
+        proposedFields.push(response.data[i].option3_field)
+      }
+      if(response.data[i].option4_field != "") {
+        proposedFields.push(response.data[i].option4_field)
+      }
+      if(response.data[i].option5_field != "") {
+        proposedFields.push(response.data[i].option5_field)
+      }
+
       formmattedRequests.push({
         id: response.data[i].id,
         originalDate: new Date(response.data[i].date),
         proposedDates: proposedDates,
+        proposedFields: proposedFields,
         home: response.data[i].reciever_team_name,
         away: response.data[i].requester_team_name,
       })
