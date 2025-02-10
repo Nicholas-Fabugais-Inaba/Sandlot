@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, aliased
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from .create_engine import create_connection
 from .models import Player, Team, Game, RescheduleRequest
 
@@ -98,8 +98,8 @@ def insert_game(home_team, away_team, date, time, field):
     engine = create_connection()
     with Session(engine) as session:
         game = Game(
-            home_team=home_team,
-            away_team=away_team,
+            home_team_id=home_team,
+            away_team_id=away_team,
             date=date,
             time=time,
             field=field, 
@@ -142,7 +142,27 @@ def get_all_games():
 def get_team_games(team_id):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Game.id, Game.home_team, Game.away_team, Game.date, Game.time, Game.field, Game.home_team_score, Game.away_team_score, Game.played).where(Game.home_team == team_id | Game.away_team == team_id)
+        home_team_alias = aliased(Team, name="home_team")
+        away_team_alias = aliased(Team, name="away_team")
+
+        stmt = (
+            select(
+                Game.id,
+                Game.date,
+                Game.time,
+                Game.field,
+                Game.home_team_score,
+                Game.away_team_score,
+                Game.played,
+                home_team_alias.id.label("home_team_id"),
+                home_team_alias.team_name.label("home_team_name"),
+                away_team_alias.id.label("away_team_id"),
+                away_team_alias.team_name.label("away_team_name")
+            )
+            .join(home_team_alias, Game.home_team_id == home_team_alias.id)
+            .join(away_team_alias, Game.away_team_id == away_team_alias.id)
+            .where(or_(Game.home_team_id == team_id, Game.away_team_id == team_id))
+        )
         result = session.execute(stmt).mappings().all()
         return result
 
@@ -190,7 +210,7 @@ def insert_mock_game(home_team, away_team, date, time, field, home_team_score, a
             session.commit()
     return True
 
-def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5):
+def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5, option1_field, option2_field, option3_field, option4_field, option5_field):
     engine = create_connection()
     with Session(engine) as session:
         request = RescheduleRequest(
@@ -201,7 +221,12 @@ def insert_reschedule_request(requester_id, receiver_id, game_id, option1, optio
             option2=option2,
             option3=option3,
             option4=option4,
-            option5=option5
+            option5=option5,
+            option1_field=option1_field,
+            option2_field=option2_field,
+            option3_field=option3_field,
+            option4_field=option4_field,
+            option5_field=option5_field
         )
         try:
             session.add_all([request])
@@ -222,11 +247,16 @@ def get_reschedule_requests(team_id):
             select(
                 RescheduleRequest.id, 
                 RescheduleRequest.game_id, 
-                RescheduleRequest.option1, 
-                RescheduleRequest.option2, 
+                RescheduleRequest.option1,
+                RescheduleRequest.option1_field, 
+                RescheduleRequest.option2,
+                RescheduleRequest.option2_field, 
                 RescheduleRequest.option3, 
+                RescheduleRequest.option3_field, 
                 RescheduleRequest.option4, 
+                RescheduleRequest.option4_field, 
                 RescheduleRequest.option5,
+                RescheduleRequest.option5_field, 
                 requester_alias.id.label("requester_id"),
                 requester_alias.team_name.label("requester_team_name"),
                 reciever_alias.id.label("reciever_id"),
@@ -235,13 +265,43 @@ def get_reschedule_requests(team_id):
                 Game.time,
                 Game.field
             )
-            .join(requester_alias, Team.id == requester_alias.id)
-            .join(reciever_alias, Team.id == reciever_alias.id)
+            .select_from(RescheduleRequest)
+            .join(requester_alias, RescheduleRequest.requester_id == requester_alias.id)
+            .join(reciever_alias, RescheduleRequest.receiver_id == reciever_alias.id)
             .join(Game, Game.id == RescheduleRequest.game_id)
-            .where(requester_alias.id == team_id | reciever_alias.id == team_id)
+            .where(or_(requester_alias.id == team_id, reciever_alias.id == team_id))
         )
         result = session.execute(stmt).mappings().all()
         return result
+    
+def delete_reschedule_request(request_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(RescheduleRequest).where(RescheduleRequest.id == request_id)
+        result = session.execute(stmt).mappings().first()
+        try:
+            session.delete([result])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return True
+    
+def delete_game(game_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Game).where(Game.id == game_id)
+        result = session.execute(stmt).mappings().first()
+        try:
+            session.delete([result])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return True
+
 
 def get_standings():
     engine = create_connection()
@@ -267,3 +327,4 @@ def get_standings():
         
         result = session.execute(stmt).mappings().all()
         return result
+

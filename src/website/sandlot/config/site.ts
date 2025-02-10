@@ -24,6 +24,10 @@ export const siteConfig = {
       label: "Profile",
       href: "/profile",
     },
+    {
+      label: "Accept RR",
+      href: "/accept-reschedule-request",
+    },
   ],
   navMenuItems: [
     {
