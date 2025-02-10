@@ -29,3 +29,13 @@ export type Game = {
     away_team_score: string;
     played: boolean;
 }
+
+export type Standings = {
+    team_name: string;
+    wins: number;
+    losses: number;
+    ties: number;
+    forfeits: number;
+    differential: number;
+    division: string;
+}
