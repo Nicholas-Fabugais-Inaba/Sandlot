@@ -19,6 +19,7 @@ interface RescheduleRequest {
 
 export default function AcceptRescheduleRequest() {
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>([]);
   const [selectedDates, setSelectedDates] = useState<{ [key: string]: Date | null }>({});
@@ -31,6 +32,7 @@ export default function AcceptRescheduleRequest() {
       const session = await getSession();
       if (session) {
         setUserRole(session.user?.role || null);
+        setUserTeamId(session.user?.team_id || null);
       }
       setLoading(false); // Set loading to false after fetching session
     };
