@@ -31,7 +31,7 @@ async def create_RR(request: RescheduleRequest):
     return response
 
 @router.post("/get_reschedule_requests", response_model=list)
-async def get_team_RRs(team_id: int):
-    requests = get_reschedule_requests(team_id)
+async def get_team_RRs(data: TeamID):
+    requests = get_reschedule_requests(data.team_id)
     requests = [dict(row) for row in requests]
     return requests
