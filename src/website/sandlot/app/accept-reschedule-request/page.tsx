@@ -42,37 +42,11 @@ export default function AcceptRescheduleRequest() {
 
   // Fetch reschedule request data (mocked for this example)
   useEffect(() => {
-    const fetchRescheduleRequests = async () => {
-      // Replace with actual API call to fetch reschedule request data
-      const requests: RescheduleRequest[] = [
-        {
-          id: "1",
-          originalDate: new Date("2025-05-10T17:00:00"),
-          proposedDates: [
-            new Date("2025-05-12T17:00:00"),
-            new Date("2025-05-14T17:00:00"),
-            new Date("2025-05-16T17:00:00"),
-          ],
-          home: "Yankees",
-          away: "Mariners",
-        },
-        {
-          id: "2",
-          originalDate: new Date("2025-06-10T17:00:00"),
-          proposedDates: [
-            new Date("2025-06-12T17:00:00"),
-            new Date("2025-06-14T17:00:00"),
-            new Date("2025-06-16T17:00:00"),
-          ],
-          home: "Red Sox",
-          away: "Blue Jays",
-        },
-      ];
-      setRescheduleRequests(requests);
-    };
-
-    getRR({ team_id: 1 }).then((data) => {
-    });
+    (async () => {
+          const session = await getSession();
+          const formattedRequests = await getRR({ team_id: session?.user.team_id });
+          setRescheduleRequests(formattedRequests)
+    })();
   }, []);
 
   const handleAccept = (id: string) => {
