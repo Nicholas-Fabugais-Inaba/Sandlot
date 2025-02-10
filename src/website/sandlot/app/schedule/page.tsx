@@ -13,11 +13,15 @@ import { title } from "@/components/primitives";
 import { Card, user } from "@heroui/react";  // Import NextUI Card
 import "./SchedulePage.css";  // Custom styles
 import getSchedule from "../functions/getSchedule";
+import { getTeamSchedule, addEmptyEvents } from "../functions/getSchedule";
 import { Event } from "../types";
 
 import createRR from "../functions/createRR";
+import { form } from "@heroui/theme";
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
+const currDate = new Date("2025-06-10");
+const currNextDate = new Date("2025-06-11");
 
 interface SelectedDate {
   date: Date;
@@ -63,13 +67,22 @@ export default function SchedulePage() {
         else if (session.user?.role === "commissioner" || session.user?.role === "role") {
           setSchedType(0);
         }
+
+        if (session.user?.role === "player" || session.user?.role === "team") {
+          (async () => {
+            let formattedEvents = await getTeamSchedule(session.user?.team_id);
+            setEvents(formattedEvents)
+          })();
+        }
+      }
+      if (events === undefined) {
+        (async () => {
+          let formattedEvents = await getSchedule()
+          setEvents(formattedEvents)
+        })()
       }
     };
-
-    (async () => {
-      let formattedEvents = await getSchedule()
-      setEvents(formattedEvents)
-    })();
+    
 
     setLoading(false); // Set loading to false after fetching session
 
@@ -116,7 +129,7 @@ export default function SchedulePage() {
 
   const handleTeamClick = (event: React.MouseEvent, start: Date | null, field: number, teams: any) => {
     // If the user is either a commissioner or the game selected is one the logged in team is playing in
-    if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId)))) {
+    if (start && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId) && start > currNextDate))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
       setRescheduleGame({ game_id: teams.id, date: start, field: field, home_id: teams.home_id, away_id: teams.away_id });
@@ -125,20 +138,34 @@ export default function SchedulePage() {
 
   const handleRescheduleClick = () => {
     setSchedType(3);
+    setLoading(true);
     setView("timeGridWeek");
+    (async () => {
+      let formattedEvents = await getSchedule();
+      formattedEvents = addEmptyEvents(formattedEvents);
+      console.log("Here", formattedEvents);
+      setEvents(formattedEvents)
+    })();
     setPopupVisible(false);
     if (calendarRef.current) {
       calendarRef.current.getApi().changeView("timeGridWeek"); // Force calendar to change view
     }
+    setLoading(false);
   };
 
   const handleReturnClick = () => {
     if (userRole === "player" || userRole === "team" || userRole === "role") {
       setSchedType(1);
+      setLoading(true);
+      (async () => {
+        let formattedEvents = await getTeamSchedule(userTeamId? userTeamId : 0);
+        setEvents(formattedEvents);
+      })();
       setView("dayGridMonth");
       if (calendarRef.current) {
         calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
       }
+      setLoading(false);
     }
     else {
       setSchedType(0);
@@ -387,7 +414,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 1"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) ? (
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start && eventInfo.event.start > currNextDate ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 1)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 1) ? 
@@ -409,7 +436,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) ? (
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start && eventInfo.event.start > currNextDate ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 2)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 2) ? 
@@ -431,7 +458,7 @@ export default function SchedulePage() {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 3"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) ? (
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start && eventInfo.event.start > currNextDate ? (
                     <div
                       onClick={() => handleSelectClick(eventInfo.event.start, 3)}
                       className={`event-content p-2 rounded-xl ${isSelected(eventInfo.event.start, 3) ? 

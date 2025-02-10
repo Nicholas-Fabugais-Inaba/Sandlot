@@ -142,7 +142,27 @@ def get_all_games():
 def get_team_games(team_id):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Game.id, Game.home_team, Game.away_team, Game.date, Game.time, Game.field, Game.home_team_score, Game.away_team_score, Game.played).where(Game.home_team == team_id | Game.away_team == team_id)
+        home_team_alias = aliased(Team, name="home_team")
+        away_team_alias = aliased(Team, name="away_team")
+
+        stmt = (
+            select(
+                Game.id,
+                Game.date,
+                Game.time,
+                Game.field,
+                Game.home_team_score,
+                Game.away_team_score,
+                Game.played,
+                home_team_alias.id.label("home_team_id"),
+                home_team_alias.team_name.label("home_team_name"),
+                away_team_alias.id.label("away_team_id"),
+                away_team_alias.team_name.label("away_team_name")
+            )
+            .join(home_team_alias, Game.home_team_id == home_team_alias.id)
+            .join(away_team_alias, Game.away_team_id == away_team_alias.id)
+            .where(or_(Game.home_team_id == team_id, Game.away_team_id == team_id))
+        )
         result = session.execute(stmt).mappings().all()
         return result
 

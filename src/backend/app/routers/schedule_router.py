@@ -20,8 +20,8 @@ async def get_scheduled_games():
     return games
 
 @router.post("/get_team_games", response_model=list)
-async def team_games(team_id: str):
-    games = get_team_games(team_id)
+async def team_games(data: TeamID):
+    games = get_team_games(data.team_id)
     games = [dict(row) for row in games]
     return games
 
