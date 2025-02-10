@@ -13,6 +13,7 @@ interface RescheduleRequest {
   id: string;
   originalDate: Date;
   proposedDates: Date[];
+  proposedFields: string[];
   home: string;
   away: string;
 }
@@ -108,9 +109,9 @@ export default function AcceptRescheduleRequest() {
                 onChange={(e) => setSelectedDates({ ...selectedDates, [request.id]: new Date(e.target.value) })}
               >
                 <option value="" disabled>Select a date</option>
-                {request.proposedDates.map((date) => (
-                  <option key={date.toISOString()} value={date.toISOString()}>
-                    {date.toLocaleString()}
+                {request.proposedDates.map((date, i) => (
+                  <option key={date.toISOString() + request.proposedFields[i]} value={date.toISOString() + request.proposedFields[i]}>
+                    {date.toLocaleString() + " on field " + request.proposedFields[i]}
                   </option>
                 ))}
               </select>

@@ -27,7 +27,7 @@ async def team_games(data: TeamID):
 
 @router.post("/create_reschedule_request", response_model=None)
 async def create_RR(request: RescheduleRequest):
-    response = insert_reschedule_request(request.requester_id, request.receiver_id, request.game_id, request.option1, request.option2, request.option3, request.option4, request.option5)
+    response = insert_reschedule_request(request.requester_id, request.receiver_id, request.game_id, request.option1, request.option2, request.option3, request.option4, request.option5, request.option1_field, request.option2_field, request.option3_field, request.option4_field, request.option5_field)
     return response
 
 @router.post("/get_reschedule_requests", response_model=list)
