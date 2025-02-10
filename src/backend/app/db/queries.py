@@ -301,3 +301,30 @@ def delete_game(game_id):
         else:
             session.commit()
         return True
+
+
+def get_standings():
+    engine = create_connection()
+    with Session(engine) as session:
+        team1 = aliased(Team)
+        team2 = aliased(Team)
+        
+        stmt = (
+            select(
+                Game.home_team_id,
+                team1.team_name.label('home_team_name'),
+                Game.home_team_score,
+                team1.division.label('home_division'),
+                Game.away_team_id,
+                team2.team_name.label('away_team_name'),
+                Game.away_team_score,
+                team2.division.label('away_division')
+            )
+            .select_from(Game)
+            .join(team1, Game.home_team_id == team1.id)
+            .join(team2, Game.away_team_id == team2.id)
+        )
+        
+        result = session.execute(stmt).mappings().all()
+        return result
+
