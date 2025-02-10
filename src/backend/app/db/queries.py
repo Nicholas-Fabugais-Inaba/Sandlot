@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, aliased
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from .create_engine import create_connection
 from .models import Player, Team, Game, RescheduleRequest
 
@@ -235,10 +235,11 @@ def get_reschedule_requests(team_id):
                 Game.time,
                 Game.field
             )
-            .join(requester_alias, Team.id == requester_alias.id)
-            .join(reciever_alias, Team.id == reciever_alias.id)
+            .select_from(RescheduleRequest)
+            .join(requester_alias, RescheduleRequest.requester_id == requester_alias.id)
+            .join(reciever_alias, RescheduleRequest.receiver_id == reciever_alias.id)
             .join(Game, Game.id == RescheduleRequest.game_id)
-            .where(requester_alias.id == team_id | reciever_alias.id == team_id)
+            .where(or_(requester_alias.id == team_id, reciever_alias.id == team_id))
         )
         result = session.execute(stmt).mappings().all()
         return result

@@ -7,6 +7,8 @@ import { Card } from "@heroui/react";  // Import NextUI Card
 import CustomModal from "./CustomModal";  // Import Custom Modal
 import "./AcceptRescheduleRequest.css";  // Custom styles
 
+import getRR from "../functions/getRR";
+
 interface RescheduleRequest {
   id: string;
   originalDate: Date;
@@ -67,7 +69,8 @@ export default function AcceptRescheduleRequest() {
       setRescheduleRequests(requests);
     };
 
-    fetchRescheduleRequests();
+    getRR({ team_id: 1 }).then((data) => {
+    });
   }, []);
 
   const handleAccept = (id: string) => {
