@@ -1,3 +1,5 @@
+// app/accept-reschedule-request/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -23,9 +25,9 @@ export default function AcceptRescheduleRequest() {
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>([]);
-  const [selectedDates, setSelectedDates] = useState<{ [key: string]: Date | null }>({});
+  const [selectedDates, setSelectedDates] = useState<{ [key: string]: string | null }>({});
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState<{ id: string, action: string, originalDate: Date, newDate?: Date } | null>(null);
+  const [modalContent, setModalContent] = useState<{ id: string, action: string, originalDate: Date, newDate?: string } | null>(null);
 
   // Fetch session data to get user role
   useEffect(() => {
@@ -105,12 +107,12 @@ export default function AcceptRescheduleRequest() {
               <h2 className="text-xl font-semibold">Proposed Dates</h2>
               <select
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                value={selectedDates[request.id] ? selectedDates[request.id]!.toISOString() : ""}
-                onChange={(e) => setSelectedDates({ ...selectedDates, [request.id]: new Date(e.target.value) })}
+                value={selectedDates[request.id] || ""}
+                onChange={(e) => setSelectedDates({ ...selectedDates, [request.id]: e.target.value })}
               >
                 <option value="" disabled>Select a date</option>
                 {request.proposedDates.map((date, i) => (
-                  <option key={date.toISOString() + request.proposedFields[i]} value={date.toISOString() + request.proposedFields[i]}>
+                  <option key={date.toISOString() + request.proposedFields[i]} value={date.toLocaleString() + " on field " + request.proposedFields[i]}>
                     {date.toLocaleString() + " on field " + request.proposedFields[i]}
                   </option>
                 ))}
