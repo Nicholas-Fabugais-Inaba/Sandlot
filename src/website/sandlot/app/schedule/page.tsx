@@ -20,7 +20,8 @@ import createRR from "../functions/createRR";
 import { form } from "@heroui/theme";
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
-const currDate = new Date("2025-06-20");
+
+const currDate = new Date("2025-06-20"); // Temporary current date, needs time in future
 const currNextDate = new Date("2025-06-21");
 
 interface SelectedDate {
@@ -528,7 +529,7 @@ export default function SchedulePage() {
             <button
               onClick={handleRescheduleClick}
               className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currDate ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
-              disabled={rescheduleGame && rescheduleGame.date < currDate}
+              disabled={rescheduleGame && rescheduleGame.date < currNextDate}
             >
               Reschedule
             </button>
