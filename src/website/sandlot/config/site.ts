@@ -28,6 +28,10 @@ export const siteConfig = {
       label: "Accept RR",
       href: "/accept-reschedule-request",
     },
+    {
+      label: "Commissioner",
+      href: "/commissioner",
+    },
   ],
   navMenuItems: [
     {
