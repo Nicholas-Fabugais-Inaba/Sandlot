@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Event, GenSchedResponse } from '../types';
-import { get } from 'http';
 import { Dictionary } from '@fullcalendar/core/internal';
 
 const APIHOST = `127.0.0.1:8000`;
@@ -23,11 +22,11 @@ export default async function getSchedule(): Promise<Event[]> {
   try {
     const response = await axios.get(`http://${APIHOST}/schedule/get_all_games`);
 
-    console.log(response.data)
+    console.log(response.data);
     
-    let formattedEvents = getFormattedEvents(response)
+    let formattedEvents = getFormattedEvents(response.data);
   
-    console.log(formattedEvents)
+    console.log(formattedEvents);
 
     return formattedEvents;
 
@@ -41,11 +40,11 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
   try {
     const response = await axios.post(`http://${APIHOST}/schedule/get_team_games`, {team_id: team_id}); 
 
-    console.log(response.data)
+    console.log(response.data);
     
-    let formattedEvents = getFormattedEvents(response)
+    let formattedEvents = getFormattedEvents(response.data);
   
-    console.log(formattedEvents)
+    console.log(formattedEvents);
 
     return formattedEvents;
 
@@ -61,10 +60,28 @@ export async function genSampleSchedule(num_games: number): Promise<GenSchedResp
     const response = await axios.post(`http://${APIHOST}/schedule/gen_schedule`, {num_games: num_games}); 
 
     console.log(response.data);
-    console.log(convertSchedData(response.data.schedule, response.data.teams));
+    const games = convertSchedData(response.data.schedule, response.data.teams);
+    console.log("num games: ", games.length);
+    const events = getFormattedEvents(games);
+    console.log(events);
+    // Count the number of field elements in events:
+    let fieldCount = 0;
+    for (const event of events) {
+      if (event.field1) {
+        fieldCount++;
+      }
+      if (event.field2) {
+        fieldCount++;
+      } 
+      if (event.field3) {
+        fieldCount++;
+      }
+    }
+    console.log("num games (events): ", fieldCount);
 
-    return {events:[], score: 0};
-  } catch {
+    return {events: events, score: response.data.score};
+  } catch (error)  {
+    console.error("Error generating schedule:", error);
     return {events:[], score: 0};
   }
 }
@@ -95,89 +112,89 @@ function convertSchedData(schedule: Dictionary, teams: Dictionary) : Game[] {
   return games;
 }
 
-function getFormattedEvents(response: any) : Event[] {
+function getFormattedEvents(games: any) : Event[] {
   var eventsTemp: { [key: string]: Event} = {}
 
-    for (const game of response.data) {
-      var dateTime : string = game.date + game.time;
+  for (const game of games) {
+    var dateTime : string = game.date + game.time;
 
-      // If the event doesn't exist, initialize it with start and end dates
-      if (!(dateTime in eventsTemp)) {
-        var start = new Date(game.date);
-        var end = new Date(game.date);
-        if (game.time === "1") {
-          start.setHours(17);
-          end.setHours(18);
-          end.setMinutes(30);
-        } else if (game.time === "2") {
-          start.setHours(18);
-          start.setMinutes(30);
-          end.setHours(20);
-        }
-        else if (game.time === "3") {
-          start.setHours(20);
-          end.setHours(21);
-          end.setMinutes(30);
-        }
-        else if (game.time === "4") {
-          start.setHours(21);
-          end.setMinutes(30);
-          end.setHours(23)
-        }
-        eventsTemp[dateTime] = {
-          start: start,
-          end: end
-        };
+    // If the event doesn't exist, initialize it with start and end dates
+    if (!(dateTime in eventsTemp)) {
+      var start = new Date(game.date);
+      var end = new Date(game.date);
+      if (game.time === "1") {
+        start.setHours(17);
+        end.setHours(18);
+        end.setMinutes(30);
+      } else if (game.time === "2") {
+        start.setHours(18);
+        start.setMinutes(30);
+        end.setHours(20);
       }
+      else if (game.time === "3") {
+        start.setHours(20);
+        end.setHours(21);
+        end.setMinutes(30);
+      }
+      else if (game.time === "4") {
+        start.setHours(21);
+        end.setMinutes(30);
+        end.setHours(23)
+      }
+      eventsTemp[dateTime] = {
+        start: start,
+        end: end
+      };
+    }
 
-      // Add the field property to the event
-      if (game.field === "1") {
-        eventsTemp[dateTime] = {
-          ...eventsTemp[dateTime],
-          field1: {
-            id: game.id,
-            home: game.home_team_name,
-            home_id: game.home_team_id,
-            away: game.away_team_name,
-            away_id: game.away_team_id
-          }
-        }
-      }
-      else if (game.field === "2") {
-        eventsTemp[dateTime] = {
-          ...eventsTemp[dateTime],
-          field2: {
-            id: game.id,
-            home: game.home_team_name,
-            home_id: game.home_team_id,
-            away: game.away_team_name,
-            away_id: game.away_team_id
-          }
-        }
-      }
-      else if (game.field === "3") {
-        eventsTemp[dateTime] = {
-          ...eventsTemp[dateTime],
-          field3: {
-            id: game.id,
-            home: game.home_team_name,
-            home_id: game.home_team_id,
-            away: game.away_team_name,
-            away_id: game.away_team_id
-          }
+    // Add the field property to the event
+    if (game.field === "1") {
+      eventsTemp[dateTime] = {
+        ...eventsTemp[dateTime],
+        field1: {
+          id: game.id,
+          home: game.home_team_name,
+          home_id: game.home_team_id,
+          away: game.away_team_name,
+          away_id: game.away_team_id
         }
       }
     }
-
-    // Convert the dictionary to an array of events
-    const formattedEvents: Event[] = [];
-    for (const key in eventsTemp) {
-      if (eventsTemp.hasOwnProperty(key)) {
-        formattedEvents.push(eventsTemp[key]);
+    else if (game.field === "2") {
+      eventsTemp[dateTime] = {
+        ...eventsTemp[dateTime],
+        field2: {
+          id: game.id,
+          home: game.home_team_name,
+          home_id: game.home_team_id,
+          away: game.away_team_name,
+          away_id: game.away_team_id
+        }
       }
     }
+    else if (game.field === "3") {
+      eventsTemp[dateTime] = {
+        ...eventsTemp[dateTime],
+        field3: {
+          id: game.id,
+          home: game.home_team_name,
+          home_id: game.home_team_id,
+          away: game.away_team_name,
+          away_id: game.away_team_id
+        }
+      }
+    }
+  }
 
-    return formattedEvents;
+  // Convert the dictionary to an array of events
+  const formattedEvents: Event[] = [];
+  for (const key in eventsTemp) {
+    if (eventsTemp.hasOwnProperty(key)) {
+      formattedEvents.push(eventsTemp[key]);
+    }
+  }
+
+  return formattedEvents;
 }
 
 export function addEmptyEvents(events: Event[]) : Event[] {
