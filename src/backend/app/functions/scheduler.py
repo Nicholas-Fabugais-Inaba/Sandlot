@@ -70,7 +70,7 @@ def constraint3(game, game_slot, schedule):
 def constraint4(game, game_slot, schedule):
     global teams
     # Checks each team involved in the game
-    weekday: int = game_slot[2].weekday()
+    weekday: int = game_slot[2].weekday() - 1 # weekday() lies, Monday is 1, so we must subtract one to convert it to the correct weekday.
     for team in game:
         if teams[team]["offday"] == weekday:
             return False # ISSUE: If both teams have an offday on this day it will be weighted the same as one team having an offday
