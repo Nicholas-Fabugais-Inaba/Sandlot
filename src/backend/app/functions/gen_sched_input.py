@@ -142,7 +142,7 @@ def get_weekdays(start_date: date, end_date: date):
     current_date = start_date
     while current_date <= end_date:
         # Check if the current date is a weekday (Monday=0, Sunday=6)
-        if current_date.weekday() < 5:  # Monday to Friday are 0 to 4
+        if current_date.weekday() > 0 and current_date.weekday() < 6:  # Monday to Friday are 0 to 4
             weekdays.append(current_date)  # Add the date
         current_date += timedelta(days=1)  # Move to the next day
     
