@@ -52,9 +52,10 @@ export default async function getRR(team_id: any): Promise<any> {
         originalField: response.data[i].field,
         proposedDates: proposedDates,
         proposedFields: proposedFields,
-        home: response.data[i].reciever_team_name,
-        away: response.data[i].requester_team_name,
-
+        reciever_name: response.data[i].reciever_team_name,
+        requester_name: response.data[i].requester_team_name,
+        reciever_id: response.data[i].reciever_id,
+        requester_id: response.data[i].requester_id,
       })
     }
   }

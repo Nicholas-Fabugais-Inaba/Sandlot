@@ -47,3 +47,5 @@ class RRAccept(BaseModel):
     time: str
     field: str
 
+class SchedParams(BaseModel):
+    num_games: int

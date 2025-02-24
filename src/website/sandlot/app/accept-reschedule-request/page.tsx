@@ -14,11 +14,15 @@ import acceptRR from "../functions/acceptRR";
 
 interface RescheduleRequest {
   id: string;
+  game_id: number;
   originalDate: Date;
+  originalField: string;
   proposedDates: Date[];
   proposedFields: string[];
-  home: string;
-  away: string;
+  reciever_name: string,
+  requester_name: string,
+  reciever_id: number,
+  requester_id: number,
 }
 
 export default function AcceptRescheduleRequest() {
@@ -76,7 +80,13 @@ export default function AcceptRescheduleRequest() {
     if (modalContent) {
       if (modalContent.action === 'accept' && modalContent.newDate) {
         // Implement the logic to accept the reschedule request
-        alert(`Reschedule request ${modalContent.id} accepted for ${modalContent.newDate.toLocaleString()}`);
+        const request = rescheduleRequests.find(req => req.id === modalContent.id);
+        if (request) {
+          let splitNewDate = parseNewDate(modalContent.newDate);
+          let timeslot = deriveTimeslot(splitNewDate[0]);
+          acceptRR({ rr_id: parseInt(request.id, 10), old_game_id: request.game_id, home_team_id: request.reciever_id, away_team_id: request.requester_id, date: splitNewDate[0].toLocaleDateString(), time: timeslot, field: splitNewDate[1] });
+          alert(`Reschedule request ${modalContent.id} accepted for ${modalContent.newDate.toLocaleString()}`);
+        }
       } else if (modalContent.action === 'deny') {
         // Implement the logic to deny the reschedule request
         alert(`Reschedule request ${modalContent.id} denied.`);
@@ -85,6 +95,24 @@ export default function AcceptRescheduleRequest() {
       setModalContent(null);
     }
   };
+
+  function parseNewDate(newDate: string): [Date, string] {
+    let splitNewDate = newDate.split(" ");
+    return [new Date(splitNewDate[0]), splitNewDate[1]];
+  }
+
+  function deriveTimeslot(date: Date): string {
+    if (date.getHours() === 17) {
+      return "1"
+    } else if (date.getHours() === 18) {
+      return "2"
+    } else if (date.getHours() === 20) {
+      return "3"
+    } else if (date.getHours() === 21) {
+      return "4"
+    }
+    return "0"
+  }
 
   if (loading) {
     return <div>Loading...</div>; // Show loading indicator while fetching session
@@ -113,7 +141,7 @@ export default function AcceptRescheduleRequest() {
               >
                 <option value="" disabled>Select a date</option>
                 {request.proposedDates.map((date, i) => (
-                  <option key={date.toISOString() + request.proposedFields[i]} value={date.toLocaleString() + " on field " + request.proposedFields[i]}>
+                  <option key={date.toISOString() + request.proposedFields[i]} value={date.toISOString() + " " + request.proposedFields[i]}>
                     {date.toLocaleString() + " on field " + request.proposedFields[i]}
                   </option>
                 ))}
@@ -147,7 +175,7 @@ export default function AcceptRescheduleRequest() {
             <p>Are you sure you want to {modalContent?.action} the reschedule request?</p>
             <p>Original Date: {modalContent?.originalDate.toLocaleString()}</p>
             {modalContent?.action === 'accept' && modalContent?.newDate && (
-              <p>New Date: {modalContent.newDate.toLocaleString()}</p>
+              <p>New Date: {parseNewDate(modalContent.newDate)[0].toLocaleString() + "on field " + parseNewDate(modalContent.newDate)[1]}</p>
             )}
           </>
         }
