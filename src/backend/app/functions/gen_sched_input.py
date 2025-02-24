@@ -1,6 +1,6 @@
 
 from datetime import date, timedelta
-from .scheduler import gen_schedule, gen_schedule_w_skip, send_schedule_to_db
+from .scheduler import gen_schedule_w_skip, send_schedule_to_db
 # from scheduler import gen_schedule_w_skip
 from random import shuffle
 from ..db.queries import get_all_teams
