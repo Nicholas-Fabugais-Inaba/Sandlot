@@ -16,6 +16,45 @@ import "./HomePage.css";  // Import the new CSS file
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [isWeatherDropdownOpen, setWeatherDropdownOpen] = useState(false);
+  const [announcements, setAnnouncements] = useState([
+    "Season starts on April 1st!",
+    "Registration opens on March 1st.",
+    "New teams welcome to join."
+  ]);
+  const [newAnnouncement, setNewAnnouncement] = useState("");
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState("");  
+  
+  const handlePostAnnouncement = () => {
+    if (newAnnouncement.trim()) {
+      setAnnouncements([...announcements, newAnnouncement]);
+      setNewAnnouncement("");
+    }
+  };  
+
+  const handleAddAnnouncement = () => {
+    if (newAnnouncement.trim() !== "") {
+      setAnnouncements([...announcements, newAnnouncement]);
+      setNewAnnouncement("");
+    }
+  };
+  
+  const handleEditAnnouncement = (index: number) => {
+    setEditingIndex(index);
+    setEditValue(announcements[index]);
+  };
+  
+  const handleSaveEdit = (index: number) => {
+    const updatedAnnouncements = [...announcements];
+    updatedAnnouncements[index] = editValue;
+    setAnnouncements(updatedAnnouncements);
+    setEditingIndex(null);
+  };
+  
+  const handleDeleteAnnouncement = (index: number) => {
+    const updatedAnnouncements = announcements.filter((_, i) => i !== index);
+    setAnnouncements(updatedAnnouncements);
+  };  
 
   const handleWeatherClick = () => {
     setWeatherDropdownOpen(!isWeatherDropdownOpen);
@@ -103,46 +142,112 @@ export default function Home() {
           );          
       default:
         return (
-          <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-            <div className="inline-block max-w-xl text-center justify-center">
-              <span className={title()}>Welcome to the&nbsp;</span>
-              <br />
-              <span className={title()}>McMaster GSA</span>
-              <br />
-              <span className={title()}>Softball League</span>
-            </div>
+          <section className="w-full px-6 py-8 md:py-10">
+            {/* Scrollable container */}
+            <div className="w-full overflow-x-auto">
+              <div className="flex flex-row gap-6 min-w-[800px]">  
+                {/* Welcome Section */}
+                <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 min-w-0">
+                  <div className="inline-block max-w-xl">
+                    <span className={title()}>Welcome to the&nbsp;</span>
+                    <br />
+                    <span className={title()}>McMaster GSA</span>
+                    <br />
+                    <span className={title()}>Softball League</span>
+                  </div>
 
-            <div className="flex gap-3">
-              <Link
-                isExternal
-                className={buttonStyles({
-                  color: "primary",
-                  radius: "full",
-                  variant: "shadow",
-                })}
-                href={siteConfig.links.docs}
-              >
-                Documentation
-              </Link>
-              <Link
-                isExternal
-                className={buttonStyles({ variant: "bordered", radius: "full" })}
-                href={siteConfig.links.github}
-              >
-                <GithubIcon size={20} />
-                GitHub
-              </Link>
-            </div>
+                  <div className="flex gap-3 mt-4">
+                    <Link
+                      isExternal
+                      className={buttonStyles({
+                        color: "primary",
+                        radius: "full",
+                        variant: "shadow",
+                      })}
+                      href={siteConfig.links.docs}
+                    >
+                      Documentation
+                    </Link>
+                    <Link
+                      isExternal
+                      className={buttonStyles({ variant: "bordered", radius: "full" })}
+                      href={siteConfig.links.github}
+                    >
+                      <GithubIcon size={20} />
+                      GitHub
+                    </Link>
+                  </div>
+                </div>
 
-            {/* Announcements Section */}
-            <section className="mt-8">
-              <h2 className="text-xl font-bold">Announcements</h2>
-              <ul className="list-disc list-inside mt-4">
-                <li>Season starts on April 1st!</li>
-                <li>Registration opens on March 1st.</li>
-                <li>New teams welcome to join.</li>
-              </ul>
-            </section>
+                {/* Announcements Section */}
+                <section className="flex-1 min-w-[300px]">
+                  <h2 className="text-xl font-bold">Announcements</h2>
+
+                  {/* Input Box for Adding a New Announcement */}
+                  <div className="flex gap-2 mt-4">
+                    <input
+                      type="text"
+                      value={newAnnouncement}
+                      onChange={(e) => setNewAnnouncement(e.target.value)}
+                      placeholder="Enter announcement..."
+                      className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                    />
+                    <button
+                      onClick={handleAddAnnouncement}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    >
+                      Post
+                    </button>
+                  </div>
+
+                  {/* Announcements List */}
+                  <ul className="mt-4 space-y-2">
+                    {announcements.map((announcement, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-sm"
+                      >
+                        {editingIndex === index ? (
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            className="border border-gray-300 rounded-md px-2 py-1 flex-grow"
+                          />
+                        ) : (
+                          <span className="text-gray-800">{announcement}</span>
+                        )}
+
+                        {/* Buttons for Edit and Delete */}
+                        <div className="flex space-x-2 ml-2">
+                          {editingIndex === index ? (
+                            <button
+                              onClick={() => handleSaveEdit(index)}
+                              className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                            >
+                              Save
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleEditAnnouncement(index)}
+                              className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+                            >
+                              Edit
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleDeleteAnnouncement(index)}
+                            className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </div>
+            </div>
           </section>
         );
     }
