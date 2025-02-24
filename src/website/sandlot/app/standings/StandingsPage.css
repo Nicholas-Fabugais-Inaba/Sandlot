@@ -1,23 +1,19 @@
 .column-name {
-    width: 30%; /* Adjust the width as needed */
-  }
-  
-  .column-wins {
-    width: 10%; /* Adjust the width as needed */
-  }
-  
-  .column-losses {
-    width: 10%; /* Adjust the width as needed */
-  }
-  
-  .column-ties {
-    width: 10%; /* Adjust the width as needed */
-  }
-  
-  .column-forfeits {
-    width: 10%; /* Adjust the width as needed */
-  }
-  
-  .column-differential {
-    width: 30%; /* Adjust the width as needed */
-  }
+  width: 25%;
+  min-width: 150px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.column-wins,
+.column-losses,
+.column-ties,
+.column-forfeits
+.column-differential {
+  width: 15%;
+  min-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

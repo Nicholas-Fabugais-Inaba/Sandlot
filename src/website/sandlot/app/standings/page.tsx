@@ -17,6 +17,7 @@ import { useAsyncList } from "@react-stately/data";
 import { title } from "@/components/primitives";
 import { getSession} from 'next-auth/react'
 import getStandings from "../functions/getStandings";
+import './StandingsPage.css';
 
 
 export default function StandingsPage() {
@@ -130,12 +131,12 @@ export default function StandingsPage() {
               <TableBody isLoading={isLoading} items={sortedTeams} loadingContent={<Spinner label="Loading..." />}>
                 {(item) => (
                   <TableRow key={item.name} className="py-2">
-                    <TableCell className="py-2">{item.name}</TableCell>
-                    <TableCell className="py-2">{item.wins}</TableCell>
-                    <TableCell className="py-2">{item.losses}</TableCell>
-                    <TableCell className="py-2">{item.ties}</TableCell>
-                    <TableCell className="py-2">{item.forfeits}</TableCell>
-                    <TableCell className="py-2">{item.differential}</TableCell>
+                    <TableCell className="py-2 column-name">{item.name}</TableCell>
+                    <TableCell className="py-2 column-wins">{item.wins}</TableCell>
+                    <TableCell className="py-2 column-losses">{item.losses}</TableCell>
+                    <TableCell className="py-2 column-ties">{item.ties}</TableCell>
+                    <TableCell className="py-2 column-forfeits">{item.forfeits}</TableCell>
+                    <TableCell className="py-2 column-differential">{item.differential}</TableCell>
                   </TableRow>
                 )}
               </TableBody>
