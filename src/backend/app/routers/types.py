@@ -49,3 +49,8 @@ class RRAccept(BaseModel):
 
 class SchedParams(BaseModel):
     num_games: int
+    
+class ScoreData(BaseModel):
+    game_id: int
+    home_team_score: int
+    away_team_score: int

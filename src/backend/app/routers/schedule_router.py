@@ -3,6 +3,7 @@ from ..functions.gen_sched_input import create_schedule, gen_schedule_repeated
 from ..db.queries import get_all_games, get_team_games, insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, update_game
 from .types import RescheduleRequest, TeamID, RRAccept, SchedParams
 
+
 router = APIRouter(tags=["schedule"])
 
 # temporary types and function
