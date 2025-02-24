@@ -3,6 +3,8 @@
 'use client';
 
 import { useState } from "react";
+import SchedulePage from "@/app/schedule/page"; // Import the schedule page
+import "./CommissionerPage.css";
 
 export default function CommissionerPage() {
   const [activeSection, setActiveSection] = useState("general");
@@ -36,11 +38,11 @@ interface ToolbarProps {
 
 function Toolbar({ setActiveSection }: ToolbarProps) {
   return (
-    <div className="bg-gray-800 text-white p-4 flex justify-around">
-      <button onClick={() => setActiveSection("general")} className="px-4 py-2">General</button>
-      <button onClick={() => setActiveSection("teams")} className="px-4 py-2">Teams</button>
-      <button onClick={() => setActiveSection("schedule")} className="px-4 py-2">Schedule</button>
-      <button onClick={() => setActiveSection("rules")} className="px-4 py-2">Rules</button>
+    <div className="toolbar">
+      <button onClick={() => setActiveSection("general")}>General</button>
+      <button onClick={() => setActiveSection("teams")}>Teams</button>
+      <button onClick={() => setActiveSection("schedule")}>Schedule</button>
+      <button onClick={() => setActiveSection("rules")}>Rules</button>
     </div>
   );
 }
@@ -87,13 +89,7 @@ function ScheduleSettings() {
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">Schedule Settings</h2>
-      <form>
-        <div className="mb-4">
-          <label className="block text-gray-700">Upload Schedule</label>
-          <input type="file" className="w-full px-4 py-2 border rounded-lg" />
-        </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Upload</button>
-      </form>
+      <SchedulePage />
     </div>
   );
 }
