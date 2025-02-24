@@ -18,54 +18,45 @@ const authOptions: NextAuthOptions = {
       authorize: async (credentials) => {
         if (credentials) {
           // Fetch user data from your database
-          let user = {
-            id: "temp_id",
-            name: "temp_name",
-            email: "temp_email",
-            role: "temp_role",
-            gender: "temp_gender",
-            teamName: "temp_team_name",
-            username: "temp_username",
-            division: "temp_division",
-            offday: "temp_offday",
-            preferred_division: "temp_preferred_division",
-            preferred_time: "temp_preferred_time",
-            team_id: 0,
-          }
+          let user = null
           // TODO: if statments here are poor, should have better way of checking for email/password or player/team
           const regex = /[@]/;
           if (regex.test(credentials.userID)) {
             const player = await getPlayer({ email: credentials.userID })
-            user = {
-              id: player.id,
-              name: player.first_name,
-              email: player.email,
-              role: "player",
-              gender: player.gender,
-              teamName: "team_name",
-              username: "temp_username",
-              division: "temp_division",
-              offday: "temp_offday",
-              preferred_division: "temp_preferred_division",
-              preferred_time: "temp_preferred_time",
-              team_id: player.team_id,
+            if (credentials.password == player.password) {
+              user = {
+                id: player.id,
+                name: player.first_name,
+                email: player.email,
+                role: "player",
+                gender: player.gender,
+                teamName: "team_name",
+                username: "temp_username",
+                division: "temp_division",
+                offday: "temp_offday",
+                preferred_division: "temp_preferred_division",
+                preferred_time: "temp_preferred_time",
+                team_id: player.team_id,
+              }
             }
           }
           else if(credentials.userID != "admin") {
             const team = await getTeam({ username: credentials.userID })
-            user = {
-              id: team.id,
-              name: "temp_name",
-              email: "temp_email",
-              role: "team",
-              gender: "temp_gender",
-              teamName: team.team_name,
-              username: team.username,
-              division: team.division,
-              offday: team.offday,
-              preferred_division: team.preferred_division,
-              preferred_time: team.preferred_time,
-              team_id: team.id,
+            if (credentials.password == team.password) {
+              user = {
+                id: team.id,
+                name: "temp_name",
+                email: "temp_email",
+                role: "team",
+                gender: "temp_gender",
+                teamName: team.team_name,
+                username: team.username,
+                division: team.division,
+                offday: team.offday,
+                preferred_division: team.preferred_division,
+                preferred_time: team.preferred_time,
+                team_id: team.id,
+              }
             }
           }
           
