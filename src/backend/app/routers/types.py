@@ -47,3 +47,7 @@ class RRAccept(BaseModel):
     time: str
     field: str
 
+class ScoreData(BaseModel):
+    game_id: int
+    home_team_score: int
+    away_team_score: int
