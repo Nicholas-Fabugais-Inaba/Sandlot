@@ -1,11 +1,23 @@
 import axios from 'axios';
-import { Game, Event } from '../types';
+import { Event, GenSchedResponse } from '../types';
 import { get } from 'http';
+import { Dictionary } from '@fullcalendar/core/internal';
 
 const APIHOST = `127.0.0.1:8000`;
 const currDate = new Date("2025-06-20");
 const seasonStart = new Date("2025-05-05");
 const seasonEnd = new Date("2025-08-20");
+
+interface Game {
+  id: number;
+  date: string;
+  time: string;
+  field: string;
+  home_team_name: string;
+  home_team_id: number;
+  away_team_name: string;
+  away_team_id: number;
+}
 
 export default async function getSchedule(): Promise<Event[]> {
   try {
@@ -41,6 +53,46 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
     console.error("Error fetching schedule:", error);
     return [];
   }
+}
+
+export async function genSampleSchedule(num_games: number): Promise<GenSchedResponse> {
+  try {
+    // Currently the input is a placeholder
+    const response = await axios.post(`http://${APIHOST}/schedule/gen_schedule`, {num_games: num_games}); 
+
+    console.log(response.data);
+    console.log(convertSchedData(response.data.schedule, response.data.teams));
+
+    return {events:[], score: 0};
+  } catch {
+    return {events:[], score: 0};
+  }
+}
+
+function convertSchedData(schedule: Dictionary, teams: Dictionary) : Game[] {
+  const games: Game[] = [];
+  // Response is a dictionary with keys being gameslots and values being lists of two teams.
+  // Loop through each key and value of response:
+  for (const key in schedule) {
+    if (schedule.hasOwnProperty(key)) {
+      const game_teams = schedule[key];      
+      // Create a new game object with the date, time, field, and team names.
+      const game: Game = {
+        id: 0,
+        field: key.split(",")[0],
+        time: key.split(",")[1],
+        date: key.split(",")[2],
+        home_team_name: teams[game_teams[0]]["name"],
+        home_team_id: teams[game_teams[0]]["id"],
+        away_team_name: teams[game_teams[1]]["name"],
+        away_team_id: teams[game_teams[1]]["id"]
+      };
+      // Add the game object to the games array.
+      games.push(game);
+    }
+  }
+  
+  return games;
 }
 
 function getFormattedEvents(response: any) : Event[] {

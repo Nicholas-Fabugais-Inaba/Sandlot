@@ -41,7 +41,7 @@ async def RR_accepted(data: RRAccept):
     update_game(data.old_game_id, data.date, data.time, data.field)
     return True
 
-@router.post("/gen_schedule", response_model=None)
+@router.post("/gen_schedule", response_model=object)
 async def gen_schedule(data: SchedParams):
-    schedule, score = gen_schedule_repeated()
-    return [schedule, score]
+    schedule, score, teams = gen_schedule_repeated()
+    return {"schedule": schedule, "score": score, "teams": teams}   

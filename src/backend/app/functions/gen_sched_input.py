@@ -224,7 +224,7 @@ def gen_schedule_repeated():
         if score < best_score:
             best_schedule = schedule
             best_score = score
-    return best_schedule, best_score
+    return best_schedule, best_score, teams
 
 
 # games = gen_games_division(divs, GAMES_PER_TEAM)
