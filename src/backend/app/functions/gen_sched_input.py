@@ -1,11 +1,11 @@
 
 from datetime import date, timedelta
-# from .scheduler import gen_schedule, gen_schedule_w_skip, send_schedule_to_db
-from scheduler import gen_schedule_w_skip
+from .scheduler import gen_schedule, gen_schedule_w_skip, send_schedule_to_db
+# from scheduler import gen_schedule_w_skip
 from random import shuffle
-# from ..db.queries import get_all_teams
+from ..db.queries import get_all_teams
 
-# from ..db.mock_data import insert_mock_schedule
+from ..db.mock_data import insert_mock_schedule
 
 
 FIELDS = 3
