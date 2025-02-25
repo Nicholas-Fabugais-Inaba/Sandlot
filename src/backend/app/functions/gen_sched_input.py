@@ -256,5 +256,5 @@ def get_teams():
 # send_schedule_to_db(schedule, score, t)
 
 
-# insert_mock_schedule()
-# gen_mock_schedule()
+#insert_mock_schedule()
+#gen_mock_schedule()
