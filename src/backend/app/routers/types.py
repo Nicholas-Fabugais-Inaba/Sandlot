@@ -50,6 +50,25 @@ class RRAccept(BaseModel):
 class SchedParams(BaseModel):
     num_games: int
 
+class SeasonSettings(BaseModel):
+    start_date: str
+    end_date: str
+    games_per_team: int
+
+class FieldName(BaseModel):
+    field_name: str
+
+class FieldID(BaseModel):
+    field_id = int
+
+class TimeslotData(BaseModel):
+    start: str
+    end: str
+    field_id: int
+
+class TimeslotID(BaseModel):
+    timeslot_id: int
+
 class ScoreData(BaseModel):
     game_id: int
     home_team_score: int

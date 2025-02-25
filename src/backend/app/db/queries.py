@@ -318,8 +318,108 @@ def get_standings():
         result = session.execute(stmt).mappings().all()
         return result
 
-def insert_scores(game_id, home_team_score, away_team_score):
+# currently unused queries start from here    
+def update_season_settings(start_date, end_date, games_per_team):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(SeasonSettings).values(start_date=start_date, end_date=end_date, games_per_team=games_per_team)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_season_settings():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            SeasonSettings.start_date, 
+            SeasonSettings.end_date, 
+            SeasonSettings.games_per_team
+        )
+        result = session.execute(stmt).mappings().first()
+        return result
+    
+def insert_field(field_name):
+    engine = create_connection()
+    with Session(engine) as session:
+        field = Field(
+            field_name = field_name
+        )
+        try:
+            session.add_all([field])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_all_fields():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            Field.id,
+            Field.field_name
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def delete_field(field_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Field).where(Field.id == field_id)
+        session.execute(stmt)
+        session.commit()
+    
+def insert_timeslot(start, end, field_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        timeslot = TimeSlot(
+            start = start,
+            end = end,
+            field_id = field_id
+        )
+        try:
+            session.add_all([timeslot])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_all_timeslots():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            TimeSlot.id,
+            TimeSlot.start,
+            TimeSlot.end,
+            TimeSlot.field_id
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def delete_timeslot(timeslot_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(TimeSlot).where(TimeSlot.id == timeslot_id)
+        session.execute(stmt)
+        session.commit()
+
+def update_score(game_id, home_team_score, away_team_score):
     engine = create_connection()
     with Session(engine) as session:
         stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
-        result = session.execute(stmt).mappings().first()
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True

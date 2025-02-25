@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .routers.schedule_router import router as schedule_router
 from .routers.user_router import router as user_rotuer
-from .routers.standings_router import router as standings_router    
+from .routers.standings_router import router as standings_router
+from .routers.commissioner_router import router as commissioner_router
 
 
 app = FastAPI()
@@ -21,7 +22,8 @@ app.add_middleware(
 app.include_router(schedule_router, prefix="/schedule")
 app.include_router(user_rotuer, prefix="/user")
 app.include_router(standings_router, prefix="/standings")
-
+app.include_router(standings_router, prefix="/standings")
+app.include_router(commissioner_router, prefix="/standings")
 
 @app.get("/")
 def read_root():
