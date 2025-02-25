@@ -86,11 +86,6 @@ function TeamsSettings() {
 }
 
 function ScheduleSettings() {
-  const handleGenerateSchedule = () => {
-    // Implement the logic to generate the schedule
-    console.log("Generate Schedule button clicked");
-  };
-
   return (
     <div>
       <SchedulePage viewer={true}/>
