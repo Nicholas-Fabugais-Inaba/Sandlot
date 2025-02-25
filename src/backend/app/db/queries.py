@@ -3,35 +3,6 @@ from sqlalchemy import select, or_, delete, update
 from .create_engine import create_connection
 from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest
 
-# example insert query to use as reference
-def example_insert_query():
-    engine = create_connection()
-    with Session(engine) as session:
-        example_player = Player(
-            first_name="John",
-            last_name="Doe",
-            email="johndoe@gmail.com",
-            password="mypassword11",
-            phone_number="111-111-1111",
-            gender="Male",
-        )
-        try:
-            session.add_all([example_player])
-        except:
-            session.rollback()
-            raise
-        else:
-            session.commit()
-
-# example select query to use as reference
-def example_select_query():
-    engine = create_connection()
-    with Session(engine) as session:
-        stmt = select(Player).where(Player.first_name.in_(["John", "Bob"]))
-        result = session.execute(stmt).all()
-        # would return result to whatever route called it in practice
-        print(result)
-
 
 # creating account insert query
 def insert_player(name, email, password):
@@ -210,6 +181,7 @@ def insert_mock_game(home_team, away_team, date, time, field, home_team_score, a
             session.commit()
     return True
 
+###### RESCHEDULE REQUEST QUERIES ######
 def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5, option1_field, option2_field, option3_field, option4_field, option5_field):
     engine = create_connection()
     with Session(engine) as session:
@@ -293,6 +265,7 @@ def update_game(game_id, new_date, new_time, new_field):
         else:
             session.commit()
 
+###### STANDINGS / SCORE QUERIES ######
 def get_standings():
     engine = create_connection()
     with Session(engine) as session:
@@ -317,8 +290,21 @@ def get_standings():
         
         result = session.execute(stmt).mappings().all()
         return result
+    
+def update_score(game_id, home_team_score, away_team_score):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
 
-# currently unused queries start from here    
+###### COMMISSIONER PAGE QUERIES ######  
 def update_season_settings(start_date, end_date, games_per_team):
     engine = create_connection()
     with Session(engine) as session:
@@ -424,20 +410,7 @@ def update_division(team_id, division):
             session.commit()
     return True
 
-def update_score(game_id, home_team_score, away_team_score):
-    engine = create_connection()
-    with Session(engine) as session:
-        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
-        try:
-            session.execute(stmt)
-        except:
-            session.rollback()
-            raise
-        else:
-            session.commit()
-    return True
-
-#join request queries
+###### JOIN REQUEST QUERIES ######
 def insert_join_request(player_id, team_id):
     engine = create_connection()
     with Session(engine) as session:
