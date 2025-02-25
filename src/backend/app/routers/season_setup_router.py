@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData
 from ..db.queries import update_season_settings, get_season_settings, insert_field, get_all_fields, delete_field, insert_timeslot, get_all_timeslots, delete_timeslot, update_division
 
-router = APIRouter(tags=["commissioner"])
+router = APIRouter(tags=["season-setup"])
 
 @router.put("/update_season_settings", response_model=None)
 async def update_SS(settings: SeasonSettings):

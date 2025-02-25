@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import SchedulePage from "@/app/schedule/page"; // Import the schedule page
-import "./CommissionerPage.css";
+import "./SeasonSetupPage.css";
 
-export default function CommissionerPage() {
+export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
 
   // State to store form data

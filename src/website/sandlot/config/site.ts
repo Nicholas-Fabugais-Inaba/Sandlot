@@ -29,8 +29,8 @@ export const siteConfig = {
       href: "/accept-reschedule-request",
     },
     {
-      label: "Commissioner",
-      href: "/commissioner",
+      label: "Season Setup",
+      href: "/season-setup",
     },
   ],
   navMenuItems: [
