@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select, or_, delete, update
 from .create_engine import create_connection
-from .models import Player, Team, Game, RescheduleRequest
+from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings
 
 # example insert query to use as reference
 def example_insert_query():
