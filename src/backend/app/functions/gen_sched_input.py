@@ -17,42 +17,42 @@ END_DATE = date(2025, 8, 20)
 GAMES_PER_TEAM = 25 # CURRENTLY BROKEN
 
 # OFFDAYS ARE CODED AS 0 BEING MONDAY AND 6 BEING SUNDAY (matching datetime)
-tigers = {"name": "Tigers", "offday": 0}
-cardinals = {"name": "Cardinals", "offday": 2}
-orioles = {"name": "Orioles", "offday": 4}
-jays = {"name": "Blue Jays", "offday": 2}
-dodgers = {"name": "Dodgers", "offday": 3}
-rangers = {"name": "Rangers", "offday": 1}
-astros = {"name": "Astros", "offday": 0}
-angels = {"name": "Angels", "offday": 4}
-rockies = {"name": "Rockies", "offday": 2}
-royals = {"name": "Royals", "offday": 0}
-cubs = {"name": "Cubs", "offday": 3}
-padres = {"name": "Padres", "offday": 3}
-white_sox = {"name": "White Sox", "offday": 1}
-guardians = {"name": "Guardians", "offday": 2}
-braves = {"name": "Braves", "offday": 1}
-giants = {"name": "Giants", "offday": 0}
-brewers = {"name": "Brewers", "offday": 4}
-nationals = {"name": "Nationals", "offday": 3}
-rays = {"name": "Rays", "offday": 4}
-marlins = {"name": "Marlins", "offday": 2}
-yankees = {"name": "Yankees", "offday": 1}
-red_sox = {"name": "Red Sox", "offday": 2}
-diamondbacks = {"name": "Diamondbacks", "offday": 3}
-mets = {"name": "Mets", "offday": 4}
-reds = {"name": "Reds", "offday": 0}
-phillies = {"name": "Phillies", "offday": 1}
-pirates = {"name": "Pirates", "offday": 2}
-mariners = {"name": "Mariners", "offday": 3}
+# tigers = {"name": "Tigers", "offday": 0}
+# cardinals = {"name": "Cardinals", "offday": 2}
+# orioles = {"name": "Orioles", "offday": 4}
+# jays = {"name": "Blue Jays", "offday": 2}
+# dodgers = {"name": "Dodgers", "offday": 3}
+# rangers = {"name": "Rangers", "offday": 1}
+# astros = {"name": "Astros", "offday": 0}
+# angels = {"name": "Angels", "offday": 4}
+# rockies = {"name": "Rockies", "offday": 2}
+# royals = {"name": "Royals", "offday": 0}
+# cubs = {"name": "Cubs", "offday": 3}
+# padres = {"name": "Padres", "offday": 3}
+# white_sox = {"name": "White Sox", "offday": 1}
+# guardians = {"name": "Guardians", "offday": 2}
+# braves = {"name": "Braves", "offday": 1}
+# giants = {"name": "Giants", "offday": 0}
+# brewers = {"name": "Brewers", "offday": 4}
+# nationals = {"name": "Nationals", "offday": 3}
+# rays = {"name": "Rays", "offday": 4}
+# marlins = {"name": "Marlins", "offday": 2}
+# yankees = {"name": "Yankees", "offday": 1}
+# red_sox = {"name": "Red Sox", "offday": 2}
+# diamondbacks = {"name": "Diamondbacks", "offday": 3}
+# mets = {"name": "Mets", "offday": 4}
+# reds = {"name": "Reds", "offday": 0}
+# phillies = {"name": "Phillies", "offday": 1}
+# pirates = {"name": "Pirates", "offday": 2}
+# mariners = {"name": "Mariners", "offday": 3}
 
-teams = {0: tigers, 1: cardinals, 2: orioles, 3: jays, 4: dodgers, 5: rangers, 6: astros, 7: angels, 8: rockies, 9: royals, 10: cubs, 11: padres, 12: white_sox, 13: guardians, 14: braves, 15: giants, 16: brewers, 17: nationals, 18: rays, 19: marlins, 20: yankees, 21: red_sox, 22: diamondbacks, 23: mets, 24: reds, 25: phillies, 26: pirates, 27: mariners}
-div_a = {0: tigers, 1: cardinals, 2: orioles, 3: jays, 4: dodgers, 5: rangers, 6: astros}
-div_b = {7: angels, 8: rockies, 9: royals, 10: cubs, 11: padres, 12: white_sox, 13: guardians}
-div_c = {14: braves, 15: giants, 16: brewers, 17: nationals, 18: rays, 19: marlins, 20: yankees}
-div_d = {21: red_sox, 22: diamondbacks, 23: mets, 24: reds, 25: phillies, 26: pirates, 27: mariners}
+# teams = {0: tigers, 1: cardinals, 2: orioles, 3: jays, 4: dodgers, 5: rangers, 6: astros, 7: angels, 8: rockies, 9: royals, 10: cubs, 11: padres, 12: white_sox, 13: guardians, 14: braves, 15: giants, 16: brewers, 17: nationals, 18: rays, 19: marlins, 20: yankees, 21: red_sox, 22: diamondbacks, 23: mets, 24: reds, 25: phillies, 26: pirates, 27: mariners}
+# div_a = {0: tigers, 1: cardinals, 2: orioles, 3: jays, 4: dodgers, 5: rangers, 6: astros}
+# div_b = {7: angels, 8: rockies, 9: royals, 10: cubs, 11: padres, 12: white_sox, 13: guardians}
+# div_c = {14: braves, 15: giants, 16: brewers, 17: nationals, 18: rays, 19: marlins, 20: yankees}
+# div_d = {21: red_sox, 22: diamondbacks, 23: mets, 24: reds, 25: phillies, 26: pirates, 27: mariners}
 
-divs = [div_a, div_b, div_c, div_d]
+# divs = [div_a, div_b, div_c, div_d]
 
 
 def gen_games_round_robin_old(teams, rounds: int):
@@ -70,12 +70,14 @@ def gen_games_round_robin_old(teams, rounds: int):
     reordered_games = [games[i + j * n] for i in range(n) for j in range(len(games) // n)]
     return reordered_games
 
+
 def gen_games_division(divs, games_per_team: int):
     games = []
     for div in divs:
         div_games = gen_games_round_robin(div, games_per_team)
         games.extend(div_games)
     return games
+
 
 def gen_games_round_robin(teams, games_per_team: int):
     team_list = list(teams.keys())
@@ -149,18 +151,18 @@ def get_weekdays(start_date: date, end_date: date):
     return weekdays
 
 
-def create_schedule():
-    global teams, schedule, json_schedule, score
-    games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
-    schedule, score = gen_schedule_w_skip(games, game_slots, teams)
-    json_schedule = {}
-    for element in schedule:
-        year = element[2].year
-        month = element[2].month
-        day = element[2].day
-        json_schedule[element[0], element[1], (year, month, day)] = schedule[element]
-    return [json_schedule, teams]
+# def create_schedule():
+#     global teams, schedule, json_schedule, score
+#     games = reorder(gen_games_division(divs, GAMES_PER_TEAM), len(teams))
+#     game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+#     schedule, score = gen_schedule_w_skip(games, game_slots, teams)
+#     json_schedule = {}
+#     for element in schedule:
+#         year = element[2].year
+#         month = element[2].month
+#         day = element[2].day
+#         json_schedule[element[0], element[1], (year, month, day)] = schedule[element]
+#     return [json_schedule, teams]
 
 
 def gen_mock_schedule():
@@ -226,7 +228,9 @@ def gen_schedule_repeated():
             best_score = score
     return best_schedule, best_score, teams
 
+
 def get_teams():
+    teams = {}
     Teams = get_all_teams()
     for i in range(len(Teams)):
         teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
