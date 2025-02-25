@@ -3,33 +3,52 @@
 import { useState, useEffect } from "react";
 import SchedulePage from "@/app/schedule/page"; // Import the schedule page
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
-import  getSeasonSettings from "../functions/getSeasonSettings";
+import getSeasonSettings from "../functions/getSeasonSettings";
 import "./SeasonSetupPage.css";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
 
-  // State to store form data
-  const [formData, setFormData] = useState({
-    seasonName: "",
-    startDate: "",
-    endDate: ""
-  });
+  // Individual state variables for form data
+  const [seasonName, setSeasonName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [gamesPerTeam, setGamesPerTeam] = useState(0);
 
   const renderSection = () => {
     switch (activeSection) {
       case "general":
-        return <GeneralSettings formData={formData} setFormData={setFormData} />;
+        return (
+          <GeneralSettings
+            seasonName={seasonName}
+            setSeasonName={setSeasonName}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            gamesPerTeam={gamesPerTeam}
+            setGamesPerTeam={setGamesPerTeam}
+          />
+        );
       case "teams":
         return <TeamsSettings />;
       case "schedule":
-        return (
-          <ScheduleSettings />
-        );
+        return <ScheduleSettings />;
       case "rules":
         return <RulesSettings />;
       default:
-        return <GeneralSettings formData={formData} setFormData={setFormData} />;
+        return (
+          <GeneralSettings
+            seasonName={seasonName}
+            setSeasonName={setSeasonName}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            gamesPerTeam={gamesPerTeam}
+            setGamesPerTeam={setGamesPerTeam}
+          />
+        );
     }
   };
 
@@ -40,7 +59,6 @@ export default function SeasonSetupPage() {
         <div className="p-6">{renderSection()}</div>
       </div>
     </ScheduleProvider>
-
   );
 }
 
@@ -60,42 +78,72 @@ function Toolbar({ setActiveSection }: ToolbarProps) {
 }
 
 interface GeneralSettingsProps {
-  formData: {
-    seasonName: string;
-    startDate: string;
-    endDate: string;
-  };
-  setFormData: (data: { seasonName: string; startDate: string; endDate: string }) => void;
+  seasonName: string;
+  setSeasonName: (name: string) => void;
+  startDate: string;
+  setStartDate: (date: string) => void;
+  endDate: string;
+  setEndDate: (date: string) => void;
+  gamesPerTeam: number;
+  setGamesPerTeam: (games: number) => void;
 }
 
-function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
+function GeneralSettings({
+  seasonName,
+  setSeasonName,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+  gamesPerTeam,
+  setGamesPerTeam
+}: GeneralSettingsProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    switch (name) {
+      case "seasonName":
+        setSeasonName(value);
+        break;
+      case "startDate":
+        setStartDate(value);
+        break;
+      case "endDate":
+        setEndDate(value);
+        break;
+      case "gamesPerTeam":
+        setGamesPerTeam(Number(value));
+        break;
+      default:
+        break;
+    }
   };
 
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(formData);
+    console.log({ seasonName, startDate, endDate, gamesPerTeam });
   };
 
-  const isSaveDisabled = !formData.startDate || !formData.endDate;
+  const isSaveDisabled = !startDate || !endDate || gamesPerTeam <= 0;
 
   useEffect(() => {
     const loadFormData = async () => {
       const data = await getSeasonSettings();
-      setFormData({
-        seasonName: data.season_name || "",
-        startDate: data.start_date || "",
-        endDate: data.end_date || ""
-      });
+      if (data.season_name != null) {
+        setSeasonName(data.season_name || "");
+      }
+      if (data.start_date != null) {
+        setStartDate(data.start_date || "");
+      }
+      if (data.end_date != null) {
+        setEndDate(data.end_date || "");
+      }
+      if (data.games_per_team != null) {  
+        setGamesPerTeam(data.games_per_team || 0);
+      }
     };
 
     loadFormData();
-  }, [setFormData]);
+  }, [setSeasonName, setStartDate, setEndDate, setGamesPerTeam]);
 
   return (
     <div className="general-settings-container" style={{ width: '50%' }}>
@@ -106,7 +154,7 @@ function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
           <input
             type="text"
             name="seasonName"
-            value={formData.seasonName}
+            value={seasonName}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg"
           />
@@ -116,7 +164,7 @@ function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
           <input
             type="date"
             name="startDate"
-            value={formData.startDate}
+            value={startDate}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg"
           />
@@ -126,7 +174,17 @@ function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
           <input
             type="date"
             name="endDate"
-            value={formData.endDate}
+            value={endDate}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Number of games played by each team</label>
+          <input
+            type="number"
+            name="gamesPerTeam"
+            value={gamesPerTeam}
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg"
           />
@@ -141,8 +199,8 @@ function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
             Save
           </button>
           {isSaveDisabled && (
-            <div className="ml-4 text-red-500">
-              Must input start and end dates before saving
+            <div className="ml-4 text-red-500" style={{ width: '50%' }}>
+              Must input start and end dates and number of games played by each team before saving
             </div>
           )}
         </div>
