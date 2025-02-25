@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "@heroui/link";
 import { Snippet } from "@heroui/snippet";
 import { Code } from "@heroui/code";
@@ -11,6 +11,8 @@ import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
+import { Session } from 'next-auth'; 
+import { getSession} from 'next-auth/react';
 import "./HomePage.css";  // Import the new CSS file
 
 export default function Home() {
@@ -24,6 +26,18 @@ export default function Home() {
   const [newAnnouncement, setNewAnnouncement] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");  
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+      setLoading(false);
+    };
+
+    fetchSession();
+  }, []);
   
   const handlePostAnnouncement = () => {
     if (newAnnouncement.trim()) {
@@ -183,22 +197,23 @@ export default function Home() {
                 <section className="flex-1 min-w-[300px]">
                   <h2 className="text-xl font-bold">Announcements</h2>
 
-                  {/* Input Box for Adding a New Announcement */}
-                  <div className="flex gap-2 mt-4">
-                    <input
-                      type="text"
-                      value={newAnnouncement}
-                      onChange={(e) => setNewAnnouncement(e.target.value)}
-                      placeholder="Enter announcement..."
-                      className="border border-gray-300 rounded-md px-3 py-2 w-full"
-                    />
-                    <button
-                      onClick={handleAddAnnouncement}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                    >
-                      Post
-                    </button>
-                  </div>
+                  {session?.user.role === "commissioner" && (
+                    <div className="flex gap-2 mt-4">
+                      <input
+                        type="text"
+                        value={newAnnouncement}
+                        onChange={(e) => setNewAnnouncement(e.target.value)}
+                        placeholder="Enter announcement..."
+                        className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                      />
+                      <button
+                        onClick={handleAddAnnouncement}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                      >
+                        Post
+                      </button>
+                    </div>
+                  )}
 
                   {/* Announcements List */}
                   <ul className="mt-4 space-y-2">
@@ -219,29 +234,31 @@ export default function Home() {
                         )}
 
                         {/* Buttons for Edit and Delete */}
-                        <div className="flex space-x-2 ml-2">
-                          {editingIndex === index ? (
+                        {session?.user.role === "commissioner" && (
+                          <div className="flex space-x-2 ml-2">
+                            {editingIndex === index ? (
+                              <button
+                                onClick={() => handleSaveEdit(index)}
+                                className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                              >
+                                Save
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleEditAnnouncement(index)}
+                                className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+                              >
+                                Edit
+                              </button>
+                            )}
                             <button
-                              onClick={() => handleSaveEdit(index)}
-                              className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                              onClick={() => handleDeleteAnnouncement(index)}
+                              className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
                             >
-                              Save
+                              Delete
                             </button>
-                          ) : (
-                            <button
-                              onClick={() => handleEditAnnouncement(index)}
-                              className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
-                            >
-                              Edit
-                            </button>
-                          )}
-                          <button
-                            onClick={() => handleDeleteAnnouncement(index)}
-                            className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
-                          >
-                            Delete
-                          </button>
-                        </div>
+                          </div>
+                        )}
                       </li>
                     ))}
                   </ul>
