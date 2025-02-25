@@ -65,6 +65,6 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot",
-    docs: "https://heroui.com",
+    docs: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot?tab=readme-ov-file#sandlot",
   },
 };
