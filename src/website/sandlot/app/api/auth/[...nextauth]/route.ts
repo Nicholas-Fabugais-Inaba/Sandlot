@@ -36,11 +36,18 @@ const authOptions: NextAuthOptions = {
           const regex = /[@]/;
           if (regex.test(credentials.userID)) {
             const player = await getPlayer({ email: credentials.userID })
+            let role
+            if(player.is_commissioner == true) {
+              role = "commissioner"
+            }
+            else {
+              role = "player"
+            }
             user = {
               id: player.id,
               name: player.first_name,
               email: player.email,
-              role: "player",
+              role: role,
               gender: player.gender,
               teamName: "team_name",
               username: "temp_username",
