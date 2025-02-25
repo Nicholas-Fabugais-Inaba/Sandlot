@@ -28,6 +28,10 @@ export const siteConfig = {
       label: "Accept RR",
       href: "/accept-reschedule-request",
     },
+    {
+      label: "Season Setup",
+      href: "/season-setup",
+    },
   ],
   navMenuItems: [
     {
@@ -65,6 +69,6 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot",
-    docs: "https://heroui.com",
+    docs: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot?tab=readme-ov-file#sandlot",
   },
 };
