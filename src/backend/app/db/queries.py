@@ -1,36 +1,7 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select, or_, delete, update
 from .create_engine import create_connection
-from .models import Player, Team, Game, RescheduleRequest
-
-# example insert query to use as reference
-def example_insert_query():
-    engine = create_connection()
-    with Session(engine) as session:
-        example_player = Player(
-            first_name="John",
-            last_name="Doe",
-            email="johndoe@gmail.com",
-            password="mypassword11",
-            phone_number="111-111-1111",
-            gender="Male",
-        )
-        try:
-            session.add_all([example_player])
-        except:
-            session.rollback()
-            raise
-        else:
-            session.commit()
-
-# example select query to use as reference
-def example_select_query():
-    engine = create_connection()
-    with Session(engine) as session:
-        stmt = select(Player).where(Player.first_name.in_(["John", "Bob"]))
-        result = session.execute(stmt).all()
-        # would return result to whatever route called it in practice
-        print(result)
+from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest
 
 
 # creating account insert query
@@ -75,7 +46,7 @@ def insert_team(team_name, username, password, division, preferred_division, pre
 def get_player(login_email):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Player.id, Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender, Player.team_id).where(Player.email == login_email)
+        stmt = select(Player.id, Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender, Player.team_id, Player.is_commissioner).where(Player.email == login_email)
         result = session.execute(stmt).mappings().first()
         return result
     
@@ -210,6 +181,7 @@ def insert_mock_game(home_team, away_team, date, time, field, home_team_score, a
             session.commit()
     return True
 
+###### RESCHEDULE REQUEST QUERIES ######
 def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5, option1_field, option2_field, option3_field, option4_field, option5_field):
     engine = create_connection()
     with Session(engine) as session:
@@ -293,6 +265,7 @@ def update_game(game_id, new_date, new_time, new_field):
         else:
             session.commit()
 
+###### STANDINGS / SCORE QUERIES ######
 def get_standings():
     engine = create_connection()
     with Session(engine) as session:
@@ -317,9 +290,166 @@ def get_standings():
         
         result = session.execute(stmt).mappings().all()
         return result
-
-def insert_scores(game_id, home_team_score, away_team_score):
+    
+def update_score(game_id, home_team_score, away_team_score):
     engine = create_connection()
     with Session(engine) as session:
         stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+###### COMMISSIONER PAGE QUERIES ######  
+def update_season_settings(start_date, end_date, games_per_team):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(SeasonSettings).values(start_date=start_date, end_date=end_date, games_per_team=games_per_team)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_season_settings():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            SeasonSettings.start_date, 
+            SeasonSettings.end_date, 
+            SeasonSettings.games_per_team
+        )
         result = session.execute(stmt).mappings().first()
+        return result
+    
+def insert_field(field_name):
+    engine = create_connection()
+    with Session(engine) as session:
+        field = Field(
+            field_name = field_name
+        )
+        try:
+            session.add_all([field])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_all_fields():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            Field.id,
+            Field.field_name
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def delete_field(field_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Field).where(Field.id == field_id)
+        session.execute(stmt)
+        session.commit()
+    
+def insert_timeslot(start, end, field_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        timeslot = TimeSlot(
+            start = start,
+            end = end,
+            field_id = field_id
+        )
+        try:
+            session.add_all([timeslot])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_all_timeslots():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            TimeSlot.id,
+            TimeSlot.start,
+            TimeSlot.end,
+            TimeSlot.field_id
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def delete_timeslot(timeslot_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(TimeSlot).where(TimeSlot.id == timeslot_id)
+        session.execute(stmt)
+        session.commit()
+
+def update_division(team_id, division):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).where(Team.id == team_id).values(division = division)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+###### JOIN REQUEST QUERIES ######
+def insert_join_request(player_id, team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        request = JoinRequest(
+            player_id=player_id,
+            team_id=team_id
+        )
+        try:
+            session.add_all([request])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def get_join_requests(team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(
+                JoinRequest.id,
+                Player.id,
+                Player.first_name,
+                Player.last_name,
+                Player.email,
+                Player.phone_number,
+                Player.gender
+            )
+            .select_from(JoinRequest)
+            .join(Player, JoinRequest.id == Player.id)
+            .where(JoinRequest.team_id == team_id)
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def delete_join_request(request_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(JoinRequest).where(JoinRequest.id == request_id)
+        session.execute(stmt)
+        session.commit()

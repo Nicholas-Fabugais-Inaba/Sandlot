@@ -28,6 +28,10 @@ export const siteConfig = {
       label: "Accept RR",
       href: "/accept-reschedule-request",
     },
+    {
+      label: "Season Setup",
+      href: "/season-setup",
+    },
   ],
   navMenuItems: [
     {
