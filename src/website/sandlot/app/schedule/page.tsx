@@ -17,8 +17,6 @@ import { Event, GenSchedResponse } from "../types";
 import createRR from "../functions/createRR";
 import { Dictionary } from "@fullcalendar/core/internal";
 
-const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
-
 const currDate = new Date("2025-06-20"); // Temporary current date, needs time in future
 const currNextDate = new Date("2025-06-21");
 
@@ -54,6 +52,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
   const [events, setEvents] = useState<Event[]>();
   const [schedule, setSchedule] = useState<Dictionary>({}); // Used to store the schedule during league initialization
   const [schedScore, setSchedScore] = useState<number>(0); // Used to store the score of the schedule during league initialization
+  const [maxSelectedDates, setMaxSelectedDates] = useState(5); // Maximum number of dates that can be selected when rescheduling games
 
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
@@ -71,6 +70,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
         }
         else if (session.user?.role === "commissioner" || session.user?.role === "role") {
           setSchedType(0);
+          setMaxSelectedDates(1); // Set maxSelectedDates to 1 for commissioner
         }
 
         if (session.user?.role === "player" || session.user?.role === "team") {
@@ -196,6 +196,12 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
     console.log("Submit Schedule button clicked");
     console.log(schedule);
   };
+
+  const handleCommissionerReschedule = () => {
+    console.log("Commissioner submit reschedule: ", 
+      selectedDates[0], " to reschedule game: ", rescheduleGame
+    );
+  }
 
   const isSelected = (start: Date | null, field: number) => {
     return start ? selectedDates.some((selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field) : false;
@@ -521,7 +527,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
               </button>
             </div>
           )} */}
-          {schedType === 3 && (
+          {schedType === 3 && userRole != "commissioner" ? ( // Team Reschedule buttons
             <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
               <div className="text-lg font-semibold">
                 Number of alternative dates selected: {selectedDates.length}/{maxSelectedDates}
@@ -532,6 +538,27 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg"
                 >
                   Send Reschedule Request
+                </button>
+                <button
+                  onClick={handleReturnClick} // Set schedType back to 0 to return to the full schedule view
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                >
+                  Back to Schedule
+                </button>
+              </div>
+            </div>
+          ) : ( // Commissioner Reschedule buttons
+            <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
+              <div className="text-lg font-semibold">
+                {selectedDates.length === 0 ? "No alternative date selected" : "Alternative date selected"}
+              </div>
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleCommissionerReschedule}
+                  className={`px-4 py-2 rounded-lg ${selectedDates.length === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white'}`}
+                  disabled={selectedDates.length === 0}
+                >
+                  Submit Reschedule
                 </button>
                 <button
                   onClick={handleReturnClick} // Set schedType back to 0 to return to the full schedule view
