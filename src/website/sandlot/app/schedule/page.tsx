@@ -15,6 +15,7 @@ import "./SchedulePage.css";  // Custom styles
 import getSchedule, { genSampleSchedule, getTeamSchedule, addEmptyEvents } from "../functions/getSchedule";
 import { Event, GenSchedResponse } from "../types";
 import createRR from "../functions/createRR";
+import { Dictionary } from "@fullcalendar/core/internal";
 
 const maxSelectedDates = 5; // Maximum number of dates that can be selected when rescheduling games
 
@@ -51,6 +52,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
   const [loading, setLoading] = useState(true);
   const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
   const [events, setEvents] = useState<Event[]>();
+  const [schedule, setSchedule] = useState<Dictionary>({}); // Used to store the schedule during league initialization
+  const [schedScore, setSchedScore] = useState<number>(0); // Used to store the score of the schedule during league initialization
 
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
@@ -185,6 +188,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
     (async () => {
       let sampleSched = await genSampleSchedule(20);
       setEvents(sampleSched.events);
+      setSchedule(sampleSched.schedule);
+      setSchedScore(sampleSched.score);
     })();
   };
 

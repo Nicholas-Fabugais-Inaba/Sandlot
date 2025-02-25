@@ -45,3 +45,8 @@ async def RR_accepted(data: RRAccept):
 async def gen_schedule(data: SchedParams):
     schedule, score, teams = gen_schedule_repeated()
     return {"schedule": schedule, "score": score, "teams": teams}   
+
+@router.post("/submit_schedule", response_model=None)
+async def submit_schedule(data: dict):
+    # submit_schedule(data)
+    return True

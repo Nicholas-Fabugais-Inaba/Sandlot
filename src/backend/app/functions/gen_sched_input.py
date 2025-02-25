@@ -226,6 +226,12 @@ def gen_schedule_repeated():
             best_score = score
     return best_schedule, best_score, teams
 
+def get_teams():
+    Teams = get_all_teams()
+    for i in range(len(Teams)):
+        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+    return teams
+
 
 # games = gen_games_division(divs, GAMES_PER_TEAM)
 # print(games)

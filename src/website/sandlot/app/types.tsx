@@ -26,6 +26,7 @@ export type Event = {
 
 export type GenSchedResponse = {
     events: Event[];
+    schedule: any;
     score: number;
 }
 

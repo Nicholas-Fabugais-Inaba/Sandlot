@@ -61,28 +61,13 @@ export async function genSampleSchedule(num_games: number): Promise<GenSchedResp
 
     console.log(response.data);
     const games = convertSchedData(response.data.schedule, response.data.teams);
-    console.log("num games: ", games.length);
     const events = getFormattedEvents(games);
     console.log(events);
-    // Count the number of field elements in events:
-    let fieldCount = 0;
-    for (const event of events) {
-      if (event.field1) {
-        fieldCount++;
-      }
-      if (event.field2) {
-        fieldCount++;
-      } 
-      if (event.field3) {
-        fieldCount++;
-      }
-    }
-    console.log("num games (events): ", fieldCount);
 
-    return {events: events, score: response.data.score};
+    return {events: events, schedule: response.data.schedule, score: response.data.score};
   } catch (error)  {
     console.error("Error generating schedule:", error);
-    return {events:[], score: 0};
+    return {events:[], schedule:{}, score: 0};
   }
 }
 
