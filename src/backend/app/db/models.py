@@ -75,6 +75,13 @@ class RescheduleRequest(Base):
     option5_field: Mapped[Optional[str]] = mapped_column(String(50))
     accepted: Mapped[Optional[bool]] = mapped_column()
 
+class JoinRequest(Base):
+    __tablename__ = "join_request"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    accepted: Mapped[Optional[bool]] = mapped_column()
+
 class SeasonSettings(Base):
     __tablename__ = "season_settings"
     id: Mapped[int] = mapped_column(primary_key=True)
