@@ -8,7 +8,7 @@ import { title } from "@/components/primitives";
 import { Input, Modal, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { Session } from 'next-auth'; 
-import { getSession} from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 
 
 
