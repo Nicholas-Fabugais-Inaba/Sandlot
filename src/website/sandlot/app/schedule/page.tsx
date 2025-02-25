@@ -275,8 +275,42 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
             slotMaxTime="22:00:00" // End at 10 PM
             slotDuration="00:30:00" // Duration of each slot (30 minutes)
             headerToolbar={{
-              left: "prev,next today",
+              left: (userRole === "team" || userRole === "player") && 
+                schedType === 1 ? "prev,next customToday viewFullScheduleButton" : 
+                (userRole === "team" || userRole === "player") && 
+                schedType === 0 ? "prev,next customToday viewTeamScheduleButton" : 
+                "prev,next customToday",
               right: "title"
+            }}
+            customButtons={{
+              viewFullScheduleButton: {
+                text: "View Full Schedule",
+                click: () => {
+                  setSchedType(0);
+                  setView("timeGridWeek");
+                  if (calendarRef.current) {
+                    calendarRef.current.getApi().changeView("timeGridWeek"); // Force calendar to change view
+                  }
+                }
+              },
+              viewTeamScheduleButton: {
+                text: "View Team Schedule",
+                click: () => {
+                  setSchedType(1);
+                  setView("dayGridMonth");
+                  if (calendarRef.current) {
+                    calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
+                  }
+                }
+              },
+              customToday: {
+                text: "Today",
+                click: () => {
+                  if (calendarRef.current) {
+                    calendarRef.current.getApi().today(); // Mimic the built-in today button behavior
+                  }
+                }
+              }
             }}
             eventColor="transparent"
             height="auto"

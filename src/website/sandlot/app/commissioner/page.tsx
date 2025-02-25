@@ -1,5 +1,3 @@
-// app/commissioner/page.tsx
-
 'use client';
 
 import { useState } from "react";
@@ -9,10 +7,17 @@ import "./CommissionerPage.css";
 export default function CommissionerPage() {
   const [activeSection, setActiveSection] = useState("general");
 
+  // State to store form data
+  const [formData, setFormData] = useState({
+    seasonName: "",
+    startDate: "",
+    endDate: ""
+  });
+
   const renderSection = () => {
     switch (activeSection) {
       case "general":
-        return <GeneralSettings />;
+        return <GeneralSettings formData={formData} setFormData={setFormData} />;
       case "teams":
         return <TeamsSettings />;
       case "schedule":
@@ -20,7 +25,7 @@ export default function CommissionerPage() {
       case "rules":
         return <RulesSettings />;
       default:
-        return <GeneralSettings />;
+        return <GeneralSettings formData={formData} setFormData={setFormData} />;
     }
   };
 
@@ -47,22 +52,57 @@ function Toolbar({ setActiveSection }: ToolbarProps) {
   );
 }
 
-function GeneralSettings() {
+interface GeneralSettingsProps {
+  formData: {
+    seasonName: string;
+    startDate: string;
+    endDate: string;
+  };
+  setFormData: (data: { seasonName: string; startDate: string; endDate: string }) => void;
+}
+
+function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
   return (
-    <div>
+    <div className="general-settings-container" style={{ width: '50%' }}>
       <h2 className="text-2xl font-semibold mb-4">General Settings</h2>
       <form>
         <div className="mb-4">
           <label className="block text-gray-700">Season Name</label>
-          <input type="text" className="w-full px-4 py-2 border rounded-lg" />
+          <input
+            type="text"
+            name="seasonName"
+            value={formData.seasonName}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg"
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Start Date</label>
-          <input type="date" className="w-full px-4 py-2 border rounded-lg" />
+          <input
+            type="date"
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg"
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">End Date</label>
-          <input type="date" className="w-full px-4 py-2 border rounded-lg" />
+          <input
+            type="date"
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-lg"
+          />
         </div>
         <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Save</button>
       </form>
@@ -88,7 +128,7 @@ function TeamsSettings() {
 function ScheduleSettings() {
   return (
     <div>
-      <SchedulePage viewer={true}/>
+      <SchedulePage viewer={true} />
     </div>
   );
 }
