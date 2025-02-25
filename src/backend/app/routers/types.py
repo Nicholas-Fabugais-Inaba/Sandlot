@@ -59,7 +59,7 @@ class FieldName(BaseModel):
     field_name: str
 
 class FieldID(BaseModel):
-    field_id = int
+    field_id: int
 
 class TimeslotData(BaseModel):
     start: str
@@ -68,6 +68,10 @@ class TimeslotData(BaseModel):
 
 class TimeslotID(BaseModel):
     timeslot_id: int
+
+class DivisionData(BaseModel):
+    team_id: int
+    division: int
 
 class ScoreData(BaseModel):
     game_id: int

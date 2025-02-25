@@ -411,6 +411,19 @@ def delete_timeslot(timeslot_id):
         session.execute(stmt)
         session.commit()
 
+def update_division(team_id, division):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).where(Team.id == team_id).values(division = division)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
 def update_score(game_id, home_team_score, away_team_score):
     engine = create_connection()
     with Session(engine) as session:
