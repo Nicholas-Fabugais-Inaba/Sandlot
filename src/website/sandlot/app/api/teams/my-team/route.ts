@@ -11,8 +11,11 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: 'Player email is required' }, { status: 400 });
     }
 
-    // Correcting: Search for the team based on either player's email or the captain's email.
-    const team = mockTeams.find(t => t.players.includes(playerEmail) || t.captainEmail === playerEmail);
+    // Search for the team using playerEmail or the captain's email.
+    const team = mockTeams.find(
+        (t) => t.players.includes(playerEmail) || t.captainEmail === playerEmail
+    );
+
     if (!team) {
         return NextResponse.json({ error: 'No team found' }, { status: 404 });
     }

@@ -77,7 +77,7 @@ const authOptions: NextAuthOptions = {
           }
           
           if (user) {
-            return user; // This returns user info to NextAuth session handler
+            return user;
           }
         }
         return null;
@@ -101,6 +101,7 @@ const authOptions: NextAuthOptions = {
           team_id: typeof token.team_id === 'number' ? token.team_id : 0,
         };
       }
+      console.log("Session callback session:", session);  // Debugging log
       return session;
     },
     async jwt({ token, user }: { token: JWT; user?: any }) {
