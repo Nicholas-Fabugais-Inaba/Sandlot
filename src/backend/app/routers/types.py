@@ -51,3 +51,6 @@ class ScoreData(BaseModel):
     game_id: int
     home_team_score: int
     away_team_score: int
+
+class PlayerID(BaseModel):
+    player_id: Optional[int]

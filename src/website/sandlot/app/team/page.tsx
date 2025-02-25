@@ -172,7 +172,7 @@ export default function TeamPage() {
         <div className="flex">
           {/* Left Section: Team Roster */}
           <div className="w-3/5 mr-4">
-            <h2 className="text-xl font-bold mb-2">{userTeam.teamName}'s Roster</h2>
+            <h2 className="text-xl font-bold mb-2">{userTeam.teamName} Roster</h2>
             <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
               <TableHeader>
                 <TableColumn>Name</TableColumn>
@@ -217,7 +217,7 @@ export default function TeamPage() {
         // Team View: Team Roster and Pending Requests
         <div className="flex">
           <div className="w-3/5 mr-4">
-            <h2 className="text-xl font-bold mb-2">{session.user.teamName || "Your Team"}'s Roster</h2>
+            <h2 className="text-xl font-bold mb-2">{session.user.teamName || "Your Team"} Roster</h2>
             <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
               <TableHeader>
                 <TableColumn>Name</TableColumn>
