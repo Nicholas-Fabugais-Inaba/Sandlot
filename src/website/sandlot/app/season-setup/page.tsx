@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SchedulePage from "@/app/schedule/page"; // Import the schedule page
+import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
+import  getSeasonSettings from "../functions/getSeasonSettings";
 import "./SeasonSetupPage.css";
 
 export default function SeasonSetupPage() {
@@ -21,7 +23,9 @@ export default function SeasonSetupPage() {
       case "teams":
         return <TeamsSettings />;
       case "schedule":
-        return <ScheduleSettings />;
+        return (
+          <ScheduleSettings />
+        );
       case "rules":
         return <RulesSettings />;
       default:
@@ -30,10 +34,13 @@ export default function SeasonSetupPage() {
   };
 
   return (
-    <div>
-      <Toolbar setActiveSection={setActiveSection} />
-      <div className="p-6">{renderSection()}</div>
-    </div>
+    <ScheduleProvider>
+      <div>
+        <Toolbar setActiveSection={setActiveSection} />
+        <div className="p-6">{renderSection()}</div>
+      </div>
+    </ScheduleProvider>
+
   );
 }
 
@@ -70,6 +77,26 @@ function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
     });
   };
 
+  const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  const isSaveDisabled = !formData.startDate || !formData.endDate;
+
+  useEffect(() => {
+    const loadFormData = async () => {
+      const data = await getSeasonSettings();
+      setFormData({
+        seasonName: data.season_name || "",
+        startDate: data.start_date || "",
+        endDate: data.end_date || ""
+      });
+    };
+
+    loadFormData();
+  }, [setFormData]);
+
   return (
     <div className="general-settings-container" style={{ width: '50%' }}>
       <h2 className="text-2xl font-semibold mb-4">General Settings</h2>
@@ -104,7 +131,21 @@ function GeneralSettings({ formData, setFormData }: GeneralSettingsProps) {
             className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Save</button>
+        <div className="flex items-center mb-4">
+          <button
+            type="submit"
+            className={`px-4 py-2 rounded-lg text-white ${isSaveDisabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
+            onClick={handleSave}
+            disabled={isSaveDisabled}
+          >
+            Save
+          </button>
+          {isSaveDisabled && (
+            <div className="ml-4 text-red-500">
+              Must input start and end dates before saving
+            </div>
+          )}
+        </div>
       </form>
     </div>
   );

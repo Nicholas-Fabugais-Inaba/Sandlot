@@ -16,6 +16,7 @@ import getSchedule, { genSampleSchedule, getTeamSchedule, addEmptyEvents } from 
 import { Event, GenSchedResponse } from "../types";
 import createRR from "../functions/createRR";
 import { Dictionary } from "@fullcalendar/core/internal";
+import { useSchedule } from './ScheduleContext';
 
 const currDate = new Date("2025-06-20"); // Temporary current date, needs time in future
 const currNextDate = new Date("2025-06-21");
@@ -38,6 +39,10 @@ interface SchedulePageProps {
 }
 
 export default function SchedulePage({ viewer }: SchedulePageProps) {
+  const context = useSchedule();
+  const [events, setEvents] = context ? [context.events, context.setEvents] : useState<Event[]>();
+  const [schedule, setSchedule] = context ? [context.schedule, context.setSchedule] : useState<Dictionary>({});
+  const [schedScore, setSchedScore] = context ? [context.schedScore, context.setSchedScore] : useState<number>(0);
   const [view, setView] = useState("timeGridWeek");
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
   const [rescheduleGame, setRescheduleGame] = useState<RescheduleGame>();
@@ -49,9 +54,6 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
-  const [events, setEvents] = useState<Event[]>();
-  const [schedule, setSchedule] = useState<Dictionary>({}); // Used to store the schedule during league initialization
-  const [schedScore, setSchedScore] = useState<number>(0); // Used to store the score of the schedule during league initialization
   const [maxSelectedDates, setMaxSelectedDates] = useState(5); // Maximum number of dates that can be selected when rescheduling games
 
   // Fetch session data to get user role and team (if player or team account)
