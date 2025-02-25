@@ -20,17 +20,17 @@ export default function SignIn() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await signIn('credentials', {
-      redirect: false,  // Prevent automatic redirect
+      redirect: false, // Prevent automatic redirect
       userID,
       password,
     });
-
+  
     if (result?.error) {
       setError(result.error);
     } else {
-      router.push(callbackUrl);  // Redirect to the page the user came from
+      window.location.href = callbackUrl; // Full page reload to ensure a complete refresh
     }
-  };
+  };  
 
   return (
     <div>
