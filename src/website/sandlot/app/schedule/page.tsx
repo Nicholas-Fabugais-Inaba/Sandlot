@@ -277,21 +277,10 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
             headerToolbar={{
               left: "prev,next today",
               right: "title"
-              // center: "title",
-              // right: "customButton"
             }}
-            // customButtons={{
-            //   customButton: {
-            //     text: 'Reschedule Selected',
-            //     click: () => {
-            //       alert('Custom button clicked!');
-            //     }
-            //   }
-            // }}
             eventColor="transparent"
             height="auto"
             nowIndicator={true} // Shows the current time indicator
-            // eventClick={(info) => alert(`Event: ${info.event.title}`)}
             eventContent={(eventInfo) => {
               const startTime = eventInfo.event.start
                 ? new Date(eventInfo.event.start)
@@ -517,16 +506,6 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
               ) : null}
             }
           />
-          {/* {schedType === 2 && (
-            <div className="mt-6 p-4 border-t border-gray-200 flex justify-end">
-              <button
-                onClick={handleSendRequest}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-              >
-                Reschedule Selected
-              </button>
-            </div>
-          )} */}
           {schedType === 3 && (
             userRole != "commissioner" ? ( // Team Reschedule buttons
               <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
