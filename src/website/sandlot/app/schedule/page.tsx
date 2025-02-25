@@ -527,47 +527,49 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
               </button>
             </div>
           )} */}
-          {schedType === 3 && userRole != "commissioner" ? ( // Team Reschedule buttons
-            <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
-              <div className="text-lg font-semibold">
-                Number of alternative dates selected: {selectedDates.length}/{maxSelectedDates}
+          {schedType === 3 && (
+            userRole != "commissioner" ? ( // Team Reschedule buttons
+              <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
+                <div className="text-lg font-semibold">
+                  Number of alternative dates selected: {selectedDates.length}/{maxSelectedDates}
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleSendRequest}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  >
+                    Send Reschedule Request
+                  </button>
+                  <button
+                    onClick={handleReturnClick} // Set schedType back to 0 to return to the full schedule view
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                  >
+                    Back to Schedule
+                  </button>
+                </div>
               </div>
-              <div className="flex space-x-4">
-                <button
-                  onClick={handleSendRequest}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                >
-                  Send Reschedule Request
-                </button>
-                <button
-                  onClick={handleReturnClick} // Set schedType back to 0 to return to the full schedule view
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                >
-                  Back to Schedule
-                </button>
+            ) : ( // Commissioner Reschedule buttons
+              <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
+                <div className="text-lg font-semibold">
+                  {selectedDates.length === 0 ? "No alternative date selected" : "Alternative date selected"}
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleCommissionerReschedule}
+                    className={`px-4 py-2 rounded-lg ${selectedDates.length === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white'}`}
+                    disabled={selectedDates.length === 0}
+                  >
+                    Submit Reschedule
+                  </button>
+                  <button
+                    onClick={handleReturnClick} // Set schedType back to 0 to return to the full schedule view
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                  >
+                    Back to Schedule
+                  </button>
+                </div>
               </div>
-            </div>
-          ) : ( // Commissioner Reschedule buttons
-            <div className="mt-6 p-4 border-t border-gray-200 flex justify-between items-center">
-              <div className="text-lg font-semibold">
-                {selectedDates.length === 0 ? "No alternative date selected" : "Alternative date selected"}
-              </div>
-              <div className="flex space-x-4">
-                <button
-                  onClick={handleCommissionerReschedule}
-                  className={`px-4 py-2 rounded-lg ${selectedDates.length === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white'}`}
-                  disabled={selectedDates.length === 0}
-                >
-                  Submit Reschedule
-                </button>
-                <button
-                  onClick={handleReturnClick} // Set schedType back to 0 to return to the full schedule view
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                >
-                  Back to Schedule
-                </button>
-              </div>
-            </div>
+            )
           )}
           {viewer && (
             <div className="flex justify-between items-center mt-4">
