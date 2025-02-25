@@ -87,8 +87,6 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
         })()
       }
     };
-    
-
     setLoading(false); // Set loading to false after fetching session
 
     fetchSession();
@@ -193,6 +191,12 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
     })();
   };
 
+  const handleSubmitSchedule = () => {
+    // Implement the logic to submit the schedule
+    console.log("Submit Schedule button clicked");
+    console.log(schedule);
+  };
+
   const isSelected = (start: Date | null, field: number) => {
     return start ? selectedDates.some((selectedDate) => selectedDate.date.getTime() === start.getTime() && selectedDate.field === field) : false;
   };
@@ -240,7 +244,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
   return (
     <div>
       {viewer ? (
-        <h1 className={title()}>Schedule Viewer</h1>
+        <h1 className={title()}>Schedule Generator</h1>
       ) : (
         <h1 className={title()}>Schedule</h1>
       )}
@@ -253,15 +257,6 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
       )}
       <div className="items-center p-6">
         <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
-          {viewer && (
-            <button
-              onClick={handleGenerateSchedule}
-              className="mb-4 px-4 py-2 bg-green-500 text-white rounded-lg"
-              style={{ width: '20%' }} // Set the width to 20% or any desired percentage
-            >
-              Generate Schedule
-            </button>
-          )}
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
@@ -543,6 +538,28 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   className="px-4 py-2 bg-gray-500 text-white rounded-lg"
                 >
                   Back to Schedule
+                </button>
+              </div>
+            </div>
+          )}
+          {viewer && (
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handleGenerateSchedule}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg"
+              >
+                Generate Schedule
+              </button>
+              <div className="flex items-center">
+                <span className="mr-4 text-lg">
+                  {Object.keys(schedule).length === 0 ? "No new schedule to submit" : `Current Schedule Score: ${schedScore}`}
+                </span>
+                <button
+                  onClick={handleSubmitSchedule}
+                  className={`px-4 py-2 rounded-lg ${Object.keys(schedule).length === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white'}`}
+                  disabled={Object.keys(schedule).length === 0}
+                >
+                  Submit Schedule
                 </button>
               </div>
             </div>

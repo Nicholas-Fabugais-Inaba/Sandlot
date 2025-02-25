@@ -93,7 +93,6 @@ function ScheduleSettings() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Schedule Settings</h2>
       <SchedulePage viewer={true}/>
     </div>
   );
