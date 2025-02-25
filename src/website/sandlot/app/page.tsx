@@ -11,6 +11,7 @@ import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
+import { useRouter } from 'next/navigation';
 import { Session } from 'next-auth'; 
 import { getSession} from 'next-auth/react';
 import "./HomePage.css";  // Import the new CSS file
@@ -18,6 +19,7 @@ import "./HomePage.css";  // Import the new CSS file
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [isWeatherDropdownOpen, setWeatherDropdownOpen] = useState(false);
+  const router = useRouter();
   const [announcements, setAnnouncements] = useState([
     "Season starts on April 1st!",
     "Registration opens on March 1st.",
@@ -293,6 +295,12 @@ export default function Home() {
               className="directory-item text-left font-semibold w-full"
             >
               Key Season Dates
+            </button>
+            <button
+              onClick={() => router.push('/team/directory')}
+              className="directory-item text-left font-semibold w-full"
+            >
+              Team Directory
             </button>
             <div className="relative">
               <button

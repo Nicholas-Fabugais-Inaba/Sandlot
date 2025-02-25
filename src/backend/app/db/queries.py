@@ -57,14 +57,35 @@ def get_team(login_username):
         result = session.execute(stmt).mappings().first()
         return result
 
-# currently a special query specifically for the scheduler, not to be used from frontend yet  
+# currently a special query specifically for the scheduler, not to be used from frontend yet 
+# used in team directory page 
 def get_all_teams():
     engine = create_connection()
     with Session(engine) as session:
         stmt = select(Team.id, Team.team_name, Team.division, Team.offday)
         result = session.execute(stmt).mappings().all()
         return result
-    
+
+def get_team_info_by_current_user(user_id):
+    engine = create_connection()
+    with Session(engine) as session:
+
+        stmtInner = (
+            select(Player.team_id)
+            .select_from(Player)
+            .where(Player.id == user_id)
+        )
+
+        stmt = (
+            select(Player.id, Player.first_name, Player.last_name, Player.email, Team.team_name, Team.id)
+            .select_from(Player, Team)
+            .where(Player.team_id == Team.id)
+            .where(Player.team_id == stmtInner)
+        )
+
+        result = session.execute(stmt).mappings().first()
+        return result
+
 def insert_game(home_team, away_team, date, time, field):
     engine = create_connection()
     with Session(engine) as session:
