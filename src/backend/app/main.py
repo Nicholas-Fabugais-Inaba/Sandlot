@@ -23,7 +23,7 @@ app.include_router(schedule_router, prefix="/schedule")
 app.include_router(user_rotuer, prefix="/user")
 app.include_router(standings_router, prefix="/standings")
 app.include_router(standings_router, prefix="/standings")
-app.include_router(commissioner_router, prefix="/standings")
+app.include_router(commissioner_router, prefix="/commissioner")
 
 @app.get("/")
 def read_root():
