@@ -46,7 +46,7 @@ def insert_team(team_name, username, password, division, preferred_division, pre
 def get_player(login_email):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Player.id, Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender, Player.team_id).where(Player.email == login_email)
+        stmt = select(Player.id, Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender, Player.team_id, Player.is_commissioner).where(Player.email == login_email)
         result = session.execute(stmt).mappings().first()
         return result
     
