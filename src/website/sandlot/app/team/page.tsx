@@ -8,16 +8,23 @@ import { title } from "@/components/primitives";
 import { Input, Modal, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { Session } from 'next-auth'; 
-import { getSession} from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 
 
 
+// Define the interface for Team and User data
 interface Team {
   id: string;
   teamName: string;
   players: { id: string; name: string; email: string }[];
   joinRequests: { id: string; name: string; email: string }[];
   captain: { id: string; name: string; email: string }; // Add captain info
+}
+
+// Define the interface for the body parameter in handleAction
+interface JoinRequestBody {
+  playerEmail: string;
+  captainEmail: string;
 }
 
 export default function TeamPage() {
@@ -82,7 +89,7 @@ export default function TeamPage() {
           const playerTeamData = await playerTeamRes.json();
           setUserTeam(playerTeamData.team);
         }
-      }
+      }      
     } catch (error) {
       console.error("Error fetching teams:", error);
     } finally {
@@ -110,15 +117,25 @@ export default function TeamPage() {
         body: body ? JSON.stringify(body) : undefined,
       });
       if (!res.ok) throw new Error("Action failed");
+  
+      if (body?.playerEmail) {
+        setUserTeam((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            joinRequests: prev.joinRequests.filter((r) => r.email !== body.playerEmail),
+          };
+        });
+      }
+  
       alert(successMessage || "Action successful");
-      fetchTeams();
     } catch (error) {
       console.error("Error performing action:", error);
       alert("Something went wrong");
     } finally {
       setActionLoading(false);
     }
-  };
+  };  
 
   if (loading) return <p>Loading...</p>;
 
@@ -172,7 +189,7 @@ export default function TeamPage() {
         <div className="flex">
           {/* Left Section: Team Roster */}
           <div className="w-3/5 mr-4">
-            <h2 className="text-xl font-bold mb-2">{userTeam.teamName}'s Roster</h2>
+            <h2 className="text-xl font-bold mb-2">{userTeam.teamName} Roster</h2>
             <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
               <TableHeader>
                 <TableColumn>Name</TableColumn>
@@ -217,7 +234,7 @@ export default function TeamPage() {
         // Team View: Team Roster and Pending Requests
         <div className="flex">
           <div className="w-3/5 mr-4">
-            <h2 className="text-xl font-bold mb-2">{session.user.teamName || "Your Team"}'s Roster</h2>
+            <h2 className="text-xl font-bold mb-2">{session.user.teamName || "Your Team"} Roster</h2>
             <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
               <TableHeader>
                 <TableColumn>Name</TableColumn>
