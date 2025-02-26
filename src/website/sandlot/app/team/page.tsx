@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Session } from 'next-auth'; 
 import { getSession } from 'next-auth/react';
 import getTeamInfo from "../functions/getTeamInfo";
+import { user } from "@heroui/theme";
 
 // Define the interface for Team and User data
 interface Team {
@@ -209,52 +210,52 @@ export default function TeamPage() {
             <p>No available teams at the moment.</p>
           )}
         </div>
-      // ) : userRole === "player" && userTeamID ? (
-      //   // Player View After Join Request Accepted
-      //   <div className="flex">
-      //     {/* Left Section: Team Roster */}
-      //     <div className="w-3/5 mr-4">
-      //       <h2 className="text-xl font-bold mb-2">{userTeam.teamName} Roster</h2>
-      //       <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
-      //         <TableHeader>
-      //           <TableColumn>Name</TableColumn>
-      //         </TableHeader>
-      //         <TableBody>
-      //           {userTeam.players.length ? (
-      //             userTeam.players.map((player) => (
-      //               <TableRow key={player.id}>
-      //                 <TableCell>{player.name}</TableCell>
-      //               </TableRow>
-      //             ))
-      //           ) : (
-      //             <TableRow><TableCell>No players yet</TableCell></TableRow>
-      //           )}
-      //         </TableBody>
-      //       </Table>
-      //     </div>
+      ) : userRole === "player" && userTeamID ? (
+        // Player View After Join Request Accepted
+        <div className="flex">
+          {/* Left Section: Team Roster */}
+          <div className="w-3/5 mr-4">
+            <h2 className="text-xl font-bold mb-2">{session?.user.teamName} Roster</h2>
+            <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
+              <TableHeader>
+                <TableColumn>Name</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {roster.length ? (
+                  roster.map((player) => (
+                    <TableRow key={player.id}>
+                      <TableCell>{player.first_name+" "+player.last_name}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow><TableCell>No players yet</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
 
-      //     {/* Right Section: Team Info (Captain's Info and Leave Team) */}
-      //     <div className="w-2/5">
-      //       <h2 className="text-xl font-bold mb-2">{userTeam.teamName}'s Info</h2>
-      //       <Button
-      //         onPress={() => alert(`Captain's Info: ${userTeam.captain.name} (${userTeam.captain.email})`)}
-      //         className="button mb-4"
-      //       >
-      //         Captain's Info
-      //       </Button>
-      //       <Button
-      //         onPress={() => handleAction(
-      //           // `/api/teams/${userTeam.id}/leave`,
-      //           // "POST",
-      //           // { playerEmail: session.user.email },
-      //           // "You have left the team"
-      //         )}
-      //         className="button"
-      //       >
-      //         Leave Team
-      //       </Button>
-      //     </div>
-      //   </div>
+          {/* Right Section: Team Info (Captain's Info and Leave Team) */}
+          <div className="w-2/5">
+            <h2 className="text-xl font-bold mb-2">{session?.user.teamName}'s Info</h2>
+            <Button
+              onPress={() => alert(`Captain's Info: ${"Temp captain name"} (${"Temp captain contact"})`)}
+              className="button mb-4"
+            >
+              Captain's Info
+            </Button>
+            <Button
+              onPress={() => handleAction(
+                // `/api/teams/${userTeam.id}/leave`,
+                // "POST",
+                // { playerEmail: session.user.email },
+                // "You have left the team"
+              )}
+              className="button"
+            >
+              Leave Team
+            </Button>
+          </div>
+        </div>
       ) : userRole === "team" ? (
         // Team View: Team Roster and Pending Requests
         <div className="flex">
