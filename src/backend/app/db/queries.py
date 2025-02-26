@@ -66,24 +66,18 @@ def get_all_teams():
         result = session.execute(stmt).mappings().all()
         return result
 
-def get_team_info_by_current_user(user_id):
+def get_team_info_by_current_user(user_teamid):
     engine = create_connection()
     with Session(engine) as session:
 
-        stmtInner = (
-            select(Player.team_id)
-            .select_from(Player)
-            .where(Player.id == user_id)
-        )
-
         stmt = (
             select(Player.id, Player.first_name, Player.last_name, Player.email, Team.team_name, Team.id)
-            .select_from(Player, Team)
-            .where(Player.team_id == Team.id)
-            .where(Player.team_id == stmtInner)
+            .select_from(Team)
+            .join(Player, Team.id == Player.team_id)
+            .where(Player.team_id == user_teamid)
         )
 
-        result = session.execute(stmt).mappings().first()
+        result = session.execute(stmt).mappings().all()
         return result
 
 def insert_game(home_team, away_team, date, time, field):
