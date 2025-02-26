@@ -71,7 +71,7 @@ def get_team_info_by_current_user(user_teamid):
     with Session(engine) as session:
 
         stmt = (
-            select(Player.id, Player.first_name, Player.last_name, Player.email, Team.team_name, Team.id)
+            select(Player.id, Player.first_name, Player.last_name, Player.email, Player.phone_number, Player.gender)
             .select_from(Team)
             .join(Player, Team.id == Player.team_id)
             .where(Player.team_id == user_teamid)
