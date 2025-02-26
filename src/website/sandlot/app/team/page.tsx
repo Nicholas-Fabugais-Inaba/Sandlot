@@ -15,10 +15,11 @@ import { user } from "@heroui/theme";
 // Define the interface for Team and User data
 interface Team {
   id: number;
-  teamName: string;
-  players: { id: string; name: string; email: string }[];
-  joinRequests: { id: string; name: string; email: string }[];
-  captain: { id: string; name: string; email: string }; // Add captain info
+  team_name: string;
+  captain_id: number;
+  // players: { id: string; name: string; email: string }[];
+  // joinRequests: { id: string; name: string; email: string }[];
+  // captain: { id: string; name: string; email: string }; // Add captain info
 }
 
 // Define the interface for the body parameter in handleAction
@@ -36,6 +37,13 @@ interface Player {
   gender: string;
 }
 
+// interface User {
+//   userRole: string;
+//   userTeamID: number;
+//   userTeamName: string;
+//   userTeamCaptain: string;
+// }
+
 export default function TeamPage() {
   // const { data: session, status } = useSession();
   const [session, setSession] = useState<Session | null>(null);
@@ -45,8 +53,9 @@ export default function TeamPage() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const router = useRouter();
-  const [userRole, setUserRole] = useState<String>("");
-  const [userTeamID, setUserTeamID] = useState<Number | null>(null);
+  const [userRole, setUserRole] = useState<string>("");
+  const [userTeamID, setUserTeamID] = useState<number | null>(null);
+  // const [userData, setUserData] = useState<User | null>(null);
 
   // useEffect(() => {
   //   if (session) {
@@ -66,6 +75,12 @@ export default function TeamPage() {
 
   useEffect(() => {
     (async () => {
+      // setUserData({
+      //   userRole: session?.user.role || "",
+      //   userTeamID: session?.user.team_id || null,
+      //   userTeamName: session?.user.teamName || "",
+      //   userTeamCaptain: session?.user. || ""
+      // });
       setUserRole(session?.user.role || "");
       setUserTeamID(session?.user.team_id || null);
       if (session?.user.team_id) {
