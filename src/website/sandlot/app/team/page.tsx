@@ -270,12 +270,13 @@ export default function TeamPage() {
                 ))}
               </TableHeader>
               <TableBody>
-                {(roster ? roster : []).map((player) => (
+                {roster ? (roster.map((player) => (
                   <TableRow key={player.id}>
                     <TableCell className="py-2 column-name">{player.first_name+" "+player.last_name}</TableCell>
                     <TableCell className="py-2 column-contact">{player.email}</TableCell>
                   </TableRow>
-                ))}
+                ))) : 
+                <TableRow><TableCell>No players yet</TableCell></TableRow>}
               </TableBody>
             </Table>
           </div>
