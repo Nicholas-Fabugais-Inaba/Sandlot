@@ -4,20 +4,20 @@ import { Event } from '../types';
 type Dictionary = { [key: string]: any };
 
 interface ScheduleContextProps {
-  events: Event[];
-  setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
-  schedule: Dictionary;
-  setSchedule: React.Dispatch<React.SetStateAction<Dictionary>>;
-  schedScore: number;
-  setSchedScore: React.Dispatch<React.SetStateAction<number>>;
+  events: Event[] | null;
+  setEvents: React.Dispatch<React.SetStateAction<Event[] | null>>;
+  schedule: Dictionary | null;
+  setSchedule: React.Dispatch<React.SetStateAction<Dictionary | null>>;
+  schedScore: number | null;
+  setSchedScore: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const ScheduleContext = createContext<ScheduleContextProps | undefined>(undefined);
 
 export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [schedule, setSchedule] = useState<Dictionary>({});
-  const [schedScore, setSchedScore] = useState<number>(0);
+  const [events, setEvents] = useState<Event[] | null>(null);
+  const [schedule, setSchedule] = useState<Dictionary | null>(null);
+  const [schedScore, setSchedScore] = useState<number | null>(null);
 
   return (
     <ScheduleContext.Provider value={{ events, setEvents, schedule, setSchedule, schedScore, setSchedScore }}>
