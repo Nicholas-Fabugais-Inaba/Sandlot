@@ -35,7 +35,7 @@ const authOptions: NextAuthOptions = {
                 id: player.id,
                 name: player.first_name,
                 email: player.email,
-                role: "player",
+                role: role,
                 gender: player.gender,
                 teamName: "team_name",
                 username: "temp_username",
