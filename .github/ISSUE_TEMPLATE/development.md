@@ -6,11 +6,6 @@ labels: 'development'
 assignees: ''
 
 ---
-
-Related Issues:
-
-[#issuenum]
-
 Description:
 
 Other notes:
