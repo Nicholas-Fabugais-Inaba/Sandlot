@@ -59,12 +59,11 @@ export default function TeamsDirectoryPage() {
 
   return (
     <div>
-      <div style={{ marginBottom: "20px" }}>
-        <h1 className={title()}>Team Directory</h1>
-      </div>
-  
-      <div style={{ display: "flex" }}>
-        <div style={{ width: "50%" }}>
+      <div className="container">
+        <div className="left-half">
+          <div style={{ marginBottom: "20px" }}>
+            <h1 className={title()}>Team Directory</h1>
+          </div>
           {/* Render a separate table for each division */}
           {uniqueDivisions.map((division) => {
             const sortedTeams = [...teams.filter((team) => team.division === division)];
@@ -118,7 +117,9 @@ export default function TeamsDirectoryPage() {
         <div className="right-half">
         {/* Add your content for the right half here */}
         <div className="right-box">
-          <h2>Right Half Content</h2>
+          <div style={{ marginBottom: "20px" }}>
+            <h1 className={title()}>Team Information</h1>
+          </div>
           <p>This is the content for the right half of the screen.</p>
         </div>
       </div>
