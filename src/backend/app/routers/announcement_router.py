@@ -14,12 +14,12 @@ async def create_announcement(data: NewAnnouncement):
     insert_announcement(data.date, data.title, data.body)
     return True
 
-@router.put("/edit_announcement", response_model=None)
+@router.post("/update_announcement", response_model=None)
 async def edit_announcement(data: AnnouncementData):
     update_announcement(data.announcement_id, data.new_date, data.new_title, data.new_body)
     return True
 
-@router.delete("/remove_announcement", response_model=None)
+@router.post("/delete_announcement", response_model=None)
 async def remove_announcement(data: AnnouncementID):
     delete_announcement(data.announcement_id)
     return True
