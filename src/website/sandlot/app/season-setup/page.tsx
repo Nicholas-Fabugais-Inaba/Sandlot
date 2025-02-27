@@ -5,6 +5,7 @@ import SchedulePage from "@/app/schedule/page"; // Import the schedule page
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
 import getSeasonSettings from "../functions/getSeasonSettings";
 import "./SeasonSetupPage.css";
+import updateSeasonSettings from "../functions/updateSeasonSettings";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
@@ -120,7 +121,9 @@ function GeneralSettings({
 
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log({ seasonName, startDate, endDate, gamesPerTeam });
+    let settings = { start_date: startDate, end_date: endDate, games_per_team: gamesPerTeam };
+    console.log(settings);
+    updateSeasonSettings(settings);
   };
 
   const isSaveDisabled = !startDate || !endDate || gamesPerTeam <= 0;
@@ -199,8 +202,8 @@ function GeneralSettings({
             Save
           </button>
           {isSaveDisabled && (
-            <div className="ml-4 text-red-500" style={{ width: '50%' }}>
-              Must input start and end dates and number of games played by each team before saving
+            <div className="ml-4 text-red-500" style={{ width: '60%' }}>
+              Must input valid start date, end date and number of games played by each team before saving
             </div>
           )}
         </div>
