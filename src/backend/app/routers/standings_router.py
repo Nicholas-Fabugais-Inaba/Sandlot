@@ -22,9 +22,10 @@ async def get_standings_data():
             "ties": 0, 
             "forfeits": 0, 
             "differential": 0, 
-            # "division": get_division_name_by_division_id(team["division"])["division_name"]
-            "division": get_division_name_by_team_id(team["id"])
+            "division": get_division_name_by_division_id(team["division"])["division_name"]
+            # "division": get_division_name_by_team_id(team["id"])["division_name"] # simply an alternate way; not needed
         }
+        print("TEAMS IS: ", teams)
 
     for game in games:
         # checking if game has been played and scored
