@@ -259,57 +259,77 @@ export default function TeamPage() {
         <div className="flex">
           <div className="w-3/5 mr-4">
             <h2 className="text-xl font-bold mb-2">{session?.user.teamName || "Your Team"} Roster</h2>
-            <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
-              <TableHeader>
-                {["name", "contact"].map((key) => (
-                  <TableColumn key={key} allowsSorting>
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </TableColumn>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {roster ? (roster.map((player) => (
-                  <TableRow key={player.id}>
-                    <TableCell className="py-2 column-name">{player.first_name+" "+player.last_name}</TableCell>
-                    <TableCell className="py-2 column-contact">{player.email}</TableCell>
-                  </TableRow>
-                ))) : 
-                <TableRow><TableCell>No players yet</TableCell></TableRow>}
-              </TableBody>
-            </Table>
+            <div className="max-h-80 overflow-y-auto p-2">
+              <Table aria-label="Team Roster" classNames={{ table: "min-w-full" }}>
+                <TableHeader>
+                  {["name", "contact"].map((key) => (
+                    <TableColumn key={key} allowsSorting>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </TableColumn>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {roster ? (roster.map((player) => (
+                    <TableRow key={player.id}>
+                      <TableCell className="py-2 column-name">{player.first_name+" "+player.last_name}</TableCell>
+                      <TableCell className="py-2 column-contact">{player.email}</TableCell>
+                    </TableRow>
+                  ))) : 
+                  <TableRow><TableCell>No players yet</TableCell></TableRow>}
+                </TableBody>
+              </Table>
+            </div>
           </div>
           
           <div className="w-2/5">
             <h2 className="text-xl font-bold mb-2">Pending Requests</h2>
-            {(userTeam?.joinRequests?.length ? userTeam.joinRequests : [{ email: "request@domain.com", name: "John Doe" }]).map((request) => (
-              <div key={request.email} className="p-4 border mb-2 rounded">
-                <p>{request.name} ({request.email})</p>
-                <Button
-                  disabled={actionLoading}
-                  className="button mr-2"
-                  onPress={() => handleAction(
-                    // `/api/teams/${session.user.teamName}/accept`,
-                    // "POST",
-                    // { playerEmail: request.email },
-                    // "Player added!"
-                  )}
-                >
-                  Accept
-                </Button>
-                <Button
-                  disabled={actionLoading}
-                  className="button"
-                  onPress={() => handleAction(
-                    // `/api/teams/${session.user.teamName}/deny`,
-                    // "POST",
-                    // { playerEmail: request.email },
-                    // "Request denied."
-                  )}
-                >
-                  Deny
-                </Button>
-              </div>
-            ))}
+              <div className="max-h-80 overflow-y-auto">
+              {(userTeam?.joinRequests?.length ? userTeam.joinRequests : [
+                { email: "request@domain.com", name: "John Doe" },
+                { email: "a@a.com", name: "Tyler" },
+                { email: "b@b.com", name: "James" },
+                { email: "c@c.com", name: "Lucy" },
+                { email: "d@d.com", name: "Barbera" },
+                { email: "e@e.com", name: "Hank" },
+                { email: "f@f.com", name: "Louis" },
+                { email: "g@g.com", name: "Kate" },
+                { email: "h@h.com", name: "Cassie" },
+                { email: "i@i.com", name: "Bob" },
+                { email: "j@j.com", name: "Adam" },
+                { email: "k@k.com", name: "Liz" },
+                { email: "l@l.com", name: "Emmanuel" },
+                { email: "r@r.com", name: "Robert" },
+                { email: "n@n.com", name: "Mary" },
+              ]).map((request) => (
+                <div key={request.email} className="p-4 border mb-2 rounded">
+                  <p>{request.name} ({request.email})</p>
+                  <Button
+                    disabled={actionLoading}
+                    className="button mr-2"
+                    onPress={() => handleAction(
+                      // `/api/teams/${session.user.teamName}/accept`,
+                      // "POST",
+                      // { playerEmail: request.email },
+                      // "Player added!"
+                    )}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    disabled={actionLoading}
+                    className="button"
+                    onPress={() => handleAction(
+                      // `/api/teams/${session.user.teamName}/deny`,
+                      // "POST",
+                      // { playerEmail: request.email },
+                      // "Request denied."
+                    )}
+                  >
+                    Deny
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       ) : null}
