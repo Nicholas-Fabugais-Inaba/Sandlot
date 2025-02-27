@@ -10,9 +10,9 @@ from ..db.mock_data import insert_mock_schedule
 
 FIELDS = 3
 TIMESLOTS = 3
-START_DATE = date(2025, 5, 5)
-# END_DATE = date(2024, 6, 30)
-END_DATE = date(2025, 8, 20)
+START_DATE = date(2025, 5, 5) # May 5, 2025 (Monday)
+END_DATE = date(2025, 8, 20) # August 20, 2025 (Wednesday)
+# END_DATE = date(2024, 6, 30) # June 30, 2024 (Sunday)
 
 GAMES_PER_TEAM = 25 # CURRENTLY BROKEN
 

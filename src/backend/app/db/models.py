@@ -37,7 +37,7 @@ class Team(Base):
     standing: Mapped[Optional[str]] = mapped_column(String(50))
     username: Mapped[Optional[str]] = mapped_column(String(50), unique=True)
     password: Mapped[Optional[str]] = mapped_column(String(50))
-    division: Mapped[Optional[int]] = mapped_column() # 0 = A
+    division: Mapped[Optional[int]] = mapped_column(ForeignKey("division.id", ondelete="SET NULL"), nullable=True) # 0 = A
     preferred_division: Mapped[Optional[int]] = mapped_column() # 0 = A
     offday: Mapped[Optional[int]] = mapped_column() # 0 = Monday
     preferred_time: Mapped[Optional[int]] = mapped_column() # 0 = balanced, 1 = early, 2 = late
@@ -53,7 +53,7 @@ class Game(Base):
     home_team_score: Mapped[Optional[int]] = mapped_column()
     away_team_score: Mapped[Optional[int]] = mapped_column()
     played: Mapped[Optional[bool]] = mapped_column(default=False)
-    forfeit: Mapped[Optional[int]] = mapped_column()
+    forfeit: Mapped[Optional[int]] = mapped_column(default=0) # 0 = no forfeit, 1 = 9-1 soft forfeit, 2 = 9-0 hard forfeit
     home_team = relationship("Team", foreign_keys=[home_team_id], backref="home_games")
     away_team = relationship("Team", foreign_keys=[away_team_id], backref="away_games")
 
@@ -100,6 +100,11 @@ class TimeSlot(Base):
     start: Mapped[Optional[str]] = mapped_column(String(50))
     end: Mapped[Optional[str]] = mapped_column(String(50))
     field_id: Mapped[Optional[int]] = mapped_column(ForeignKey("field.id"))
+
+class Division(Base):
+    __tablename__ = "division"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    division_name: Mapped[Optional[str]] = mapped_column(String(50))
 
 # function which creates defined models as tables in DB
 def create_tables():
