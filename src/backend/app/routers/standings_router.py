@@ -23,7 +23,7 @@ async def get_standings_data():
             "forfeits": 0, 
             "differential": 0, 
             # "division": get_division_name_by_division_id(team["division"])["division_name"]
-            "division": get_division_name_by_team_id(team["id"])["division_name"]
+            "division": get_division_name_by_team_id(team["id"])
         }
 
     for game in games:
