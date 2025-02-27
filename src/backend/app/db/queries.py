@@ -472,7 +472,7 @@ def delete_join_request(request_id):
         session.commit()
 
 
-###
+### getting division table info
 def get_division_name_by_division_id(division_id):
     engine = create_connection()
     with Session(engine) as session:
@@ -495,4 +495,15 @@ def get_division_name_by_team_id(team_id):
             .where(Team.id == team_id)
         )
         result = session.execute(stmt).mappings().first()
+        return result
+    
+def get_teams_season_setup():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Team.id, Team.team_name, Team.division, Team.preferred_division, Division.division_name)
+            .select_from(Team)
+            .join(Division, Division.id == Team.division)
+        )
+        result = session.exectue(stmt).mappings().all()
         return result
