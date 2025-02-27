@@ -31,12 +31,10 @@ export default function SeasonSetupPage() {
             setGamesPerTeam={setGamesPerTeam}
           />
         );
-      case "teams":
-        return <TeamsSettings />;
+      case "divisions":
+        return <DivisionsSettings />;
       case "schedule":
         return <ScheduleSettings />;
-      case "rules":
-        return <RulesSettings />;
       default:
         return (
           <GeneralSettings
@@ -71,9 +69,8 @@ function Toolbar({ setActiveSection }: ToolbarProps) {
   return (
     <div className="toolbar">
       <button onClick={() => setActiveSection("general")}>General</button>
-      <button onClick={() => setActiveSection("teams")}>Teams</button>
+      <button onClick={() => setActiveSection("divisions")}>Divisions</button>
       <button onClick={() => setActiveSection("schedule")}>Schedule</button>
-      <button onClick={() => setActiveSection("rules")}>Rules</button>
     </div>
   );
 }
@@ -212,17 +209,151 @@ function GeneralSettings({
   );
 }
 
-function TeamsSettings() {
+function DivisionsSettings() {
+  const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(false);
+  const [divisions, setDivisions] = useState<string[]>([]);
+  const [newDivision, setNewDivision] = useState("");
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editedName, setEditedName] = useState("");
+
+  // Load state from localStorage on mount
+  useEffect(() => {
+    const storedDivisionsEnabled = localStorage.getItem("divisionsEnabled");
+    if (storedDivisionsEnabled !== null) {
+      setIsDivisionsEnabled(storedDivisionsEnabled === "true"); // Convert string to boolean
+    }
+
+    const storedDivisions = localStorage.getItem("divisions");
+    if (storedDivisions) {
+      try {
+        setDivisions(JSON.parse(storedDivisions));
+      } catch {
+        console.error("Failed to parse divisions from localStorage");
+      }
+    }
+  }, []);
+
+  // Save divisionsEnabled state to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem("divisionsEnabled", isDivisionsEnabled.toString());
+  }, [isDivisionsEnabled]);
+
+  // Save divisions list to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem("divisions", JSON.stringify(divisions));
+  }, [divisions]);
+
+  // Toggle divisions on/off
+  const toggleDivisions = () => setIsDivisionsEnabled((prev) => !prev);
+
+  // Add a division
+  const addDivision = () => {
+    if (newDivision.trim() !== "") {
+      setDivisions((prev) => [...prev, newDivision]);
+      setNewDivision("");
+    }
+  };
+
+  // Start editing a division
+  const startEditing = (index: number, name: string) => {
+    setEditingIndex(index);
+    setEditedName(name);
+  };
+
+  // Save edited division name
+  const saveEdit = (index: number) => {
+    const updatedDivisions = [...divisions];
+    updatedDivisions[index] = editedName;
+    setDivisions(updatedDivisions);
+    setEditingIndex(null);
+  };
+
+  // Delete a division
+  const deleteDivision = (index: number) => {
+    setDivisions((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Teams Settings</h2>
-      <form>
-        <div className="mb-4">
-          <label className="block text-gray-700">Add Team</label>
-          <input type="text" className="w-full px-4 py-2 border rounded-lg" placeholder="Team Name" />
+      <h2 className="text-2xl font-semibold mb-4">Divisions Settings</h2>
+
+      {/* Toggle to enable/disable divisions */}
+      <div className="mb-4 flex items-center">
+        <input
+          type="checkbox"
+          id="toggleDivisions"
+          checked={isDivisionsEnabled}
+          onChange={toggleDivisions}
+          className="mr-2"
+        />
+        <label htmlFor="toggleDivisions" className="text-gray-700">
+          Enable Divisions
+        </label>
+      </div>
+
+      {isDivisionsEnabled && (
+        <div>
+          {/* Add Division */}
+          <div className="mb-4 flex">
+            <input
+              type="text"
+              value={newDivision}
+              onChange={(e) => setNewDivision(e.target.value)}
+              className="w-full px-4 py-2 border rounded-lg"
+              placeholder="Division Name"
+            />
+            <button
+              type="button"
+              onClick={addDivision}
+              className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+            >
+              Add Division
+            </button>
+          </div>
+
+          {/* List of Divisions */}
+          <ul>
+            {divisions.map((division, index) => (
+              <li key={index} className="flex items-center justify-between p-2 border rounded-lg mb-2">
+                {editingIndex === index ? (
+                  <input
+                    type="text"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    className="w-full px-2 py-1 border rounded-lg"
+                  />
+                ) : (
+                  <span>{division}</span>
+                )}
+
+                <div className="ml-2 flex">
+                  {editingIndex === index ? (
+                    <button
+                      onClick={() => saveEdit(index)}
+                      className="px-3 py-1 bg-green-500 text-white rounded-lg mr-2"
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => startEditing(index, division)}
+                      className="px-3 py-1 bg-yellow-500 text-white rounded-lg mr-2"
+                    >
+                      Edit
+                    </button>
+                  )}
+                  <button
+                    onClick={() => deleteDivision(index)}
+                    className="px-3 py-1 bg-red-500 text-white rounded-lg"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Add Team</button>
-      </form>
+      )}
     </div>
   );
 }
@@ -231,21 +362,6 @@ function ScheduleSettings() {
   return (
     <div>
       <SchedulePage viewer={true} />
-    </div>
-  );
-}
-
-function RulesSettings() {
-  return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">Rules Settings</h2>
-      <form>
-        <div className="mb-4">
-          <label className="block text-gray-700">Game Rules</label>
-          <textarea className="w-full px-4 py-2 border rounded-lg" rows={5}></textarea>
-        </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Save Rules</button>
-      </form>
     </div>
   );
 }
