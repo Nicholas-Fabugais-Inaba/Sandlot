@@ -1,6 +1,10 @@
 'use client';
 
-import { useState, useEffect } from "react";
+'use client';
+
+import { useState, useEffect, useRef } from "react";
+import { DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import SchedulePage from "@/app/schedule/page"; // Import the schedule page
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
 import getSeasonSettings from "../functions/getSeasonSettings";
@@ -32,7 +36,11 @@ export default function SeasonSetupPage() {
           />
         );
       case "divisions":
-        return <DivisionsSettings />;
+        return (
+          <DndProvider backend={HTML5Backend}>
+            <DivisionsSettings />
+          </DndProvider>
+        );
       case "schedule":
         return <ScheduleSettings />;
       default:
@@ -209,12 +217,90 @@ function GeneralSettings({
   );
 }
 
+const ItemTypes = {
+  TEAM: 'team',
+};
+
+interface DragItem {
+  index: number;
+  division: string;
+}
+
+interface TeamProps {
+  team: string;
+  index: number;
+  division: string;
+  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivision: string, targetDivision: string) => void;
+}
+
+const Team: React.FC<TeamProps> = ({ team, index, division, moveTeam }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.TEAM,
+    item: { index, division },
+    collect: (monitor: DragSourceMonitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  drag(ref);
+
+  return (
+    <div
+      ref={ref}
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+      className="flex items-center justify-between p-2 border rounded-lg mb-2"
+    >
+      <span>{team}</span>
+    </div>
+  );
+};
+
+interface DivisionProps {
+  division: string;
+  teams: string[];
+  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivision: string, targetDivision: string) => void;
+}
+
+const Division: React.FC<DivisionProps> = ({ division, teams, moveTeam }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [, drop] = useDrop<DragItem>({
+    accept: ItemTypes.TEAM,
+    drop(item: DragItem, monitor: DropTargetMonitor) {
+      const hoverIndex = teams.length; // Drop at the end of the list if dropped in the overall target
+      if (item.division !== division || item.index !== hoverIndex) {
+        moveTeam(item.index, hoverIndex, item.division, division);
+        item.index = hoverIndex;
+        item.division = division;
+      }
+    },
+  });
+
+  drop(ref);
+
+  return (
+    <div ref={ref} className="division drop-target">
+      <h3>{division}</h3>
+      {teams.length === 0 ? (
+        <div className="empty-division">Drop teams here</div>
+      ) : (
+        teams.map((team, index) => (
+          <Team key={index} team={team} index={index} division={division} moveTeam={moveTeam} />
+        ))
+      )}
+    </div>
+  );
+};
+
 function DivisionsSettings() {
   const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(false);
-  const [divisions, setDivisions] = useState<string[]>([]);
+  const [divisions, setDivisions] = useState<{ [key: string]: string[] }>({
+    "A": ["Tigers", "Mets", "Red Sox"],
+    "B": ["Yankees", "Dodgers", "Giants"],
+    "Team Bank": ["Braves", "Cubs", "Phillies", "Pirates"]
+  });
   const [newDivision, setNewDivision] = useState("");
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editedName, setEditedName] = useState("");
 
   // Load state from localStorage on mount
   useEffect(() => {
@@ -249,28 +335,27 @@ function DivisionsSettings() {
   // Add a division
   const addDivision = () => {
     if (newDivision.trim() !== "") {
-      setDivisions((prev) => [...prev, newDivision]);
+      setDivisions((prev) => ({ ...prev, [newDivision]: [] }));
       setNewDivision("");
     }
   };
 
-  // Start editing a division
-  const startEditing = (index: number, name: string) => {
-    setEditingIndex(index);
-    setEditedName(name);
-  };
+  // Move a team between divisions
+  const moveTeam = (dragIndex: number, hoverIndex: number, sourceDivision: string, targetDivision: string) => {
+    if (sourceDivision === targetDivision) {
+      return;
+    }
 
-  // Save edited division name
-  const saveEdit = (index: number) => {
-    const updatedDivisions = [...divisions];
-    updatedDivisions[index] = editedName;
-    setDivisions(updatedDivisions);
-    setEditingIndex(null);
-  };
+    const sourceTeams = [...divisions[sourceDivision]];
+    const [movedTeam] = sourceTeams.splice(dragIndex, 1);
+    const targetTeams = [...divisions[targetDivision]];
+    targetTeams.splice(hoverIndex, 0, movedTeam);
 
-  // Delete a division
-  const deleteDivision = (index: number) => {
-    setDivisions((prev) => prev.filter((_, i) => i !== index));
+    setDivisions((prev) => ({
+      ...prev,
+      [sourceDivision]: sourceTeams,
+      [targetDivision]: targetTeams,
+    }));
   };
 
   return (
@@ -292,66 +377,48 @@ function DivisionsSettings() {
       </div>
 
       {isDivisionsEnabled && (
-        <div>
-          {/* Add Division */}
-          <div className="mb-4 flex">
-            <input
-              type="text"
-              value={newDivision}
-              onChange={(e) => setNewDivision(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg"
-              placeholder="Division Name"
-            />
-            <button
-              type="button"
-              onClick={addDivision}
-              className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
-            >
-              Add Division
-            </button>
+        <div className="flex">
+          <div className="divisions-container flex-grow">
+            {/* Add Division */}
+            <div className="mb-4 flex">
+              <input
+                type="text"
+                value={newDivision}
+                onChange={(e) => setNewDivision(e.target.value)}
+                className="w-full px-4 py-2 border rounded-lg"
+                placeholder="Division Name"
+              />
+              <button
+                type="button"
+                onClick={addDivision}
+                className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+              >
+                Add Division
+              </button>
+            </div>
+
+            {/* List of Divisions */}
+            <div className="divisions-list overflow-y-auto" style={{ maxHeight: '40vh' }}>
+              {Object.keys(divisions).filter(division => division !== "Team Bank").map((division) => (
+                <div key={division} className="division-container">
+                  <Division
+                    division={division}
+                    teams={divisions[division]}
+                    moveTeam={moveTeam}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* List of Divisions */}
-          <ul>
-            {divisions.map((division, index) => (
-              <li key={index} className="flex items-center justify-between p-2 border rounded-lg mb-2">
-                {editingIndex === index ? (
-                  <input
-                    type="text"
-                    value={editedName}
-                    onChange={(e) => setEditedName(e.target.value)}
-                    className="w-full px-2 py-1 border rounded-lg"
-                  />
-                ) : (
-                  <span>{division}</span>
-                )}
-
-                <div className="ml-2 flex">
-                  {editingIndex === index ? (
-                    <button
-                      onClick={() => saveEdit(index)}
-                      className="px-3 py-1 bg-green-500 text-white rounded-lg mr-2"
-                    >
-                      Save
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => startEditing(index, division)}
-                      className="px-3 py-1 bg-yellow-500 text-white rounded-lg mr-2"
-                    >
-                      Edit
-                    </button>
-                  )}
-                  <button
-                    onClick={() => deleteDivision(index)}
-                    className="px-3 py-1 bg-red-500 text-white rounded-lg"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {/* Team Bank */}
+          <div className="team-bank-container flex-shrink-0 ml-4" style={{ width: '40%' }}>
+            <Division
+              division="Team Bank"
+              teams={divisions["Team Bank"]}
+              moveTeam={moveTeam}
+            />
+          </div>
         </div>
       )}
     </div>
