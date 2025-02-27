@@ -14,15 +14,17 @@ async def get_standings_data():
     teams = get_all_teams()
     teams = {team['id']: {"name": team["team_name"], "wins": 0, "losses": 0, "ties": 0, "forfeits": 0, "differential": 0, "division": map_division(team["division"])} for team in teams}
     for game in games:
+        # checking if game has been played and scored
         if game['played'] == True:
 
+            # computing forfeiting
             if game['forfeit'] == 1 or game['forfeit'] == 2:
                 if game['home_team_score'] == 9:
                     teams[game['away_team_id']]['forfeits'] += 1
                 elif game['away_team_score'] == 9:
                     teams[game['home_team_id']]['forfeits'] += 1
-                
 
+            # computing wins, losses, ties, and differentials
             if game['home_team_score'] > game['away_team_score']:
                 teams[game['home_team_id']]['wins'] += 1
                 teams[game['away_team_id']]['losses'] += 1
@@ -36,7 +38,6 @@ async def get_standings_data():
             teams[game['home_team_id']]['differential'] += game['home_team_score'] - game['away_team_score']
             teams[game['away_team_id']]['differential'] += game['away_team_score'] - game['home_team_score']
     
-        # forfeits ommitted for now
     return teams.values()
 
 def map_division(divison_int):
