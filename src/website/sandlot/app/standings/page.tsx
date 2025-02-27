@@ -34,30 +34,6 @@ export default function StandingsPage() {
     differential: number;
     division: string;
   }
-
-  // let list = useAsyncList<Team>({
-  //   async load({ signal }) {
-  //     let res = await fetch("https://swapi.py4e.com/api/people/?search", { signal });
-  //     let json = await res.json();
-
-  //     setIsLoading(false);
-
-  //     return {
-  //       items: [
-  //         { name: "Team A", wins: 10, losses: 2, ties: 1, forfeits: 0, differential: 20, division: "Division A" },
-  //         { name: "Team B", wins: 8, losses: 4, ties: 2, forfeits: 0, differential: 15, division: "Division A" },
-  //         { name: "Team C", wins: 10, losses: 2, ties: 1, forfeits: 0, differential: 20, division: "Division A" },
-  //         { name: "Team D", wins: 8, losses: 4, ties: 2, forfeits: 0, differential: 15, division: "Division A" },
-  //         { name: "Team E", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division B" },
-  //         { name: "Team F", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division B" },
-  //         { name: "Team G", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division C" },
-  //         { name: "Team H", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division C" },
-  //         { name: "Team I", wins: 6, losses: 6, ties: 1, forfeits: 1, differential: 5, division: "Division D" },
-  //         { name: "Team J", wins: 4, losses: 8, ties: 0, forfeits: 1, differential: -10, division: "Division D" },
-  //       ],
-  //     };
-  //   },
-  // }); 
   
   useEffect(() => {
   

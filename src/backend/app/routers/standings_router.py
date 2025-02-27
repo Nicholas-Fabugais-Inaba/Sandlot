@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..db.queries import get_standings, get_all_teams, get_division_name_by_id
+from ..db.queries import get_standings, get_all_teams, get_division_name_by_division_id, get_division_name_by_team_id
 from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData
 
 
@@ -11,8 +11,21 @@ async def get_standings_data():
     # gets standings from query and puts into dict
     games = get_standings()
     games = [dict(row) for row in games]
-    teams = get_all_teams()
-    teams = {team['id']: {"name": team["team_name"], "wins": 0, "losses": 0, "ties": 0, "forfeits": 0, "differential": 0, "division": get_division_name_by_id(team["division"])} for team in teams}
+    teams_data = get_all_teams()
+    teams = {}
+
+    for team in teams_data:
+        teams[team['id']] = {
+            "name": team["team_name"], 
+            "wins": 0, 
+            "losses": 0, 
+            "ties": 0, 
+            "forfeits": 0, 
+            "differential": 0, 
+            # "division": get_division_name_by_division_id(team["division"])["division_name"]
+            "division": get_division_name_by_team_id(team["id"])["division_name"]
+        }
+
     for game in games:
         # checking if game has been played and scored
         if game['played'] == True:
