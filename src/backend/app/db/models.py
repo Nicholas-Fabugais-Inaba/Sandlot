@@ -53,7 +53,7 @@ class Game(Base):
     home_team_score: Mapped[Optional[int]] = mapped_column()
     away_team_score: Mapped[Optional[int]] = mapped_column()
     played: Mapped[Optional[bool]] = mapped_column(default=False)
-    forfeit: Mapped[Optional[int]] = mapped_column()
+    forfeit: Mapped[Optional[int]] = mapped_column(default=0) # 0 = no forfeit, 1 = 9-1 soft forfeit, 2 = 9-0 hard forfeit
     home_team = relationship("Team", foreign_keys=[home_team_id], backref="home_games")
     away_team = relationship("Team", foreign_keys=[away_team_id], backref="away_games")
 

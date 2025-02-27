@@ -302,7 +302,9 @@ def get_standings():
                 Game.away_team_id,
                 team2.team_name.label('away_team_name'),
                 Game.away_team_score,
-                team2.division.label('away_division')
+                team2.division.label('away_division'),
+                Game.played,
+                Game.forfeit
             )
             .select_from(Game)
             .join(team1, Game.home_team_id == team1.id)
