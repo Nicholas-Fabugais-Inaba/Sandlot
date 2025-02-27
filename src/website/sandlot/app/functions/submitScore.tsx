@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const APIHOST = `127.0.0.1:8000`;
 
-export default async function reportScore(scoreData: any): Promise<void> {
-    axios.post(`http://${APIHOST}/schedule/report_score`, scoreData).then((response) => {
+export default async function submitScore(scoreData: any): Promise<void> {
+    axios.post(`http://${APIHOST}/schedule/submit_score`, scoreData).then((response) => {
       console.log("server response: " + response.status);
       console.log("score reported");
     }).catch((error) => {

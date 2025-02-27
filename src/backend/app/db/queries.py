@@ -312,10 +312,10 @@ def get_standings():
         result = session.execute(stmt).mappings().all()
         return result
     
-def update_score(game_id, home_team_score, away_team_score):
+def update_score(game_id, home_team_score, away_team_score, forfeit):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
+        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=True, forfeit=forfeit)
         try:
             session.execute(stmt)
         except:
