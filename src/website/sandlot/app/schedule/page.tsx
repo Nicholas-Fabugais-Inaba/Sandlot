@@ -82,8 +82,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
             setEvents(formattedEvents)
           })();
         }
-      }
-      if (events === undefined) {
+      } else {
         (async () => {
           let formattedEvents = await getSchedule()
           setEvents(formattedEvents)
