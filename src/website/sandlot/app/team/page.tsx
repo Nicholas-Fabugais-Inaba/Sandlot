@@ -178,23 +178,6 @@ export default function TeamPage() {
   //   }
   // };  
 
-  if (loading) return <p>Loading...</p>;
-
-  if (!session && !loading) {
-    return (
-      <div>
-        <h1 className={title()}>Team</h1>
-        <div className="centered-container mt-32">
-          <h1 className="text-xl font-semibold text-center">You need to be signed in to view this page.</h1>
-          <div className="flex space-x-4 mt-4">
-            <Button onPress={() => router.push("/profile/signin?callbackUrl=/team")} className="button">Sign In</Button>
-            <Button onPress={() => router.push("/profile/register?callbackUrl=/team")} className="button">Register</Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <h1 className={title()}>Team</h1>

@@ -45,6 +45,8 @@ export const Navbar = () => {
       return false; // Hide for non-commissioners
     } else if (item.label === "Accept RR" && session?.user.role !== "team") {
       return false; // Hide if the user is not part of a team
+    } else if (item.label === "Team" && session?.user.role !== "team" && session?.user.role !== "player") {
+      return false; // Hide for non-players
     }
     return true;
   });
