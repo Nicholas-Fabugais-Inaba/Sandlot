@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..db.queries import get_standings, get_all_teams
+from ..db.queries import get_standings, get_all_teams, get_division_name_by_id
 from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData
 
 
@@ -12,7 +12,7 @@ async def get_standings_data():
     games = get_standings()
     games = [dict(row) for row in games]
     teams = get_all_teams()
-    teams = {team['id']: {"name": team["team_name"], "wins": 0, "losses": 0, "ties": 0, "forfeits": 0, "differential": 0, "division": map_division(team["division"])} for team in teams}
+    teams = {team['id']: {"name": team["team_name"], "wins": 0, "losses": 0, "ties": 0, "forfeits": 0, "differential": 0, "division": get_division_name_by_id(team["division"])} for team in teams}
     for game in games:
         # checking if game has been played and scored
         if game['played'] == True:
@@ -39,15 +39,3 @@ async def get_standings_data():
             teams[game['away_team_id']]['differential'] += game['away_team_score'] - game['home_team_score']
     
     return teams.values()
-
-def map_division(divison_int):
-    if divison_int == 0:
-        return "Division A"
-    elif divison_int == 1:
-        return "Division B"
-    elif divison_int == 2:
-        return "Division C"
-    elif divison_int == 3:
-        return "Division D"
-    else:
-        return "Unknown"

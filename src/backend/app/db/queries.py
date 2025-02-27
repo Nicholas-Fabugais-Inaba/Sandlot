@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select, or_, delete, update
 from .create_engine import create_connection
-from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest
+from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest, Division
 
 
 # creating account insert query
@@ -470,3 +470,16 @@ def delete_join_request(request_id):
         stmt = delete(JoinRequest).where(JoinRequest.id == request_id)
         session.execute(stmt)
         session.commit()
+
+
+###
+def get_division_name_by_id(division_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Division.division_name)
+            .select_from(Division)
+            .join(Team, Division.id == Team.division)
+        )
+        result = session.execute(stmt).mappings().first()
+        return result
