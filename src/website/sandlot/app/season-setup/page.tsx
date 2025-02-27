@@ -15,6 +15,7 @@ export default function SeasonSetupPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [gamesPerTeam, setGamesPerTeam] = useState(0);
+  const [gameDays, setGameDays] = useState<string[]>([]);
 
   const renderSection = () => {
     switch (activeSection) {
@@ -29,6 +30,8 @@ export default function SeasonSetupPage() {
             setEndDate={setEndDate}
             gamesPerTeam={gamesPerTeam}
             setGamesPerTeam={setGamesPerTeam}
+            gameDays={gameDays}
+            setGameDays={setGameDays}
           />
         );
       case "divisions":
@@ -46,6 +49,8 @@ export default function SeasonSetupPage() {
             setEndDate={setEndDate}
             gamesPerTeam={gamesPerTeam}
             setGamesPerTeam={setGamesPerTeam}
+            gameDays={gameDays}
+            setGameDays={setGameDays}
           />
         );
     }
@@ -84,6 +89,8 @@ interface GeneralSettingsProps {
   setEndDate: (date: string) => void;
   gamesPerTeam: number;
   setGamesPerTeam: (games: number) => void;
+  gameDays: string[];
+  setGameDays: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 function GeneralSettings({
@@ -94,8 +101,22 @@ function GeneralSettings({
   endDate,
   setEndDate,
   gamesPerTeam,
-  setGamesPerTeam
+  setGamesPerTeam,
+  gameDays,
+  setGameDays
 }: GeneralSettingsProps) {
+
+  const toggleGameDay = (day: string) => {
+    setGameDays((prevDays: string[]) => {
+      console.log("Previous state:", prevDays);
+      const updatedDays = prevDays.includes(day)
+      ? prevDays.filter((d) => d !== day)
+      : [...prevDays, day];
+      console.log("Updated state:", updatedDays);
+      return updatedDays;
+    });
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     switch (name) {
@@ -118,7 +139,13 @@ function GeneralSettings({
 
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    let settings = { start_date: startDate, end_date: endDate, games_per_team: gamesPerTeam };
+    const settings = { 
+      season_name: seasonName,
+      start_date: startDate, 
+      end_date: endDate, 
+      games_per_team: gamesPerTeam,
+      game_days: gameDays 
+    };
     console.log(settings);
     updateSeasonSettings(settings);
   };
@@ -128,22 +155,15 @@ function GeneralSettings({
   useEffect(() => {
     const loadFormData = async () => {
       const data = await getSeasonSettings();
-      if (data.season_name != null) {
-        setSeasonName(data.season_name || "");
-      }
-      if (data.start_date != null) {
-        setStartDate(data.start_date || "");
-      }
-      if (data.end_date != null) {
-        setEndDate(data.end_date || "");
-      }
-      if (data.games_per_team != null) {  
-        setGamesPerTeam(data.games_per_team || 0);
-      }
+      setSeasonName(data.season_name || "");
+      setStartDate(data.start_date || "");
+      setEndDate(data.end_date || "");
+      setGamesPerTeam(data.games_per_team || 0);
+      setGameDays(data.game_days || []);
     };
 
     loadFormData();
-  }, [setSeasonName, setStartDate, setEndDate, setGamesPerTeam]);
+  }, [setSeasonName, setStartDate, setEndDate, setGamesPerTeam, setGameDays]);
 
   return (
     <div className="general-settings-container" style={{ width: '50%' }}>
@@ -188,6 +208,22 @@ function GeneralSettings({
             onChange={handleChange}
             className="w-full px-4 py-2 border rounded-lg"
           />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Game Days</label>
+          <div className="grid grid-cols-4 gap-2">
+            {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+              <label key={day} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={gameDays.includes(day)}
+                  onChange={() => toggleGameDay(day)}
+                  className="mr-2"
+                />
+                {day}
+              </label>
+            ))}
+          </div>
         </div>
         <div className="flex items-center mb-4">
           <button
