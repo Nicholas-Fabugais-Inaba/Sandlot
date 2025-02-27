@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select, or_, delete, update
 from .create_engine import create_connection
-from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest
+from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest, Announcement
 
 
 # creating account insert query
@@ -421,7 +421,7 @@ def delete_timeslot(timeslot_id):
 def update_division(team_id, division):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = update(Team).where(Team.id == team_id).values(division = division)
+        stmt = update(Team).where(Team.id == team_id).values(division=division)
         try:
             session.execute(stmt)
         except:
@@ -472,5 +472,55 @@ def delete_join_request(request_id):
     engine = create_connection()
     with Session(engine) as session:
         stmt = delete(JoinRequest).where(JoinRequest.id == request_id)
+        session.execute(stmt)
+        session.commit()
+
+###### ANNOUNCEMENT QUERIES ######
+def get_all_announcements():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            Announcement.id,
+            Announcement.date,
+            Announcement.title,
+            Announcement.body,
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
+    
+def insert_announcement(date, title, body):
+    engine = create_connection()
+    with Session(engine) as session:
+        announcement = Announcement(
+            date=date,
+            title=title,
+            body=body
+        )
+        try:
+            session.add_all([announcement])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+    
+def update_announcement(announcement_id, new_date, new_title, new_body):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Announcement).where(Announcement.id == announcement_id).values(date=new_date, title=new_title, body=new_body)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def delete_announcement(announcement_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Announcement).where(Announcement.id == announcement_id)
         session.execute(stmt)
         session.commit()
