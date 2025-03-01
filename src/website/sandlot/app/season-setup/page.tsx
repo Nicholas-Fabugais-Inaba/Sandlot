@@ -10,6 +10,7 @@ import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the
 import getSeasonSettings from "../functions/getSeasonSettings";
 import "./SeasonSetupPage.css";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
+import getTeamsSeasonSetup from "../functions/getTeamsSeasonSetup";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
@@ -259,22 +260,34 @@ const ItemTypes = {
 
 interface DragItem {
   index: number;
-  division: string;
+  division_id: number;
+}
+
+interface Team {
+  id: number;
+  name: string;
+  preferredDivision: string;
+}
+
+interface Division {
+  id: number;
+  name: string;
+  teams: Team[];
 }
 
 interface TeamProps {
-  team: string;
+  team: Team;
   index: number;
-  division: string;
-  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivision: string, targetDivision: string) => void;
+  division_id: number;
+  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => void;
 }
 
-const Team: React.FC<TeamProps> = ({ team, index, division, moveTeam }) => {
+const Team: React.FC<TeamProps> = ({ team, index, division_id, moveTeam }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.TEAM,
-    item: { index, division },
+    item: { index, division_id },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -288,27 +301,27 @@ const Team: React.FC<TeamProps> = ({ team, index, division, moveTeam }) => {
       style={{ opacity: isDragging ? 0.5 : 1 }}
       className="flex items-center justify-between p-2 border rounded-lg mb-2"
     >
-      <span>{team}</span>
+      <span>{team.name}</span>
+      <span className="text-xs text-gray-500">Preferred: {team.preferredDivision}</span>
     </div>
   );
 };
 
 interface DivisionProps {
-  division: string;
-  teams: string[];
-  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivision: string, targetDivision: string) => void;
+  division: Division;
+  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => void;
 }
 
-const Division: React.FC<DivisionProps> = ({ division, teams, moveTeam }) => {
+const Division: React.FC<DivisionProps> = ({ division, moveTeam }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<DragItem>({
     accept: ItemTypes.TEAM,
     drop(item: DragItem, monitor: DropTargetMonitor) {
-      const hoverIndex = teams.length; // Drop at the end of the list if dropped in the overall target
-      if (item.division !== division || item.index !== hoverIndex) {
-        moveTeam(item.index, hoverIndex, item.division, division);
+      const hoverIndex = division.teams.length; // Drop at the end of the list if dropped in the overall target
+      if (item.division_id !== division.id || item.index !== hoverIndex) {
+        moveTeam(item.index, hoverIndex, item.division_id, division.id);
         item.index = hoverIndex;
-        item.division = division;
+        item.division_id = division.id;
       }
     },
   });
@@ -317,12 +330,12 @@ const Division: React.FC<DivisionProps> = ({ division, teams, moveTeam }) => {
 
   return (
     <div ref={ref} className="division drop-target">
-      <h3>{division}</h3>
-      {teams.length === 0 ? (
+      <h3>{division.name}</h3>
+      {division.teams.length === 0 ? (
         <div className="empty-division">Drop teams here</div>
       ) : (
-        teams.map((team, index) => (
-          <Team key={index} team={team} index={index} division={division} moveTeam={moveTeam} />
+        division.teams.map((team, index) => (
+          <Team key={team.id} team={team} index={index} division_id={division.id} moveTeam={moveTeam} />
         ))
       )}
     </div>
@@ -330,29 +343,32 @@ const Division: React.FC<DivisionProps> = ({ division, teams, moveTeam }) => {
 };
 
 function DivisionsSettings() {
-  const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(false);
-  const [divisions, setDivisions] = useState<{ [key: string]: string[] }>({
-    "A": ["Tigers", "Mets", "Red Sox"],
-    "B": ["Yankees", "Dodgers", "Giants"],
-    "Team Bank": ["Braves", "Cubs", "Phillies", "Pirates"]
-  });
+  const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(true);
+  const [divisions, setDivisions] = useState<Division[]>([{ id: 0, name: "Team Bank", teams: [] }]);
   const [newDivision, setNewDivision] = useState("");
 
   // Load state from localStorage on mount
   useEffect(() => {
-    const storedDivisionsEnabled = localStorage.getItem("divisionsEnabled");
-    if (storedDivisionsEnabled !== null) {
-      setIsDivisionsEnabled(storedDivisionsEnabled === "true"); // Convert string to boolean
-    }
+    // const storedDivisionsEnabled = localStorage.getItem("divisionsEnabled");
+    // if (storedDivisionsEnabled !== null) {
+    //   setIsDivisionsEnabled(storedDivisionsEnabled === "true"); // Convert string to boolean
+    // }
 
-    const storedDivisions = localStorage.getItem("divisions");
-    if (storedDivisions) {
-      try {
-        setDivisions(JSON.parse(storedDivisions));
-      } catch {
-        console.error("Failed to parse divisions from localStorage");
-      }
-    }
+    // const storedDivisions = localStorage.getItem("divisions");
+    // console.log("Stored divisions:", storedDivisions);
+    // if (storedDivisions) {
+    //   try {
+    //     setDivisions(JSON.parse(storedDivisions));
+    //   } catch {
+    //     console.error("Failed to parse divisions from localStorage");
+    //   }
+    // }
+    const loadDivisionData = async () => {
+      const data = await getTeamsSeasonSetup();
+      setDivisions(data);
+    };
+
+    loadDivisionData();
   }, []);
 
   // Save divisionsEnabled state to localStorage when changed
@@ -371,27 +387,39 @@ function DivisionsSettings() {
   // Add a division
   const addDivision = () => {
     if (newDivision.trim() !== "") {
-      setDivisions((prev) => ({ ...prev, [newDivision]: [] }));
+      const newDivisionId = divisions.length + 1;
+      setDivisions((prev) => [...prev, { id: newDivisionId, name: newDivision, teams: [] }]);
       setNewDivision("");
     }
   };
 
   // Move a team between divisions
-  const moveTeam = (dragIndex: number, hoverIndex: number, sourceDivision: string, targetDivision: string) => {
-    if (sourceDivision === targetDivision) {
+  const moveTeam = (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => {
+    if (sourceDivisionId === targetDivisionId) {
       return;
     }
 
-    const sourceTeams = [...divisions[sourceDivision]];
+    const sourceDivision = divisions.find((division) => division.id === sourceDivisionId);
+    const targetDivision = divisions.find((division) => division.id === targetDivisionId);
+
+    if (!sourceDivision || !targetDivision) {
+      return;
+    }
+
+    const sourceTeams = [...sourceDivision.teams];
     const [movedTeam] = sourceTeams.splice(dragIndex, 1);
-    const targetTeams = [...divisions[targetDivision]];
+    const targetTeams = [...targetDivision.teams];
     targetTeams.splice(hoverIndex, 0, movedTeam);
 
-    setDivisions((prev) => ({
-      ...prev,
-      [sourceDivision]: sourceTeams,
-      [targetDivision]: targetTeams,
-    }));
+    setDivisions((prev) =>
+      prev.map((division) =>
+        division.id === sourceDivisionId
+          ? { ...division, teams: sourceTeams }
+          : division.id === targetDivisionId
+          ? { ...division, teams: targetTeams }
+          : division
+      )
+    );
   };
 
   return (
@@ -414,7 +442,7 @@ function DivisionsSettings() {
 
       {isDivisionsEnabled && (
         <div className="flex">
-          <div className="divisions-container flex-grow">
+          <div className="divisions-container flex-grow" style={{ width: '60%' }}>
             {/* Add Division */}
             <div className="mb-4 flex">
               <input
@@ -434,12 +462,11 @@ function DivisionsSettings() {
             </div>
 
             {/* List of Divisions */}
-            <div className="divisions-list overflow-y-auto" style={{ maxHeight: '40vh' }}>
-              {Object.keys(divisions).filter(division => division !== "Team Bank").map((division) => (
-                <div key={division} className="division-container">
+            <div className="divisions-list overflow-y-auto" style={{ bottom: 0 }}>
+              {divisions.filter(division => division.name !== "Team Bank").map((division) => (
+                <div key={division.id} className="division-container">
                   <Division
                     division={division}
-                    teams={divisions[division]}
                     moveTeam={moveTeam}
                   />
                 </div>
@@ -448,10 +475,9 @@ function DivisionsSettings() {
           </div>
 
           {/* Team Bank */}
-          <div className="team-bank-container flex-shrink-0 ml-4" style={{ width: '40%' }}>
+          <div className="team-bank-container flex-shrink-0 ml-4" style={{ width: '40%', position: 'sticky', top: '10px' }}>
             <Division
-              division="Team Bank"
-              teams={divisions["Team Bank"]}
+              division={divisions.find(division => division.name === "Team Bank")!}
               moveTeam={moveTeam}
             />
           </div>

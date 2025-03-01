@@ -505,5 +505,17 @@ def get_teams_season_setup():
             .select_from(Team)
             .join(Division, Division.id == Team.division)
         )
-        result = session.exectue(stmt).mappings().all()
+        result = session.execute(stmt).mappings().all()
+        return result
+
+def get_divisions_season_setup():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(
+                Division.id, 
+                Division.division_name
+            )
+        )
+        result = session.execute(stmt).mappings().all()
         return result
