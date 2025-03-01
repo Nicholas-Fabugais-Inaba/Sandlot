@@ -11,6 +11,8 @@ import getSeasonSettings from "../functions/getSeasonSettings";
 import "./SeasonSetupPage.css";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
 import getTeamsSeasonSetup from "../functions/getTeamsSeasonSetup";
+import updateTeamDivisions from "../functions/updateTeamDivisions";
+import updateDivisions from "../functions/updateDivisions";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
@@ -349,20 +351,6 @@ function DivisionsSettings() {
 
   // Load state from localStorage on mount
   useEffect(() => {
-    // const storedDivisionsEnabled = localStorage.getItem("divisionsEnabled");
-    // if (storedDivisionsEnabled !== null) {
-    //   setIsDivisionsEnabled(storedDivisionsEnabled === "true"); // Convert string to boolean
-    // }
-
-    // const storedDivisions = localStorage.getItem("divisions");
-    // console.log("Stored divisions:", storedDivisions);
-    // if (storedDivisions) {
-    //   try {
-    //     setDivisions(JSON.parse(storedDivisions));
-    //   } catch {
-    //     console.error("Failed to parse divisions from localStorage");
-    //   }
-    // }
     const loadDivisionData = async () => {
       const data = await getTeamsSeasonSetup();
       setDivisions(data);
@@ -371,23 +359,13 @@ function DivisionsSettings() {
     loadDivisionData();
   }, []);
 
-  // Save divisionsEnabled state to localStorage when changed
-  useEffect(() => {
-    localStorage.setItem("divisionsEnabled", isDivisionsEnabled.toString());
-  }, [isDivisionsEnabled]);
-
-  // Save divisions list to localStorage when changed
-  useEffect(() => {
-    localStorage.setItem("divisions", JSON.stringify(divisions));
-  }, [divisions]);
-
   // Toggle divisions on/off
   const toggleDivisions = () => setIsDivisionsEnabled((prev) => !prev);
 
   // Add a division
   const addDivision = () => {
     if (newDivision.trim() !== "") {
-      const newDivisionId = divisions.length + 1;
+      const newDivisionId = divisions.length > 0 ? Math.max(...divisions.map(d => d.id)) + 1 : 1;
       setDivisions((prev) => [...prev, { id: newDivisionId, name: newDivision, teams: [] }]);
       setNewDivision("");
     }
@@ -420,6 +398,13 @@ function DivisionsSettings() {
           : division
       )
     );
+  };
+
+  // Save divisions to the database
+  const saveDivisions = async () => {
+    alert("Divisions save button pressed.");
+    updateDivisions(divisions);
+    updateTeamDivisions(divisions);
   };
 
   return (
@@ -462,7 +447,7 @@ function DivisionsSettings() {
             </div>
 
             {/* List of Divisions */}
-            <div className="divisions-list overflow-y-auto" style={{ bottom: 0 }}>
+            <div className="divisions-list overflow-y-auto" style={{ maxHeight: "60vh" }}>
               {divisions.filter(division => division.name !== "Team Bank").map((division) => (
                 <div key={division.id} className="division-container">
                   <Division
@@ -480,6 +465,15 @@ function DivisionsSettings() {
               division={divisions.find(division => division.name === "Team Bank")!}
               moveTeam={moveTeam}
             />
+            <div style={{ textAlign: 'right', marginTop: '20px' }}>
+              <button
+                type="button"
+                onClick={saveDivisions}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg"
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
       )}

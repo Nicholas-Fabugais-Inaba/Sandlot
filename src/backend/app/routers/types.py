@@ -81,3 +81,7 @@ class ScoreData(BaseModel):
 
 class PlayerID(BaseModel):
     player_id: Optional[int]
+
+class Division(BaseModel):
+    division_id: int
+    division_name: str

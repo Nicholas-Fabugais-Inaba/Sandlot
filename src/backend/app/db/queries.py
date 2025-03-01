@@ -427,6 +427,30 @@ def update_division(team_id, division):
             session.commit()
     return True
 
+def insert_division_with_id(division_id, division_name):
+    engine = create_connection()
+    with Session(engine) as session:
+        division = Division(
+            id=division_id,
+            division_name=division_name
+        )
+        try:
+            session.add_all([division])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def delete_all_divisions_except_team_bank():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Division).where(Division.id != 0)
+        session.execute(stmt)
+        session.commit()
+    return True
+
 ###### JOIN REQUEST QUERIES ######
 def insert_join_request(player_id, team_id):
     engine = create_connection()
