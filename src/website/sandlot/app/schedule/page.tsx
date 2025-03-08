@@ -34,6 +34,13 @@ interface RescheduleGame {
   away_id: number;
 }
 
+interface GameScore {
+  homeScore: number;
+  homeName: string;
+  awayScore: number;
+  awayName: string;
+}
+
 interface SchedulePageProps {
   viewer?: boolean;
 }
@@ -46,6 +53,12 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
   const [view, setView] = useState("timeGridWeek");
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
   const [rescheduleGame, setRescheduleGame] = useState<RescheduleGame>();
+  const [gameScore, setGameScore] = useState<GameScore>();
+  const [submitScoreVisible, setSubmitScoreVisible] = useState(false);
+  const [homeScore, setHomeScore] = useState<number | null>(null);
+  const [awayScore, setAwayScore] = useState<number | null>(null);
+  const [homeTeamName, setHomeTeamName] = useState<string>('');
+  const [awayTeamName, setAwayTeamName] = useState<string>('');
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const popupRef = useRef<HTMLDivElement>(null);
@@ -138,7 +151,50 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
       setRescheduleGame({ game_id: teams.id, date: start, field: field, home_id: teams.home_id, away_id: teams.away_id });
+      setGameScore({
+        homeScore: 0,
+        homeName: teams.home,
+        awayScore: 0,
+        awayName: teams.away
+      });
     }
+  };
+
+  const handleSubmitScoreClick = () => {
+    setHomeTeamName(gameScore?.homeName || '');
+    setAwayTeamName(gameScore?.awayName || '');
+    setSubmitScoreVisible(true);
+    setPopupVisible(false);
+  };
+
+  const handleScoreSubmit = async () => {
+    if (gameScore) {
+      // Implement the logic to submit the scores to the database
+      const response = await fetch('/api/submit-score', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          game_id: rescheduleGame?.game_id,
+          homeScore: homeScore,
+          awayScore: awayScore,
+          homeName: gameScore.homeName,
+          awayName: gameScore.awayName,
+        }),
+      });
+  
+      if (response.ok) {
+        console.log("Scores submitted successfully");
+      } else {
+        console.error("Failed to submit scores");
+      }
+    }
+    setSubmitScoreVisible(false);
+  };
+
+  const handleScoreCancel = () => {
+    setSubmitScoreVisible(false);
   };
 
   const handleRescheduleClick = () => {
@@ -625,9 +681,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
               Reschedule
             </button>
             <button
-              onClick={() => {
-                alert("Submit score");
-              }}
+              onClick={handleSubmitScoreClick}
               className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
             >
               Submit Score
@@ -638,6 +692,45 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
             >
               Close
             </button>
+          </div>
+        </div>
+      )}
+      {submitScoreVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Submit Score</h2>
+            <div className="mb-4">
+              <label className="block text-gray-700">Home Team: {homeTeamName}</label>
+              <input
+                type="number"
+                className="w-full px-4 py-2 border rounded-lg"
+                value={homeScore !== null ? homeScore : ''}
+                onChange={(e) => setHomeScore(Number(e.target.value))}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Away Team: {awayTeamName}</label>
+              <input
+                type="number"
+                className="w-full px-4 py-2 border rounded-lg"
+                value={awayScore !== null ? awayScore : ''}
+                onChange={(e) => setAwayScore(Number(e.target.value))}
+              />
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={handleScoreSubmit}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+              >
+                Submit
+              </button>
+              <button
+                onClick={handleScoreCancel}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
