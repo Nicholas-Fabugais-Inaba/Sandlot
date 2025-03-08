@@ -1,0 +1,42 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items starting from the top */
+    align-items: center;
+    height: 70vh;            /* Adjust height */
+    text-align: center;
+    gap: 1.5rem;             /* Adds spacing between elements */
+    padding-top: 1rem;       /* Adds padding for spacing between header and form */
+}
+
+.button {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+  
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+    align-items: center; /* Centers form inputs */
+    margin-top: 70px; /* Adjust this to control the space below the error message */
+    padding-bottom: 20px; /* Optional: Adds padding to the bottom */
+}

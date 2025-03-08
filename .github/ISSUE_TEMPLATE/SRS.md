@@ -1,10 +1,10 @@
 ---
-name: SRS Issue
-about: Template for assigning SRS sections
-title: 'SRS | Section [insert section number]'
+name: Documentation Issue
+about: Template for assigning Documentation sections
+title: '[insert document] | Section [insert section number]'
 labels: 'documentation'
 assignees: ''
 
 ---
 
-Work on section []
+Work on section [insert section number]
