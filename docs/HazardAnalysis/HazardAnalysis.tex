@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{multirow}
 \usepackage{pdflscape}
+\usepackage{geometry}
 \usepackage{multicol}
 \usepackage[dvipsnames]{xcolor}
 \usepackage{enumitem}
@@ -67,6 +68,7 @@
 \midrule
 Oct. 21, 2024 & NFI, JL, AV, CG & TA Feedback\\
 Oct. 23, 2024 & NFI, JL, AV, CG & Rev0\\
+Jan. 7, 2025 & JL & Made changes to reflect changes in SRS; added AS-6 to table\\
 ... & ... & ...\\
 \bottomrule
 \end{tabularx}
@@ -82,7 +84,7 @@ Oct. 23, 2024 & NFI, JL, AV, CG & Rev0\\
 
 \section{Introduction}
 
-Sandlot is intended to be the successor for the current McMaster GSA
+Sandlot is intended to be the successor to the current McMaster GSA
 softball league scheduling and management platform. This project
 will implement the current functionality from the existing system including
 additional features such as a new login system, commissioner admin
@@ -90,7 +92,7 @@ privileges, and an improvement to the robustness, ease of use, and
 maintainability to the platform.
 
 Hazards are conditions of the product system that could lead to undesirable outcomes. 
-In Sandlot, hazards of security, malfunctions, usability, among others will be analyzed.
+In Sandlot, security hazards, malfunctions, and usability will be analyzed.
 
 \section{Scope and Purpose of Hazard Analysis}
 
@@ -113,17 +115,17 @@ are discovered from the analysis.
 The system can be divided into the following components:
 \begin{itemize}
     \item Authentication
-    \subitem This component authenticates user inputted login information with the database
+    \subitem This component authenticates user-inputted login information with the database
     and determines whether a login is successful.
     \item Scheduling
-    \subitem This component generates a schedule based on user inputted availability data. 
+    \subitem This component generates a schedule based on user-inputted availability data. 
     Additionally, it allows for rescheduling events in these schedules after they 
     have been generated.
     \item Accounts
-    \subitem This component allows users to create, delete or edit accounts. Additionally, account types 
-    determine the ways in which a user can interact with the system, its data, and its components.
+    \subitem This component allows users to create, delete, or edit accounts. Additionally, account types 
+    determine how a user can interact with the system, its data, and its components.
     \item Team Structure
-    \subitem This component is a data structure of the system which allows accounts to be grouped together 
+    \subitem This component is a data structure of the system that allows accounts to be grouped 
     such that a group of accounts interact with the system, its data, and its components in the same way as 
     each other. Additionally, accounts can be added/removed from teams, users can request to join a 
     certain team, and teams can be created/deleted.
@@ -139,92 +141,116 @@ The system can be divided into the following components:
 \end{itemize}
 
 \subsection{System Boundaries}
-The system limits itself to the components mentioned before; the front end and backend of the website.
-External APIs that connect to our system are considered as outside the system boundaries.
-This would include the webserver, and weather tracker, among others. 
+The system limits itself to the components mentioned before; the frontend and backend of the website.
+External APIs connecting to our system are considered outside the system boundaries.
+This would include the web server, and weather tracker, among others. 
 
 \section{Critical Assumptions}
 
 \begin{itemize}
-    \item It is assumed that users will not attempt to maliciously attack the system.
+  \item It is assumed that users will act in good faith and will not engage in activities such as
+  exploiting vulnerabilities, unauthorized access, or other malicious actions against the system.
+  
+  \item The system assumes that the data provided by users is accurate and properly formatted, and
+  that users will comply with any input validation guidelines. Any discrepancies or errors in data
+  may affect the system's ability to function correctly.
+
+  \item The system assumes that the underlying infrastructure (servers, network, etc.) will function
+  reliably, with sufficient resources to support the expected load and usage patterns.
+  
+  \item It is assumed that the system will be used within the intended geographical and legal
+  contexts, and that any legal or regulatory considerations regarding data privacy and security
+  will be adhered to.
+  
+  \item It is assumed that any third-party services or APIs integrated into the system are secure
+  and reliable, with proper data safety protocols in place.
+  
+  \item The system assumes that users will have a stable internet connection, as connectivity is
+  required for full functionality.  
 \end{itemize}
 
 \section{Failure Mode and Effect Analysis}
+
+\newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.45in}
+\pagenumbering{gobble}
 \begin{landscape}
 % breaks margins
-\vspace*{-3.25cm}
-\hspace*{-3.25cm}
+%\vspace*{-3.25cm}
+%\hspace*{-3.25cm}
 % adds vertical padding to table
-\def\arraystretch{1.3}
+\def\arraystretch{1.2}
 \begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|}
 \cline{1-6}
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions}\\
 \cline{1-6}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
-& SR-7 & Misinputted user login information should give a warning to the user when
+& EU-2 AS-6 & Misinputted user login information should give a warning to the user when
 login information does not exist or is incorrect.\\
 \cline{1-6}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
-SR-1 & Allow captain to resubmit availability that overwrites previously
+FR-17 & Allow the captain to resubmit availability that overwrites previously
 submitted availability if submitted before the due date.\\
 \cline{2-6}
 & User reads schedule incorrectly. & User may not attend a game by accident or
-travel to a game at the wrong time. & Schedule is unclear, unreadable, or user
-makes an error. & AC-1 AC-2 & Ensure schedule data and structure is visible and
-readable.\\
+travel to a game at the wrong time. & Schedule is unclear, unreadable, or the user
+makes an error. & AC-1 AC-2 & Ensure schedule data and structure are a readable
+font size of at least 16 pixels and the colours have a contrast ratio of at least
+4.5:1.\\
 \cline{2-6}
-& Teams availability data have scheduling conflicts. & System cannot make a
-valid schedule. & Availability data has scheduling conflicts. & SR-8 & Teams
+& Team's availability data have scheduling conflicts. & System cannot make a
+valid schedule. & Availability data has scheduling conflicts. & EU-3 & Teams
 will be given a warning if their availability data has scheduling conflicts.\\
 \cline{2-6}
 & Captain doesn't respond to another captain's reschedule request. & Captain
 who sent the reschedule request will not know if the opposing captain wants to
 reschedule or not. & System doesn't adequately notify the opposing captain
-about the reschedule request. & SR-5 & Make sure the captain who needs to
+about the reschedule request. & IG-4 & Make sure the captain who needs to
 accept the request cannot avoid seeing the request notification.\\
 \cline{1-6}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
-unclear or user makes an error. & AP-1 AP-2 & Ensure that when assigning a team for a
+unclear or the user makes an error. & AP-1 AP-2 & Ensure that when assigning a team for a
 user, the team options to select from are clear and the input section is
 readable.\\
 \cline{1-6}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
-has access to actions they shouldn't use. & Interface lacks security or user
-makes an error. & SR-2 & Giving an account additional permissions should give
+has access to actions they shouldn't use. & Interface lacks security or the user
+makes an error. & AS-5 & Giving an account additional permissions should give
 a warning to the user when configuring accounts.\\
 \cline{2-6}
 & All commissioner level accounts are deleted. & There are no accounts left
 that can give commissioner level permissions. & System allows for all
-commissioner accounts to be deleted. & SR-3 & Do not let users delete a
+commissioner accounts to be deleted. & IG-2 & Do not let users delete a
 commissioner account if there is only one left.\\
 \cline{2-6}
 & User logs in on an account that isn't theirs. & User may make actions that
 are not desired by the account's owner. & Account owners are not careful with
-their login data. & SR-10 & Remind users to keep their passwords secret andsecure.\\
+their login data. & PV-2 & Remind users to keep their passwords secret and secure.\\
 \cline{1-6}
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
-Standings and database has incorrect scores. & User inputs the wrong score. &
-SR-4 & Allow the opposing team's captain to verify the score and contest it if
+Standings and the database have incorrect scores. & User inputs the wrong score. &
+IG-3 & Allow the opposing team's captain to verify the score and contest it if
 the score is wrong.\\
 \cline{2-6}
 \cline{1-6}
 \multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
-critical information. & Alert is unclear, unreadable, or user makes an error. &
-SR-9 & Ensure alert message is visible and readable.\\
+critical information. & Alert is unclear, unreadable, or the user makes an error. &
+AC-3 & Ensure the alert message has a readable font size of at least 16 pixels
+and colours with a contrast ratio of at least 4.5:1.\\
 \cline{2-6}
 \hline
 \end{tabularx}
 
 \end{landscape}
+\restoregeometry{}
 
 \section{Safety and Security Requirements}
 
 \begin{myreq}
-    \reqno SR-1
+    \reqno FR-17
     \reqdesc If the season start availability due date hasn't been reached, a
     captain should be able to resubmit availability data which overwrites
     previous availability data.
@@ -240,7 +266,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-    \reqno SR-2
+    \reqno AS-5
     \reqdesc Giving permissions to users must be accompanied by an error that
     warns the user of the severity of the action.
     \reqrat Accidentally giving permissions to users who shouldn't have them
@@ -255,7 +281,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-    \reqno SR-3
+    \reqno IG-2
     \reqdesc If there is only one commissioner level account, that account
     cannot be deleted.
     \reqrat Deleting this account would stop any more commissioner level
@@ -270,7 +296,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-    \reqno SR-4
+    \reqno IG-3
     \reqdesc All match scores must be visible and contestable by other
     captains once recorded.
     \reqrat Match score correctness is extremely important for a competitive
@@ -286,7 +312,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-5
+  \reqno IG-4
   \reqdesc Captains are adequately notified when they receive an alert or a
   reschedule request.
   \reqrat Important information may be shared in alerts, and reschedule
@@ -294,7 +320,7 @@ SR-9 & Ensure alert message is visible and readable.\\
   should reach their intended targets if possible.
   \reqorig Alex Verity
   \reqfit Assuming the user hasn't interfered, alerts and reschedule requests
-  shall always be sent to a place the user receives notifications.
+  shall always be sent to a place where the user receives notifications.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
@@ -302,7 +328,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-6
+  \reqno AS-6
   \reqdesc Users can only access an account with correctly inputted login
   information that matches the database stored login information.
   \reqrat Login information stored in the database should correspond to a
@@ -319,13 +345,13 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-7
+  \reqno EU-2
   \reqdesc Misinputted user login information shall provide a warning to the
   user, if login information does not exist or does not match the database
   stored login information.
   \reqrat Login information stored in the database should match the user
   inputted login information. Feedback should be provided for the user to
-  understand an error has occured when accessing an account with incorrect
+  understand an error has occurred when accessing an account with incorrect
   login details.
   \reqorig Nicholas Fabugais-Inaba
   \reqfit Assuming the user has misinputted the login details for
@@ -339,7 +365,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-8
+  \reqno EU-3
   \reqdesc Teams will be given a warning if their availability data has
   scheduling conflicts.
   \reqrat The system should be able to create a valid schedule, in which
@@ -355,8 +381,9 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-9
-  \reqdesc Alerts sent to users must be visible and readable.
+  \reqno AC-3
+  \reqdesc Alerts sent to users must be a readable font size of at least 16 pixels
+  and the colours must have a contrast ratio of at least 4.5:1.
   \reqrat User may travel to a game that was postponed or cancelled, or miss
   out on critical information.
   \reqorig Nicholas Fabugais-Inaba
@@ -369,7 +396,7 @@ SR-9 & Ensure alert message is visible and readable.\\
 \end{myreq}
 
 \begin{myreq}
-  \reqno SR-10
+  \reqno PV-2
   \reqdesc Users are reminded to keep their passwords secure.
   \reqrat If a user accesses another user's account they may do actions
   without the account owner's permission or that the account owner is unaware
@@ -394,17 +421,17 @@ to ensure the safety and security of the Sandlot platform's users.\\\\
 
 Proof of Concept Demonstration (November 11-22):
 \begin{itemize}
-  \item Authentication: SR-6 and SR-7
-  \item Scheduling: SR-1, SRS(22), SR-8
+  \item Authentication: AS-6 and EU-2
+  \item Scheduling: FR-17, AC-1, AC-2, and EU-3
 \end{itemize}
 
 Final Demonstration (Revision 1) (March 24-30):
 \begin{itemize}
-  \item Scheduling: SR-5
-  \item Teams: SRS(17)
-  \item Accounts: SR-2, SR-3 and SR-10
-  \item Scoring/Standings: SR-4
-  \item Alerts: SR-9
+  \item Scheduling: IG-4
+  \item Teams: AP-1 and AP-2
+  \item Accounts: AS-5, IG-2, and PV-2
+  \item Scoring/Standings: IG-3
+  \item Alerts: AC-3
 \end{itemize}
 
 \newpage{}
