@@ -72,26 +72,38 @@ seen in more detail in the VnV plan.
 
 \subsection{Usability}
 
+Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com/Pages/ResponsePage.aspx?id=B2M3RCm0rUKMJSjNSW9HcodvkeIlB8lOjrmyIWuVT7dUQ0hBNFRVTjFHWVhITDIzSklZRDRYTVZRMi4u}{Sandlot Usability Survey}
+
 \begin{enumerate}
-  \item{test-AP3\\}
-  Description(How test was performed): 
-  Result: Neutral (3)\\
+  \item{Readability: test-AP3, STY1, UP1\\}
+  Brief Description(How tests were performed): The user was provided the website and asked
+  to read groups of text or images such as the schedule or account registration fields.
+  They would then be provided the survey form, provided above, to fill out and provide their own feedback
+  on their experience. \\
+  Overall Result: Yes, the system was accessible. (3)\\
+  Evaluation: After the tester(s) had read the Sandlot website's different texts and images,
+  they found the website's readability to be up to a high quality, following a consistent
+  stylistic formatting as evaluated from the resulting rating metric.
+  \item{Navigation: test-AP4, EU1, LR3\\}
+  Brief Description(How tests were performed): The user was provided the website and asked
+  to navigate to certain functionalities/pages such as viewing the schedule or
+  rescheduling a game. They would then be provided the survey form, provided above, to fill
+  out and provide their own feedback on their experience. \\
+  Overall Result: Somewhat Easy (4)\\
   Evaluation: After the tester(s) had navigated the Sandlot website's different pages
-  (Schedule, Home, Season Setup) and viewed images such as the schedule, directory
-  pages including parking and weather information, they found the website to have
-  displayed images at a high quality from the resulting rating.
-  \item{test-AP4\\}
-  Description(How test was performed): 
-  Result: Neutral (3)\\
-  Evaluation: 
-  \item{test-AC3\\}
-  Description(How test was performed): 
-  Result: Neutral (3)\\
-  Evaluation: 
-  \item{test-CR1\\}
-  Description(How test was performed): 
-  Result: Neutral (3)\\
-  Evaluation: 
+  (Schedule, Home, Profile, etc.), they found the website's navigation including
+  its menus and links to be easily accessible and straightforward from the resulting
+  rating metric.
+  \item{Registration/Login: test-EU2\\}
+  Brief Description(How test was performed): The user was asked to register and sign in to
+  an account they had created, identifying any faults such as login failure, incorrect
+  password verification, etc., throughout their experience. They would then be provided the survey form, provided above, to fill
+  out and provide their own feedback on their experience. \\
+  Overall Result: Strongly Agree (5)\\
+  Evaluation: After the tester(s) had registered and signed in to the account they had
+  created on the Sandlot website, they had found the website's registration and sign in process
+  to function appropriately (i.e. providing correct sign in feedback if their password was
+  incorrect) based on the received resulting rating metric.
 \end{enumerate}
 		
 \subsection{Performance}
@@ -100,7 +112,37 @@ seen in more detail in the VnV plan.
 	
 \section{Comparison to Existing Implementation}	
 
-This section will not be appropriate for every project.
+The current website used by the league, \href{https://www.gsasoftball.ca/}{GSA Softball},
+provides basic functionalities for managing the McMaster Graduate Softball league, including
+viewing schedules, team standings, weather information, etc. However, there are many links
+or functionalities with the current website that are not operational, providing 404 Not Found errors.
+The new Sandlot website introduces several improvements and additional features aimed at
+enhancing the overall user experience and operational efficiency.
+
+One of the significant improvements in the Sandlot website is the user interface design.
+The new design provides a more modern and intuitive user experience, making it easier for
+users of the system to navigate through different pages on the website. Additionally, the
+layout is much cleaner, using a consistent stylistic formatting which enhances the readability
+and accessibility of the system's text and images including the schedule, directory information
+such as parking or weather information, and more. This is a notable improvement over the
+existing website, which has a more dated and less user-friendly interface.
+
+The Sandlot website also introduces advanced functionalities that are designed to streamline
+league management and reduce the administrative burden on league organizers. For example, the
+league organizers will be privy to multiple configuration options like division management and
+general scheduling decisions such as a season's start and end date or minimum games played
+by a team.
+
+Another key enhancement is the integration of user accounts and personalized dashboards.
+The Sandlot website allows players and captains to create accounts and access personalized
+information relevant to their roles. This includes viewing their team's schedule and
+managing player rosters. The current website lacks this level of personalization and
+user-specific functionality.
+
+In summary, the Sandlot website offers a comprehensive and user-friendly platform that
+addresses many of the limitations of the current GSA Softball website. Improvements to the UI,
+account management, and league configuration options provide a significant upgrade,
+making the Sandlot website a more efficient and effective tool for managing league activities.
 
 \section{Unit Testing}
 
@@ -110,6 +152,100 @@ This section will not be appropriate for every project.
 the supervisor (when one exists) shaped the final product.  In particular 
 the feedback from the Rev 0 demo to the supervisor (or to potential users) 
 should be highlighted.}
+
+\subsection{Feedback from Rev 0 demo}
+
+\begin{itemize}
+  \item \textbf{User Role Implementation:} The demo showcased the user role functionality. However,
+  the commissioner role was not yet available. The requirements for the commissioner role, as
+  outlined in the SRS, were implemented for accessing league configuration and management options and
+  other admin-level functionalities including alerts and generating a season schedule.
+  \item \textbf{Scheduling Algorithm:} The team developed their own algorithm for scheduling, which was
+  deemed reasonable. Configuration options were added to make the software general enough for other
+  users while satisfying the specific requirements for Dr. Nease. Default values were set to meet
+  Dr. Nease's requirements.
+  \item \textbf{Rescheduling Functionality:} The team verified that rescheduling can be done and that it
+  is straightforward. Additional features were added to enhance the rescheduling process, such as
+  providing clear messages when a game cannot be rescheduled and explaining how the reschedule
+  request works.
+  \item \textbf{Usability Testing:} Usability testing was emphasized as very important for the
+  project. The team conducted extensive usability tests and made several improvements based on the
+  feedback received. This can be seen below in the user feedback section.
+\end{itemize}
+
+\subsection{Feedback from the Supervisor}
+
+\begin{itemize}
+  \item \textbf{Informataion Access:} Players can now see the email addresses of players on the same
+  team but cannot access the email addresses of players on other teams' rosters. This ensures privacy
+  while providing necessary contact information for a player's current team.
+  \item \textbf{Team Schedule Location:} The team schedule is now prominently displayed on the
+  schedule page, making it easily accessible to users. The entire season schedule is still available
+  for view on the schedule page, if a user would like to access it.
+  \item \textbf{Waiver Management:} The waiver process needs to be streamlined by integrating it into the
+  website. Players should be able to view their signed waivers directly on the site, and a PDF version
+  should be available for a player to download.
+  \item \textbf{Join Request Limit:} The system should allow for configurable limits on the number of
+  join requests a team can receive, providing flexibility for different league requirements.
+  \item \textbf{Configuration Options:} Toggle options for reschedulability, adding fields and
+  timeslots, choosing available days, and setting constraints should be implemented to make the system
+  adaptable for other leagues.
+  \item \textbf{Alerts/Announcements:} A bulk email feature needs to be added for sending alerts to specific
+  groups of users. Announcements should be be dated and include headers and content for better
+  communication.
+  \item \textbf{Team Page Improvements:} Pie charts for scores, upcoming games, and team profile
+  pictures would be desireable bonus features to add that could enhance the team pages.
+  \item \textbf{Captcha and Security:} Captcha is desired to prevent automated sign-ups and
+  enhance security.
+\end{itemize}
+
+\subsection{User Feedback}
+
+\begin{itemize}
+  \item \textbf{UI \& Navigation:}
+  \begin{itemize}
+    \item The GitHub logo, Documentation, and Github links were removed and a login/signup button was
+    added to all pages, providing enhanced clarity to the registration/sign in process.
+    \item Notices should be added to inform users to join a team to view the schedule if they are not
+    part of a team.
+    \item Messages explaining why a game cannot be rescheduled should be added.
+    \item A legend for field colors needs to be added to the schedule.
+  \end{itemize}
+  \item \textbf{Rescheduling:}
+  \begin{itemize}
+    \item The reschedule request process should be clarified with a popup or description on the page,
+    indicating how the rescheduling of a game works.
+    \item Already played games should be greyed out/removed on both the reschedule menu and the regular
+    schedule menu.
+    \item The proposed dates section of a received reschedule request should clearly indicate who the
+    request is coming from as currently no team information is visible unless a user were to verify the
+    game themselves by navigating to the schedule page.
+    \item Dates in reschedule requests should be reformatted to be more readable
+    (e.g., "Tuesday, June 14th").
+  \end{itemize}
+  \item \textbf{Registration/Login:}
+  \begin{itemize}
+    \item A notice encouraging users to join a team should be added after signing up as a player.
+    \item Sign-up email confirmations should be implemented once an account has been successfully
+    registered by the user.
+    \item Password checking on sign-up submission should be considered to ensure password strength.
+    \item Two-factor authentication was considered for sign-up.
+  \end{itemize}
+  \item \textbf{General Improvements:}
+  \begin{itemize}
+    \item Preferred division field on team sign-up can be explained better with a tooltip.
+    \item Offdays that appear in the registration process should be only added to the preferred off-day
+    list, if the admin had configured the league to be played on those days. Also, if the league were
+    to be scheduled on only one day of the week, the off-day selection should be disabled.
+    \item Multiple off-days being selected was considered.
+    \item Registering a new account should automatically sign the user in to their created account.
+    \item Reschedule options need to be made more obvious with a dotted border and lighter color.
+    \item Game start times should be highlighted as more important than end times. Considered removing
+    end times altogether.
+    \item Different colors, along with a legend, should be used to highlight games in the reschedule
+    menu based on their status.
+  \end{itemize}
+\end{itemize}
 
 \section{Automated Testing}
 		
@@ -144,6 +280,68 @@ graduate attribute of Reflection.
   predict a feasible amount of effort and the right tasks needed to build the
   evidence that demonstrates the required quality?  (It is expected that most
   teams will have had to deviate from their original VnV Plan.)
+\end{enumerate}
+
+\subsection*{Team Reflection}
+
+  \begin{enumerate}
+    \item Which parts of this document stemmed from speaking to your client(s) or
+    a proxy (e.g. your peers)? Which ones were not, and why?\\
+
+    The parts of this document that stemmed from speaking directly to clients or peers include
+    the changes due to testing section that had condensed all of the feedback received from the
+    Rev 0 demo, the supervisor, and selected users. Additionally, the usability testing conducted,
+    along with the analysis of the data collected was gathered from speaking to client(s) or a proxy.
+    The parts of the document that did not come from client(s) or a proxy was the unit testing as
+    the team had written multiple sets of unit tests that were used to test certain functionalities
+    of the system such as the scheduling algorithm. These were based on best practices and our team's
+    internal discussions to ensure the robustness and successful operation of the system.\\
+    
+    \item In what ways was the Verification and Validation (VnV) Plan different
+    from the activities that were actually conducted for VnV?  If there were
+    differences, what changes required the modification in the plan?  Why did
+    these changes occur?  Would you be able to anticipate these changes in future
+    projects?  If there weren't any differences, how was your team able to clearly
+    predict a feasible amount of effort and the right tasks needed to build the
+    evidence that demonstrates the required quality?  (It is expected that most
+    teams will have had to deviate from their original VnV Plan.)\\
+
+    The VnV Plan was different and required several changes before conducting actual Verification
+    and Validation for reasons including access to actual users of the system and the constant
+    iteration that had occured from when the VnV Plan was first written.
+    These changes occurred because real-world testing often uncovers issues that
+    are not apparent during the planning phase. The iterative feedback from users
+    and the supervisor helped us identify and address these issues, however this prompted changes
+    needing to be made for the initially written VnV Plan. Specifically, some of these changes included
+    reducing the amount of tests that would proceed through the VnV process or tests that the team
+    had deemed unnecessary and thus removed. In future projects, we would anticipate such changes by
+    incorporating more flexible and adaptive planning processes, allowing for iterative testing and
+    feedback loops to refine the VnV activities continuously.
+    Despite these deviations from the original plan, our team was able to predict a feasible amount of effort
+    and the right tasks needed to build enough data for a proper analysis of the system.
+    This was achieved through team alignment with the project's goals and requirements, ensuring
+    the scope of the project was feasible for completion within the given time frame.
+
+\end{enumerate}
+
+\subsection*{Nicholas Fabugais-Inaba -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  The organization of each team member working on a particular section was something that went
+  very well as part of this deliverable. This allowed us to fill out the various sections of this
+  deliverable with a high level of detail as each person could focus on a section that they felt most
+  comfortable in writing about. Additionally, with the sections completed, our team was able to communicate
+  effectively and provide feedback on each other's sections, ensuring that the deliverable
+  would be written up to all of our standards.
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  When conducting the usability testing, it was difficult to get a large number of users to test the
+  system and provide enough feedback for the team to conduct an extensive analysis. Although there
+  was a limited amount of data collected, the team was still able to utilize the data and provide
+  a proper analysis. This was done by identifying consistent themes in the users' feedback as this
+  would let us know areas of the system that either provided a strong user experience or parts of
+  the system that required improvement.
 \end{enumerate}
 
 \end{document}
