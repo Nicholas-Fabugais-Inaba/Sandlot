@@ -15,6 +15,10 @@
 \input{../Comments}
 \input{../Common}
 
+\newcounter{mnum}
+\newcommand{\mthemnum}{M\themnum}
+\newcommand{\mref}[1]{M\ref{#1}}
+
 \begin{document}
 
 \title{Verification and Validation Report: \progname} 
@@ -108,8 +112,8 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   stylistic formatting as evaluated from the resulting rating metric.
   \item{Navigation: test-AP4, EU1, LR3\\}
   Brief Description(How tests were performed): The user was provided the website and asked
-  to navigate to certain functionalities/pages such as viewing the schedule or
-  rescheduling a game. They would then be provided the survey form, provided above, to fill
+  to navigate to certain functionalities/pages such as viewing the schedule (EU1, LR3),
+  rescheduling a game, etc. They would then be provided the survey form, provided above, to fill
   out and provide their own feedback on their experience. \\
   Overall Result: Somewhat Easy (4)\\
   Evaluation: After the tester(s) had navigated the Sandlot website's different pages
@@ -128,9 +132,39 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   incorrect) based on the received resulting rating metric.
 \end{enumerate}
 		
-\subsection{Performance}
+\subsection{Security}
 
-\subsection{etc.}
+\begin{enumerate}
+  \item{General Access: test-AS1-1, AS1-2, PV1\\}
+  Brief Description(How tests were performed): The tester was given general access to the
+  website, in which they were not logged in to any account. They were then prompted to
+  access both the season schedule (AS1-1) and standings (AS1-2), responding if each
+  were both displayed correctly (i.e. all games showed up on the schedule, all teams
+  showed up in the standings with their respective records). Also, the tester would attempt
+  to locate sensitive information (PV1) (i.e. contact information of players) across the
+  website and confirm if no such information was able to be observed. \\
+  Tests Conducted: \\
+  Pass/Fail Rate: \\
+  Evaluation: 
+  \item{Account-Specific Access: test-AS6-1, AS6-2\\}
+  Brief Description(How tests were performed): The tester was asked to sign in to a given
+  account (player, team, commissioner), inputting valid (AS6-1) and invalid (AS6-2)
+  account information. The system should then either log the tester into the account or
+  deny their log in request due to invalid account information. \\
+  Tests Conducted: \\
+  Pass/Fail Rate: \\
+  Evaluation: 
+  \item{Scheduling/Rescheduling: test-IG1-1, IG1-2\\}
+  Brief Description(How test were performed): The tester will be provided with sample
+  scheduling data and be asked to generate a season schedule (IG1-1). They will then be
+  asked to submit a reschedule request (IG1-2) and accept/deny the request on the receiving end
+  (the opposing team), confirming if the request had either been successfully denied or
+  accepted. If the reschedule request was successfully accepted, the tester should
+  confirm that the updated game day/time is reflected upon viewing the season schedule. \\
+  Tests Conducted: \\
+  Pass/Fail Rate: \\
+  Evaluation: 
+\end{enumerate}
 	
 \section{Comparison to Existing Implementation}	
 
@@ -271,9 +305,64 @@ should be highlighted.}
 
 \section{Automated Testing}
 		
-\section{Trace to Requirements}
+\section{Traceability between Requirements and Modules}
 		
-\section{Trace to Modules}		
+\begin{description}
+  \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware Hiding Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Account Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mPL}:] Player Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTE}:] Team Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Commissioner Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAS}:] Account Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTS}:] Team Structure Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mS}:] Season Scheduler Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mRE}:] Reschedule Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAL}:] Alerts Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mDB}:] Database Module
+\end{description}
+
+% the table should use mref, the requirements should be named, use something
+% like fref
+\begin{table}
+\centering
+\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\toprule
+\textbf{Req.} & \textbf{Modules}\\
+\midrule
+FR-1 & \mref{mST}, \mref{mS},\\
+FR-2 & \mref{mTE}, \mref{mDB}\\
+FR-3 & \mref{mAC}, \mref{mAS}\\
+FR-4 & \mref{mAC}, \mref{mAS}\\
+FR-5 & \mref{mAC}, \mref{mAS}\\
+FR-6 & \mref{mCM}, \mref{mAL}\\
+FR-7 & \mref{mTE}, \mref{mCM}\\
+FR-8 & \mref{mPL},\\
+FR-9 & \mref{mS}\\
+FR-10 & \mref{mPL}, \mref{mRE}\\
+FR-11 & \mref{mPL}, \mref{mRE}\\
+FR-12 & \mref{mPL}, \mref{mRE}\\
+FR-13 & \mref{mPL}, \mref{mTE}\\
+FR-14 & \mref{mPL}, \mref{mTE}\\
+FR-15 & \mref{mPL}, \mref{mTE}\\
+FR-16 & \mref{mAC}\\
+FR-17 & \mref{mPL}, \mref{mTE}\\
+FR-18 & \mref{mCM}, \mref{mS}\\
+FR-19 & \mref{mPL}, \mref{mCM}, \mref{mTS}\\
+FR-20 & \mref{mSS}, \mref{mS}\\
+FR-21 & \mref{mTS}, \mref{mSS}, \mref{mS}\\
+FR-22 & \mref{mCM}, \mref{mSS}, \mref{mS}\\
+FR-23 & \mref{mTS}\\
+FR-24 & \mref{mAC}, \mref{mWA}\\
+\bottomrule
+\end{tabular}
+\caption{Trace Between Functional Requirements and Modules}
+\label{TblRT}
+\end{table}
 
 \section{Code Coverage Metrics}
 
