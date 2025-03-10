@@ -1650,10 +1650,23 @@ Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
 How test will be performed: 
 
-\item{test-id2\\}
+\item{test-URS1, Reschedule date variation.\\}
 
-Test reschedule with different dates.
-    
+Type: Automatic
+
+Initial State: Schedule generated.
+
+Input: Variations of an original date of a game and a new date for the game.
+
+Output: The database is updated to remove the game from the original date and
+add the same game to the new date.
+
+Test Case Derivation: Rescheduler must update the database to reflect the new
+date of the game.
+
+How test will be performed: Unit test in test\_rescheduler.py found at
+src/backend/app/functions.
+
 \end{enumerate}
 
 \subsubsection{Database Module}
@@ -1668,37 +1681,72 @@ Test reschedule with different dates.
 \item{test-id1\\}
 
 Test every set function in the database.
-    
+
 \end{enumerate}
 
 \subsubsection{Season Scheduler Module}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+To cover testing the Season Scheduler Module, the following tests will be
+perfromed. They will test each input of the scheduler and validate that
+whenever possible, a valid schedule is generated.
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-USS1, Start and end dates.\\}
 
-Test scheduler with different season start and end dates.
-					
-\item{test-id2\\}
+Type: Automatic
 
-Test scheduler with different number of games per team.
+Initial State: Schedule not yet generated.
 
-\item{test-id3\\}
+Input: Variations of season start and end dates, standard number of games per
+team, team and division data.
 
-Test scheduler with different numbers of divisions and teams per division.
+Output: A valid schedule is generated, all games within start and end date
+range.
 
-\item{test-id4\\}
+Test Case Derivation: Scheduler must generate a valid schedule based on
+inputs.
 
-Test scheduler with different team offdays and perferred times.
-    
+How test will be performed: Unit test in test\_scheduler.py found at
+src/backend/app/functions.
+
+\item{test-USS2, Number of games played per team.\\}
+
+Type: Automatic
+
+Initial State: Schedule not yet generated.
+
+Input: Variations of number of games played per team, standard dates, team and
+division data.
+
+Output: A valid schedule is generated, all teams play the same number of games
+in the season plus or minus one game.
+
+Test Case Derivation: Scheduler must generate a valid schedule based on
+inputs.
+
+How test will be performed: Unit test in test\_scheduler.py found at
+src/backend/app/functions.
+
+\item{test-USS3, Team data variations.\\}
+
+Type: Automatic
+
+Initial State: Schedule not yet generated.
+
+Input: Variations of team's data and division data, standard dates and number
+of games played by each team.
+
+Output: A valid schedule is generated, all teams do not play on their offday
+and only play teams in their division.
+
+Test Case Derivation: Scheduler must generate a valid schedule based on
+inputs.
+
+How test will be performed: Unit test in test\_scheduler.py found at
+src/backend/app/functions.
+
 \end{enumerate}
-
-...
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -1709,45 +1757,41 @@ Test scheduler with different team offdays and perferred times.
 \wss{These tests may involve collecting performance data from previously
   mentioned functional tests.}
 
-\subsubsection{Module ?}
-		
+Some modules require tasks to be done in a reasonable amount of time. These
+tests will define what a reasonable amount of time is and test if the modules
+meet these requirements.
+
+\subsubsection{Season Scheduler Module}
+
+To cover testing the Season Scheduler Module, the following tests will be
+perfromed. They will test each input of the scheduler and validate that
+whenever possible, a valid schedule is generated.
+
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-USS4, Time to generate schedule.\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Type: Automatic
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+Initial State: Schedule not yet generated.
+
+Input: Variations of season start and end dates, number of games per
+team, team and division data.
+
+Output: A valid schedule is generated within 10 minutes.
+
+Test Case Derivation: Scheduler must generate a valid schedule within the
+supervisors time constraints.
+
+How test will be performed: Unit test in test\_scheduler.py found at
+src/backend/app/functions.
 
 \end{enumerate}
-
-\subsubsection{Module ?}
-
-...
 
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
-				
+
 \bibliographystyle{plainnat}
 
 \bibliography{../../refs/References}
