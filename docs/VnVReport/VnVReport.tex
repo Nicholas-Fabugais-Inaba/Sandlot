@@ -2,6 +2,7 @@
 
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{float}
@@ -74,26 +75,92 @@ seen in more detail in the VnV plan.
 
 \section{Functional Requirements Evaluation}
 
-\begin{table}[h!]
-  \centering
-  \begin{tabular}{|c|c|}
+
+\begin{longtable}{|c|c|p{8cm}|}
   \hline
-  \textbf{Test Name} & \textbf{Result} \\
+  \textbf{Test Name} & \textbf{Result} & \textbf{Analysis}\\
   \hline
-  test-1 & Passed \\
+  \multicolumn{3}{|c|}{\textbf{Scheduling}}\\
   \hline
-  test-2 & Failed \\
+  test-FR8 & Passed & System can take availabilty data when creating team
+  account.\\
+  % \hline
+  % test-FR9 & Passed & Covered by unit tests.\\
   \hline
-  test-3 & Passed \\
+  test-FR10 & Passed & Reschedule requests are able to be sent.\\
   \hline
-  test-4 & Passed \\
+  test-FR11 & Passed & Reschedule requests can be accepted and update the
+  database accordingly.\\
   \hline
-  test-5 & Failed \\
+  test-FR12 & Failed & Feature must be added to notify team account users
+  when their requests have been accepted.\\
   \hline
-  \end{tabular}
+  test-FR18 & Failed & Score data currently does not update when using admin
+  features.\\
+  \hline
+  test-FR20 & Passed & Schedule data is displayed if it exists in the
+  database.\\
+  \hline
+  test-FR21 & Passed & Team only schedule data is displayed if it exists in
+  the database.\\
+  % \hline
+  % test-FR22 & Passed & This feature is no longer planned for.\\
+  \hline
+  \multicolumn{3}{|c|}{\textbf{Accounts}} \\
+  \hline
+  test-FR1-1 & Passed & \\
+  \hline
+  test-FR1-2 & Passed & \\
+  \hline
+  test-FR3-1 & Passed & \\
+  \hline
+  test-FR3-2 & Passed & \\
+  \hline
+  test-FR4 & Passed & \\
+  \hline
+  test-FR5-1 & Passed & \\
+  \hline
+  test-FR5-2 & Passed & \\
+  \hline
+  test-FR16-1 & Passed & \\
+  \hline
+  test-FR16-2 & Passed & \\
+  \hline
+  test-FR19 & Passed & \\
+  \hline
+  \multicolumn{3}{|c|}{\textbf{Team Structure}} \\
+  \hline
+  test-FR2-1 & Passed & \\
+  \hline
+  test-FR2-2 & Passed & \\
+  \hline
+  test-FR7 & Passed & \\
+  \hline
+  test-FR13-1 & Passed & \\
+  \hline
+  test-FR13-2 & Passed & \\
+  \hline
+  test-FR15 & Passed & \\
+  \hline
+  test-FR23 & Passed & \\
+  % \hline
+  % \multicolumn{3}{|c|}{\textbf{Scoring/Standings}} \\
+  % \hline
+  % test-FR14-1 & Passed & \\
+  % \hline
+  % test-FR14-2 & Passed & \\
+  % \hline
+  % test-FR14-3 & Passed & \\
+  % \hline
+  % \multicolumn{3}{|c|}{\textbf{Alerts}} \\
+  % \hline
+  % test-FR6-1 & Passed & \\
+  % \hline
+  % test-FR6-2 & Passed & \\
+  \hline
   \caption{Functional Requirements Test Results}
-  \label{tab:functional-requirements}
-  \end{table}
+\end{longtable}
+% \caption{Functional Requirements Test Results}
 
 
 \section{Nonfunctional Requirements Evaluation}
