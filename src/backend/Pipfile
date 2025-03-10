@@ -9,6 +9,7 @@ sqlalchemy = "*"
 python-dotenv = "*"
 pyodbc = "*"
 psycopg2 = "*"
+parameterized = "*"
 
 [dev-packages]
 
