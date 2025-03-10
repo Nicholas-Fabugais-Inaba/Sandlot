@@ -15,6 +15,10 @@
 \input{../Comments}
 \input{../Common}
 
+\newcounter{mnum}
+\newcommand{\mthemnum}{M\themnum}
+\newcommand{\mref}[1]{M\ref{#1}}
+
 \begin{document}
 
 \title{Verification and Validation Report: \progname} 
@@ -249,9 +253,64 @@ should be highlighted.}
 
 \section{Automated Testing}
 		
-\section{Trace to Requirements}
+\section{Traceability between Requirements and Modules}
 		
-\section{Trace to Modules}		
+\begin{description}
+  \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware Hiding Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Account Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mPL}:] Player Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTE}:] Team Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Commissioner Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAS}:] Account Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTS}:] Team Structure Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mS}:] Season Scheduler Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mRE}:] Reschedule Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAL}:] Alerts Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mDB}:] Database Module
+\end{description}
+
+% the table should use mref, the requirements should be named, use something
+% like fref
+\begin{table}
+\centering
+\begin{tabular}{p{0.2\textwidth} p{0.6\textwidth}}
+\toprule
+\textbf{Req.} & \textbf{Modules}\\
+\midrule
+FR-1 & \mref{mST}, \mref{mS},\\
+FR-2 & \mref{mTE}, \mref{mDB}\\
+FR-3 & \mref{mAC}, \mref{mAS}\\
+FR-4 & \mref{mAC}, \mref{mAS}\\
+FR-5 & \mref{mAC}, \mref{mAS}\\
+FR-6 & \mref{mCM}, \mref{mAL}\\
+FR-7 & \mref{mTE}, \mref{mCM}\\
+FR-8 & \mref{mPL},\\
+FR-9 & \mref{mS}\\
+FR-10 & \mref{mPL}, \mref{mRE}\\
+FR-11 & \mref{mPL}, \mref{mRE}\\
+FR-12 & \mref{mPL}, \mref{mRE}\\
+FR-13 & \mref{mPL}, \mref{mTE}\\
+FR-14 & \mref{mPL}, \mref{mTE}\\
+FR-15 & \mref{mPL}, \mref{mTE}\\
+FR-16 & \mref{mAC}\\
+FR-17 & \mref{mPL}, \mref{mTE}\\
+FR-18 & \mref{mCM}, \mref{mS}\\
+FR-19 & \mref{mPL}, \mref{mCM}, \mref{mTS}\\
+FR-20 & \mref{mSS}, \mref{mS}\\
+FR-21 & \mref{mTS}, \mref{mSS}, \mref{mS}\\
+FR-22 & \mref{mCM}, \mref{mSS}, \mref{mS}\\
+FR-23 & \mref{mTS}\\
+FR-24 & \mref{mAC}, \mref{mWA}\\
+\bottomrule
+\end{tabular}
+\caption{Trace Between Functional Requirements and Modules}
+\label{TblRT}
+\end{table}
 
 \section{Code Coverage Metrics}
 
