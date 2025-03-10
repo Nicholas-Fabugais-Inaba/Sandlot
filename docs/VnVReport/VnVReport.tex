@@ -175,28 +175,57 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   showed up in the standings with their respective records). Also, the tester would attempt
   to locate sensitive information (PV1) (i.e. contact information of players) across the
   website and confirm if no such information was able to be observed. \\
-  Tests Conducted: \\
-  Pass/Fail Rate: \\
-  Evaluation: 
-  \item{Account-Specific Access: test-AS6-1, AS6-2\\}
+  Average Result: Strongly/Slightly Agree (4.75)\\
+  Evaluation: The tester(s) had successfully accessed the Sandlot website's season schedule and
+  standings based on the resulting rating metric, without being logged in to an account. Additionally,
+  they were not able to obtain contact information when browsing the website, securing sensitive
+  information saved by the system from account users. The high rating score indicates that the
+  website's general access is operating appropriately with little to no errors. However,
+  improvements could be made to the loading times of the system as one comment made from the
+  usability survey stated on initial loadings of a page, the initial time to view the page would
+  take a little longer than expected.
+  \item{Request Validation: test-AS6-1, AS6-2, IG1-2\\}
   Brief Description(How tests were performed): The tester was asked to sign in to a given
   account (player, team, commissioner), inputting valid (AS6-1) and invalid (AS6-2)
   account information. The system should then either log the tester into the account or
-  deny their log in request due to invalid account information. \\
-  Tests Conducted: \\
-  Pass/Fail Rate: \\
-  Evaluation: 
-  \item{Scheduling/Rescheduling: test-IG1-1, IG1-2\\}
-  Brief Description(How test were performed): The tester will be provided with sample
-  scheduling data and be asked to generate a season schedule (IG1-1). They will then be
-  asked to submit a reschedule request (IG1-2) and accept/deny the request on the receiving end
-  (the opposing team), confirming if the request had either been successfully denied or
-  accepted. If the reschedule request was successfully accepted, the tester should
-  confirm that the updated game day/time is reflected upon viewing the season schedule. \\
+  deny their log in request due to invalid account information. When logged in with valid
+  credentials, the tester should then submit a reschedule request (IG1-2) and accept/deny the
+  request on the receiving end (the opposing team) by logging into their account. They will then
+  confirm if the request had either been successfully denied or accepted. If the reschedule
+  request was successfully accepted, the tester should confirm that the updated game day/time
+  is reflected upon viewing the season schedule. \\
+  Average Result: Slightly Agree (4)\\
+  Evaluation: The tester(s) had successfully logged into their account with valid credentials
+  and were denied access with invalid credentials based on the resulting rating metric. However,
+  the reschedule request process was not as straightforward as expected, with some testers
+  still being able to view their reschedule request even after they accepted or denied it.
+  This indicates that the reschedule request process requires improvements to ensure that feedback
+  is presented appropriately to users on their rescheduling actions (accept/deny). Moreover, the
+  data gathered from the usability testing suggests that the system's account verification is
+  secure, ensuring that only authorized users can access the system as well as their own personal
+  information pertaining to their account.
+  \item{Scheduling: test-IG1-1\\}
+  Brief Description(How test was performed): The tester will be provided with sample
+  scheduling data and be asked to generate a season schedule. This season schedule that is created
+  should not have any conflicting scheduling conflicts that exist. \\
   Tests Conducted: \\
   Pass/Fail Rate: \\
   Evaluation: 
 \end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{survey_responses_access.png}
+\caption{General Access Response Metrics}
+\label{access}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{survey_responses_validate_inputs.png}
+\caption{Request Validation Response Metrics}
+\label{validate}
+\end{figure}
 	
 \section{Comparison to Existing Implementation}	
 
