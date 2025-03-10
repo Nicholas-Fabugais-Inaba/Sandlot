@@ -1,11 +1,11 @@
 
 from datetime import date, timedelta
-from .scheduler import gen_schedule_w_skip, send_schedule_to_db
-# from scheduler import gen_schedule_w_skip
+# from .scheduler import gen_schedule_w_skip, send_schedule_to_db
+from scheduler import gen_schedule_w_skip
 from random import shuffle
-from ..db.queries import get_all_teams
+# from ..db.queries import get_all_teams
 
-from ..db.mock_data import insert_mock_schedule
+# from ..db.mock_data import insert_mock_schedule
 
 
 FIELDS = 3
@@ -141,7 +141,7 @@ def get_weekdays(start_date: date, end_date: date):
     weekdays = []
     
     # Iterate through the date range
-    current_date = start_date
+    current_date: date = start_date
     while current_date <= end_date:
         # Check if the current date is a weekday (Monday=0, Sunday=6)
         if current_date.weekday() > 0 and current_date.weekday() < 6:  # Monday to Friday are 0 to 4
@@ -195,29 +195,29 @@ def gen_mock_schedule():
     send_schedule_to_db(schedule, score, t)
 
 
-def gen_schedule_repeated():
-    teams = {}
-    div_a = {}
-    div_b = {}
-    div_c = {}
-    div_d = {}
-    Teams = get_all_teams()
-    for i in range(len(Teams)):
-        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
-        if Teams[i]["division"] == 0:
-            div_a[i] = teams[i]
-        elif Teams[i]["division"] == 1:
-            div_b[i] = teams[i]
-        elif Teams[i]["division"] == 2:
-            div_c[i] = teams[i]
-        elif Teams[i]["division"] == 3:
-            div_d[i] = teams[i]
+def gen_schedule_repeated(fields=FIELDS, timeslots=TIMESLOTS, games_per_team=GAMES_PER_TEAM, start_date=START_DATE, end_date=END_DATE, teams={}, divs=[]):
+    if teams == {}:
+        div_a = {}
+        div_b = {}
+        div_c = {}
+        div_d = {}
+        Teams = get_all_teams()
+        for i in range(len(Teams)):
+            teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+            if Teams[i]["division"] == 0:
+                div_a[i] = teams[i]
+            elif Teams[i]["division"] == 1:
+                div_b[i] = teams[i]
+            elif Teams[i]["division"] == 2:
+                div_c[i] = teams[i]
+            elif Teams[i]["division"] == 3:
+                div_d[i] = teams[i]
 
-    divs = [div_a, div_b, div_c, div_d]
+        divs = [div_a, div_b, div_c, div_d]
 
-    games = gen_games_division(divs, GAMES_PER_TEAM)
+    games = gen_games_division(divs, games_per_team)
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+    game_slots = gen_game_slots(fields, timeslots, start_date, end_date, len(teams))
 
     # Repeats the schedule generation 10 times and returns the best schedule
     best_schedule, best_score, t = gen_schedule_w_skip(games, game_slots, teams)

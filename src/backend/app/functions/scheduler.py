@@ -2,7 +2,7 @@
 import datetime
 from sys import maxsize
 import time
-from ..db.queries import insert_mock_game
+# from ..db.queries import insert_mock_game
 import random
 
 # All variables here are global for use in the backtrack scheduler algorithm
@@ -130,7 +130,7 @@ def backtrack_scheduler_w_skip():
         # Find the least played weeks for the teams in the game
         # CURRENTLY this just uses a week from the list as a starting place, if the week is full it will move to the next week sequentially.
         least_played_weeks = find_least_played_weeks(game[0], game[1])
-        print(least_played_weeks)
+        # print(least_played_weeks)
         # Select a random week from the least played weeks
         start_week = random.choice(least_played_weeks)
         curr_week = start_week
@@ -138,7 +138,7 @@ def backtrack_scheduler_w_skip():
         while True: # Loop through all weeks
             slot_chosen = False
             # print(schedule)
-            print("Week: ", curr_week)
+            # print("Week: ", curr_week)
             week_slots = game_slots[curr_week]
             # SHUFFLE WEEK_SLOTS
             random.shuffle(week_slots)
