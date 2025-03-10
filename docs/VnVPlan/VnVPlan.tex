@@ -1626,6 +1626,10 @@ section 4 and useability tests.
   appropriate specific modules can be verified by a non-testing based
   technique.  That can also be documented in this section.}
 
+This section will cover testing all data accessing and manipulation functions
+in our system using unit tests. The modules covering these functions are the
+Reschedule Module, Database Module and Season Scheduler Module.
+
 \subsubsection{Reschedule Module}
 
 \wss{Include a blurb here to explain why the subsections below cover the module.
@@ -1634,21 +1638,6 @@ section 4 and useability tests.
   tests were selected.}
 
 \begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
 
 \item{test-URS1, Reschedule date variation.\\}
 
@@ -1791,6 +1780,10 @@ src/backend/app/functions.
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
+
+Each module that requires unit testing has been named in the above sections.
+The section name matches the module name in the Module Decomposition table in
+the MG and MIS documents \cite{MG} \cite{MIS}.
 
 \bibliographystyle{plainnat}
 
