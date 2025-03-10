@@ -3,6 +3,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -106,31 +108,61 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   to read groups of text or images such as the schedule or account registration fields.
   They would then be provided the survey form, provided above, to fill out and provide their own feedback
   on their experience. \\
-  Overall Result: Yes, the system was accessible. (3)\\
+  Average Result: Yes, the system was accessible. (3)\\
   Evaluation: After the tester(s) had read the Sandlot website's different texts and images,
   they found the website's readability to be up to a high quality, following a consistent
-  stylistic formatting as evaluated from the resulting rating metric.
-  \item{Navigation: test-AP4, EU1, LR3\\}
-  Brief Description(How tests were performed): The user was provided the website and asked
-  to navigate to certain functionalities/pages such as viewing the schedule (EU1, LR3),
-  rescheduling a game, etc. They would then be provided the survey form, provided above, to fill
-  out and provide their own feedback on their experience. \\
-  Overall Result: Somewhat Easy (4)\\
-  Evaluation: After the tester(s) had navigated the Sandlot website's different pages
-  (Schedule, Home, Profile, etc.), they found the website's navigation including
-  its menus and links to be easily accessible and straightforward from the resulting
-  rating metric.
+  stylistic formatting as evaluated from the resulting rating metric. This indicates that the
+  text and images on the website are clear and easy to understand, which is crucial for user
+  engagement and satisfaction. However, there is still room for improvement in ensuring that
+  all text elements are uniformly accessible across different devices and screen sizes.
   \item{Registration/Login: test-EU2\\}
   Brief Description(How test was performed): The user was asked to register and sign in to
   an account they had created, identifying any faults such as login failure, incorrect
   password verification, etc., throughout their experience. They would then be provided the survey form, provided above, to fill
   out and provide their own feedback on their experience. \\
-  Overall Result: Strongly Agree (5)\\
+  Average Result: Strongly Agree (5)\\
   Evaluation: After the tester(s) had registered and signed in to the account they had
   created on the Sandlot website, they had found the website's registration and sign in process
   to function appropriately (i.e. providing correct sign in feedback if their password was
-  incorrect) based on the received resulting rating metric.
+  incorrect) based on the received resulting rating metric. This high satisfaction score indicates
+  that the registration and login processes are user-friendly and reliable. However, implementing
+  additional security measures such as two-factor authentication could further enhance user trust
+  and security. Features such as password strength checking and email confirmations would be
+  beneficial to add on top of the current implementation.
+  \item{Navigation: test-AP4, EU1, LR3\\}
+  Brief Description(How tests were performed): The user was provided the website and asked
+  to navigate to certain functionalities/pages such as viewing the schedule (EU1, LR3),
+  rescheduling a game, etc. They would then be provided the survey form, provided above, to fill
+  out and provide their own feedback on their experience. \\
+  Average Result: Very/Somewhat Easy (4.4)\\
+  Evaluation: After the tester(s) had navigated the Sandlot website's different pages
+  (Schedule, Home, Profile, etc.), they found the website's navigation including
+  its menus and links to be easily accessible and straightforward from the resulting
+  rating metric. This high ease-of-use score suggests that the website's navigation is intuitive
+  and user-friendly. However, further improvements could be made by adding more contextual help
+  and tooltips to guide users through complex tasks.
 \end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{survey_responses_visual.png}
+\caption{Readability Response Metrics}
+\label{visual}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{survey_responses_register_signin.png}
+\caption{Registration/Login Response Metrics}
+\label{account}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.6]{survey_responses_navigation.png}
+\caption{Navigation Response Metrics}
+\label{nav}
+\end{figure}
 		
 \subsection{Security}
 
