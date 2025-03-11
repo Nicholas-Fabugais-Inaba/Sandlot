@@ -6,6 +6,7 @@ name: pytest automation
 on:
   push:
     branches: [ "main" ]
+    branches: [ "pytest-workflow"]
   pull_request:
     branches: [ "main" ]
 
