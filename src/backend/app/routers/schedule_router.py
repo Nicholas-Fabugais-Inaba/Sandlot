@@ -1,17 +1,16 @@
 from fastapi import APIRouter
-from ..functions.gen_sched_input import create_schedule
+from ..functions.gen_sched_input import gen_schedule_repeated
 from ..db.queries import get_all_games, get_team_games, insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, update_game
-from .types import RescheduleRequest, TeamID, RRAccept
-
+from .types import RescheduleRequest, TeamID, RRAccept, SchedParams
 
 router = APIRouter(tags=["schedule"])
 
 # temporary types and function
-@router.get("/get", response_model=list)
-async def get_schedule():
-    # we would call the helper functions to generate the schedule here and return the output back to the website
-    schedule: list = create_schedule()
-    return schedule
+# @router.get("/get", response_model=list)
+# async def get_schedule():
+#     # we would call the helper functions to generate the schedule here and return the output back to the website
+#     schedule: list = create_schedule()
+#     return schedule
 
 @router.get("/get_all_games", response_model=list)
 async def get_scheduled_games():
@@ -40,4 +39,14 @@ async def get_team_RRs(data: TeamID):
 async def RR_accepted(data: RRAccept):
     delete_reschedule_request(data.rr_id)
     update_game(data.old_game_id, data.date, data.time, data.field)
+    return True
+
+@router.post("/gen_schedule", response_model=object)
+async def gen_schedule(data: SchedParams):
+    schedule, score, teams = gen_schedule_repeated()
+    return {"schedule": schedule, "score": score, "teams": teams}   
+
+@router.post("/submit_schedule", response_model=None)
+async def submit_schedule(data: dict):
+    # submit_schedule(data)
     return True
