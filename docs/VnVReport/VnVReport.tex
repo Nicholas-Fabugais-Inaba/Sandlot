@@ -52,10 +52,12 @@ Mar. 10, 2025 & 1.1 & Prior to Rev1\\
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  SRS & Software Requirements Specification\\
+  M & Module \\
   \bottomrule
 \end{tabular}\\
 
-\wss{symbols, abbreviations or acronyms -- you can reference the SRS tables if needed}
+% \wss{symbols, abbreviations or acronyms -- you can reference the SRS tables if needed}
 
 \newpage
 
@@ -275,9 +277,16 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   Brief Description(How test was performed): The tester will be provided with sample
   scheduling data and be asked to generate a season schedule. This season schedule that is created
   should not have any conflicting scheduling conflicts that exist. \\
-  Tests Conducted: \\
-  Pass/Fail Rate: \\
-  Evaluation: 
+  Tests Conducted: 50\\
+  Pass/Fail Rate: 43/50 (86\%)\\
+  Evaluation: The tester(s) successfully generated a season schedule without any conflicting
+  scheduling conflicts in 43 out of 50 attempts. The seven failures occured randomly and would
+  be resolved when the website was reloaded. This high pass rate indicates that the scheduling algorithm
+  is robust and reliable for most scenarios. However, improvements on the front end need to be
+  investigated to ensure that all possible errors are resolved. These errors could occur from when the
+  front end retrieves the scheduling data from the database or how it handles the data on the front end.
+  The feedback from the usability testing also highlighted the need for better error messages and
+  guidance in the display of the schedule, to help users understand and resolve issues more effectively.
 \end{enumerate}
 
 \begin{figure}[H]
@@ -332,10 +341,10 @@ making the Sandlot website a more efficient and effective tool for managing leag
 
 \section{Changes Due to Testing}
 
-\wss{This section should highlight how feedback from the users and from 
-the supervisor (when one exists) shaped the final product.  In particular 
-the feedback from the Rev 0 demo to the supervisor (or to potential users) 
-should be highlighted.}
+% \wss{This section should highlight how feedback from the users and from 
+% the supervisor (when one exists) shaped the final product.  In particular 
+% the feedback from the Rev 0 demo to the supervisor (or to potential users) 
+% should be highlighted.}
 
 \subsection{Feedback from Rev 0 demo}
 
@@ -454,6 +463,8 @@ should be highlighted.}
   \item [\refstepcounter{mnum} \mthemnum \label{mDB}:] Database Module
 \end{description}
 
+\newpage
+
 % the table should use mref, the requirements should be named, use something
 % like fref
 \begin{table}
@@ -463,36 +474,36 @@ should be highlighted.}
 \textbf{Req.} & \textbf{Modules}\\
 \midrule
 FR-1 & \mref{mST}, \mref{mS},\\
-FR-2 & \mref{mTE}, \mref{mDB}\\
+% FR-2 & \mref{mTE}, \mref{mDB}\\
 FR-3 & \mref{mAC}, \mref{mAS}\\
 FR-4 & \mref{mAC}, \mref{mAS}\\
 FR-5 & \mref{mAC}, \mref{mAS}\\
-FR-6 & \mref{mCM}, \mref{mAL}\\
-FR-7 & \mref{mTE}, \mref{mCM}\\
+% FR-6 & \mref{mCM}, \mref{mAL}\\
+% FR-7 & \mref{mTE}, \mref{mCM}\\
 FR-8 & \mref{mPL},\\
-FR-9 & \mref{mS}\\
+% FR-9 & \mref{mS}\\
 FR-10 & \mref{mPL}, \mref{mRE}\\
 FR-11 & \mref{mPL}, \mref{mRE}\\
 FR-12 & \mref{mPL}, \mref{mRE}\\
-FR-13 & \mref{mPL}, \mref{mTE}\\
-FR-14 & \mref{mPL}, \mref{mTE}\\
+% FR-13 & \mref{mPL}, \mref{mTE}\\
+% FR-14 & \mref{mPL}, \mref{mTE}\\
 FR-15 & \mref{mPL}, \mref{mTE}\\
 FR-16 & \mref{mAC}\\
-FR-17 & \mref{mPL}, \mref{mTE}\\
+% FR-17 & \mref{mPL}, \mref{mTE}\\
 FR-18 & \mref{mCM}, \mref{mS}\\
-FR-19 & \mref{mPL}, \mref{mCM}, \mref{mTS}\\
+% FR-19 & \mref{mPL}, \mref{mCM}, \mref{mTS}\\
 FR-20 & \mref{mSS}, \mref{mS}\\
 FR-21 & \mref{mTS}, \mref{mSS}, \mref{mS}\\
-FR-22 & \mref{mCM}, \mref{mSS}, \mref{mS}\\
-FR-23 & \mref{mTS}\\
-FR-24 & \mref{mAC}, \mref{mWA}\\
+% FR-22 & \mref{mCM}, \mref{mSS}, \mref{mS}\\
+% FR-23 & \mref{mTS}\\
+% FR-24 & \mref{mAC}, \mref{mWA}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Functional Requirements and Modules}
 \label{TblRT}
 \end{table}
 
-\section{Code Coverage Metrics}
+%\section{Code Coverage Metrics}
 
 \bibliographystyle{plainnat}
 \bibliography{../../refs/References}
