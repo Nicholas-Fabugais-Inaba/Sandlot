@@ -352,7 +352,47 @@ making the Sandlot website a more efficient and effective tool for managing leag
   \hline
   \multicolumn{3}{|c|}{\textbf{Database Module}}\\
   \hline
-  test-1 & & \\
+  test\_get\_schedule\_games & Passed & Backend correctly retrieves scheduled 
+  game data. \\
+  \hline
+  test\_team\_games & Passed & Backend correctly retrieves all of the specified 
+  team's games. \\
+  \hline
+  test\_create\_RR & Passed & Backend properly creates a new reschedule request with the 
+  specificied data in the database. \\
+  \hline
+  test\_get\_team\_RRs & Passed & Backend correctly retrieves all reschedule requests adressed to a 
+  specific team. \\
+  \hline
+  test\_delete\_reschedule\_request & Passed &  Backend properly deletes a specified reschedule request 
+  from the database. \\
+  \hline
+  test\_get\_standings\_data & Passed & Backend properly retrieves completed game scores and calculates
+  the standings of teams based on them. \\
+  \hline
+  test\_get\_player\_data & Passed & Backend correctly retrieves the list of players that belong to 
+  a specified team including their information. \\
+  \hline
+  test\_get\_team\_data & Passed & Backend correctly retrieves all teams in the databse and their 
+  divisions. \\
+  \hline
+  test\_create\_player\_account & Passed & Backend properly creates a player account in the database
+  with the player information provided to it. \\
+  \hline
+  test\_create\_team\_account & Passed & Backend properly creates a team account in the database with
+  the team information provided to it. \\
+  \hline
+  test\_get\_player\_account & Passed & Backend correctly retreives a player's account information
+  based on the player's email. \\
+  \hline
+  test\_get\_team\_account & Passed & Backend correctly retrieves a team's account information based on
+  the team's username. \\
+  \hline
+  test\_delete\_player & Passed & Backend properly deletes a player account from the database 
+  based on the information provided. \\
+  \hline
+  test\_delete\_team & Passed & Backend properly deletes a team account from the database based on
+  the information provided. \\
   \hline
   \multicolumn{3}{|c|}{\textbf{Season Scheduler Module}}\\
   \hline
@@ -367,6 +407,9 @@ making the Sandlot website a more efficient and effective tool for managing leag
   \hline
   \caption{Unit Test Results}
 \end{longtable}
+
+The system has proven to be fairly robust, with a majority of our unit tests passing successfully. 
+This shows its stability, reliability, and ability to perform as expected in these specific areas.
 
 \section{Changes Due to Testing}
 
