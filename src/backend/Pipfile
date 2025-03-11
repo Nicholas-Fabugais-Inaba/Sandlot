@@ -9,6 +9,8 @@ sqlalchemy = "*"
 python-dotenv = "*"
 pyodbc = "*"
 psycopg2 = "*"
+pytest = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 
