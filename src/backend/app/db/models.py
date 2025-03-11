@@ -8,6 +8,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from .create_engine import create_connection
+#from create_engine import create_connection
 
 engine = create_connection()
 
@@ -24,6 +25,7 @@ class Player(Base):
     phone_number: Mapped[Optional[str]] = mapped_column(String(15))
     gender: Mapped[Optional[str]] = mapped_column(String(30))
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    is_commissioner: Mapped[bool] = mapped_column(default=False)
 
 class Team(Base):
     __tablename__ = "team"
@@ -35,11 +37,11 @@ class Team(Base):
     standing: Mapped[Optional[str]] = mapped_column(String(50))
     username: Mapped[Optional[str]] = mapped_column(String(50), unique=True)
     password: Mapped[Optional[str]] = mapped_column(String(50))
-    division: Mapped[Optional[int]] = mapped_column() # 0 = A
+    division: Mapped[Optional[int]] = mapped_column(ForeignKey("division.id", ondelete="SET NULL"), nullable=True) # 0 = A
     preferred_division: Mapped[Optional[int]] = mapped_column() # 0 = A
     offday: Mapped[Optional[int]] = mapped_column() # 0 = Monday
     preferred_time: Mapped[Optional[int]] = mapped_column() # 0 = balanced, 1 = early, 2 = late
-    
+
 class Game(Base):
     __tablename__ = "game"
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -51,7 +53,7 @@ class Game(Base):
     home_team_score: Mapped[Optional[int]] = mapped_column()
     away_team_score: Mapped[Optional[int]] = mapped_column()
     played: Mapped[Optional[bool]] = mapped_column(default=False)
-    # forfeit: Mapped[Optional[int]] = mapped_column()
+    forfeit: Mapped[Optional[int]] = mapped_column()
     home_team = relationship("Team", foreign_keys=[home_team_id], backref="home_games")
     away_team = relationship("Team", foreign_keys=[away_team_id], backref="away_games")
 
@@ -73,8 +75,39 @@ class RescheduleRequest(Base):
     option5_field: Mapped[Optional[str]] = mapped_column(String(50))
     accepted: Mapped[Optional[bool]] = mapped_column()
 
+class JoinRequest(Base):
+    __tablename__ = "join_request"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    accepted: Mapped[Optional[bool]] = mapped_column()
+
+class SeasonSettings(Base):
+    __tablename__ = "season_settings"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    start_date: Mapped[Optional[str]] = mapped_column(String(50))
+    end_date: Mapped[Optional[str]] = mapped_column(String(50))
+    games_per_team: Mapped[Optional[int]] = mapped_column()
+
+class Field(Base):
+    __tablename__ = "field"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    field_name: Mapped[Optional[str]] = mapped_column(String(50))
+
+class TimeSlot(Base):
+    __tablename__ = "time_slot"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    start: Mapped[Optional[str]] = mapped_column(String(50))
+    end: Mapped[Optional[str]] = mapped_column(String(50))
+    field_id: Mapped[Optional[int]] = mapped_column(ForeignKey("field.id"))
+
+class Division(Base):
+    __tablename__ = "division"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    division_name: Mapped[Optional[str]] = mapped_column(String(50))
+
 # function which creates defined models as tables in DB
 def create_tables():
     Base.metadata.create_all(engine)
 
-# create_tables()
+#create_tables()
