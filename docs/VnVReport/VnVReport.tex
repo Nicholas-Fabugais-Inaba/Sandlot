@@ -341,7 +341,32 @@ making the Sandlot website a more efficient and effective tool for managing leag
 
 \section{Unit Testing}
 
-
+\begin{longtable}{|c|c|p{8cm}|}
+  \hline
+  \textbf{Test Name} & \textbf{Result} & \textbf{Analysis}\\
+  \hline
+  \multicolumn{3}{|c|}{\textbf{Reschedule Module}}\\
+  \hline
+  test-URS1 & Passed & Backend reschedule function correctly updates
+  database.\\
+  \hline
+  \multicolumn{3}{|c|}{\textbf{Database Module}}\\
+  \hline
+  test-1 & & \\
+  \hline
+  \multicolumn{3}{|c|}{\textbf{Season Scheduler Module}}\\
+  \hline
+  test-USS1 & Passed & Scheduler correctly distributes games between inputted
+  start and end dates.\\
+  \hline
+  test-USS2 & Failed & Function that creates initial set of games must be
+  modified to create the correct number of games per team.\\
+  \hline
+  test-USS3 & Passed & Scheduler correctly generates schedule for a variety of
+  teams and division distributions.\\
+  \hline
+  \caption{Unit Test Results}
+\end{longtable}
 
 \section{Changes Due to Testing}
 
@@ -445,14 +470,6 @@ making the Sandlot website a more efficient and effective tool for managing leag
 \end{itemize}
 
 \section{Automated Testing}
-
-Currently, unit tests for the database, season scheduler, and reschedule modules are 
-automated and continuously integrated using github actions to execute them on every push
-and pull reqeust to our main branch. This ensures our code is as robust as possible when 
-pushing to production branches while also saving us the hassle of manually running the tests 
-ourselves. In the future we plan to extend our automated testing environments to produce 
-visual test reports  in the form of HTML documents after each execution as well as provide 
-code coverage metrics to help bolster our testing data.
 		
 \section{Traceability between Requirements and Modules}
 		
