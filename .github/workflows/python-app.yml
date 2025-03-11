@@ -31,11 +31,7 @@ jobs:
       run: |
         python -m pip list
     - name: Test with pytest
+      env: 
+        CONN_STRING: ${{ secrets.CONN_STRING }}
       run: |
-        pytest --html=tests/Reports/Report.html
-    - name: Test Report Generation
-      uses: actions/upload-artifact@v4
-      if: success() || failure()
-      with:
-        name: Pytest Report           # Name of the folder
-        path: tests/Reports           # Path to test results
+        pytest
