@@ -1667,9 +1667,95 @@ src/backend/app/functions.
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test\_get\_schedule\_games\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test\_schedule.py}{test\_schedule.py}
+  
+  Tests if the backend code properly retrieves all games in the accepted schedule. The 
+  database is a testing database separate from the one used in the actual system. 
+  Additionally, the game data being retrieved is from a set of placeholder testing data
+  such that the list of games retrieved is consistent and can be tested against. (This 
+  information about the test database and placeholder data is true for all database module
+  tests and will not be repeated for each test, but will apply)
 
-Test every set function in the database.
+  \item{test\_team\_games\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test\_schedule.py}{test\_schedule.py}
+  
+  Tests if the backend code properly retrieves all games played by a certain team based on 
+  the id of the team passed to the function.
+
+  \item{test\_create\_RR\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test\_schedule.py}{test\_schedule.py}
+  
+  Tests if the backend code properly creates and stores a reschedule request between 2 teams
+  passed to the function. The reschedule request created only contains 1 reschedule option.
+
+  \item{test\_get\_team\_RRs\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test\_schedule.py}{test\_schedule.py}
+  
+  Tests if the backend code properly retrieves all reschedule requests sent to a team 
+  based on the id of the team passed to the function.
+
+  \item{test\_delete\_reschedule\_request\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test\_schedule.py}{test\_schedule.py}
+  
+  Tests if the backend code properly deletes a reschedule request when passed its 
+  corresponding id in the database.
+
+  \item{test\_get\_standings\_data\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_standings.py}{test\_standings.py}
+  
+  Tests if the backend code properly retrieves the score data for all completed games
+  in the schedule and calculates the standings for all teams based on the scores.
+  
+  \item{test\_get\_player\_data\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_teams.py}{test\_teams.py}
+  
+  Tests if the backend code properly retrieves the list of all players that belong to a 
+  certain team and their corresponding information based on the id of the teanm passed to
+  the function.
+
+  \item{test\_get\_team\_data\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_teams.py}{test\_teams.py}
+  
+  Tests if the backend code properly retrieves the list of all teams in the database and 
+  their divisions.
+
+  \item{test\_create\_player\_account\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_users.py}{test\_users.py}
+  
+  Tests if the backend code properly creates and stores player account in the database 
+  when passed a name, email, and password.
+
+  \item{test\_create\_team\_account\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_users.py}{test\_users.py}
+  
+  Tests if the backend code properly creates and stores team account in the database 
+  when passed a team name, username, password, and preference data.
+
+  \item{test\_get\_player\_account\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_users.py}{test\_users.py}
+  
+  Tests if the backend code properly retrieves a player account from the database 
+  based on the email of the player passed to the function.
+
+  \item{test\_get\_team\_account\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_users.py}{test\_users.py}
+  
+  Tests if the backend code properly retrieves a team account from the database 
+  based on the username of the team passed to the function.
+
+  item{test\_delete\_player\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_users.py}{test\_users.py}
+  
+  Tests if the backend code properly deletes a player account request when passed its 
+  corresponding id in the database.
+
+  item{test\_delete\_team\\}
+  Located in: \href{https://github.com/Nicholas-Fabugais-Inaba/Sandlot/blob/pytest-workflow/test/test_users.py}{test\_users.py}
+  
+  Tests if the backend code properly deletes a team account request when passed its 
+  corresponding id in the database.
+
 
 \end{enumerate}
 
