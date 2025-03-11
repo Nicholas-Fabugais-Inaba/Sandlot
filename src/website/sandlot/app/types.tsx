@@ -24,6 +24,12 @@ export type Event = {
     };
 }
 
+export type GenSchedResponse = {
+    events: Event[];
+    schedule: any;
+    score: number;
+}
+
 export type Game = {
     id: number;
     home_team: string;
