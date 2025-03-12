@@ -44,7 +44,9 @@ export const Navbar = () => {
     if (item.label === "Season Setup" && session?.user.role !== "commissioner") {
       return false; // Hide for non-commissioners
     } else if (item.label === "Accept RR" && session?.user.role !== "team") {
-      return false; // Hide if the user is not part of a team
+      return false; // Hide if the user is not signed in as a team
+    } else if (item.label === "Team" && session?.user.role !== "player" && session?.user.role !== "team") {
+      return false; // Hide if the user is not signed in as a team or player
     }
     return true;
   });
@@ -82,19 +84,8 @@ export const Navbar = () => {
   
       <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <GithubIcon className="text-default-500" />
-          </Link>
           <ThemeSwitch />
         </NavbarItem>
-      </NavbarContent>
-  
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
-        <ThemeSwitch />
-        <NavbarMenuToggle />
       </NavbarContent>
   
       <NavbarMenu>
