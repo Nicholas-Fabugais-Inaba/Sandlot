@@ -105,6 +105,7 @@ export default function ManageRescheduleRequest() {
       }
       setModalVisible(false);
       setModalContent(null);
+      window.location.reload();
     }
   };
 
