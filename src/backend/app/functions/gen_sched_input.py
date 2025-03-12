@@ -1,9 +1,9 @@
 
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from .scheduler import gen_schedule_w_skip, send_schedule_to_db
 # from scheduler import gen_schedule_w_skip
 from random import shuffle
-from ..db.queries import get_all_teams
+from ..db.queries import get_all_teams, get_season_settings
 
 from ..db.mock_data import insert_mock_schedule
 
@@ -172,6 +172,7 @@ def gen_mock_schedule():
     div_c = {}
     div_d = {}
     Teams = get_all_teams()
+    Settings = get_season_settings()
     for i in range(len(Teams)):
         teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
         if Teams[i]["division"] == 0:
@@ -185,9 +186,12 @@ def gen_mock_schedule():
 
     divs = [div_a, div_b, div_c, div_d]
 
-    games = gen_games_division(divs, GAMES_PER_TEAM)
+    start_date = datetime.strptime(Settings["start_date"], "%Y-%m-%d").date()
+    end_date = datetime.strptime(Settings["end_date"], "%Y-%m-%d").date()
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+    games = gen_games_division(divs, Settings["games_per_team"])
+
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date, len(teams))
 
     schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
     print(schedule)
