@@ -43,8 +43,8 @@ export const Navbar = () => {
   const filteredNavItems = siteConfig.navItems.filter((item) => {
     if (item.label === "Season Setup" && session?.user.role !== "commissioner") {
       return false; // Hide for non-commissioners
-    } else if (item.label === "Accept RR" && session?.user.role !== "team") {
-      return false; // Hide if the user is not signed in as a team
+    } else if (item.label === "Rescheduler" && session?.user.role !== "team") {
+      return false; // Hide if the user is not part of a team
     } else if (item.label === "Team" && session?.user.role !== "player" && session?.user.role !== "team") {
       return false; // Hide if the user is not signed in as a team or player
     }

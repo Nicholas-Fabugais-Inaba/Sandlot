@@ -25,8 +25,8 @@ export const siteConfig = {
       href: "/profile",
     },
     {
-      label: "Accept RR",
-      href: "/accept-reschedule-request",
+      label: "Rescheduler",
+      href: "/manage-reschedule-request",
     },
     {
       label: "Season Setup",
