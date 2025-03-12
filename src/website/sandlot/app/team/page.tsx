@@ -282,7 +282,7 @@ export default function TeamPage() {
           </div>
           
           <div className="w-2/5">
-            <h2 className="text-xl font-bold mb-2">Pending Requests</h2>
+            <h2 className="text-xl font-bold mb-2">Pending Player Join Requests</h2>
               <div className="max-h-80 overflow-y-auto">
               {(userTeam?.joinRequests?.length ? userTeam.joinRequests : [
                 { email: "request@domain.com", name: "John Doe" },
