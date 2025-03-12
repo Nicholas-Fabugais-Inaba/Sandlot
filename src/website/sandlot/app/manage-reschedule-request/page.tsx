@@ -2,6 +2,7 @@
 
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getSession } from 'next-auth/react';
 import { title } from "@/components/primitives";
@@ -33,6 +34,7 @@ export default function ManageRescheduleRequest() {
   const [selectedDates, setSelectedDates] = useState<{ [key: string]: string | null }>({});
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState<{ id: string, action: string, originalDate: Date, originalField: string, reciever_name?: string, requester_name?: string, newDate?: string } | null>(null);
+  const router = useRouter();
 
   // Fetch session data to get user role
   useEffect(() => {
@@ -131,55 +133,64 @@ export default function ManageRescheduleRequest() {
     return <div>Loading...</div>; // Show loading indicator while fetching session
   }
 
-  if (rescheduleRequests.length === 0) {
-    return <div>No reschedule requests found.</div>; // Show message if no reschedule requests are found
-  }
-
   return (
     <div>
       <h1 className={title()}>Manage Reschedule Requests</h1>
       <div className="items-center p-6">
-        {rescheduleRequests.map((request) => (
-          <Card key={request.id} className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white mb-6">
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold">Game Requested for Rescheduling</h2>
-              <p>{request.reciever_name} vs. {request.requester_name}</p>
-            </div>
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold">Original Game Date</h2>
-              <p>{request.originalDate.toLocaleString() + " on Field " + request.originalField}</p>
-            </div>
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold">Proposed Dates</h2>
-              <select
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                value={selectedDates[request.id] || ""}
-                onChange={(e) => setSelectedDates({ ...selectedDates, [request.id]: e.target.value })}
-              >
-                <option value="" disabled>Select a date</option>
-                {request.proposedDates.map((date, i) => (
-                  <option key={date.toISOString() + request.proposedFields[i]} value={date.toISOString() + " " + request.proposedFields[i]}>
-                    {date.toLocaleString() + " on Field " + request.proposedFields[i]}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => handleAccept(request.id)}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg"
-              >
-                Accept
-              </button>
-              <button
-                onClick={() => handleDeny(request.id)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg"
-              >
-                Deny
-              </button>
-            </div>
-          </Card>
-        ))}
+        {rescheduleRequests.length === 0 ? (
+          <div>No reschedule requests found.</div>
+        ) : (
+          rescheduleRequests.map((request) => (
+            <Card key={request.id} className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white mb-6">
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold">Game Requested for Rescheduling</h2>
+                <p>{request.reciever_name} vs. {request.requester_name}</p>
+              </div>
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold">Original Game Date</h2>
+                <p>{request.originalDate.toLocaleString() + " on Field " + request.originalField}</p>
+              </div>
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold">Proposed Dates</h2>
+                <select
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  value={selectedDates[request.id] || ""}
+                  onChange={(e) => setSelectedDates({ ...selectedDates, [request.id]: e.target.value })}
+                >
+                  <option value="" disabled>Select a date</option>
+                  {request.proposedDates.map((date, i) => (
+                    <option key={date.toISOString() + request.proposedFields[i]} value={date.toISOString() + " " + request.proposedFields[i]}>
+                      {date.toLocaleString() + " on Field " + request.proposedFields[i]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => handleAccept(request.id)}
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() => handleDeny(request.id)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                >
+                  Deny
+                </button>
+              </div>
+            </Card>
+          ))
+        )}
+        <div className="mt-6">
+          <p className="italic">Need to reschedule your team's game?</p>
+          <button
+            onClick={() => router.push('/schedule')}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-2"
+          >
+            Reschedule Game
+          </button>
+        </div>
       </div>
 
       <CustomModal
