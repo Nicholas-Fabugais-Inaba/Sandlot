@@ -63,6 +63,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const popupRef = useRef<HTMLDivElement>(null);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const calendarRef = useRef<FullCalendar>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
@@ -125,6 +126,19 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [popupVisible]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSelectClick = (start: Date | null, field: number) => {
     if (start) {
@@ -315,9 +329,9 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
         <h1 className={title()}>Schedule</h1>
       )}
       {schedType === 3 ? (
-        <p className="text-2xl font-semibold text-center mt-2">Choose alternate game slots</p>
+        <p className="text-2xl text-center mt-2"><em>Click up to 5 free game slots to reschedule your team's game</em></p>
       ) : (userRole === "team" || userRole === "commissioner") && !viewer ? (
-        <p className="text-2xl font-semibold text-center mt-2">Click to reschedule a game</p>
+        <p className="text-2xl text-center mt-2"><em>Click on one of your team's games to reschedule the game or submit a score</em></p>
       ) : (
         <></>
       )}
@@ -777,6 +791,14 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
             </div>
           </div>
         </div>
+      )}
+      {showScrollToTop && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 p-3 bg-blue-500 text-white rounded-full shadow-lg z-50"
+        >
+          ↑
+        </button>
       )}
     </div>
   );
