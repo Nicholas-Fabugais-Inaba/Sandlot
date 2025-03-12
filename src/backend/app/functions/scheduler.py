@@ -70,7 +70,7 @@ def constraint3(game, game_slot, schedule):
 def constraint4(game, game_slot, schedule):
     global teams
     # Checks each team involved in the game
-    weekday: int = game_slot[2].weekday() - 1 # weekday() lies, Monday is 1, so we must subtract one to convert it to the correct weekday.
+    weekday: int = game_slot[2].weekday()# - 1 # weekday() lies, Monday is 1, so we must subtract one to convert it to the correct weekday.
     for team in game:
         if teams[team]["offday"] == weekday:
             return False # ISSUE: If both teams have an offday on this day it will be weighted the same as one team having an offday
@@ -130,7 +130,7 @@ def backtrack_scheduler_w_skip():
         # Find the least played weeks for the teams in the game
         # CURRENTLY this just uses a week from the list as a starting place, if the week is full it will move to the next week sequentially.
         least_played_weeks = find_least_played_weeks(game[0], game[1])
-        print(least_played_weeks)
+        # print(least_played_weeks)
         # Select a random week from the least played weeks
         start_week = random.choice(least_played_weeks)
         curr_week = start_week
@@ -138,7 +138,7 @@ def backtrack_scheduler_w_skip():
         while True: # Loop through all weeks
             slot_chosen = False
             # print(schedule)
-            print("Week: ", curr_week)
+            # print("Week: ", curr_week)
             week_slots = game_slots[curr_week]
             # SHUFFLE WEEK_SLOTS
             random.shuffle(week_slots)
