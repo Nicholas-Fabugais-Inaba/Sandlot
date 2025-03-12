@@ -1,4 +1,4 @@
-// app/accept-reschedule-request/page.tsx
+// app/manage-reschedule-request/page.tsx
 
 "use client";
 
@@ -7,7 +7,7 @@ import { getSession } from 'next-auth/react';
 import { title } from "@/components/primitives";
 import { Card } from "@heroui/react";  // Import NextUI Card
 import CustomModal from "./CustomModal";  // Import Custom Modal
-import "./AcceptRescheduleRequest.css";  // Custom styles
+import "./ManageRescheduleRequest.css";  // Custom styles
 
 import getRR from "../functions/getRR";
 import acceptRR from "../functions/acceptRR";
@@ -25,14 +25,14 @@ interface RescheduleRequest {
   requester_id: number,
 }
 
-export default function AcceptRescheduleRequest() {
+export default function ManageRescheduleRequest() {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>([]);
   const [selectedDates, setSelectedDates] = useState<{ [key: string]: string | null }>({});
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState<{ id: string, action: string, originalDate: Date, newDate?: string } | null>(null);
+  const [modalContent, setModalContent] = useState<{ id: string, action: string, originalDate: Date, originalField: string, reciever_name?: string, requester_name?: string, newDate?: string } | null>(null);
 
   // Fetch session data to get user role
   useEffect(() => {
@@ -61,7 +61,14 @@ export default function AcceptRescheduleRequest() {
     const selectedDate = selectedDates[id];
     const request = rescheduleRequests.find(req => req.id === id);
     if (selectedDate && request) {
-      setModalContent({ id, action: 'accept', originalDate: request.originalDate, newDate: selectedDate });
+      setModalContent({
+        id,
+        action: 'accept',
+        originalDate: request.originalDate,
+        originalField: request.originalField,
+        reciever_name: request.reciever_name,
+        requester_name: request.requester_name,
+        newDate: selectedDate });
       setModalVisible(true);
     } else {
       alert("Please select a date.");
@@ -71,7 +78,12 @@ export default function AcceptRescheduleRequest() {
   const handleDeny = (id: string) => {
     const request = rescheduleRequests.find(req => req.id === id);
     if (request) {
-      setModalContent({ id, action: 'deny', originalDate: request.originalDate });
+      setModalContent({ id,
+        action: 'deny',
+        originalDate: request.originalDate,
+        originalField: request.originalField,
+        reciever_name: request.reciever_name,
+        requester_name: request.requester_name });
       setModalVisible(true);
     }
   };
@@ -124,13 +136,17 @@ export default function AcceptRescheduleRequest() {
 
   return (
     <div>
-      <h1 className={title()}>Accept Reschedule Requests</h1>
+      <h1 className={title()}>Manage Reschedule Requests</h1>
       <div className="items-center p-6">
         {rescheduleRequests.map((request) => (
           <Card key={request.id} className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white mb-6">
             <div className="mb-4">
+              <h2 className="text-xl font-semibold">Game Requested for Rescheduling</h2>
+              <p>{request.reciever_name} vs. {request.requester_name}</p>
+            </div>
+            <div className="mb-4">
               <h2 className="text-xl font-semibold">Original Game Date</h2>
-              <p>{request.originalDate.toLocaleString()}</p>
+              <p>{request.originalDate.toLocaleString() + " on Field " + request.originalField}</p>
             </div>
             <div className="mb-4">
               <h2 className="text-xl font-semibold">Proposed Dates</h2>
@@ -142,7 +158,7 @@ export default function AcceptRescheduleRequest() {
                 <option value="" disabled>Select a date</option>
                 {request.proposedDates.map((date, i) => (
                   <option key={date.toISOString() + request.proposedFields[i]} value={date.toISOString() + " " + request.proposedFields[i]}>
-                    {date.toLocaleString() + " on field " + request.proposedFields[i]}
+                    {date.toLocaleString() + " on Field " + request.proposedFields[i]}
                   </option>
                 ))}
               </select>
@@ -173,9 +189,10 @@ export default function AcceptRescheduleRequest() {
         body={
           <>
             <p>Are you sure you want to {modalContent?.action} the reschedule request?</p>
-            <p>Original Date: {modalContent?.originalDate.toLocaleString()}</p>
+            <p>Original Game: {modalContent?.reciever_name} vs. {modalContent?.requester_name}</p>
+            <p>Original Date: {modalContent?.originalDate.toLocaleString()} on Field {modalContent?.originalField}</p>
             {modalContent?.action === 'accept' && modalContent?.newDate && (
-              <p>New Date: {parseNewDate(modalContent.newDate)[0].toLocaleString() + "on field " + parseNewDate(modalContent.newDate)[1]}</p>
+              <p>New Date: {parseNewDate(modalContent.newDate)[0].toLocaleString() + " on Field " + parseNewDate(modalContent.newDate)[1]}</p>
             )}
           </>
         }
