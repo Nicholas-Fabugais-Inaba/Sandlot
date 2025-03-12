@@ -5,6 +5,7 @@ from .routers.team_router import router as team_router
 from .routers.user_router import router as user_router
 from .routers.standings_router import router as standings_router
 from .routers.season_setup_router import router as season_setup_router
+from .routers.announcement_router import router as announcement_router
 
 
 app = FastAPI()
@@ -25,6 +26,7 @@ app.include_router(user_router, prefix="/user")
 app.include_router(standings_router, prefix="/standings")
 app.include_router(team_router, prefix="/team")
 app.include_router(season_setup_router, prefix="/season-setup")
+app.include_router(announcement_router, prefix="/announcement")
 
 @app.get("/")
 def read_root():

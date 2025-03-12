@@ -6,14 +6,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "@heroui/link";
 import { Snippet } from "@heroui/snippet";
 import { Code } from "@heroui/code";
-import { Card } from "@heroui/react";
+import { Button, Card } from "@heroui/react";
 import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 import { useRouter } from 'next/navigation';
 import { Session } from 'next-auth'; 
-import { getSession} from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import "./HomePage.css";  // Import the new CSS file
 
 export default function Home() {
@@ -160,7 +160,7 @@ export default function Home() {
         return (
           <section className="w-full px-6 py-8 md:py-10">
             {/* Scrollable container */}
-            <div className="w-full overflow-x-auto">
+            <div className="w-full mx-auto">
               <div className="flex flex-row gap-6 min-w-[800px]">  
                 {/* Welcome Section */}
                 <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 min-w-0">
@@ -171,27 +171,14 @@ export default function Home() {
                     <br />
                     <span className={title()}>Softball League</span>
                   </div>
-
-                  <div className="flex gap-3 mt-4">
-                    <Link
-                      isExternal
-                      className={buttonStyles({
-                        color: "primary",
-                        radius: "full",
-                        variant: "shadow",
-                      })}
-                      href={siteConfig.links.docs}
-                    >
-                      Documentation
-                    </Link>
-                    <Link
-                      isExternal
-                      className={buttonStyles({ variant: "bordered", radius: "full" })}
-                      href={siteConfig.links.github}
-                    >
-                      <GithubIcon size={20} />
-                      GitHub
-                    </Link>
+                  <div className="flex flex-col items-center mt-6 ml-20">
+                    <Button onPress={() => signIn(undefined, { callbackUrl: "/profile" })} className="button">
+                      Sign In
+                    </Button>
+                    <p className="mt-2 mb-2"><em>Don't have an account?</em></p>
+                    <Button onPress={() => router.push('/profile/register')} className="button">
+                      Register
+                    </Button>
                   </div>
                 </div>
 

@@ -101,6 +101,13 @@ class TimeSlot(Base):
     end: Mapped[Optional[str]] = mapped_column(String(50))
     field_id: Mapped[Optional[int]] = mapped_column(ForeignKey("field.id"))
 
+class Announcement(Base):
+    __tablename__ = "announcement"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    date: Mapped[Optional[str]] = mapped_column(String(50))
+    title: Mapped[Optional[str]] = mapped_column(String(100))
+    body: Mapped[Optional[str]] = mapped_column(String(500))
+
 class Division(Base):
     __tablename__ = "division"
     id: Mapped[int] = mapped_column(primary_key=True)

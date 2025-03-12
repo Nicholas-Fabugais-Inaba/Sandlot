@@ -3,6 +3,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';  // To handle the query parameters
 import { title } from "@/components/primitives";
 import { Button } from '@heroui/react';
@@ -45,29 +46,47 @@ export default function Register() {
   // };
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault(); // default action on submit is to redirect to callbackUrl
-    if(accountType == 'player') {
-      let newUser = {
-        name: name,
-        email: email,
-        password: password,
+    e.preventDefault(); // Prevent default form submission behavior
+
+    try {
+      if (accountType === 'player') {
+        const newUser = {
+          name: name,
+          email: email,
+          password: password,
+        };
+        await registerPlayer(newUser);
+      } else {
+        const newTeam = {
+          team_name: teamName,
+          username: teamUsername,
+          password: password,
+          preferred_division: preferredDivision,
+          preferred_offday: preferredOffday,
+          preferred_time: preferredTime,
+        };
+        await registerTeam(newTeam);
       }
-      // TODO: error checking to make sure response is OK on registration
-      await registerPlayer(newUser)
-    }
-    else {
-      let newTeam = {
-        team_name: teamName,
-        username: teamUsername,
+
+      // Automatically sign in the user after successful registration
+      const result = await signIn('credentials', {
+        redirect: false, // Prevent automatic redirect
+        userID: accountType === 'player' ? email : teamUsername,
         password: password,
-        preferred_division: preferredDivision,
-        preferred_offday: preferredOffday,
-        preferred_time: preferredTime
+      });
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        window.location.href = callbackUrl; // Full page reload to ensure a complete refresh
       }
-      // TODO: error checking to make sure response is OK on registration
-      await registerTeam(newTeam)
+    } catch (error) {
+      if (error instanceof Error) {
+        setError((error as any).response?.data?.detail || 'Registration failed');
+      } else {
+        setError('Registration failed');
+      }
     }
-    router.push(callbackUrl);
   };
 
   const renderForm = () => {
@@ -185,7 +204,8 @@ export default function Register() {
                 <Button type="submit" className="button">Register</Button>
               </div>
 
-              <div className="flex justify-center mt-4">
+              <div className="flex space-x-4 justify-center mt-4">
+                <Button onPress={() => setAccountType(null)} className="button">Back</Button>
                 <Button onPress={() => router.push(callbackUrl)} className="button">Cancel</Button>
               </div>
             </form>
