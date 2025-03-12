@@ -37,7 +37,7 @@ class Team(Base):
     standing: Mapped[Optional[str]] = mapped_column(String(50))
     username: Mapped[Optional[str]] = mapped_column(String(50), unique=True)
     password: Mapped[Optional[str]] = mapped_column(String(50))
-    division: Mapped[Optional[int]] = mapped_column() # 0 = A
+    division: Mapped[Optional[int]] = mapped_column(ForeignKey("division.id", ondelete="SET NULL"), nullable=True) # 0 = A
     preferred_division: Mapped[Optional[int]] = mapped_column() # 0 = A
     offday: Mapped[Optional[int]] = mapped_column() # 0 = Monday
     preferred_time: Mapped[Optional[int]] = mapped_column() # 0 = balanced, 1 = early, 2 = late
@@ -107,6 +107,11 @@ class Announcement(Base):
     date: Mapped[Optional[str]] = mapped_column(String(50))
     title: Mapped[Optional[str]] = mapped_column(String(100))
     body: Mapped[Optional[str]] = mapped_column(String(500))
+
+class Division(Base):
+    __tablename__ = "division"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    division_name: Mapped[Optional[str]] = mapped_column(String(50))
 
 # function which creates defined models as tables in DB
 def create_tables():

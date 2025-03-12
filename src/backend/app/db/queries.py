@@ -20,7 +20,7 @@ def insert_player(name, email, password):
             raise
         else:
             session.commit()
-    return True
+            return "player created"
 
 def insert_team(team_name, username, password, division, preferred_division, preferred_offday, preferred_time):
     engine = create_connection()
@@ -41,7 +41,23 @@ def insert_team(team_name, username, password, division, preferred_division, pre
             raise
         else:
             session.commit()
-    return True
+            return "team created"
+
+def delete_player(player_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Player).where(Player.id == player_id)
+        session.execute(stmt)
+        session.commit()
+        return "player deleted"
+
+def delete_team(team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Team).where(Team.id == team_id)
+        session.execute(stmt)
+        session.commit()
+        return "team deleted"
 
 def get_player(login_email):
     engine = create_connection()
@@ -66,24 +82,18 @@ def get_all_teams():
         result = session.execute(stmt).mappings().all()
         return result
 
-def get_team_info_by_current_user(user_id):
+def get_team_info_by_current_user(user_teamid):
     engine = create_connection()
     with Session(engine) as session:
 
-        stmtInner = (
-            select(Player.team_id)
-            .select_from(Player)
-            .where(Player.id == user_id)
-        )
-
         stmt = (
-            select(Player.id, Player.first_name, Player.last_name, Player.email, Team.team_name, Team.id)
-            .select_from(Player, Team)
-            .where(Player.team_id == Team.id)
-            .where(Player.team_id == stmtInner)
+            select(Player.id, Player.first_name, Player.last_name, Player.email, Player.phone_number, Player.gender)
+            .select_from(Team)
+            .join(Player, Team.id == Player.team_id)
+            .where(Player.team_id == user_teamid)
         )
 
-        result = session.execute(stmt).mappings().first()
+        result = session.execute(stmt).mappings().all()
         return result
 
 def insert_game(home_team, away_team, date, time, field):
@@ -228,7 +238,7 @@ def insert_reschedule_request(requester_id, receiver_id, game_id, option1, optio
             raise
         else:
             session.commit()
-    return True
+            return "reschedule request created"
 
 def get_reschedule_requests(team_id):
     engine = create_connection()
@@ -273,6 +283,7 @@ def delete_reschedule_request(request_id):
         stmt = delete(RescheduleRequest).where(RescheduleRequest.id == request_id)
         session.execute(stmt)
         session.commit()
+        return "reschedule request deleted"
     
 def update_game(game_id, new_date, new_time, new_field):
     engine = create_connection()
