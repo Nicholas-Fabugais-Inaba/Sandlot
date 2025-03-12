@@ -17,6 +17,7 @@ import { Event, GenSchedResponse } from "../types";
 import createRR from "../functions/createRR";
 import { Dictionary } from "@fullcalendar/core/internal";
 import { useSchedule } from './ScheduleContext';
+import saveSchedule from "../functions/saveSchedule";
 
 const currDate = new Date("2025-06-20"); // Temporary current date, needs time in future
 const currNextDate = new Date("2025-06-21");
@@ -47,9 +48,9 @@ interface SchedulePageProps {
 
 export default function SchedulePage({ viewer }: SchedulePageProps) {
   const context = useSchedule();
-  const [events, setEvents] = context ? [context.events, context.setEvents] : useState<Event[]>();
-  const [schedule, setSchedule] = context ? [context.schedule, context.setSchedule] : useState<Dictionary>({});
-  const [schedScore, setSchedScore] = context ? [context.schedScore, context.setSchedScore] : useState<number>(0);
+  const [events, setEvents] = context && context.events ? [context.events, context.setEvents] : useState<Event[]>();
+  const [schedule, setSchedule] = context && context.schedule ? [context.schedule, context.setSchedule] : useState<Dictionary>({});
+  const [schedScore, setSchedScore] = context && context.schedScore ? [context.schedScore, context.setSchedScore] : useState<number>(0);
   const [view, setView] = useState("timeGridWeek");
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
   const [rescheduleGame, setRescheduleGame] = useState<RescheduleGame>();
@@ -253,6 +254,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
     // Implement the logic to submit the schedule
     console.log("Submit Schedule button clicked");
     console.log(schedule);
+    saveSchedule(schedule);
   };
 
   const handleCommissionerReschedule = () => {

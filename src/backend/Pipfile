@@ -7,8 +7,9 @@ name = "pypi"
 fastapi = {extras = ["standard"], version = "*"}
 sqlalchemy = "*"
 python-dotenv = "*"
-pyodbc = "*"
 psycopg2 = "*"
+pytest = "*"
+pytest-asyncio = "*"
 
 [dev-packages]
 
