@@ -171,15 +171,17 @@ export default function Home() {
                     <br />
                     <span className={title()}>Softball League</span>
                   </div>
-                  <div className="flex flex-col items-center mt-6 ml-20">
-                    <Button onPress={() => signIn(undefined, { callbackUrl: "/profile" })} className="button">
-                      Sign In
-                    </Button>
-                    <p className="mt-2 mb-2"><em>Don't have an account?</em></p>
-                    <Button onPress={() => router.push('/profile/register')} className="button">
-                      Register
-                    </Button>
-                  </div>
+                  {!loading && session === null && (
+                    <div className="flex flex-col items-center mt-6 ml-20">
+                      <Button onPress={() => signIn(undefined, { callbackUrl: "/profile" })} className="button">
+                        Sign In
+                      </Button>
+                      <p className="mt-2 mb-2"><em>Don't have an account?</em></p>
+                      <Button onPress={() => router.push('/profile/register')} className="button">
+                        Register
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Announcements Section */}

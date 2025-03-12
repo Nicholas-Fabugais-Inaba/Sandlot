@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select, or_, delete, update
 from .create_engine import create_connection
-from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest, Announcement
+from .models import Player, Team, Game, RescheduleRequest, Field, TimeSlot, SeasonSettings, JoinRequest, Division, Announcement
 
 
 # creating account insert query
@@ -313,7 +313,9 @@ def get_standings():
                 Game.away_team_id,
                 team2.team_name.label('away_team_name'),
                 Game.away_team_score,
-                team2.division.label('away_division')
+                team2.division.label('away_division'),
+                Game.played,
+                Game.forfeit
             )
             .select_from(Game)
             .join(team1, Game.home_team_id == team1.id)
@@ -323,10 +325,10 @@ def get_standings():
         result = session.execute(stmt).mappings().all()
         return result
     
-def update_score(game_id, home_team_score, away_team_score):
+def update_score(game_id, home_team_score, away_team_score, forfeit):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
+        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=True, forfeit=forfeit)
         try:
             session.execute(stmt)
         except:
@@ -535,3 +537,29 @@ def delete_announcement(announcement_id):
         stmt = delete(Announcement).where(Announcement.id == announcement_id)
         session.execute(stmt)
         session.commit()
+
+
+###
+def get_division_name_by_division_id(division_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Division.division_name)
+            .select_from(Division)
+            .join(Team, Team.division == Division.id)
+            .where(Division.id == division_id)
+        )
+        result = session.execute(stmt).mappings().first()
+        return result
+
+def get_division_name_by_team_id(team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Division.division_name)
+            .select_from(Division)
+            .join(Team, Team.division == Division.id)
+            .where(Team.id == team_id)
+        )
+        result = session.execute(stmt).mappings().first()
+        return result
