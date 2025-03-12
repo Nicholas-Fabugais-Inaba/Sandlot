@@ -323,6 +323,45 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
       )}
       <div className="items-center p-6">
         <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
+          {schedType === 0 || schedType === 1 ? (
+            <div className="legend flex justify-center items-center">
+              <div className="legend-item">
+                <div className="legend-color legend-game-played"></div>
+                <span>Game Played</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color legend-field1"></div>
+                <span>Field 1</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color legend-field2"></div>
+                <span>Field 2</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color legend-field3"></div>
+                <span>Field 3</span>
+              </div>
+            </div>
+          ) : schedType === 2 || schedType === 3 ? (
+            <div className="legend flex justify-center items-center">
+              <div className="legend-item">
+                <div className="legend-color legend-game-played"></div>
+                <span>Game Played</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color legend-full-slot"></div>
+                <span>Full Slot</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color legend-free-slot"></div>
+                <span>Free Slot</span>
+              </div>
+              <div className="legend-item">
+                <div className="legend-color legend-chosen-slot"></div>
+                <span>Chosen Slot</span>
+              </div>
+            </div>
+          ) : null}
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin]}
@@ -387,13 +426,16 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                     .slice(0, 5)
                 : "";
 
+              const isPastEvent = eventInfo.event.start && new Date(eventInfo.event.start) < currDate;
+              // const isRescheduleGame = rescheduleGame && eventInfo.event.start && eventInfo.event.extendedProps.field1?.home_id === rescheduleGame.home_id && eventInfo.event.extendedProps.field1?.away_id === rescheduleGame.away_id;
+
               return schedType === 0 ? ( // Full Schedule
                 <div className="event-content-grid" key={selectedDates.join(',')}>
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
                     <div
                       onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
-                      className={`event-content p-2 rounded-xl bg-orange-100 text-orange-800
-                        ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : "border-2 border-orange-100"}`}
+                      className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-orange-100 text-orange-800"}
+                        ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : ""}`}
                     >
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
                       <div className="font-semibold">{"vs"}</div>
@@ -408,8 +450,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
                     <div
                       onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
-                      className={`event-content p-2 rounded-xl bg-cyan-100 text-blue-800
-                        ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : "border-2 border-cyan-100"}`}
+                      className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-cyan-100 text-blue-800"}
+                        ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : ""}`}
                     >
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
                       <div className="font-semibold">{"vs"}</div>
@@ -424,8 +466,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
                     <div
                       onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
-                      className={`event-content p-2 rounded-xl bg-purple-100 text-purple-800
-                        ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : "border-2 border-purple-100"}`}
+                      className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-purple-100 text-purple-800"}
+                        ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : ""}`}
                     >
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
                       <div className="font-semibold">{"vs"}</div>
@@ -444,8 +486,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                     (userTeamId === eventInfo.event.extendedProps.field1?.home_id || userTeamId === eventInfo.event.extendedProps.field1?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
-                        className={`event-content p-2 rounded-xl bg-orange-100 text-orange-800
-                          ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : "border-2 border-orange-100"}`}
+                        className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-orange-100 text-orange-800"}
+                          ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : ""}`}
                       >
                         <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
                         <div className="font-semibold">{"vs"}</div>
@@ -458,8 +500,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                     (userTeamId === eventInfo.event.extendedProps.field2?.home_id || userTeamId === eventInfo.event.extendedProps.field2?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
-                        className={`event-content p-2 rounded-xl bg-cyan-100 text-blue-800
-                          ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : "border-2 border-cyan-100"}`}
+                        className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-cyan-100 text-blue-800"}
+                          ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : ""}`}
                       >
                         <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
                         <div className="font-semibold">{"vs"}</div>
@@ -472,8 +514,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                     (userTeamId === eventInfo.event.extendedProps.field3?.home_id || userTeamId === eventInfo.event.extendedProps.field3?.away_id) ? (
                       <div
                         onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
-                        className={`event-content p-2 rounded-xl bg-purple-100 text-purple-800
-                          ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : "border-2 border-purple-100"}`}
+                        className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-purple-100 text-purple-800"}
+                          ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : ""}`}
                       >
                         <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
                         <div className="font-semibold">{"vs"}</div>
@@ -531,7 +573,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
               ) : schedType === 3 ? ( // Choose alternative game days
                 <div className="event-content-grid">
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
-                    <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
+                    <div className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.home}</div>
                       <div className="font-semibold">{"vs"}</div>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field1.away}</div>
@@ -553,7 +595,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                     <div></div>
                   )}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
-                    <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
+                    <div className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.home}</div>
                       <div className="font-semibold">{"vs"}</div>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field2.away}</div>
@@ -575,7 +617,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                     <div></div>
                   )}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
-                    <div className="event-content p-2 rounded-xl bg-red-100 text-red-800">
+                    <div className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.home}</div>
                       <div className="font-semibold">{"vs"}</div>
                       <div className="event-team font-semibold">{eventInfo.event.extendedProps.field3.away}</div>
