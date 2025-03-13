@@ -282,9 +282,10 @@ interface TeamProps {
   index: number;
   division_id: number;
   moveTeam: (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => void;
+  setIsDragging: (isDragging: boolean) => void; // Add this prop
 }
 
-const Team: React.FC<TeamProps> = ({ team, index, division_id, moveTeam }) => {
+const Team: React.FC<TeamProps> = ({ team, index, division_id, moveTeam, setIsDragging }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -293,7 +294,12 @@ const Team: React.FC<TeamProps> = ({ team, index, division_id, moveTeam }) => {
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    end: () => setIsDragging(false), // Reset dragging state when drag ends
   });
+
+  useEffect(() => {
+    setIsDragging(isDragging);
+  }, [isDragging, setIsDragging]);
 
   drag(ref);
 
@@ -312,9 +318,10 @@ const Team: React.FC<TeamProps> = ({ team, index, division_id, moveTeam }) => {
 interface DivisionProps {
   division: Division;
   moveTeam: (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => void;
+  isDragging: boolean; // Add this prop to track dragging state
+  setIsDragging: (isDragging: boolean) => void; // Add this prop to set dragging state
 }
-
-const Division: React.FC<DivisionProps> = ({ division, moveTeam }) => {
+const Division: React.FC<DivisionProps> = ({ division, moveTeam, isDragging, setIsDragging }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<DragItem>({
     accept: ItemTypes.TEAM,
@@ -333,11 +340,18 @@ const Division: React.FC<DivisionProps> = ({ division, moveTeam }) => {
   return (
     <div ref={ref} className="division drop-target">
       <h3>{division.name}</h3>
-      {division.teams.length === 0 ? (
+      {division.teams.length === 0 || (isDragging && division.name !== "Team Bank") ? (
         <div className="empty-division">Drop teams here</div>
       ) : (
         division.teams.map((team, index) => (
-          <Team key={team.id} team={team} index={index} division_id={division.id} moveTeam={moveTeam} />
+          <Team
+            key={team.id}
+            team={team}
+            index={index}
+            division_id={division.id}
+            moveTeam={moveTeam}
+            setIsDragging={setIsDragging} // Pass the setIsDragging callback
+          />
         ))
       )}
     </div>
@@ -348,6 +362,7 @@ function DivisionsSettings() {
   const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(true);
   const [divisions, setDivisions] = useState<Division[]>([{ id: 0, name: "Team Bank", teams: [] }]);
   const [newDivision, setNewDivision] = useState("");
+  const [isDragging, setIsDragging] = useState(false); // Lift the dragging state up
 
   // Load state from localStorage on mount
   useEffect(() => {
@@ -409,7 +424,7 @@ function DivisionsSettings() {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Divisions Settings</h2>
+      <h2 className="text-2xl font-semibold mb-4">Division Settings</h2>
 
       {/* Toggle to enable/disable divisions */}
       <div className="mb-4 flex items-center">
@@ -453,6 +468,8 @@ function DivisionsSettings() {
                   <Division
                     division={division}
                     moveTeam={moveTeam}
+                    isDragging={isDragging} // Pass the isDragging state
+                    setIsDragging={setIsDragging} // Pass the setIsDragging function
                   />
                 </div>
               ))}
@@ -464,6 +481,8 @@ function DivisionsSettings() {
             <Division
               division={divisions.find(division => division.name === "Team Bank")!}
               moveTeam={moveTeam}
+              isDragging={isDragging} // Pass the isDragging state
+              setIsDragging={setIsDragging} // Pass the setIsDragging function
             />
             <div style={{ textAlign: 'right', marginTop: '20px' }}>
               <button
