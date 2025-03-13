@@ -82,6 +82,21 @@ class ScoreData(BaseModel):
 class PlayerID(BaseModel):
     player_id: Optional[int]
 
+class NewAnnouncement(BaseModel):
+    date: str
+    title: str
+    body: str
+
+class AnnouncementData(BaseModel):
+    announcement_id: int
+    new_date: str
+    new_title: str
+    new_body: str
+
+class AnnouncementID(BaseModel):
+    announcement_id: int
+
+
 class Division(BaseModel):
     division_id: int
     division_name: str

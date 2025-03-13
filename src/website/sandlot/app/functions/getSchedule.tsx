@@ -105,30 +105,25 @@ function getFormattedEvents(games: any) : Event[] {
 
     // If the event doesn't exist, initialize it with start and end dates
     if (!(dateTime in eventsTemp)) {
+      // Split the date string into components
       var start = new Date(game.date);
       var end = new Date(game.date);
       if (game.time === "1") {
-        start.setHours(17);
-        end.setHours(18);
-        end.setMinutes(30);
+        start.setUTCHours(21, 0, 0);
+        end.setUTCHours(22, 30, 0);
       } else if (game.time === "2") {
-        start.setHours(18);
-        start.setMinutes(30);
-        end.setHours(20);
-      }
-      else if (game.time === "3") {
-        start.setHours(20);
-        end.setHours(21);
-        end.setMinutes(30);
-      }
-      else if (game.time === "4") {
-        start.setHours(21);
-        end.setMinutes(30);
-        end.setHours(23)
+        start.setUTCHours(22, 30, 0);
+        end.setUTCHours(24, 0, 0);
+      } else if (game.time === "3") {
+        start.setUTCHours(24, 0, 0);
+        end.setUTCHours(25, 30, 0);
+      } else if (game.time === "4") {
+        start.setUTCHours(25, 30, 0);
+        end.setUTCHours(29, 0, 0);
       }
       eventsTemp[dateTime] = {
         start: start,
-        end: end
+        end: end,
       };
     }
 
@@ -210,7 +205,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 
@@ -225,7 +220,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
       end.setMinutes(0);
       events.push({
         start: new Date(startDate),
-        end: end
+        end: end,
       });
     }
 
@@ -237,7 +232,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 
