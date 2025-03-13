@@ -1,7 +1,7 @@
 import pytest
 import sys
 
-sys.path.append('C:\\Users\\casra\\Documents\\VScode Projects\\4G06_Capstone\\src')
+sys.path.append('src')
 
 from backend.app.routers.user_router import *
 from backend.app.routers.types import NewPlayer, NewTeam
