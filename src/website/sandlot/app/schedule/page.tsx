@@ -19,8 +19,12 @@ import { Dictionary } from "@fullcalendar/core/internal";
 import { useSchedule } from './ScheduleContext';
 import saveSchedule from "../functions/saveSchedule";
 
-const currDate = new Date("2025-06-20"); // Temporary current date, needs time in future
-const currNextDate = new Date("2025-06-21");
+const currDate = new Date();
+currDate.setDate(currDate.getDate() + 61);
+// currDate.setHours(currDate.getHours() - 1);
+console.log(currDate);
+const currNextDate = new Date(currDate);
+currNextDate.setDate(currDate.getDate() + 1);
 
 interface SelectedDate {
   date: Date;
@@ -160,12 +164,12 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
     }
   };
 
-  const handleTeamClick = (event: React.MouseEvent, start: Date | null, field: number, teams: any) => {
+  const handleTeamClick = (event: React.MouseEvent, date: Date | null, field: number, teams: any) => {
     // If the user is either a commissioner or the game selected is one the logged in team is playing in
-    if (start && !viewer && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId)))) {
+    if (date && !viewer && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId)))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
-      setRescheduleGame({ game_id: teams.id, date: start, field: field, home_id: teams.home_id, away_id: teams.away_id });
+      setRescheduleGame({ game_id: teams.id, date: date, field: field, home_id: teams.home_id, away_id: teams.away_id });
       setGameScore({
         homeScore: 0,
         homeName: teams.home,

@@ -123,7 +123,7 @@ function getFormattedEvents(games: any) : Event[] {
       }
       eventsTemp[dateTime] = {
         start: start,
-        end: end
+        end: end,
       };
     }
 
@@ -205,7 +205,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 
@@ -220,7 +220,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
       end.setMinutes(0);
       events.push({
         start: new Date(startDate),
-        end: end
+        end: end,
       });
     }
 
@@ -232,7 +232,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 
