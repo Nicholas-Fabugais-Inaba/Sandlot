@@ -87,19 +87,24 @@ def gen_games_round_robin(teams, games_per_team: int):
 
     n = len(team_list)
     games = []
+    team_games_count = {team: 0 for team in team_list}
+    iter_count = -1
 
-    for r in range(games_per_team):
+    while all(count <= games_per_team for count in team_games_count.values()):
         round_games = []
+        iter_count += 1
         for i in range(n // 2):
             team1 = team_list[i]
             team2 = team_list[n - i - 1]
             if team1 != "BYE" and team2 != "BYE":
                 game = (team1, team2)
                 # Add the game in both directions to alternate home/away balance
-                if r % 2 == 0:
+                if iter_count % 2 == 0:
                     round_games.append(game)
                 else:
                     round_games.append((team2, team1))
+                team_games_count[team1] += 1
+                team_games_count[team2] += 1
         games.extend(round_games)
         # Rotate the teams except the first one
         team_list = [team_list[0]] + team_list[-1:] + team_list[1:-1]
