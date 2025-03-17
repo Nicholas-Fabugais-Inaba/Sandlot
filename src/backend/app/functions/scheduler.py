@@ -2,7 +2,7 @@
 import datetime
 from sys import maxsize
 import time
-from db.queries.mock_queries import insert_mock_game
+from ..db.queries.mock_queries import insert_mock_game
 import random
 
 # All variables here are global for use in the backtrack scheduler algorithm

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData
-from db.queries.player_queries import insert_player, get_player
-from db.queries.team_queries import insert_team, get_team
+from ..db.queries.player_queries import insert_player, get_player
+from ..db.queries.team_queries import insert_team, get_team
 
 
 router = APIRouter(tags=["user"])

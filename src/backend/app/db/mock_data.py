@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from db.queries.team_queries import insert_team
-from db.queries.mock_queries import insert_mock_player
+from ..db.queries.team_queries import insert_team
+from ..db.queries.mock_queries import insert_mock_player
 
 
 class MockTeam(BaseModel):

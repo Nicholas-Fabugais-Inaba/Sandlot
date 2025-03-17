@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from .types import TeamID
-from db.queries.team_queries import get_all_teams, get_team_players
-from db.queries.division_queries import get_division_name_by_division_id
+from ..db.queries.team_queries import get_all_teams, get_team_players
+from ..db.queries.division_queries import get_division_name_by_division_id
 
 
 router = APIRouter(tags=["team"])

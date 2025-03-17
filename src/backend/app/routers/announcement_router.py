@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from .types import NewAnnouncement, AnnouncementData, AnnouncementID
-from db.queries.announcement_queries import get_all_announcements, insert_announcement, update_announcement, delete_announcement
+from ..db.queries.announcement_queries import get_all_announcements, insert_announcement, update_announcement, delete_announcement
 
 
 router = APIRouter(tags=["announcement"])
