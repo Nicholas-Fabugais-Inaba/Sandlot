@@ -100,3 +100,31 @@ def update_score(game_id, home_team_score, away_team_score):
         else:
             session.commit()
     return True
+
+# TODO: not sure if this should be in team_queries or game_queries but this seemed more appropriate
+def get_standings():
+    engine = create_connection()
+    with Session(engine) as session:
+        team1 = aliased(Team)
+        team2 = aliased(Team)
+        
+        stmt = (
+            select(
+                Game.home_team_id,
+                team1.team_name.label('home_team_name'),
+                Game.home_team_score,
+                team1.division.label('home_division'),
+                Game.away_team_id,
+                team2.team_name.label('away_team_name'),
+                Game.away_team_score,
+                team2.division.label('away_division'),
+                Game.played,
+                Game.forfeit
+            )
+            .select_from(Game)
+            .join(team1, Game.home_team_id == team1.id)
+            .join(team2, Game.away_team_id == team2.id)
+        )
+        
+        result = session.execute(stmt).mappings().all()
+        return result

@@ -3,7 +3,8 @@ from datetime import datetime, date, timedelta
 from .scheduler import gen_schedule_w_skip, send_schedule_to_db
 # from scheduler import gen_schedule_w_skip
 from random import shuffle
-from ..db.queries import get_all_teams, get_season_settings
+from ..db.queries.team_queries import get_all_teams
+from ..db.queries.season_settings_queries import get_season_settings
 
 from ..db.mock_data import insert_mock_schedule
 
