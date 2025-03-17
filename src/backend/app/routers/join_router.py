@@ -11,7 +11,7 @@ async def create_join_request(data: JoinRequest):
     response = insert_join_request(data.player_id, data.team_id)
     return response
 
-@router.get("/get_join_requests", response_model=list)
+@router.post("/get_join_requests", response_model=list)
 async def get_team_join_requests(data: TeamID):
     requests = get_join_requests(data.team_id)
     requests = [dict(row) for row in requests]
