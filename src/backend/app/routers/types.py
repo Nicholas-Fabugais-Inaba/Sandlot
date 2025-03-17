@@ -96,3 +96,14 @@ class AnnouncementData(BaseModel):
 class AnnouncementID(BaseModel):
     announcement_id: int
 
+class JoinRequest(BaseModel):
+    player_id: int
+    team_id: int
+
+class JRAccept(BaseModel):
+    jr_id: int
+    player_id: int
+    team_id: int
+
+class JRDecline(BaseModel):
+    jr_id: int

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from ..create_engine import create_connection
 from ..models import Player, JoinRequest
 
@@ -39,6 +39,19 @@ def get_join_requests(team_id):
         )
         result = session.execute(stmt).mappings().all()
         return result
+    
+def decline_join_request(request_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(JoinRequest).where(JoinRequest.id == request_id).values(accepted=False)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
     
 def delete_join_request(request_id):
     engine = create_connection()
