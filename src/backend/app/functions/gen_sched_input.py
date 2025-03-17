@@ -212,12 +212,18 @@ def gen_schedule_repeated():
 
     Teams = get_all_teams()
     Settings = get_season_settings()
+
+    skipped_teams = 0
+
     for i in range(len(Teams)):
-        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
-        # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
-        if Teams[i]["division"] not in divs:
-            divs[Teams[i]["division"]] = {}
-        divs[Teams[i]["division"]][i] = teams[i]
+        if Teams[i]["division"] != -1:
+            teams[i - skipped_teams] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
+            # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
+            if Teams[i]["division"] not in divs:
+                divs[Teams[i]["division"]] = {}
+            divs[Teams[i]["division"]][i - skipped_teams] = teams[i - skipped_teams]
+        else:
+            skipped_teams += 1
 
     start_date = datetime.strptime(Settings["start_date"], "%Y-%m-%d").date()
     end_date = datetime.strptime(Settings["end_date"], "%Y-%m-%d").date()
