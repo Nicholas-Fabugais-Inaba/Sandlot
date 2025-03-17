@@ -47,11 +47,11 @@ async def submit_schedule(data: dict):
     return True
 
 @router.post("/get_score", response_model=None)
-async def get_score(data: GameID):
+async def get_game_score(data: GameID):
     score = get_score(data.game_id)
     return score
 
 @router.post("/submit_score", response_model=None)
-async def submit_score(data: ScoreData):
-    update_score(game_id=data.game_id, home_team_score=data.home_team_score, away_team_score=data.away_team_score, forfeit=data.forfeit)
+async def submit_game_score(data: ScoreData):
+    update_score(game_id=data.game_id, home_team_score=data.home_score, away_team_score=data.away_score, forfeit=data.forfeit)
     return True

@@ -47,6 +47,7 @@ interface GameScore {
   home_name: string;
   away_score: number;
   away_name: string;
+  forfeit: number;
 }
 
 interface SchedulePageProps {
@@ -183,7 +184,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
           home_score: res.home_team_score,
           home_name: teams.home,
           away_score: res.away_team_score,
-          away_name: teams.away
+          away_name: teams.away,
+          forfeit: res.forfeit? res.forfeit : 0
         });
       }, (err) => {
         console.error(err);

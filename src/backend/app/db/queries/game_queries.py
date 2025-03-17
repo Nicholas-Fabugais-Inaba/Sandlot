@@ -91,14 +91,14 @@ def update_game(game_id, new_date, new_time, new_field):
 def get_score(game_id):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Game.home_team_score, Game.away_team_score).where(Game.id == game_id)
+        stmt = select(Game.home_team_score, Game.away_team_score, Game.forfeit).where(Game.id == game_id)
         result = session.execute(stmt).mappings().first()
         return result
 
-def update_score(game_id, home_team_score, away_team_score):
+def update_score(game_id, home_team_score, away_team_score, forfeit):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
+        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, forfeit=forfeit, played=1)
         try:
             session.execute(stmt)
         except:
