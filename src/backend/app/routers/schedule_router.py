@@ -6,7 +6,6 @@ from ..functions.gen_sched_input import gen_schedule_repeated
 from ..db.queries import get_all_games, get_team_games, insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, update_game, get_score, update_score
 from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams
 
-
 router = APIRouter(tags=["schedule"])
 
 @router.get("/get_all_games", response_model=list)
