@@ -219,11 +219,11 @@ def gen_schedule_repeated():
 
     for i in range(len(Teams)):
         if Teams[i]["division"] != -1:
-            teams[i - skipped_teams] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
+            teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
             # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
             if Teams[i]["division"] not in divs:
                 divs[Teams[i]["division"]] = {}
-            divs[Teams[i]["division"]][i - skipped_teams] = teams[i - skipped_teams]
+            divs[Teams[i]["division"]][Teams[i]["id"]] = teams[Teams[i]["id"]]
         else:
             skipped_teams += 1
 

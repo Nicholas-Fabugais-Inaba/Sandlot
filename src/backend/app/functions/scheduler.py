@@ -208,9 +208,9 @@ def gen_constraints():
     hard_constraints.append(constraint4)
 
 
-def initialize_weeks_played(num_teams, num_weeks):
+def initialize_weeks_played(teams, num_weeks):
     # Initialize the weeks_played dictionary
-    for team in range(num_teams):
+    for team in teams:
         weeks_played[team] = {week: 0 for week in range(0, num_weeks)}
 
     return weeks_played
@@ -222,7 +222,7 @@ def gen_schedule_w_skip(games_to_sched, game_slots_to_sched, teams_to_sched):
     game_slots = game_slots_to_sched
     teams = teams_to_sched
     gen_constraints()
-    initialize_weeks_played(len(teams), len(game_slots))
+    initialize_weeks_played(teams, len(game_slots))
     print("starting schedule generation")
     schedule, score = backtrack_scheduler_w_skip()
     if schedule:
