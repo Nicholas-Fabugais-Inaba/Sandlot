@@ -3,14 +3,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Link } from "@heroui/link";
-import { Snippet } from "@heroui/snippet";
-import { Code } from "@heroui/code";
 import { Button, Card } from "@heroui/react";
-import { button as buttonStyles } from "@heroui/theme";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+import { title } from "@/components/primitives";
 import { useRouter } from 'next/navigation';
 import { Session } from 'next-auth'; 
 import { getSession, signIn } from 'next-auth/react';
@@ -21,13 +15,15 @@ export default function Home() {
   const [isWeatherDropdownOpen, setWeatherDropdownOpen] = useState(false);
   const router = useRouter();
   const [announcements, setAnnouncements] = useState([
-    "Season starts on April 1st!",
-    "Registration opens on March 1st.",
-    "New teams welcome to join."
+    { title: "Season Start", body: "Season starts on April 1st!", date: new Date('2025-04-01') },
+    { title: "Registration", body: "Registration opens on March 1st.", date: new Date('2025-03-01') },
+    { title: "New Teams", body: "New teams welcome to join.", date: new Date('2025-02-15') }
   ]);
-  const [newAnnouncement, setNewAnnouncement] = useState("");
+  const [newAnnouncementTitle, setNewAnnouncementTitle] = useState("");
+  const [newAnnouncementBody, setNewAnnouncementBody] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editValue, setEditValue] = useState("");  
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,37 +36,53 @@ export default function Home() {
 
     fetchSession();
   }, []);
-  
-  const handlePostAnnouncement = () => {
-    if (newAnnouncement.trim()) {
-      setAnnouncements([...announcements, newAnnouncement]);
-      setNewAnnouncement("");
-    }
-  };  
 
   const handleAddAnnouncement = () => {
-    if (newAnnouncement.trim() !== "") {
-      setAnnouncements([...announcements, newAnnouncement]);
-      setNewAnnouncement("");
+    if (newAnnouncementTitle.trim() && newAnnouncementBody.trim()) {
+      const newAnnouncement = {
+        title: newAnnouncementTitle,
+        body: newAnnouncementBody,
+        date: new Date(), // Set the current date for new announcements
+      };
+  
+      setAnnouncements((prevAnnouncements) => [
+        ...prevAnnouncements,
+        newAnnouncement,
+      ]);
+  
+      setNewAnnouncementTitle(""); // Reset title field
+      setNewAnnouncementBody("");  // Reset body field
     }
   };
-  
+
   const handleEditAnnouncement = (index: number) => {
     setEditingIndex(index);
-    setEditValue(announcements[index]);
+    setEditTitle(announcements[index].title);
+    setEditBody(announcements[index].body);
   };
-  
+
   const handleSaveEdit = (index: number) => {
-    const updatedAnnouncements = [...announcements];
-    updatedAnnouncements[index] = editValue;
-    setAnnouncements(updatedAnnouncements);
-    setEditingIndex(null);
-  };
+    if (editTitle.trim() && editBody.trim()) {
+      const updatedAnnouncements = [...announcements];
+      // Keep the original date and update only title and body
+      updatedAnnouncements[index] = {
+        title: editTitle,
+        body: editBody,
+        date: announcements[index].date, // Retain the original date
+      };
   
+      setAnnouncements(updatedAnnouncements);
+      setEditingIndex(null); // Reset editing index
+    } else {
+      // Optionally, show an error message if the title or body is empty
+      alert("Both title and body must be filled out.");
+    }
+  };
+
   const handleDeleteAnnouncement = (index: number) => {
     const updatedAnnouncements = announcements.filter((_, i) => i !== index);
     setAnnouncements(updatedAnnouncements);
-  };  
+  };
 
   const handleWeatherClick = () => {
     setWeatherDropdownOpen(!isWeatherDropdownOpen);
@@ -161,7 +173,7 @@ export default function Home() {
           <section className="w-full px-6 py-8 md:py-10">
             {/* Scrollable container */}
             <div className="w-full mx-auto">
-              <div className="flex flex-row gap-6 min-w-[800px]">  
+              <div className="flex flex-row gap-6 min-w-[900px]">  
                 {/* Welcome Section */}
                 <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 min-w-0">
                   <div className="inline-block max-w-xl">
@@ -185,75 +197,103 @@ export default function Home() {
                 </div>
 
                 {/* Announcements Section */}
-                <section className="flex-1 min-w-[300px]">
-                  <h2 className="text-xl font-bold">Announcements</h2>
+                <div id="announcements" className="max-h-96 overflow-y-auto border border-gray-300 rounded-lg p-4">
+                  <section className="flex-1 min-w-[500px]">
+                    <h2 className="text-xl font-bold">Announcements</h2>
 
-                  {session?.user.role === "commissioner" && (
-                    <div className="flex gap-2 mt-4">
-                      <input
-                        type="text"
-                        value={newAnnouncement}
-                        onChange={(e) => setNewAnnouncement(e.target.value)}
-                        placeholder="Enter announcement..."
-                        className="border border-gray-300 rounded-md px-3 py-2 w-full"
-                      />
-                      <button
-                        onClick={handleAddAnnouncement}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                      >
-                        Post
-                      </button>
-                    </div>
-                  )}
+                    {session?.user.role === "commissioner" && (
+                      <div className="flex flex-col gap-2 mt-4">
+                        <input
+                          type="text"
+                          value={newAnnouncementTitle}
+                          onChange={(e) => setNewAnnouncementTitle(e.target.value)}
+                          placeholder="Enter announcement title..."
+                          className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                        />
+                        <textarea
+                          value={newAnnouncementBody}
+                          onChange={(e) => setNewAnnouncementBody(e.target.value)}
+                          placeholder="Enter announcement body..."
+                          className="border border-gray-300 rounded-md px-3 py-2 w-full h-24"
+                        />
+                        <button
+                          onClick={handleAddAnnouncement}
+                          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                        >
+                          Post
+                        </button>
+                      </div>
+                    )}
 
-                  {/* Announcements List */}
-                  <ul className="mt-4 space-y-2">
-                    {announcements.map((announcement, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-sm"
-                      >
-                        {editingIndex === index ? (
-                          <input
-                            type="text"
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                            className="border border-gray-300 rounded-md px-2 py-1 flex-grow"
-                          />
-                        ) : (
-                          <span className="text-gray-800">{announcement}</span>
-                        )}
+                    {/* Announcements List */}
+                    <ul className="mt-4 space-y-2">
+                      {announcements.map((announcement, index) => {
+                        const currentDate = new Date().toLocaleDateString(); // Format the current date
+                        return (
+                          <li
+                            key={index}
+                            className="flex flex-col bg-gray-100 p-3 rounded-lg shadow-sm"
+                          >
+                            <div className="relative w-full">
+                              {/* Date in the top right corner */}
+                              <div className="absolute top-2 right-2 text-xs text-gray-500">
+                                {currentDate}
+                              </div>
 
-                        {/* Buttons for Edit and Delete */}
-                        {session?.user.role === "commissioner" && (
-                          <div className="flex space-x-2 ml-2">
-                            {editingIndex === index ? (
-                              <button
-                                onClick={() => handleSaveEdit(index)}
-                                className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
-                              >
-                                Save
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => handleEditAnnouncement(index)}
-                                className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
-                              >
-                                Edit
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleDeleteAnnouncement(index)}
-                              className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+                              {editingIndex === index ? (
+                                <>
+                                  <input
+                                    type="text"
+                                    value={editTitle}
+                                    onChange={(e) => setEditTitle(e.target.value)}
+                                    className="border border-gray-300 rounded-md px-2 py-1 w-full"
+                                  />
+                                  <textarea
+                                    value={editBody}
+                                    onChange={(e) => setEditBody(e.target.value)}
+                                    className="border border-gray-300 rounded-md px-2 py-1 w-full h-24 mt-2"
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <h3 className="text-lg font-bold text-gray-800">{announcement.title}</h3>
+                                  <p className="text-gray-800">{announcement.body}</p>
+                                </>
+                              )}
+
+                              {/* Buttons for Edit and Delete */}
+                              {session?.user.role === "commissioner" && (
+                                <div className="flex space-x-2 mt-2">
+                                  {editingIndex === index ? (
+                                    <button
+                                      onClick={() => handleSaveEdit(index)}
+                                      className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                                    >
+                                      Save
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() => handleEditAnnouncement(index)}
+                                      className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+                                    >
+                                      Edit
+                                    </button>
+                                  )}
+                                  <button
+                                    onClick={() => handleDeleteAnnouncement(index)}
+                                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                </div>
               </div>
             </div>
           </section>
