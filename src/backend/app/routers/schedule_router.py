@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from .types import RescheduleRequest, TeamID, RRAccept, SchedParams, ScoreData
-from ..db.queries.game_queries import get_all_games, get_team_games, update_game, get_score, update_score
+from ..db.queries.game_queries import get_all_games, get_team_games, update_game, delete_all_games, get_score, update_score
 from ..db.queries.reschedule_request_queries import insert_reschedule_request, get_reschedule_requests, delete_reschedule_request
 from ..functions.gen_sched_input import gen_schedule_repeated
 from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams
@@ -38,6 +38,7 @@ async def RR_accepted(data: RRAccept):
 
 @router.post("/gen_schedule", response_model=object)
 async def gen_schedule(data: SchedParams):
+    delete_all_games()
     schedule, score, teams = gen_schedule_repeated()
     return {"schedule": schedule, "score": score, "teams": teams}   
 

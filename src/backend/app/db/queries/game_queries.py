@@ -88,6 +88,17 @@ def update_game(game_id, new_date, new_time, new_field):
         else:
             session.commit()
 
+def delete_all_games():
+    engine = create_connection()
+    with Session(engine) as session:
+        try:
+            session.query(Game).delete()
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+
 def get_score(game_id):
     engine = create_connection()
     with Session(engine) as session:
