@@ -88,6 +88,13 @@ def update_game(game_id, new_date, new_time, new_field):
         else:
             session.commit()
 
+def get_score(game_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Game.home_team_score, Game.away_team_score).where(Game.id == game_id)
+        result = session.execute(stmt).mappings().first()
+        return result
+
 def update_score(game_id, home_team_score, away_team_score):
     engine = create_connection()
     with Session(engine) as session:
