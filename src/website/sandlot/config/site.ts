@@ -47,10 +47,6 @@ export const siteConfig = {
       href: "/standings",
     },
     {
-      label: "Team",
-      href: "/team",
-    },
-    {
       label: "Profile",
       href: "/profile",
     },
