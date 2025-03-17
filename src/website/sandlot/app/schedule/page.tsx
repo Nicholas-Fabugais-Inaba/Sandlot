@@ -401,8 +401,8 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
             events={events}
             allDaySlot={false}
             weekends={false}
-            slotMinTime="16:00:00" // Start at 4 PM
-            slotMaxTime="22:00:00" // End at 10 PM
+            slotMinTime="17:00:00" // Start at 5 PM
+            slotMaxTime="23:00:00" // End at 11 PM
             slotDuration="00:30:00" // Duration of each slot (30 minutes)
             headerToolbar={{
               left: (userRole === "team" || userRole === "player") && 

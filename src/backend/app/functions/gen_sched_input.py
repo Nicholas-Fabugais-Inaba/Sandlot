@@ -10,7 +10,7 @@ from ..db.mock_data import insert_mock_schedule
 
 
 FIELDS = 3
-TIMESLOTS = 3
+TIMESLOTS = 4
 START_DATE = date(2025, 5, 5) # May 5, 2025 (Monday)
 END_DATE = date(2025, 8, 20) # August 20, 2025 (Wednesday)
 # END_DATE = date(2024, 6, 30) # June 30, 2024 (Sunday)
@@ -112,7 +112,7 @@ def gen_games_round_robin(teams, games_per_team: int):
     return games
 
 
-def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date, num_teams: int):
+def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date):
     game_slots = []
     weekdays = get_weekdays(start_date, end_date)
     print(weekdays)
@@ -132,6 +132,8 @@ def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date
         week_slots = []
         for field in range(1, fields + 1):
             for timeslot in range(1, timeslots + 1):
+                if (field == 1 and (timeslot == 3 or timeslot == 4)) or (field == 2 and (timeslot == 3 or timeslot == 4)):
+                    continue
                 for day in week:
                     week_slots.append((field, timeslot, day))
         game_slots.append(week_slots)
@@ -198,7 +200,7 @@ def gen_mock_schedule():
 
     games = gen_games_division(divs, Settings["games_per_team"])
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date, len(teams))
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date)
 
     schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
     print(schedule)
@@ -231,7 +233,7 @@ def gen_schedule_repeated():
 
     games = gen_games_division(divs, Settings["games_per_team"])
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date, len(teams))
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date)
 
     # Repeats the schedule generation 10 times and returns the best schedule
     best_schedule, best_score, t = gen_schedule_w_skip(games, game_slots, teams)
@@ -257,7 +259,7 @@ def get_teams():
 # print(len(games))
 
 
-# game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+# game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE)
 # print(game_slots)
 # print(len(game_slots))
 

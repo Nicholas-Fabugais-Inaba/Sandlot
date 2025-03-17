@@ -119,7 +119,7 @@ function getFormattedEvents(games: any) : Event[] {
         end.setUTCHours(25, 30, 0);
       } else if (game.time === "4") {
         start.setUTCHours(25, 30, 0);
-        end.setUTCHours(29, 0, 0);
+        end.setUTCHours(27, 0, 0);
       }
       eventsTemp[dateTime] = {
         start: start,
