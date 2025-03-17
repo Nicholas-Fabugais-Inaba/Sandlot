@@ -1,3 +1,4 @@
+# Setup
 Python verison:
     3.13.0
 check with: python --version
@@ -22,3 +23,7 @@ install required packages with:
 run fastapi server with:
     fastapi dev main.py
 within the "app" folder
+
+# Queries
+Queries to the database are in the app/db/queries directory
+Queries are organized into different files based on which table in the database they interact with

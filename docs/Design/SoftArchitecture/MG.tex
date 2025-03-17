@@ -46,8 +46,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 13, 2025 & 1.0 & TA Feedback\\
+January 17, 2025 & 1.1 & Rev0\\
 \bottomrule
 \end{tabularx}
 
@@ -74,7 +74,6 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
   \bottomrule
 \end{tabular}\\
 
@@ -157,16 +156,35 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
+  \item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
   hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+  \item[\refstepcounter{acnum} \actheacnum \label{acLogIn}:] The format of the
+  log in process and data.
+  \item[\refstepcounter{acnum} \actheacnum \label{acSched}:] The algorithm
+  used for the season scheduler.
+  \item[\refstepcounter{acnum} \actheacnum \label{acSchedConstraints}:] The
+  constraints on the season schedule.
+  \item[\refstepcounter{acnum} \actheacnum \label{acAvailability}:] The format
+  of a team's season availability data.
+  \item[\refstepcounter{acnum} \actheacnum \label{acSchedConflicts}:] How
+  scheduling conflicts are to be resolved.
+  \item[\refstepcounter{acnum} \actheacnum \label{acSchedFormat}:] The format
+  of the season schedule.
+  \item[\refstepcounter{acnum} \actheacnum \label{acStandFormat}:] The format
+  of the season standings.
+  \item[\refstepcounter{acnum} \actheacnum \label{acCreateAccount}:] The
+  format of the create player/team account process and data.
+  \item[\refstepcounter{acnum} \actheacnum \label{acJoinRequest}:] The process
+  of a player requesting to join a team.
+  \item[\refstepcounter{acnum} \actheacnum \label{acAdmin}:] The process of a
+  commissioner making an admin command.
+  \item[\refstepcounter{acnum} \actheacnum \label{acAlertSend}:] The process
+  of creating an alert.
+  \item[\refstepcounter{acnum} \actheacnum \label{acReschedule}:] The process
+  of rescheduling a game.
+  \item[\refstepcounter{acnum} \actheacnum \label{acAlertReceive}:] The method
+  by which alerts are received.
 \end{description}
-
-\wss{Anticipated changes relate to changes that would be made in requirements,
-design or implementation choices.  They are not related to changes that are made
-at run-time, like the values of parameters.}
 
 \subsection{Unlikely Changes} \label{SecUchange}
 
@@ -178,9 +196,14 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
   (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucWeb}:] The system being a
+  web application.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucAccStr}:] Player, team,
+  and commissioner account structure.
+  \item[\refstepcounter{ucnum} \uctheucnum \label{ucSched}:] The goal of the
+  system to generate a season schedule.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -188,11 +211,27 @@ decisions will be changed.
 This section provides an overview of the module design. Modules are summarized
 in a hierarchy decomposed by secrets in Table \ref{TblMH}. The modules listed
 below, which are leaves in the hierarchy tree, are the modules that will
-actually be implemented.
+be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+  \item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware Hiding Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAC}:] Account Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mPL}:] Player Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTE}:] Team Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Commissioner Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAS}:] Account Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mTS}:] Team Structure Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Structure
+  Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mS}:] Season Scheduler Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mRE}:] Reschedule Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mAL}:] Alerts Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mWA}:] Web Application
+  Framework Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mDB}:] Database Module
 \end{description}
 
 
@@ -206,19 +245,22 @@ actually be implemented.
 {Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{11}{0.3\textwidth}{Behaviour-Hiding Module} & Account Module\\
+& Player Module\\
+& Team Module\\
+& Commissioner Module\\
+& Account Structure Module\\
+& Team Structure Module\\
+& Schedule Structure Module\\
+& Standings Structure Module\\
+& Reschedule Module\\
+& Alerts Module\\
+& Database Module\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{2}{0.3\textwidth}{Software Decision Module} & Season Scheduler
+Module\\
+& Web Application Framework Module\\
 \bottomrule
 
 \end{tabular}
@@ -232,13 +274,6 @@ The design of the system is intended to satisfy the requirements developed in
 the SRS. In this stage, the system is decomposed into modules. The connection
 between requirements and modules is listed in Table~\ref{TblRT}.
 
-\wss{The intention of this section is to document decisions that are made
-  ``between'' the requirements and the design.  To satisfy some requirements,
-  design decisions need to be made.  Rather than make these decisions implicit,
-  they are explicitly recorded here.  For instance, if a program has security
-  requirements, a specific design decision may be made to satisfy those
-  requirements with a password.}
-
 \section{Module Decomposition} \label{SecMD}
 
 Modules are decomposed according to the principle of ``information hiding''
@@ -248,64 +283,183 @@ module. The \emph{Services} field specifies \emph{what} the module will do
 without documenting \emph{how} to do it. For each module, a suggestion for the
 implementing software is given under the \emph{Implemented By} title. If the
 entry is \emph{OS}, this means that the module is provided by the operating
-system or by standard programming language libraries.  \emph{\progname{}} means the
-module will be implemented by the \progname{} software.
+system or by standard programming language libraries.  \emph{\progname{}}
+means the module will be implemented by the \progname{} software.
 
 Only the leaf modules in the hierarchy have to be implemented. If a dash
-(\emph{--}) is shown, this means that the module is not a leaf and will not have
-to be implemented.
+(\emph{--}) is shown, this means that the module is not a leaf and will not
+have to be implemented.
 
 \subsection{Hardware Hiding Modules (\mref{mHH})}
 
 \begin{description}
-\item[Secrets:]The data structure and algorithm used to implement the virtual
-  hardware.
-\item[Services:]Serves as a virtual hardware used by the rest of the
+  \item[Secrets:]The data structure and algorithm used to implement the
+  virtual hardware.
+  \item[Services:]Serves as a virtual hardware used by the rest of the
   system. This module provides the interface between the hardware and the
   software. So, the system can use it to display outputs or to accept inputs.
-\item[Implemented By:] OS
+  \item[Implemented By:] OS
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
 
 \begin{description}
-\item[Secrets:]The contents of the required behaviours.
-\item[Services:]Includes programs that provide externally visible behaviour of
-  the system as specified in the software requirements specification (SRS)
+  \item[Secrets:]The contents of the required behaviours.
+  \item[Services:]Includes programs that provide externally visible behaviour
+  of the system as specified in the software requirements specification (SRS)
   documents. This module serves as a communication layer between the
-  hardware-hiding module and the software decision module. The programs in this
-  module will need to change if there are changes in the SRS.
-\item[Implemented By:] --
+  hardware-hiding module and the software decision module. The programs in
+  this module will need to change if there are changes in the SRS.
+  \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{Account Module (\mref{mAC})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+  \item[Secrets:]The general functionality of all accounts.
+  \item[Services:]Contains functions to allow the user to create, delete,
+  login, and edit their \progname{} account.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Player Module (\mref{mPL})}
+
+\begin{description}
+  \item[Secrets:]The functionality of a player account.
+  \item[Services:]Contains functions to allow the user to join and leave a
+  team.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Team Module (\mref{mTE})}
+
+\begin{description}
+  \item[Secrets:]The functionality of a team account.
+  \item[Services:]Contains functions to allow the user to submit a game score
+  and access to the Reschedule Module functionality.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Commissioner Module (\mref{mCM})}
+
+\begin{description}
+  \item[Secrets:]The functionality of a commissioner account.
+  \item[Services:]Contains functions to allow the user to perform defined
+  admin commands and send alerts.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Object
+\end{description}
+
+\subsubsection{Account Structure Module (\mref{mAS})}
+
+\begin{description}
+  \item[Secrets:]The format of the account data.
+  \item[Services:]Defines a general account data structure for all accounts,
+  including player, team, and commissioner accounts.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
+\end{description}
+
+\subsubsection{Team Structure Module (\mref{mTS})}
+
+\begin{description}
+  \item[Secrets:]The format of the team account data.
+  \item[Services:]Defines a team account data structure that inherits from the
+  account structure module.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
+\end{description}
+
+\subsubsection{Schedule Structure Module (\mref{mSS})}
+
+\begin{description}
+  \item[Secrets:]The format of the season schedule data.
+  \item[Services:]Defines a season schedule data structure.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
+\end{description}
+
+\subsubsection{Standings Structure Module (\mref{mST})}
+
+\begin{description}
+  \item[Secrets:]The format of the season standings data.
+  \item[Services:]Defines a season standings data structure.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Abstract Data Type
+\end{description}
+
+\subsubsection{Reschedule Module (\mref{mRE})}
+
+\begin{description}
+  \item[Secrets:]The function of a team account to request and accept a game
+  reschedule.
+  \item[Services:]Contains functions to allow the user to request and accept a
+  game reschedule.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Alerts Module (\mref{mAL})}
+
+\begin{description}
+  \item[Secrets:]The function of a commissioner account to create and send
+  alerts.
+  \item[Services:]Contains functions to allow the user to create and send alerts.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Database Module (\mref{mDB})}
+
+\begin{description}
+  \item[Secrets:]The function of storing player, team, commissioner, schedule
+  and standings data.
+  \item[Services:]Defines and maintains a database that stores all relevant data
+  to the \progname{} system. This includes account data for players, teams, and
+  commissioners such as contact information and team player lists. It also
+  includes full game lists for the schedule and game scores. The maintenance
+  includes regular backups and data integrity checks.
+  \item[Implemented By:] \progname{}
+  \item[Type of Module:] Library
+\end{description}
 
 
 \subsection{Software Decision Module}
 
 \begin{description}
-\item[Secrets:] The design decision based on mathematical theorems, physical
+  \item[Secrets:] The design decision based on mathematical theorems, physical
   facts, or programming considerations. The secrets of this module are
   \emph{not} described in the SRS.
-\item[Services:] Includes data structure and algorithms used in the system that
+  \item[Services:] Includes data structure and algorithms used in the system that
   do not provide direct interaction with the user. 
   % Changes in these modules are more likely to be motivated by a desire to
   % improve performance than by externally imposed changes.
-\item[Implemented By:] --
+  \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Season Scheduler Module (\mref{mS})}
+
+\begin{description}
+  \item[Secrets:]The algorithm used to generate a season schedule.
+  \item[Services:]The algorithm generates a season schedule using each teams
+  availability and a set of constraints as inputs and outputs a schedule of
+  the form of the data structure defined in the schedule structure module.
+  \item[Implemented By:] \progname{}
+\end{description}
+
+\subsubsection{Web Application Framework Module (\mref{mWA})}
+
+\begin{description}
+  \item[Secrets:]The framework needed to host the web application on which
+  \progname{} will run.
+  \item[Services:]Defines a framework that will allow all other modules to be
+  hosted on a web application including any other UI libraries or tools
+  needed.
+  \item[Implemented By:] \progname{}
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 
@@ -320,20 +474,33 @@ requirements and between the modules and the anticipated changes.
 \toprule
 \textbf{Req.} & \textbf{Modules}\\
 \midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+FR-1 & \mref{mST}, \mref{mS},\\
+FR-2 & \mref{mTE}, \mref{mDB}\\
+FR-3 & \mref{mAC}, \mref{mAS}\\
+FR-4 & \mref{mAC}, \mref{mAS}\\
+FR-5 & \mref{mAC}, \mref{mAS}\\
+FR-6 & \mref{mCM}, \mref{mAL}\\
+FR-7 & \mref{mTE}, \mref{mCM}\\
+FR-8 & \mref{mPL},\\
+FR-9 & \mref{mS}\\
+FR-10 & \mref{mPL}, \mref{mRE}\\
+FR-11 & \mref{mPL}, \mref{mRE}\\
+FR-12 & \mref{mPL}, \mref{mRE}\\
+FR-13 & \mref{mPL}, \mref{mTE}\\
+FR-14 & \mref{mPL}, \mref{mTE}\\
+FR-15 & \mref{mPL}, \mref{mTE}\\
+FR-16 & \mref{mAC}\\
+FR-17 & \mref{mPL}, \mref{mTE}\\
+FR-18 & \mref{mCM}, \mref{mS}\\
+FR-19 & \mref{mPL}, \mref{mCM}, \mref{mTS}\\
+FR-20 & \mref{mSS}, \mref{mS}\\
+FR-21 & \mref{mTS}, \mref{mSS}, \mref{mS}\\
+FR-22 & \mref{mCM}, \mref{mSS}, \mref{mS}\\
+FR-23 & \mref{mTS}\\
+FR-24 & \mref{mAC}, \mref{mWA}\\
 \bottomrule
 \end{tabular}
-\caption{Trace Between Requirements and Modules}
+\caption{Trace Between Functional Requirements and Modules}
 \label{TblRT}
 \end{table}
 
@@ -344,17 +511,19 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \textbf{AC} & \textbf{Modules}\\
 \midrule
 \acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acLogIn} & \mref{mAC}, \mref{mAS}, \mref{mWA}, \mref{mDB}\\
+\acref{acSched} & \mref{mS}\\
+\acref{acSchedConstraints} & \mref{mSS}\\
+\acref{acAvailability} & \mref{mPL}, \mref{mWA}, \mref{mDB}\\
+\acref{acSchedConflicts} & \mref{mSS}, \mref{mWA}\\
+\acref{acSchedFormat} & \mref{mSS}, \mref{mWA}\\
+\acref{acStandFormat} & \mref{mST}, \mref{mWA}\\
+\acref{acCreateAccount} & \mref{mPL}, \mref{mTE}, \mref{mWA}, \mref{mDB}\\
+\acref{acJoinRequest} & \mref{mPL}, \mref{mTE}, \mref{mWA}\\
+\acref{acAdmin} & \mref{mCM}, \mref{mWA}\\
+\acref{acAlertSend} & \mref{mAL}, \mref{mWA}\\
+\acref{acReschedule} & \mref{mPL}, \mref{mRE}, \mref{mWA}\\
+\acref{acAlertReceive} & \mref{mAL}, \mref{mWA}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -374,14 +543,7 @@ the modules. It can be seen that the graph is a directed acyclic graph
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
-\wss{The uses relation is not a data flow diagram.  In the code there will often
-be an import statement in module A when it directly uses module B.  Module B
-provides the services that module A needs.  The code for module A needs to be
-able to see these services (hence the import statement).  Since the uses
-relation is transitive, there is a use relation without an import, but the
-arrows in the diagram typically correspond to the presence of import statement.}
-
-\wss{If module A uses module B, the arrow is directed from A to B.}
+\includegraphics[scale=0.7]{9_use_hierarchy_diagram.png}
 
 \begin{figure}[H]
 \centering
@@ -394,22 +556,97 @@ arrows in the diagram typically correspond to the presence of import statement.}
 
 \section{User Interfaces}
 
-\wss{Design of user interface for software and hardware.  Attach an appendix if
-needed. Drawings, Sketches, Figma}
+Preliminary design of the major user interfaces can be found in the \href{https://www.figma.com/proto/5YNR4bBk1vqGhvvdioqJnI/Capstone-MG-Sketches?node-id=4-2&p=f&t=sLgjpB9bWIdGXPd8-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1}{Figma}.
+Screens are also provided in the appendix.
 
 \section{Design of Communication Protocols}
 
-\wss{If appropriate}
+The design of the communication protocols define how the modules will interact within the system.
+where the system will use both synchronous (for real-time interactions like user authentication)
+and asynchronous (for background operations like logging) communication methods.
+Key technologies will include HTTP/HTTPS for secure data transmission, REST APIs for
+resource access, WebSockets for real-time updates, and message queues (e.g., RabbitMQ)
+for asynchronous communication. Data formats used are JSON for lightweight data exchange
+and XML for structured configuration files. Robust communication is ensured through error
+handling and retry mechanisms, managing issues like network failures and invalid data.
+Security measures include authentication and authorization using tokens (e.g., JWT) and
+encryption via HTTPS. For example, a POST request may be sent by a user to create an account,
+where the Account Module would process and store the data, responding with a corresponding account ID.
 
 \section{Timeline}
 
-\wss{Schedule of tasks and who is responsible}
+The implementation of modules for Rev 0 will follow the detailed timeline below.
+Daily stand-up meetings will be held to track each team member's progress and address
+any issues they may have run into, prior to the meeting. Each module will have unit
+tests to ensure successful functionality, and integration tests will be performed
+after integrating each module. Final testing will then validate the core functionality,
+making sure the performance of the system is able to accomplish each module's functions.
 
-\wss{You can point to GitHub if this information is included there}
+\begin{itemize}
+  \item \textbf{Week 1 (January 13-19)}: Initial Setup and Planning
+    \begin{itemize}
+      \item Create Github issues that team members will assign themselves
+      (All team members)
+    \end{itemize}
+  \item \textbf{Week 2 (January 20-26)}: Core Module Implementation
+    \begin{itemize}
+      \item Implement the account module (Casra Ghazanfari)
+      \item Implement the player, team, and commissioner modules (Nicholas Fabugais-Inaba)
+      \item Setup database module for storing different data (Casra Ghazanfari)
+      \item Create the schedule and standings structure modules (Jung Woo Lee)
+      \item Update season scheduler module to generate an optimal schedule (Alex Verity)
+    \end{itemize}
+  \item \textbf{Week 3 (January 27-February 2)}: Remaining Modules and Integration
+    \begin{itemize}
+      \item Implement alerts module (Alex Verity)
+      \item Implement web application framework module (Casra Ghazanfari)
+      \item Implement reschedule module (Jung Woo Lee)
+      \item Initial integration testing (All team members)
+    \end{itemize}
+  \item \textbf{Week 4 (February 3)}: Final Integration and Testing
+    \begin{itemize}
+      \item Design and implement the user interface (Nicholas Fabugais-Inaba)
+      \item Final integration and comprehensive testing (All team members)
+    \end{itemize}
+\end{itemize}
 
 \bibliographystyle {plainnat}
 \bibliography{../../../refs/References}
 
 \newpage{}
+
+\section{Appendix} \label{Appendix}
+
+\centering
+\includegraphics[scale=0.6]{Figma1.png}
+\begin{figure}[H]
+\centering
+\caption{User interface: Season schedule page}
+\label{FigSS}
+\end{figure}
+
+\centering
+\includegraphics[scale=0.5]{Figma2.png}
+\begin{figure}[H]
+\centering
+\caption{User interface: League standings page}
+\label{FigSS}
+\end{figure}
+
+\centering
+\includegraphics[scale=0.5]{Figma3.png}
+\begin{figure}[H]
+\centering
+\caption{User interface: Team page}
+\label{FigSS}
+\end{figure}
+
+\centering
+\includegraphics[scale=0.6]{Figma4.png}
+\begin{figure}[H]
+\centering
+\caption{User interface: User log in page}
+\label{FigSS}
+\end{figure}
 
 \end{document}
