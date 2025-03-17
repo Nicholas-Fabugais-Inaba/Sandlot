@@ -18,6 +18,8 @@ import createRR from "../functions/createRR";
 import { Dictionary } from "@fullcalendar/core/internal";
 import { useSchedule } from './ScheduleContext';
 import saveSchedule from "../functions/saveSchedule";
+import getScore from "../functions/getScore";
+import submitScore from "../functions/submitScore";
 
 const currDate = new Date();
 currDate.setDate(currDate.getDate() + 61);
@@ -40,10 +42,11 @@ interface RescheduleGame {
 }
 
 interface GameScore {
-  homeScore: number;
-  homeName: string;
-  awayScore: number;
-  awayName: string;
+  game_id: number;
+  home_score: number;
+  home_name: string;
+  away_score: number;
+  away_name: string;
 }
 
 interface SchedulePageProps {
@@ -60,10 +63,6 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
   const [rescheduleGame, setRescheduleGame] = useState<RescheduleGame>();
   const [gameScore, setGameScore] = useState<GameScore>();
   const [submitScoreVisible, setSubmitScoreVisible] = useState(false);
-  const [homeScore, setHomeScore] = useState<number | null>(null);
-  const [awayScore, setAwayScore] = useState<number | null>(null);
-  const [homeTeamName, setHomeTeamName] = useState<string>('');
-  const [awayTeamName, setAwayTeamName] = useState<string>('');
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const popupRef = useRef<HTMLDivElement>(null);
@@ -164,50 +163,62 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
     }
   };
 
-  const handleTeamClick = (event: React.MouseEvent, date: Date | null, field: number, teams: any) => {
+  const handleTeamClick = async (event: React.MouseEvent, date: Date | null, field: number, teams: any) => {
     // If the user is either a commissioner or the game selected is one the logged in team is playing in
     if (date && !viewer && (userRole === "commissioner" || userRole === "role" || (userRole === "team" && (teams.home_id === userTeamId || teams.away_id === userTeamId)))) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
-      setRescheduleGame({ game_id: teams.id, date: date, field: field, home_id: teams.home_id, away_id: teams.away_id });
-      setGameScore({
-        homeScore: 0,
-        homeName: teams.home,
-        awayScore: 0,
-        awayName: teams.away
+      setRescheduleGame({
+        game_id: teams.id,
+        date: date,
+        field: field,
+        home_id: teams.home_id,
+        away_id: teams.away_id
+      });
+      // If the game already has a score set it here
+      // NOT IMPLEMENTED FULLY
+      await getScore(teams.id).then((res) => {
+        setGameScore({
+          game_id: teams.id,
+          home_score: res.home_team_score,
+          home_name: teams.home,
+          away_score: res.away_team_score,
+          away_name: teams.away
+        });
+      }, (err) => {
+        console.error(err);
       });
     }
   };
 
   const handleSubmitScoreClick = () => {
-    setHomeTeamName(gameScore?.homeName || '');
-    setAwayTeamName(gameScore?.awayName || '');
     setSubmitScoreVisible(true);
     setPopupVisible(false);
   };
 
   const handleScoreSubmit = async () => {
     if (gameScore) {
-      // Implement the logic to submit the scores to the database
-      const response = await fetch('/api/submit-score', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          game_id: rescheduleGame?.game_id,
-          homeScore: homeScore,
-          awayScore: awayScore,
-          homeName: gameScore.homeName,
-          awayName: gameScore.awayName,
-        }),
-      });
+      submitScore(gameScore);
+
+      // const response = await fetch('/api/submit-score', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     game_id: rescheduleGame?.game_id,
+      //     homeScore: homeScore,
+      //     awayScore: awayScore,
+      //     homeName: gameScore.homeName,
+      //     awayName: gameScore.awayName,
+      //   }),
+      // });
   
-      if (response.ok) {
-        console.log("Scores submitted successfully");
-      } else {
-        console.error("Failed to submit scores");
-      }
+      // if (response.ok) {
+      //   console.log("Scores submitted successfully");
+      // } else {
+      //   console.error("Failed to submit scores");
+      // }
     }
     setSubmitScoreVisible(false);
   };
@@ -451,7 +462,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                 <div className="event-content-grid" key={selectedDates.join(',')}>
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away ? (
                     <div
-                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
+                      onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
                       className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-orange-100 text-orange-800"}
                         ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : ""}`}
                     >
@@ -467,7 +478,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   )}
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away ? (
                     <div
-                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
+                      onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
                       className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-cyan-100 text-blue-800"}
                         ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : ""}`}
                     >
@@ -483,7 +494,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   )}
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away ? (
                     <div
-                      onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
+                      onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
                       className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-purple-100 text-purple-800"}
                         ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : ""}`}
                     >
@@ -503,7 +514,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
                     (userTeamId === eventInfo.event.extendedProps.field1?.home_id || userTeamId === eventInfo.event.extendedProps.field1?.away_id) ? (
                       <div
-                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
+                        onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
                         className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-orange-100 text-orange-800"}
                           ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : ""}`}
                       >
@@ -517,7 +528,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
                     (userTeamId === eventInfo.event.extendedProps.field2?.home_id || userTeamId === eventInfo.event.extendedProps.field2?.away_id) ? (
                       <div
-                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
+                        onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
                         className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-cyan-100 text-blue-800"}
                           ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : ""}`}
                       >
@@ -531,7 +542,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
                     (userTeamId === eventInfo.event.extendedProps.field3?.home_id || userTeamId === eventInfo.event.extendedProps.field3?.away_id) ? (
                       <div
-                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
+                        onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
                         className={`event-content p-2 rounded-xl ${isPastEvent ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-purple-100 text-purple-800"}
                           ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : ""}`}
                       >
@@ -548,7 +559,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field1?.home && eventInfo.event.extendedProps.field1?.away && 
                     (userTeamId === eventInfo.event.extendedProps.field1?.home_id || userTeamId === eventInfo.event.extendedProps.field1?.away_id) ? (
                       <div
-                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
+                        onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 1, eventInfo.event.extendedProps.field1)}
                         className={`event-content p-2 rounded-xl bg-green-100 text-green-800
                           ${isSelected(eventInfo.event.start, 1) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
                       >
@@ -562,7 +573,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field2?.home && eventInfo.event.extendedProps.field2?.away && 
                     (userTeamId === eventInfo.event.extendedProps.field2?.home_id || userTeamId === eventInfo.event.extendedProps.field2?.away_id) ? (
                       <div
-                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
+                        onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 2, eventInfo.event.extendedProps.field2)}
                         className={`event-content p-2 rounded-xl bg-green-100 text-green-800
                           ${isSelected(eventInfo.event.start, 2) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
                       >
@@ -576,7 +587,7 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
                   {eventInfo.event.extendedProps.field3?.home && eventInfo.event.extendedProps.field3?.away &&
                     (userTeamId === eventInfo.event.extendedProps.field3?.home_id || userTeamId === eventInfo.event.extendedProps.field3?.away_id) ? (
                       <div
-                        onClick={(e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
+                        onClick={async (e) => handleTeamClick(e, eventInfo.event.start, 3, eventInfo.event.extendedProps.field3)}
                         className={`event-content p-2 rounded-xl bg-green-100 text-green-800
                           ${isSelected(eventInfo.event.start, 3) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
                       >
@@ -762,21 +773,29 @@ export default function SchedulePage({ viewer }: SchedulePageProps) {
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Submit Score</h2>
             <div className="mb-4">
-              <label className="block text-gray-700">Home Team: {homeTeamName}</label>
+              <label className="block text-gray-700">Home Team: {gameScore?.home_name}</label>
               <input
                 type="number"
                 className="w-full px-4 py-2 border rounded-lg"
-                value={homeScore !== null ? homeScore : ''}
-                onChange={(e) => setHomeScore(Number(e.target.value))}
+                value={gameScore?.home_score !== null ? gameScore?.home_score : ''}
+                onChange={(e) => {
+                  if (gameScore) {
+                    setGameScore({ ...gameScore, home_score: Number(e.target.value) });
+                  }
+                }}
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Away Team: {awayTeamName}</label>
+              <label className="block text-gray-700">Away Team: {gameScore?.away_name}</label>
               <input
                 type="number"
                 className="w-full px-4 py-2 border rounded-lg"
-                value={awayScore !== null ? awayScore : ''}
-                onChange={(e) => setAwayScore(Number(e.target.value))}
+                value={gameScore?.away_score !== null ? gameScore?.away_score : ''}
+                onChange={(e) => {
+                  if (gameScore) {
+                    setGameScore({ ...gameScore, away_score: Number(e.target.value) });
+                  }
+                }}
               />
             </div>
             <div className="flex justify-end space-x-4">

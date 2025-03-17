@@ -38,6 +38,16 @@ class RescheduleRequest(BaseModel):
 class TeamID(BaseModel):
     team_id: Optional[int]
 
+class GameID(BaseModel):
+    game_id: Optional[int]
+
+class Score(BaseModel):
+    game_id: int
+    home_score: int
+    home_name: str
+    away_score: int
+    away_name: str
+
 class RRAccept(BaseModel):
     rr_id: int
     old_game_id: int

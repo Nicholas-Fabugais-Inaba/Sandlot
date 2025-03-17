@@ -78,7 +78,7 @@ def get_team(login_username):
 def get_all_teams():
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Team.id, Team.team_name, Team.division, Team.offday)
+        stmt = select(Team.id, Team.team_name, Team.division, Team.offday, Team.preferred_time)
         result = session.execute(stmt).mappings().all()
         return result
 
@@ -535,3 +535,10 @@ def delete_announcement(announcement_id):
         stmt = delete(Announcement).where(Announcement.id == announcement_id)
         session.execute(stmt)
         session.commit()
+
+def get_score(game_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Game.home_team_score, Game.away_team_score).where(Game.id == game_id)
+        result = session.execute(stmt).mappings().first()
+        return result

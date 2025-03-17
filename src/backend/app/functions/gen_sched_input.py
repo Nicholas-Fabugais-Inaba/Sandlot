@@ -71,9 +71,9 @@ def gen_games_round_robin_old(teams, rounds: int):
     return reordered_games
 
 
-def gen_games_division(divs, games_per_team: int):
+def gen_games_division(divs: dict, games_per_team: int):
     games = []
-    for div in divs:
+    for div in divs.values():
         div_games = gen_games_round_robin(div, games_per_team)
         games.extend(div_games)
     return games
@@ -207,24 +207,16 @@ def gen_mock_schedule():
 
 def gen_schedule_repeated():
     teams = {}
-    div_a = {}
-    div_b = {}
-    div_c = {}
-    div_d = {}
+    divs = {}
+
     Teams = get_all_teams()
     Settings = get_season_settings()
     for i in range(len(Teams)):
-        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
-        if Teams[i]["division"] == 0:
-            div_a[i] = teams[i]
-        elif Teams[i]["division"] == 1:
-            div_b[i] = teams[i]
-        elif Teams[i]["division"] == 2:
-            div_c[i] = teams[i]
-        elif Teams[i]["division"] == 3:
-            div_d[i] = teams[i]
-
-    divs = [div_a, div_b, div_c, div_d]
+        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
+        # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
+        if Teams[i]["division"] not in divs:
+            divs[Teams[i]["division"]] = {}
+        divs[Teams[i]["division"]][i] = teams[i]
 
     start_date = datetime.strptime(Settings["start_date"], "%Y-%m-%d").date()
     end_date = datetime.strptime(Settings["end_date"], "%Y-%m-%d").date()
