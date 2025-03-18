@@ -1,32 +1,35 @@
 // app/profile/register/page.tsx
 
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';  // To handle the query parameters
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation"; // To handle the query parameters
+import { Button } from "@heroui/react";
+
+import styles from "./Register.module.css";
+
 import { title } from "@/components/primitives";
-import { Button } from '@heroui/react';
-import styles from './Register.module.css';
-
-import registerPlayer from '@/app/functions/registerPlayer';
-import registerTeam from '@/app/functions/registerTeam';
+import registerPlayer from "@/app/functions/registerPlayer";
+import registerTeam from "@/app/functions/registerTeam";
 
 export default function Register() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [accountType, setAccountType] = useState<'player' | 'team' | null>(null);
-  const [teamName, setTeamName] = useState('');
-  const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
-  const [error, setError] = useState('');
-  const [teamUsername, setTeamUsername] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [accountType, setAccountType] = useState<"player" | "team" | null>(
+    null,
+  );
+  const [teamName, setTeamName] = useState("");
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [error, setError] = useState("");
+  const [teamUsername, setTeamUsername] = useState("");
   const [preferredOffday, setPreferredOffday] = useState<number>(0); // defaulted to 0 instead of  || "" because it was causing typing problems in the backend
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
-  const searchParams = useSearchParams();  // Access the query params
-  const callbackUrl = searchParams?.get('callbackUrl') || '/profile';  // Default to '/profile' if no callbackUrl
+  const searchParams = useSearchParams(); // Access the query params
+  const callbackUrl = searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
 
   // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
   // const handleRegistration = async (e: React.FormEvent) => {
@@ -49,12 +52,13 @@ export default function Register() {
     e.preventDefault(); // Prevent default form submission behavior
 
     try {
-      if (accountType === 'player') {
+      if (accountType === "player") {
         const newUser = {
           name: name,
           email: email,
           password: password,
         };
+
         await registerPlayer(newUser);
       } else {
         const newTeam = {
@@ -65,13 +69,14 @@ export default function Register() {
           preferred_offday: preferredOffday,
           preferred_time: preferredTime,
         };
+
         await registerTeam(newTeam);
       }
 
       // Automatically sign in the user after successful registration
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         redirect: false, // Prevent automatic redirect
-        userID: accountType === 'player' ? email : teamUsername,
+        userID: accountType === "player" ? email : teamUsername,
         password: password,
       });
 
@@ -82,35 +87,61 @@ export default function Register() {
       }
     } catch (error) {
       if (error instanceof Error) {
-        setError((error as any).response?.data?.detail || 'Registration failed');
+        setError(
+          (error as any).response?.data?.detail || "Registration failed",
+        );
       } else {
-        setError('Registration failed');
+        setError("Registration failed");
       }
     }
   };
 
   const renderForm = () => {
-    if (accountType === 'player') {
+    if (accountType === "player") {
       return (
         <div>
           <div className={styles.inputGroup}>
             <label>Email:</label>
-            <input className={styles.input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              required
+              className={styles.input}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Password:</label>
-            <input className={styles.input} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <input
+              required
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Name:</label>
-            <input className={styles.input} type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
 
           <div className={`${styles.inputGroup} ${styles.gender}`}>
             <label htmlFor="gender">Gender:</label>
-            <select className={styles.input} id="gender" value={gender} onChange={(e) => setGender(e.target.value)} required>
+            <select
+              required
+              className={styles.input}
+              id="gender"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+            >
               <option value="">Select gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -119,27 +150,51 @@ export default function Register() {
           </div>
         </div>
       );
-    } else if (accountType === 'team') {
+    } else if (accountType === "team") {
       return (
         <div>
           <div className={styles.inputGroup}>
             <label>Username:</label>
-            <input className={styles.input} type="text" value={teamUsername} onChange={(e) => setTeamUsername(e.target.value)} required />
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={teamUsername}
+              onChange={(e) => setTeamUsername(e.target.value)}
+            />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Password:</label>
-            <input className={styles.input} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <input
+              required
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Team Name:</label>
-            <input className={styles.input} type="text" value={teamName} onChange={(e) => setTeamName(e.target.value)} required />
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+            />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Preferred Division:</label>
-            <select  className={styles.input} id="preferredDivision" value={preferredDivision} onChange={(e) => setPreferredDivision(parseInt(e.target.value))} required >
+            <select
+              required
+              className={styles.input}
+              id="preferredDivision"
+              value={preferredDivision}
+              onChange={(e) => setPreferredDivision(parseInt(e.target.value))}
+            >
               <option value="-1">None</option>
               <option value="0">A</option>
               <option value="1">B</option>
@@ -150,7 +205,13 @@ export default function Register() {
 
           <div className={styles.inputGroup}>
             <label>Select Preferred Offday:</label>
-            <select  className={styles.input} id="preferredOffday" value={preferredOffday} onChange={(e) => setPreferredOffday(parseInt(e.target.value))} required >
+            <select
+              required
+              className={styles.input}
+              id="preferredOffday"
+              value={preferredOffday}
+              onChange={(e) => setPreferredOffday(parseInt(e.target.value))}
+            >
               <option value="-1">None</option>
               <option value="0">Monday</option>
               <option value="1">Tuesday</option>
@@ -162,7 +223,13 @@ export default function Register() {
 
           <div className={styles.inputGroup}>
             <label>Select Preferred Time of Day:</label>
-            <select className={styles.input} id="preferredTime" value={preferredTime} onChange={(e) => setPreferredTime(parseInt(e.target.value))} required>
+            <select
+              required
+              className={styles.input}
+              id="preferredTime"
+              value={preferredTime}
+              onChange={(e) => setPreferredTime(parseInt(e.target.value))}
+            >
               <option value="0">Balanced</option>
               <option value="1">Early</option>
               <option value="2">Late</option>
@@ -176,7 +243,11 @@ export default function Register() {
   return (
     <div>
       <h1 className={title()}>
-      {accountType === 'player' ? 'Register Player' : accountType === 'team' ? 'Register Team' : 'Register'}
+        {accountType === "player"
+          ? "Register Player"
+          : accountType === "team"
+            ? "Register Team"
+            : "Register"}
       </h1>
       <div className={styles.container}>
         <div className="centered-container">
@@ -188,25 +259,48 @@ export default function Register() {
                 Choose an Account Type:
               </h1>
               <div className="flex space-x-4 mt-4">
-                <Button onPress={() => setAccountType('player')} className="button">Player</Button>
-                <Button onPress={() => setAccountType('team')} className="button">Team</Button>
+                <Button
+                  className="button"
+                  onPress={() => setAccountType("player")}
+                >
+                  Player
+                </Button>
+                <Button
+                  className="button"
+                  onPress={() => setAccountType("team")}
+                >
+                  Team
+                </Button>
               </div>
               <div className="flex justify-center mt-48">
-                <Button onPress={() => router.push(callbackUrl)} className="button">Cancel</Button>
+                <Button
+                  className="button"
+                  onPress={() => router.push(callbackUrl)}
+                >
+                  Cancel
+                </Button>
               </div>
             </div>
           ) : (
             <form className="form" onSubmit={(e) => handleRegister(e)}>
-
               {renderForm()}
 
               <div className="flex space-x-4 justify-center">
-                <Button type="submit" className="button">Register</Button>
+                <Button className="button" type="submit">
+                  Register
+                </Button>
               </div>
 
               <div className="flex space-x-4 justify-center mt-4">
-                <Button onPress={() => setAccountType(null)} className="button">Back</Button>
-                <Button onPress={() => router.push(callbackUrl)} className="button">Cancel</Button>
+                <Button className="button" onPress={() => setAccountType(null)}>
+                  Back
+                </Button>
+                <Button
+                  className="button"
+                  onPress={() => router.push(callbackUrl)}
+                >
+                  Cancel
+                </Button>
               </div>
             </form>
           )}
