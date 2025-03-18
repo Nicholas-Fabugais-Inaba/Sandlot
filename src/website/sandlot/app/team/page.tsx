@@ -206,7 +206,7 @@ export default function TeamPage() {
           {teams.length ? (
             teams.map((team) => (
               <div key={team.id} className="p-4 border mb-2 rounded">
-                <p>{team.teamName}</p>
+                <p>{team.team_name}</p>
                 <Button
                   className="button"
                   disabled={actionLoading}
