@@ -18,15 +18,18 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Logo } from "@/components/icons";
-import React, { useEffect, useState } from "react";
+import { Logo, BellIcon } from "@/components/icons";
+import React, { useEffect, useState, useRef } from "react";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
+import { NotificationModal } from "@/components/NotificationModal"; // Import modal
 
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
+  const bellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -48,6 +51,14 @@ export const Navbar = () => {
     }
     return true;
   });
+
+  const handleBellClick = () => {
+    setIsModalOpen(prev => !prev);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
 
   return (
     <HeroUINavbar isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen} maxWidth="xl" position="sticky">
@@ -82,6 +93,14 @@ export const Navbar = () => {
   
       <NavbarContent className="flex basis-1/5 sm:basis-full gap-2" justify="end">
         <NavbarItem className="flex gap-2">
+          <div ref={bellRef}> {/* Bell icon wrapper to track position */}
+            <BellIcon
+              onClick={handleBellClick}
+              className="cursor-pointer"
+            />
+          </div>
+        </NavbarItem>
+        <NavbarItem className="flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
         <NavbarMenuToggle
@@ -99,6 +118,9 @@ export const Navbar = () => {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
+
+      {/* Modal */}
+      <NotificationModal isOpen={isModalOpen} onClose={handleCloseModal} anchorRef={bellRef} />
     </HeroUINavbar>
   );
 };
