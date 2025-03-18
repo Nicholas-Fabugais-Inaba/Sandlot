@@ -10,6 +10,7 @@ python-dotenv = "*"
 psycopg2 = "*"
 pytest = "*"
 pytest-asyncio = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
