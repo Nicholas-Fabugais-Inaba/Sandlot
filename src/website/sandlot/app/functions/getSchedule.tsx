@@ -2,10 +2,6 @@ import axios from "axios";
 import { Dictionary } from "@fullcalendar/core/internal";
 
 import { Event, GenSchedResponse } from "../types";
-import axios from "axios";
-import { Dictionary } from "@fullcalendar/core/internal";
-
-import { Event, GenSchedResponse } from "../types";
 
 const APIHOST = `127.0.0.1:8000`;
 const currDate = new Date("2025-06-20");
@@ -25,9 +21,6 @@ interface Game {
 
 export default async function getSchedule(): Promise<Event[]> {
   try {
-    const response = await axios.get(
-      `http://${APIHOST}/schedule/get_all_games`,
-    );
     const response = await axios.get(
       `http://${APIHOST}/schedule/get_all_games`,
     );
@@ -51,10 +44,6 @@ export default async function getSchedule(): Promise<Event[]> {
 
 export async function getTeamSchedule(team_id: number): Promise<Event[]> {
   try {
-    const response = await axios.post(
-      `http://${APIHOST}/schedule/get_team_games`,
-      { team_id: team_id },
-    );
     const response = await axios.post(
       `http://${APIHOST}/schedule/get_team_games`,
       { team_id: team_id },

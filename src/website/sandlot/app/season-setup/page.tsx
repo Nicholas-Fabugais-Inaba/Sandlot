@@ -28,16 +28,11 @@ export default function SeasonSetupPage() {
           <GeneralSettings
             endDate={endDate}
             gamesPerTeam={gamesPerTeam}
-            endDate={endDate}
-            gamesPerTeam={gamesPerTeam}
             seasonName={seasonName}
-            setEndDate={setEndDate}
-            setGamesPerTeam={setGamesPerTeam}
             setEndDate={setEndDate}
             setGamesPerTeam={setGamesPerTeam}
             setSeasonName={setSeasonName}
             setStartDate={setStartDate}
-            startDate={startDate}
             startDate={startDate}
           />
         );
@@ -52,16 +47,11 @@ export default function SeasonSetupPage() {
           <GeneralSettings
             endDate={endDate}
             gamesPerTeam={gamesPerTeam}
-            endDate={endDate}
-            gamesPerTeam={gamesPerTeam}
             seasonName={seasonName}
-            setEndDate={setEndDate}
-            setGamesPerTeam={setGamesPerTeam}
             setEndDate={setEndDate}
             setGamesPerTeam={setGamesPerTeam}
             setSeasonName={setSeasonName}
             setStartDate={setStartDate}
-            startDate={startDate}
             startDate={startDate}
           />
         );
@@ -112,7 +102,6 @@ function GeneralSettings({
   endDate,
   setEndDate,
   gamesPerTeam,
-  setGamesPerTeam,
   setGamesPerTeam,
 }: GeneralSettingsProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

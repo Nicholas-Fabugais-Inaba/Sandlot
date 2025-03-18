@@ -1,5 +1,4 @@
 import axios from "axios";
-import axios from "axios";
 
 const APIHOST = `127.0.0.1:8000`;
 
