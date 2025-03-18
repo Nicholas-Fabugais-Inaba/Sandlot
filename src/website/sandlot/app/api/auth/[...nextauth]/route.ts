@@ -3,6 +3,7 @@
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
+
 import getPlayer from "@/app/functions/getPlayer";
 import getTeam from "@/app/functions/getTeam";
 
@@ -10,26 +11,28 @@ const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       // The name to display on the sign-in form (e.g. 'Sign in with...')
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        userID: { label: 'User ID', type: 'text' },
-        password: { label: 'Password', type: 'password' },
+        userID: { label: "User ID", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
         if (credentials) {
           // Fetch user data from your database
-          let user = null
+          let user = null;
           // TODO: if statments here are poor, should have better way of checking for email/password or player/team
           const regex = /[@]/;
+
           if (regex.test(credentials.userID)) {
-            const player = await getPlayer({ email: credentials.userID })
+            const player = await getPlayer({ email: credentials.userID });
+
             if (credentials.password == player.password) {
-              let role
-              if(player.is_commissioner == true) {
-                role = "commissioner"
-              }
-              else {
-                role = "player"
+              let role;
+
+              if (player.is_commissioner == true) {
+                role = "commissioner";
+              } else {
+                role = "player";
               }
               user = {
                 id: player.id,
@@ -44,11 +47,11 @@ const authOptions: NextAuthOptions = {
                 preferred_division: "temp_preferred_division",
                 preferred_time: "temp_preferred_time",
                 team_id: player.team_id,
-              }
+              };
             }
-          }
-          else if(credentials.userID != "admin") {
-            const team = await getTeam({ username: credentials.userID })
+          } else if (credentials.userID != "admin") {
+            const team = await getTeam({ username: credentials.userID });
+
             if (credentials.password == team.password) {
               user = {
                 id: team.id,
@@ -63,36 +66,38 @@ const authOptions: NextAuthOptions = {
                 preferred_division: team.preferred_division,
                 preferred_time: team.preferred_time,
                 team_id: team.id,
-              }
+              };
             }
           }
-          
+
           if (user) {
             return user;
           }
         }
+
         return null;
       },
     }),
   ],
   session: {
-    strategy: 'jwt', // Ensure JWT is used for session handling
+    strategy: "jwt", // Ensure JWT is used for session handling
   },
   pages: {
-    signIn: '/profile/signin',
+    signIn: "/profile/signin",
   },
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user = {
           ...session.user,
-          name: token.name ?? '',
-          role: typeof token.role === 'string' ? token.role : '',
-          teamName: typeof token.teamName === 'string' ? token.teamName : '',
-          team_id: typeof token.team_id === 'number' ? token.team_id : 0,
+          name: token.name ?? "",
+          role: typeof token.role === "string" ? token.role : "",
+          teamName: typeof token.teamName === "string" ? token.teamName : "",
+          team_id: typeof token.team_id === "number" ? token.team_id : 0,
         };
       }
-      console.log("Session callback session:", session);  // Debugging log
+      console.log("Session callback session:", session); // Debugging log
+
       return session;
     },
     async jwt({ token, user }: { token: JWT; user?: any }) {
@@ -103,6 +108,7 @@ const authOptions: NextAuthOptions = {
         token.teamName = user.teamName;
         token.team_id = user.team_id;
       }
+
       return token;
     },
   },
