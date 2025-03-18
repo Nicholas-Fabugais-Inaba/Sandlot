@@ -4,6 +4,7 @@ import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 
+
 import getPlayer from "@/app/functions/getPlayer";
 import getTeam from "@/app/functions/getTeam";
 

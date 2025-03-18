@@ -1,17 +1,13 @@
 import axios from "axios";
-import axios from "axios";
 
 const APIHOST = `127.0.0.1:8000`;
 
-export default async function submitScore(scoreData: any): Promise<void> {
-  console.log("Submitting score...", scoreData);
+export default async function acceptJR(jrID: any): Promise<void> {
   axios
-    .post(`http://${APIHOST}/schedule/submit_score`, scoreData)
+    .post(`http://${APIHOST}/join/join_request_declined`, jrID)
     .then((response) => {
       console.log("server response: " + response.status);
-      console.log("score reported");
-    })
-    .catch((error) => {
+      console.log("JR declined");
     })
     .catch((error) => {
       console.log(error.response);

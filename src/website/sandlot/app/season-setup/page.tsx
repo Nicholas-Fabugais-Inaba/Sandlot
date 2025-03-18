@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import { useState, useEffect } from "react";
 
@@ -6,6 +7,7 @@ import getSeasonSettings from "../functions/getSeasonSettings";
 
 import Schedule from "@/app/schedule/schedule"; // Import the schedule page
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
+
 
 import "./SeasonSetupPage.css";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
@@ -26,11 +28,16 @@ export default function SeasonSetupPage() {
           <GeneralSettings
             endDate={endDate}
             gamesPerTeam={gamesPerTeam}
+            endDate={endDate}
+            gamesPerTeam={gamesPerTeam}
             seasonName={seasonName}
+            setEndDate={setEndDate}
+            setGamesPerTeam={setGamesPerTeam}
             setEndDate={setEndDate}
             setGamesPerTeam={setGamesPerTeam}
             setSeasonName={setSeasonName}
             setStartDate={setStartDate}
+            startDate={startDate}
             startDate={startDate}
           />
         );
@@ -45,11 +52,16 @@ export default function SeasonSetupPage() {
           <GeneralSettings
             endDate={endDate}
             gamesPerTeam={gamesPerTeam}
+            endDate={endDate}
+            gamesPerTeam={gamesPerTeam}
             seasonName={seasonName}
+            setEndDate={setEndDate}
+            setGamesPerTeam={setGamesPerTeam}
             setEndDate={setEndDate}
             setGamesPerTeam={setGamesPerTeam}
             setSeasonName={setSeasonName}
             setStartDate={setStartDate}
+            startDate={startDate}
             startDate={startDate}
           />
         );
@@ -101,9 +113,11 @@ function GeneralSettings({
   setEndDate,
   gamesPerTeam,
   setGamesPerTeam,
+  setGamesPerTeam,
 }: GeneralSettingsProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
 
     switch (name) {
       case "seasonName":

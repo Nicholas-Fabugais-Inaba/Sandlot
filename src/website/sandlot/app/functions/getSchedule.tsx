@@ -2,6 +2,10 @@ import axios from "axios";
 import { Dictionary } from "@fullcalendar/core/internal";
 
 import { Event, GenSchedResponse } from "../types";
+import axios from "axios";
+import { Dictionary } from "@fullcalendar/core/internal";
+
+import { Event, GenSchedResponse } from "../types";
 
 const APIHOST = `127.0.0.1:8000`;
 const currDate = new Date("2025-06-20");
@@ -24,16 +28,22 @@ export default async function getSchedule(): Promise<Event[]> {
     const response = await axios.get(
       `http://${APIHOST}/schedule/get_all_games`,
     );
+    const response = await axios.get(
+      `http://${APIHOST}/schedule/get_all_games`,
+    );
 
     console.log(response.data);
 
+
     let formattedEvents = getFormattedEvents(response.data);
+
 
     console.log(formattedEvents);
 
     return formattedEvents;
   } catch (error) {
     console.error("Error fetching schedule:", error);
+
 
     return [];
   }
@@ -45,16 +55,23 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
       `http://${APIHOST}/schedule/get_team_games`,
       { team_id: team_id },
     );
+    const response = await axios.post(
+      `http://${APIHOST}/schedule/get_team_games`,
+      { team_id: team_id },
+    );
 
     console.log(response.data);
 
+
     let formattedEvents = getFormattedEvents(response.data);
+
 
     console.log(formattedEvents);
 
     return formattedEvents;
   } catch (error) {
     console.error("Error fetching schedule:", error);
+
 
     return [];
   }
