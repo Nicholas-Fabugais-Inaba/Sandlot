@@ -50,11 +50,11 @@ interface GameScore {
   forfeit: number;
 }
 
-interface SchedulePageProps {
+interface ScheduleProps {
   viewer?: boolean;
 }
 
-export default function SchedulePage({ viewer }: SchedulePageProps) {
+export default function Schedule({ viewer }: ScheduleProps) {
   const context = useSchedule();
   const [events, setEvents] = context && context.events ? [context.events, context.setEvents] : useState<Event[]>();
   const [schedule, setSchedule] = context && context.schedule ? [context.schedule, context.setSchedule] : useState<Dictionary>({});
