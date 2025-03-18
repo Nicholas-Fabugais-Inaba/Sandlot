@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { Event, GenSchedResponse } from '../types';
-import { Dictionary } from '@fullcalendar/core/internal';
+import axios from "axios";
+import { Event, GenSchedResponse } from "../types";
+import { Dictionary } from "@fullcalendar/core/internal";
 
 const APIHOST = `127.0.0.1:8000`;
 const currDate = new Date("2025-06-20");
@@ -20,16 +20,17 @@ interface Game {
 
 export default async function getSchedule(): Promise<Event[]> {
   try {
-    const response = await axios.get(`http://${APIHOST}/schedule/get_all_games`);
+    const response = await axios.get(
+      `http://${APIHOST}/schedule/get_all_games`,
+    );
 
     console.log(response.data);
-    
+
     let formattedEvents = getFormattedEvents(response.data);
-  
+
     console.log(formattedEvents);
 
     return formattedEvents;
-
   } catch (error) {
     console.error("Error fetching schedule:", error);
     return [];
@@ -38,46 +39,57 @@ export default async function getSchedule(): Promise<Event[]> {
 
 export async function getTeamSchedule(team_id: number): Promise<Event[]> {
   try {
-    const response = await axios.post(`http://${APIHOST}/schedule/get_team_games`, {team_id: team_id}); 
+    const response = await axios.post(
+      `http://${APIHOST}/schedule/get_team_games`,
+      { team_id: team_id },
+    );
 
     console.log(response.data);
-    
+
     let formattedEvents = getFormattedEvents(response.data);
-  
+
     console.log(formattedEvents);
 
     return formattedEvents;
-
   } catch (error) {
     console.error("Error fetching schedule:", error);
     return [];
   }
 }
 
-export async function genSampleSchedule(num_games: number): Promise<GenSchedResponse> {
+export async function genSampleSchedule(
+  num_games: number,
+): Promise<GenSchedResponse> {
   try {
     // Currently the input is a placeholder
-    const response = await axios.post(`http://${APIHOST}/schedule/gen_schedule`, {num_games: num_games}); 
+    const response = await axios.post(
+      `http://${APIHOST}/schedule/gen_schedule`,
+      { num_games: num_games },
+    );
 
     console.log(response.data);
     const games = convertSchedData(response.data.schedule, response.data.teams);
     const events = getFormattedEvents(games);
     console.log(events);
 
-    return {events: events, schedule: response.data.schedule, score: response.data.score};
-  } catch (error)  {
+    return {
+      events: events,
+      schedule: response.data.schedule,
+      score: response.data.score,
+    };
+  } catch (error) {
     console.error("Error generating schedule:", error);
-    return {events:[], schedule:{}, score: 0};
+    return { events: [], schedule: {}, score: 0 };
   }
 }
 
-function convertSchedData(schedule: Dictionary, teams: Dictionary) : Game[] {
+function convertSchedData(schedule: Dictionary, teams: Dictionary): Game[] {
   const games: Game[] = [];
   // Response is a dictionary with keys being gameslots and values being lists of two teams.
   // Loop through each key and value of response:
   for (const key in schedule) {
     if (schedule.hasOwnProperty(key)) {
-      const game_teams = schedule[key];      
+      const game_teams = schedule[key];
       // Create a new game object with the date, time, field, and team names.
       const game: Game = {
         id: 0,
@@ -87,21 +99,21 @@ function convertSchedData(schedule: Dictionary, teams: Dictionary) : Game[] {
         home_team_name: teams[game_teams[0]]["name"],
         home_team_id: teams[game_teams[0]]["id"],
         away_team_name: teams[game_teams[1]]["name"],
-        away_team_id: teams[game_teams[1]]["id"]
+        away_team_id: teams[game_teams[1]]["id"],
       };
       // Add the game object to the games array.
       games.push(game);
     }
   }
-  
+
   return games;
 }
 
-function getFormattedEvents(games: any) : Event[] {
-  var eventsTemp: { [key: string]: Event} = {}
+function getFormattedEvents(games: any): Event[] {
+  var eventsTemp: { [key: string]: Event } = {};
 
   for (const game of games) {
-    var dateTime : string = game.date + game.time;
+    var dateTime: string = game.date + game.time;
 
     // If the event doesn't exist, initialize it with start and end dates
     if (!(dateTime in eventsTemp)) {
@@ -115,20 +127,18 @@ function getFormattedEvents(games: any) : Event[] {
         start.setHours(18);
         start.setMinutes(30);
         end.setHours(20);
-      }
-      else if (game.time === "3") {
+      } else if (game.time === "3") {
         start.setHours(20);
         end.setHours(21);
         end.setMinutes(30);
-      }
-      else if (game.time === "4") {
+      } else if (game.time === "4") {
         start.setHours(21);
         end.setMinutes(30);
-        end.setHours(23)
+        end.setHours(23);
       }
       eventsTemp[dateTime] = {
         start: start,
-        end: end
+        end: end,
       };
     }
 
@@ -141,11 +151,10 @@ function getFormattedEvents(games: any) : Event[] {
           home: game.home_team_name,
           home_id: game.home_team_id,
           away: game.away_team_name,
-          away_id: game.away_team_id
-        }
-      }
-    }
-    else if (game.field === "2") {
+          away_id: game.away_team_id,
+        },
+      };
+    } else if (game.field === "2") {
       eventsTemp[dateTime] = {
         ...eventsTemp[dateTime],
         field2: {
@@ -153,11 +162,10 @@ function getFormattedEvents(games: any) : Event[] {
           home: game.home_team_name,
           home_id: game.home_team_id,
           away: game.away_team_name,
-          away_id: game.away_team_id
-        }
-      }
-    }
-    else if (game.field === "3") {
+          away_id: game.away_team_id,
+        },
+      };
+    } else if (game.field === "3") {
       eventsTemp[dateTime] = {
         ...eventsTemp[dateTime],
         field3: {
@@ -165,9 +173,9 @@ function getFormattedEvents(games: any) : Event[] {
           home: game.home_team_name,
           home_id: game.home_team_id,
           away: game.away_team_name,
-          away_id: game.away_team_id
-        }
-      }
+          away_id: game.away_team_id,
+        },
+      };
     }
   }
 
@@ -182,13 +190,12 @@ function getFormattedEvents(games: any) : Event[] {
   return formattedEvents;
 }
 
-export function addEmptyEvents(events: Event[]) : Event[] {
-
+export function addEmptyEvents(events: Event[]): Event[] {
   if (currDate > seasonEnd) {
     return events;
   }
 
-  let startDate
+  let startDate;
   if (currDate > seasonStart) {
     startDate = currDate;
   } else {
@@ -201,23 +208,27 @@ export function addEmptyEvents(events: Event[]) : Event[] {
       startDate.setDate(startDate.getDate() + 1);
       continue;
     }
-    console.log(startDate)
+    console.log(startDate);
     startDate.setHours(17);
     startDate.setMinutes(0);
 
-    let eventExists = events.some(event => event.start.getTime() === startDate.getTime());
+    let eventExists = events.some(
+      (event) => event.start.getTime() === startDate.getTime(),
+    );
 
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 
     startDate.setHours(18);
     startDate.setMinutes(30);
 
-    eventExists = events.some(event => event.start.getTime() === startDate.getTime());
+    eventExists = events.some(
+      (event) => event.start.getTime() === startDate.getTime(),
+    );
 
     if (!eventExists) {
       let end = new Date(startDate);
@@ -225,19 +236,21 @@ export function addEmptyEvents(events: Event[]) : Event[] {
       end.setMinutes(0);
       events.push({
         start: new Date(startDate),
-        end: end
+        end: end,
       });
     }
 
     startDate.setHours(20);
     startDate.setMinutes(0);
 
-    eventExists = events.some(event => event.start.getTime() === startDate.getTime());
+    eventExists = events.some(
+      (event) => event.start.getTime() === startDate.getTime(),
+    );
 
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 

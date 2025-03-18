@@ -12,13 +12,21 @@ export async function POST(req: Request) {
   }
 
   if (team.captainEmail !== captainEmail) {
-    return NextResponse.json({ error: "Only the captain can deny players" }, { status: 403 });
+    return NextResponse.json(
+      { error: "Only the captain can deny players" },
+      { status: 403 },
+    );
   }
 
-  team.joinRequests = team.joinRequests.filter((email) => email !== playerEmail);
+  team.joinRequests = team.joinRequests.filter(
+    (email) => email !== playerEmail,
+  );
 
   // Ensure the updated team is saved
   await updateTeam(teamId, { joinRequests: team.joinRequests });
 
-  return NextResponse.json({ message: "Player request denied", team }, { status: 200 });
+  return NextResponse.json(
+    { message: "Player request denied", team },
+    { status: 200 },
+  );
 }

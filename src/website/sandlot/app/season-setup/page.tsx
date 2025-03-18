@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import SchedulePage from "@/app/schedule/page"; // Import the schedule page
@@ -97,7 +97,7 @@ function GeneralSettings({
   endDate,
   setEndDate,
   gamesPerTeam,
-  setGamesPerTeam
+  setGamesPerTeam,
 }: GeneralSettingsProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -121,7 +121,11 @@ function GeneralSettings({
 
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    let settings = { start_date: startDate, end_date: endDate, games_per_team: gamesPerTeam };
+    let settings = {
+      start_date: startDate,
+      end_date: endDate,
+      games_per_team: gamesPerTeam,
+    };
     console.log(settings);
     updateSeasonSettings(settings);
   };
@@ -140,7 +144,7 @@ function GeneralSettings({
       if (data.end_date != null) {
         setEndDate(data.end_date || "");
       }
-      if (data.games_per_team != null) {  
+      if (data.games_per_team != null) {
         setGamesPerTeam(data.games_per_team || 0);
       }
     };
@@ -149,7 +153,7 @@ function GeneralSettings({
   }, [setSeasonName, setStartDate, setEndDate, setGamesPerTeam]);
 
   return (
-    <div className="general-settings-container" style={{ width: '50%' }}>
+    <div className="general-settings-container" style={{ width: "50%" }}>
       <h2 className="text-2xl font-semibold mb-4">General Settings</h2>
       <form>
         <div className="mb-4">
@@ -183,7 +187,9 @@ function GeneralSettings({
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Number of games played by each team</label>
+          <label className="block text-gray-700">
+            Number of games played by each team
+          </label>
           <input
             type="number"
             name="gamesPerTeam"
@@ -195,15 +201,16 @@ function GeneralSettings({
         <div className="flex items-center mb-4">
           <button
             type="submit"
-            className={`px-4 py-2 rounded-lg text-white ${isSaveDisabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
+            className={`px-4 py-2 rounded-lg text-white ${isSaveDisabled ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
             onClick={handleSave}
             disabled={isSaveDisabled}
           >
             Save
           </button>
           {isSaveDisabled && (
-            <div className="ml-4 text-red-500" style={{ width: '60%' }}>
-              Must input valid start date, end date and number of games played by each team before saving
+            <div className="ml-4 text-red-500" style={{ width: "60%" }}>
+              Must input valid start date, end date and number of games played
+              by each team before saving
             </div>
           )}
         </div>
@@ -219,9 +226,18 @@ function TeamsSettings() {
       <form>
         <div className="mb-4">
           <label className="block text-gray-700">Add Team</label>
-          <input type="text" className="w-full px-4 py-2 border rounded-lg" placeholder="Team Name" />
+          <input
+            type="text"
+            className="w-full px-4 py-2 border rounded-lg"
+            placeholder="Team Name"
+          />
         </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Add Team</button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+        >
+          Add Team
+        </button>
       </form>
     </div>
   );
@@ -242,9 +258,17 @@ function RulesSettings() {
       <form>
         <div className="mb-4">
           <label className="block text-gray-700">Game Rules</label>
-          <textarea className="w-full px-4 py-2 border rounded-lg" rows={5}></textarea>
+          <textarea
+            className="w-full px-4 py-2 border rounded-lg"
+            rows={5}
+          ></textarea>
         </div>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Save Rules</button>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+        >
+          Save Rules
+        </button>
       </form>
     </div>
   );

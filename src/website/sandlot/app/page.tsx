@@ -11,10 +11,10 @@ import { button as buttonStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
-import { useRouter } from 'next/navigation';
-import { Session } from 'next-auth'; 
-import { getSession} from 'next-auth/react';
-import "./HomePage.css";  // Import the new CSS file
+import { useRouter } from "next/navigation";
+import { Session } from "next-auth";
+import { getSession } from "next-auth/react";
+import "./HomePage.css"; // Import the new CSS file
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
@@ -23,11 +23,11 @@ export default function Home() {
   const [announcements, setAnnouncements] = useState([
     "Season starts on April 1st!",
     "Registration opens on March 1st.",
-    "New teams welcome to join."
+    "New teams welcome to join.",
   ]);
   const [newAnnouncement, setNewAnnouncement] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editValue, setEditValue] = useState("");  
+  const [editValue, setEditValue] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,13 +40,13 @@ export default function Home() {
 
     fetchSession();
   }, []);
-  
+
   const handlePostAnnouncement = () => {
     if (newAnnouncement.trim()) {
       setAnnouncements([...announcements, newAnnouncement]);
       setNewAnnouncement("");
     }
-  };  
+  };
 
   const handleAddAnnouncement = () => {
     if (newAnnouncement.trim() !== "") {
@@ -54,23 +54,23 @@ export default function Home() {
       setNewAnnouncement("");
     }
   };
-  
+
   const handleEditAnnouncement = (index: number) => {
     setEditingIndex(index);
     setEditValue(announcements[index]);
   };
-  
+
   const handleSaveEdit = (index: number) => {
     const updatedAnnouncements = [...announcements];
     updatedAnnouncements[index] = editValue;
     setAnnouncements(updatedAnnouncements);
     setEditingIndex(null);
   };
-  
+
   const handleDeleteAnnouncement = (index: number) => {
     const updatedAnnouncements = announcements.filter((_, i) => i !== index);
     setAnnouncements(updatedAnnouncements);
-  };  
+  };
 
   const handleWeatherClick = () => {
     setWeatherDropdownOpen(!isWeatherDropdownOpen);
@@ -88,24 +88,47 @@ export default function Home() {
             <h2 className="text-xl font-bold mb-4">Parking Information</h2>
             <Card className="rounded-2xl shadow-lg p-6 bg-white">
               <p className="mb-4">
-                Parking has changed their approach to the situation this year, so please pass along this important set of instructions to your players to avoid being ticketed:
+                Parking has changed their approach to the situation this year,
+                so please pass along this important set of instructions to your
+                players to avoid being ticketed:
               </p>
               <ol className="list-disc list-inside mb-4 space-y-2">
-                <li>Scan QR codes posted around the lot, or Text 4916 to 75498; Tap link to register.</li>
+                <li>
+                  Scan QR codes posted around the lot, or Text 4916 to 75498;
+                  Tap link to register.
+                </li>
                 <li>Enter license plate.</li>
                 <li>Select Rate (evening flat rate).</li>
-                <li>Enter promo <b>GSABB24</b> before payment.</li>
+                <li>
+                  Enter promo <b>GSABB24</b> before payment.
+                </li>
                 <li>Promo Code will reduce price to $0.</li>
                 <li>Click park for free to register plate.</li>
                 <li>
-                  <a href="https://www.gsasoftball.ca/PrintDocs/Mc%20Master-18x24-4916.pdf" target="_blank" className="text-blue-600">HONK Parking QR code</a>
+                  <a
+                    href="https://www.gsasoftball.ca/PrintDocs/Mc%20Master-18x24-4916.pdf"
+                    target="_blank"
+                    className="text-blue-600"
+                  >
+                    HONK Parking QR code
+                  </a>
                 </li>
               </ol>
               <p className="mb-4">
-                This process does NOT need to be repeated in lot Q and will also grant you access to that lot if you want to stop by the Phoenix.
+                This process does NOT need to be repeated in lot Q and will also
+                grant you access to that lot if you want to stop by the Phoenix.
               </p>
               <p className="mb-4">
-                If you have any questions, let me know at <a href="mailto:j.a.nease@outlook.com" className="text-blue-600">j.a.nease@outlook.com</a>. Please make sure you are prepared for this or you are at risk of being ticketed, which you will have to take up with the parking office on your own time.
+                If you have any questions, let me know at{" "}
+                <a
+                  href="mailto:j.a.nease@outlook.com"
+                  className="text-blue-600"
+                >
+                  j.a.nease@outlook.com
+                </a>
+                . Please make sure you are prepared for this or you are at risk
+                of being ticketed, which you will have to take up with the
+                parking office on your own time.
               </p>
             </Card>
           </div>
@@ -115,53 +138,92 @@ export default function Home() {
           <div>
             <h2 className="text-xl font-bold mb-4">Key Season Dates</h2>
             <Card className="rounded-2xl shadow-lg p-6 bg-white">
-              <p className="mb-4">Dates and Tournaments (Null dates indicate event will not happen)</p>
               <p className="mb-4">
-                <a href="https://www.gsasoftball.ca/Phoenix%20Cup/Phoenix%20Cup.htm" target="_blank" className="text-blue-600">Phoenix Cup:</a> 2025-08-20 to 2025-08-24
+                Dates and Tournaments (Null dates indicate event will not
+                happen)
               </p>
-              <p className="mb-4">Significant Dates: Year 2025 (provisional and may change)</p>
+              <p className="mb-4">
+                <a
+                  href="https://www.gsasoftball.ca/Phoenix%20Cup/Phoenix%20Cup.htm"
+                  target="_blank"
+                  className="text-blue-600"
+                >
+                  Phoenix Cup:
+                </a>{" "}
+                2025-08-20 to 2025-08-24
+              </p>
+              <p className="mb-4">
+                Significant Dates: Year 2025 (provisional and may change)
+              </p>
               <ul className="list-disc list-inside mb-4 space-y-2">
                 <li>2025-03-15 - Team entry period starts</li>
                 <li>2025-04-07 - (12:00 noon) Deadline for Team entries</li>
-                <li>2025-04-07 - (6:00 p.m. to 7:30 p.m.) Captain's meeting, BSB 154 (Burke Science Building close by the Phoenix)</li>
+                <li>
+                  2025-04-07 - (6:00 p.m. to 7:30 p.m.) Captain's meeting, BSB
+                  154 (Burke Science Building close by the Phoenix)
+                </li>
                 <li>2025-04-23 - (approximate) official schedule released</li>
-                <li>2025-04-28 - Tentative opening day of schedule for Mixed League</li>
+                <li>
+                  2025-04-28 - Tentative opening day of schedule for Mixed
+                  League
+                </li>
                 <li>TBA - Annual Psychology tournament</li>
-                <li>2024-06-15 - Tentative Date for Women's Tournament (Saturday)</li>
-                <li>2025-08-18 (5:00 p.m.) - Phoenix Cup organizational meeting</li>
+                <li>
+                  2024-06-15 - Tentative Date for Women's Tournament (Saturday)
+                </li>
+                <li>
+                  2025-08-18 (5:00 p.m.) - Phoenix Cup organizational meeting
+                </li>
                 <li>2025-08-29 - Last day of regular schedule</li>
                 <li>2025-08-20 to 2025-08-24 - Phoenix Cup Tournament</li>
-                <li>2025-08-24 to 2025-08-29 - Fields available as regular season and for re-scheduled games</li>
+                <li>
+                  2025-08-24 to 2025-08-29 - Fields available as regular season
+                  and for re-scheduled games
+                </li>
               </ul>
             </Card>
           </div>
-        );  
-        case "rainouts":
-          return (
-            <div>
-              <h2 className="text-xl font-bold mb-4">Procedure for Rainouts</h2>
-              <Card className="rounded-2xl shadow-lg p-6 bg-white">
-                <p className="mb-4">
-                  Our current policy is to follow the lead of City of Hamilton Recreation and close fields when the city closes theirs. This may change as we will have equipment designed to deal with at least some of the issues that close city fields (i.e. standing water on infields). The rescheduling of rainouts will be handled by the online procedures for re-scheduling games that is described elsewhere. The most up to date master schedule will always be found on the website (MKL Softball Web Site). The Phoenix also posts up to date schedules once a week on their bulletin board.
-                </p>
-                <p className="mb-4">
-                  I leave the negotiations as to an appropriate replay date to the two captains. Use the online request form to determine what slots are open. If no one has requested the time before you, you will be re-assigned to that date and it will be marked as taken on the schedule. In the case of duplicate requests, it will be first come, first served. The procedure has been automated for your convenience and mine and should not require my intervention. The online procedure automatically notifies both team captains, the commissioner, and the umpiring coordinators by email.
-                </p>
-                <p className="mb-4">
-                  Andy Duncan (x26893)
-                </p>
-                <p className="mb-4">
-                  Curt Heckamen
-                </p>
-              </Card>
-            </div>
-          );          
+        );
+      case "rainouts":
+        return (
+          <div>
+            <h2 className="text-xl font-bold mb-4">Procedure for Rainouts</h2>
+            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+              <p className="mb-4">
+                Our current policy is to follow the lead of City of Hamilton
+                Recreation and close fields when the city closes theirs. This
+                may change as we will have equipment designed to deal with at
+                least some of the issues that close city fields (i.e. standing
+                water on infields). The rescheduling of rainouts will be handled
+                by the online procedures for re-scheduling games that is
+                described elsewhere. The most up to date master schedule will
+                always be found on the website (MKL Softball Web Site). The
+                Phoenix also posts up to date schedules once a week on their
+                bulletin board.
+              </p>
+              <p className="mb-4">
+                I leave the negotiations as to an appropriate replay date to the
+                two captains. Use the online request form to determine what
+                slots are open. If no one has requested the time before you, you
+                will be re-assigned to that date and it will be marked as taken
+                on the schedule. In the case of duplicate requests, it will be
+                first come, first served. The procedure has been automated for
+                your convenience and mine and should not require my
+                intervention. The online procedure automatically notifies both
+                team captains, the commissioner, and the umpiring coordinators
+                by email.
+              </p>
+              <p className="mb-4">Andy Duncan (x26893)</p>
+              <p className="mb-4">Curt Heckamen</p>
+            </Card>
+          </div>
+        );
       default:
         return (
           <section className="w-full px-6 py-8 md:py-10">
             {/* Scrollable container */}
             <div className="w-full overflow-x-auto">
-              <div className="flex flex-row gap-6 min-w-[800px]">  
+              <div className="flex flex-row gap-6 min-w-[800px]">
                 {/* Welcome Section */}
                 <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 min-w-0">
                   <div className="inline-block max-w-xl">
@@ -186,7 +248,10 @@ export default function Home() {
                     </Link>
                     <Link
                       isExternal
-                      className={buttonStyles({ variant: "bordered", radius: "full" })}
+                      className={buttonStyles({
+                        variant: "bordered",
+                        radius: "full",
+                      })}
                       href={siteConfig.links.github}
                     >
                       <GithubIcon size={20} />
@@ -297,7 +362,7 @@ export default function Home() {
               Key Season Dates
             </button>
             <button
-              onClick={() => router.push('/team/directory')}
+              onClick={() => router.push("/team/directory")}
               className="directory-item text-left font-semibold w-full"
             >
               Team Directory
@@ -312,9 +377,20 @@ export default function Home() {
               {isWeatherDropdownOpen && (
                 <div className="absolute left-0 top-full mt-2 p-2 bg-white shadow rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
-                    <li><button onClick={handleRainoutsClick} className="text-left text-blue-600">Rainouts</button></li>
                     <li>
-                      <a href="https://tempestwx.com/station/48603/" target="_blank" className="text-blue-600">
+                      <button
+                        onClick={handleRainoutsClick}
+                        className="text-left text-blue-600"
+                      >
+                        Rainouts
+                      </button>
+                    </li>
+                    <li>
+                      <a
+                        href="https://tempestwx.com/station/48603/"
+                        target="_blank"
+                        className="text-blue-600"
+                      >
                         Ainsley Wood Station
                       </a>
                     </li>
