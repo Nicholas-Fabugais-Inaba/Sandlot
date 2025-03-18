@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { Event } from '../types';
+import React, { createContext, useState, useContext, ReactNode } from "react";
+
+import { Event } from "../types";
 
 type Dictionary = { [key: string]: any };
 
@@ -12,7 +13,9 @@ interface ScheduleContextProps {
   setSchedScore: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-const ScheduleContext = createContext<ScheduleContextProps | undefined>(undefined);
+const ScheduleContext = createContext<ScheduleContextProps | undefined>(
+  undefined,
+);
 
 export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
   const [events, setEvents] = useState<Event[] | null>(null);
@@ -20,7 +23,16 @@ export const ScheduleProvider = ({ children }: { children: ReactNode }) => {
   const [schedScore, setSchedScore] = useState<number | null>(null);
 
   return (
-    <ScheduleContext.Provider value={{ events, setEvents, schedule, setSchedule, schedScore, setSchedScore }}>
+    <ScheduleContext.Provider
+      value={{
+        events,
+        setEvents,
+        schedule,
+        setSchedule,
+        schedScore,
+        setSchedScore,
+      }}
+    >
       {children}
     </ScheduleContext.Provider>
   );
