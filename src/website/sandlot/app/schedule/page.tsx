@@ -47,7 +47,7 @@ interface SchedulePageProps {
   viewer?: boolean;
 }
 
-export function SchedulePage({ viewer }: SchedulePageProps) {
+function SchedulePage({ viewer }: SchedulePageProps) {
   const context = useSchedule();
   const [events, setEvents] =
     context && context.events
@@ -941,3 +941,5 @@ export function SchedulePage({ viewer }: SchedulePageProps) {
     </div>
   );
 }
+
+export default SchedulePage;
