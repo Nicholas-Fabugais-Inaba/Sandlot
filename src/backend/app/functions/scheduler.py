@@ -66,29 +66,42 @@ def constraint3(game, game_slot, schedule):
     return True
 
 
-# Constraint 4: Teams should avoid playing on their recorded offday
+# Constraint 4: Teams should never play on their recorded offday
 def constraint4(game, game_slot, schedule):
     global teams
     # Checks each team involved in the game
-    weekday: int = game_slot[2].weekday()# - 1 # weekday() lies, Monday is 1, so we must subtract one to convert it to the correct weekday.
+    weekday: int = game_slot[2].weekday()
     for team in game:
         if teams[team]["offday"] == weekday:
-            return False # ISSUE: If both teams have an offday on this day it will be weighted the same as one team having an offday
+            return False
     return True
 
-def constraint5(game, game_slot, schedule):
+# Soft Constraint 1: Teams should avoid playing on their recorded offday
+def soft_constraint1(game, game_slot, schedule):
+    global teams
+    # Checks each team involved in the game
+    weekday: int = game_slot[2].weekday()
+    score = 0
+    for team in game:
+        if teams[team]["offday"] == weekday:
+            score += 3
+    return score
+
+# Soft Constraint 2: Teams should avoid playing timeslots they don't prefer
+# 0 = No preference, 1 = Early, 2 = Balanced, 3 = Late
+def soft_constraint2(game, game_slot, schedule):
     global teams
     # Checks each team involved in the game
     time = game_slot[1]
     score = 0
     for team in game:
         if teams[team]["pref_time"] == 1: # Early preference
-            if time == 1 or time == 2:
+            if time == 3 or time == 4:
                 score += 1
         elif teams[team]["pref_time"] == 2: # Balanced preference
             continue
         elif teams[team]["pref_time"] == 3: # Late preference
-            if time == 3 or time == 4:
+            if time == 1 or time == 2:
                 score += 1
     return score
 
@@ -156,7 +169,7 @@ def backtrack_scheduler_w_skip():
                     # new_score: int = 0
                     soft_constrained = False
                     for soft_constraint in soft_constraints:
-                        soft_constraint_score = soft_constraint[0](game, game_slot, schedule)
+                        soft_constraint_score = soft_constraint(game, game_slot, schedule)
                         if soft_constraint_score != 0:
                             # If timeslot adds to score (fails soft constraint), mark as soft constrained and skip it
                             soft_constrained = True
@@ -183,15 +196,15 @@ def backtrack_scheduler_w_skip():
             if curr_week == start_week:
                 break
 
-        if not slot_chosen:
-            for constrained_slot in soft_constrained_slots:
-                curr_score += constrained_slot[1]
-                schedule[constrained_slot[0]] = game
-                slot_chosen = True
-                break
+        if not slot_chosen and len(soft_constrained_slots) > 0:
+            # Find the soft constrained slot with the lowest score
+            lowest_score_slot = min(soft_constrained_slots, key=lambda x: x[1])
+            curr_score += lowest_score_slot[1]
+            schedule[lowest_score_slot[0]] = game
+            slot_chosen = True
 
         if not slot_chosen:
-            return False
+            return False, maxsize
 
     return schedule, curr_score
 
@@ -204,8 +217,9 @@ def gen_constraints():
     hard_constraints.append(constraint1)
     hard_constraints.append(constraint2)
     # hard_constraints.append(constraint3)
-    # soft_constraints.append((constraint4, 1))
     hard_constraints.append(constraint4)
+    # soft_constraints.append(soft_constraint1)
+    soft_constraints.append(soft_constraint2)
 
 
 def initialize_weeks_played(teams, num_weeks):
@@ -227,6 +241,8 @@ def gen_schedule_w_skip(games_to_sched, game_slots_to_sched, teams_to_sched):
     schedule, score = backtrack_scheduler_w_skip()
     if schedule:
         return schedule, score, teams
+    else:
+        return [], maxsize, teams
 
 
 def send_schedule_to_db(schedule: dict, score: int, teams: dict):
