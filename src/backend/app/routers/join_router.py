@@ -1,14 +1,16 @@
 from fastapi import APIRouter
 from .types import JoinRequest, TeamID, JRAccept, JRDecline
 from ..db.queries.join_request_queries import insert_join_request, get_join_requests, decline_join_request, delete_join_request
-from ..db.queries.player_queries import update_players_team
+from ..db.queries.player_queries import get_player, update_players_team
 
 
-router = APIRouter(tags=["schedule"])
+router = APIRouter(tags=["join"])
 
+# TODO: fix this route
 @router.post("/create_join_request", response_model=None)
 async def create_join_request(data: JoinRequest):
-    response = insert_join_request(data.player_id, data.team_id)
+    player = get_player(data.email)
+    response = insert_join_request(player.id, data.team_id)
     return response
 
 @router.post("/get_join_requests", response_model=list)

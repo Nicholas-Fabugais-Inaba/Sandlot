@@ -97,7 +97,7 @@ class AnnouncementID(BaseModel):
     announcement_id: int
 
 class JoinRequest(BaseModel):
-    player_id: int
+    email: str
     team_id: int
 
 class JRAccept(BaseModel):

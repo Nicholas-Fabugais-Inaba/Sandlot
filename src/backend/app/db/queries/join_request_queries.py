@@ -26,7 +26,7 @@ def get_join_requests(team_id):
         stmt = (
             select(
                 JoinRequest.id,
-                Player.id,
+                Player.id.label("player_id"),
                 Player.first_name,
                 Player.last_name,
                 Player.email,
@@ -35,7 +35,10 @@ def get_join_requests(team_id):
             )
             .select_from(JoinRequest)
             .join(Player, JoinRequest.id == Player.id)
-            .where(JoinRequest.team_id == team_id)
+            .where(
+                JoinRequest.team_id == team_id,
+                JoinRequest.accepted == None
+            )
         )
         result = session.execute(stmt).mappings().all()
         return result
