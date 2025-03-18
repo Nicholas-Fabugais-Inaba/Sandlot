@@ -1,6 +1,6 @@
 // components/NotificationModal.tsx
 
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 interface Notification {
   id: number;
@@ -23,10 +23,28 @@ export const NotificationModal: FC<NotificationModalProps> = ({ isOpen, onClose,
     // Add more notifications as needed
   ]);
 
-  if (!isOpen) return null; // Don't render if the modal is closed
+  const [bellPosition, setBellPosition] = useState<DOMRect | null>(null);
 
-  // Get the position of the bell icon using its reference
-  const bellPosition = anchorRef.current?.getBoundingClientRect();
+  useEffect(() => {
+    const updateBellPosition = () => {
+      if (anchorRef.current) {
+        setBellPosition(anchorRef.current.getBoundingClientRect());
+      }
+    };
+
+    // Update position on mount
+    updateBellPosition();
+
+    // Update position on resize
+    window.addEventListener('resize', updateBellPosition);
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener('resize', updateBellPosition);
+    };
+  }, [anchorRef]);
+
+  if (!isOpen) return null; // Don't render if the modal is closed
 
   // Function to calculate the time difference
   const timeAgo = (timestamp: string) => {
