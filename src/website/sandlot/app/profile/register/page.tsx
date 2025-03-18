@@ -17,7 +17,8 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [accountType, setAccountType] = useState<'player' | 'team' | null>(null);
   const [teamName, setTeamName] = useState('');
-  const [name, setName] = useState('');
+  const [firstname, setFirstName] = useState('');
+  const [lastname, setLastName] = useState('');
   const [gender, setGender] = useState('');
   const [error, setError] = useState('');
   const [teamUsername, setTeamUsername] = useState('');
@@ -51,7 +52,8 @@ export default function Register() {
     try {
       if (accountType === 'player') {
         const newUser = {
-          name: name,
+          firstname: firstname,
+          lastname: lastname,
           email: email,
           password: password,
         };
@@ -94,6 +96,16 @@ export default function Register() {
       return (
         <div>
           <div className={styles.inputGroup}>
+            <label>First Name:</label>
+            <input className={styles.input} type="text" value={firstname} onChange={(e) => setFirstName(e.target.value)} required />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Last Name:</label>
+            <input className={styles.input} type="text" value={lastname} onChange={(e) => setLastName(e.target.value)} required />
+          </div>
+
+          <div className={styles.inputGroup}>
             <label>Email:</label>
             <input className={styles.input} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
@@ -101,11 +113,6 @@ export default function Register() {
           <div className={styles.inputGroup}>
             <label>Password:</label>
             <input className={styles.input} type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label>Name:</label>
-            <input className={styles.input} type="text" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
 
           <div className={`${styles.inputGroup} ${styles.gender}`}>

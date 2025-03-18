@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { getSession, signOut, signIn } from 'next-auth/react';
 import { Session } from 'next-auth'; 
 import { title } from "@/components/primitives";
-import { Button, Card, CardHeader, CardBody, CardFooter, Divider } from '@heroui/react';
+import { Button, Card, CardBody } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
@@ -47,7 +47,7 @@ export default function ProfilePage() {
     );
   }
 
-  const displayName = session.user?.name || session.user?.teamName || "User";
+  const displayName = session.user?.firstname || session.user?.teamName || "User";
   const userRole = session.user?.role;
   const userGender = session.user?.gender || "Not specified";
   const userTeam = session.user?.teamName || "Not assigned to a team";
@@ -72,7 +72,7 @@ export default function ProfilePage() {
           <h2 className="text-xl font-semibold mb-4">Account Info</h2>
           <Card className="max-w-full">
             <CardBody>
-              <p><strong>Name:</strong> {displayName}</p>
+              <p><strong>Name:</strong> {displayName} {session.user?.lastname}</p>
               <p><strong>Role:</strong> {userRole}</p>
               <p><strong>Gender:</strong> {userGender}</p>
               <p><strong>Team:</strong> {userTeam}</p>
