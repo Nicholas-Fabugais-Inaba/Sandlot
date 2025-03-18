@@ -8,8 +8,9 @@ export default async function getRR(team_id: any): Promise<any> {
   // TODO: insanely giga scuffed formatting need to be fixed
   let formmattedRequests = []
   for(let i = 0; i < response.data.length; i++) {
-    console.log(response.data[i].reciever_id)
-    console.log(team_id)
+    console.log(response.data[i])
+    // console.log(response.data[i].reciever_id)
+    // console.log(team_id)
     if(response.data[i].reciever_id == team_id.team_id) {
       let proposedDates = []
       if(response.data[i].option1 != "") {
@@ -45,10 +46,22 @@ export default async function getRR(team_id: any): Promise<any> {
         proposedFields.push(response.data[i].option5_field)
       }
 
+      // Sets game time according to the time from database
+      let datetime = new Date(response.data[i].date)
+      if(response.data[i].time === "1") {
+        datetime.setUTCHours(21, 0, 0);
+      } else if(response.data[i].time === "2") {
+        datetime.setUTCHours(22, 30, 0);
+      } else if(response.data[i].time === "3") {
+        datetime.setUTCHours(24, 0, 0);
+      } else if(response.data[i].time === "4") {
+        datetime.setUTCHours(25, 30, 0);
+      }
+
       formmattedRequests.push({
         id: response.data[i].id,
         game_id: response.data[i].game_id,
-        originalDate: new Date(response.data[i].date),
+        originalDate: datetime,
         originalField: response.data[i].field,
         proposedDates: proposedDates,
         proposedFields: proposedFields,

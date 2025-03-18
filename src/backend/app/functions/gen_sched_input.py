@@ -10,7 +10,7 @@ from ..db.mock_data import insert_mock_schedule
 
 
 FIELDS = 3
-TIMESLOTS = 3
+TIMESLOTS = 4
 START_DATE = date(2025, 5, 5) # May 5, 2025 (Monday)
 END_DATE = date(2025, 8, 20) # August 20, 2025 (Wednesday)
 # END_DATE = date(2024, 6, 30) # June 30, 2024 (Sunday)
@@ -72,9 +72,9 @@ def gen_games_round_robin_old(teams, rounds: int):
     return reordered_games
 
 
-def gen_games_division(divs, games_per_team: int):
+def gen_games_division(divs: dict, games_per_team: int):
     games = []
-    for div in divs:
+    for div in divs.values():
         div_games = gen_games_round_robin(div, games_per_team)
         games.extend(div_games)
     return games
@@ -88,26 +88,31 @@ def gen_games_round_robin(teams, games_per_team: int):
 
     n = len(team_list)
     games = []
+    team_games_count = {team: 0 for team in team_list}
+    iter_count = -1
 
-    for r in range(games_per_team):
+    while all(count <= games_per_team for count in team_games_count.values()):
         round_games = []
+        iter_count += 1
         for i in range(n // 2):
             team1 = team_list[i]
             team2 = team_list[n - i - 1]
             if team1 != "BYE" and team2 != "BYE":
                 game = (team1, team2)
                 # Add the game in both directions to alternate home/away balance
-                if r % 2 == 0:
+                if iter_count % 2 == 0:
                     round_games.append(game)
                 else:
                     round_games.append((team2, team1))
+                team_games_count[team1] += 1
+                team_games_count[team2] += 1
         games.extend(round_games)
         # Rotate the teams except the first one
         team_list = [team_list[0]] + team_list[-1:] + team_list[1:-1]
     return games
 
 
-def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date, num_teams: int):
+def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date):
     game_slots = []
     weekdays = get_weekdays(start_date, end_date)
     print(weekdays)
@@ -127,6 +132,8 @@ def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date
         week_slots = []
         for field in range(1, fields + 1):
             for timeslot in range(1, timeslots + 1):
+                if (field == 1 and (timeslot == 3 or timeslot == 4)) or (field == 2 and (timeslot == 3 or timeslot == 4)):
+                    continue
                 for day in week:
                     week_slots.append((field, timeslot, day))
         game_slots.append(week_slots)
@@ -193,7 +200,7 @@ def gen_mock_schedule():
 
     games = gen_games_division(divs, Settings["games_per_team"])
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date, len(teams))
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date)
 
     schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
     print(schedule)
@@ -203,24 +210,22 @@ def gen_mock_schedule():
 
 def gen_schedule_repeated():
     teams = {}
-    div_a = {}
-    div_b = {}
-    div_c = {}
-    div_d = {}
+    divs = {}
+
     Teams = get_all_teams()
     Settings = get_season_settings()
-    for i in range(len(Teams)):
-        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
-        if Teams[i]["division"] == 0:
-            div_a[i] = teams[i]
-        elif Teams[i]["division"] == 1:
-            div_b[i] = teams[i]
-        elif Teams[i]["division"] == 2:
-            div_c[i] = teams[i]
-        elif Teams[i]["division"] == 3:
-            div_d[i] = teams[i]
 
-    divs = [div_a, div_b, div_c, div_d]
+    skipped_teams = 0
+
+    for i in range(len(Teams)):
+        if Teams[i]["division"] != -1:
+            teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
+            # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
+            if Teams[i]["division"] not in divs:
+                divs[Teams[i]["division"]] = {}
+            divs[Teams[i]["division"]][Teams[i]["id"]] = teams[Teams[i]["id"]]
+        else:
+            skipped_teams += 1
 
     start_date = datetime.strptime(Settings["start_date"], "%Y-%m-%d").date()
     end_date = datetime.strptime(Settings["end_date"], "%Y-%m-%d").date()
@@ -228,7 +233,7 @@ def gen_schedule_repeated():
 
     games = gen_games_division(divs, Settings["games_per_team"])
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date, len(teams))
+    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date)
 
     # Repeats the schedule generation 10 times and returns the best schedule
     best_schedule, best_score, t = gen_schedule_w_skip(games, game_slots, teams)
@@ -254,7 +259,7 @@ def get_teams():
 # print(len(games))
 
 
-# game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE, len(teams))
+# game_slots = gen_game_slots(FIELDS, TIMESLOTS, START_DATE, END_DATE)
 # print(game_slots)
 # print(len(game_slots))
 

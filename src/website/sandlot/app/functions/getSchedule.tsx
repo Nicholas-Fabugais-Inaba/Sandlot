@@ -119,11 +119,11 @@ function getFormattedEvents(games: any) : Event[] {
         end.setUTCHours(25, 30, 0);
       } else if (game.time === "4") {
         start.setUTCHours(25, 30, 0);
-        end.setUTCHours(29, 0, 0);
+        end.setUTCHours(27, 0, 0);
       }
       eventsTemp[dateTime] = {
         start: start,
-        end: end
+        end: end,
       };
     }
 
@@ -135,8 +135,12 @@ function getFormattedEvents(games: any) : Event[] {
           id: game.id,
           home: game.home_team_name,
           home_id: game.home_team_id,
+          home_score: game.home_team_score,
           away: game.away_team_name,
-          away_id: game.away_team_id
+          away_id: game.away_team_id,
+          away_score: game.away_team_score,
+          played: game.played,
+          forfeit: game.forfeit
         }
       }
     }
@@ -147,8 +151,12 @@ function getFormattedEvents(games: any) : Event[] {
           id: game.id,
           home: game.home_team_name,
           home_id: game.home_team_id,
+          home_score: game.home_team_score,
           away: game.away_team_name,
-          away_id: game.away_team_id
+          away_id: game.away_team_id,
+          away_score: game.away_team_score,
+          played: game.played,
+          forfeit: game.forfeit
         }
       }
     }
@@ -159,8 +167,12 @@ function getFormattedEvents(games: any) : Event[] {
           id: game.id,
           home: game.home_team_name,
           home_id: game.home_team_id,
+          home_score: game.home_team_score,
           away: game.away_team_name,
-          away_id: game.away_team_id
+          away_id: game.away_team_id,
+          away_score: game.away_team_score,
+          played: game.played,
+          forfeit: game.forfeit
         }
       }
     }
@@ -205,7 +217,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 
@@ -220,7 +232,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
       end.setMinutes(0);
       events.push({
         start: new Date(startDate),
-        end: end
+        end: end,
       });
     }
 
@@ -232,7 +244,7 @@ export function addEmptyEvents(events: Event[]) : Event[] {
     if (!eventExists) {
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30))
+        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
       });
     }
 
