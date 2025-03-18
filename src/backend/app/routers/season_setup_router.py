@@ -14,7 +14,7 @@ async def create_schedule(schedule: dict):
     teams = {}
     Teams = get_all_teams()
     for i in range(len(Teams)):
-        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+        teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
     for gameslot, game in schedule.items():
         gameslot = gameslot.split(",")
         insert_game(int(teams[game[0]]["id"]), int(teams[game[1]]["id"]), gameslot[2], gameslot[1], gameslot[0])

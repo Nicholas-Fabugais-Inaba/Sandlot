@@ -135,8 +135,12 @@ function getFormattedEvents(games: any) : Event[] {
           id: game.id,
           home: game.home_team_name,
           home_id: game.home_team_id,
+          home_score: game.home_team_score,
           away: game.away_team_name,
-          away_id: game.away_team_id
+          away_id: game.away_team_id,
+          away_score: game.away_team_score,
+          played: game.played,
+          forfeit: game.forfeit
         }
       }
     }
@@ -147,8 +151,12 @@ function getFormattedEvents(games: any) : Event[] {
           id: game.id,
           home: game.home_team_name,
           home_id: game.home_team_id,
+          home_score: game.home_team_score,
           away: game.away_team_name,
-          away_id: game.away_team_id
+          away_id: game.away_team_id,
+          away_score: game.away_team_score,
+          played: game.played,
+          forfeit: game.forfeit
         }
       }
     }
@@ -159,8 +167,12 @@ function getFormattedEvents(games: any) : Event[] {
           id: game.id,
           home: game.home_team_name,
           home_id: game.home_team_id,
+          home_score: game.home_team_score,
           away: game.away_team_name,
-          away_id: game.away_team_id
+          away_id: game.away_team_id,
+          away_score: game.away_team_score,
+          played: game.played,
+          forfeit: game.forfeit
         }
       }
     }
