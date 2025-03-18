@@ -4,10 +4,11 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation"; // To handle the query parameters
-import { title } from "@/components/primitives";
 import { Button } from "@heroui/react";
+
 import styles from "./Register.module.css";
 
+import { title } from "@/components/primitives";
 import registerPlayer from "@/app/functions/registerPlayer";
 import registerTeam from "@/app/functions/registerTeam";
 
@@ -54,6 +55,7 @@ export default function Register() {
         email: email,
         password: password,
       };
+
       // TODO: error checking to make sure response is OK on registration
       await registerPlayer(newUser);
     } else {
@@ -65,6 +67,7 @@ export default function Register() {
         preferred_offday: preferredOffday,
         preferred_time: preferredTime,
       };
+
       // TODO: error checking to make sure response is OK on registration
       await registerTeam(newTeam);
     }
@@ -78,44 +81,44 @@ export default function Register() {
           <div className={styles.inputGroup}>
             <label>Email:</label>
             <input
+              required
               className={styles.input}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Password:</label>
             <input
+              required
               className={styles.input}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Name:</label>
             <input
+              required
               className={styles.input}
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
             />
           </div>
 
           <div className={`${styles.inputGroup} ${styles.gender}`}>
             <label htmlFor="gender">Gender:</label>
             <select
+              required
               className={styles.input}
               id="gender"
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              required
             >
               <option value="">Select gender</option>
               <option value="male">Male</option>
@@ -131,44 +134,44 @@ export default function Register() {
           <div className={styles.inputGroup}>
             <label>Username:</label>
             <input
+              required
               className={styles.input}
               type="text"
               value={teamUsername}
               onChange={(e) => setTeamUsername(e.target.value)}
-              required
             />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Password:</label>
             <input
+              required
               className={styles.input}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Team Name:</label>
             <input
+              required
               className={styles.input}
               type="text"
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              required
             />
           </div>
 
           <div className={styles.inputGroup}>
             <label>Preferred Division:</label>
             <select
+              required
               className={styles.input}
               id="preferredDivision"
               value={preferredDivision}
               onChange={(e) => setPreferredDivision(parseInt(e.target.value))}
-              required
             >
               <option value="-1">None</option>
               <option value="0">A</option>
@@ -181,11 +184,11 @@ export default function Register() {
           <div className={styles.inputGroup}>
             <label>Select Preferred Offday:</label>
             <select
+              required
               className={styles.input}
               id="preferredOffday"
               value={preferredOffday}
               onChange={(e) => setPreferredOffday(parseInt(e.target.value))}
-              required
             >
               <option value="-1">None</option>
               <option value="0">Monday</option>
@@ -199,11 +202,11 @@ export default function Register() {
           <div className={styles.inputGroup}>
             <label>Select Preferred Time of Day:</label>
             <select
+              required
               className={styles.input}
               id="preferredTime"
               value={preferredTime}
               onChange={(e) => setPreferredTime(parseInt(e.target.value))}
-              required
             >
               <option value="0">Balanced</option>
               <option value="1">Early</option>
@@ -235,22 +238,22 @@ export default function Register() {
               </h1>
               <div className="flex space-x-4 mt-4">
                 <Button
-                  onPress={() => setAccountType("player")}
                   className="button"
+                  onPress={() => setAccountType("player")}
                 >
                   Player
                 </Button>
                 <Button
-                  onPress={() => setAccountType("team")}
                   className="button"
+                  onPress={() => setAccountType("team")}
                 >
                   Team
                 </Button>
               </div>
               <div className="flex justify-center mt-48">
                 <Button
-                  onPress={() => router.push(callbackUrl)}
                   className="button"
+                  onPress={() => router.push(callbackUrl)}
                 >
                   Cancel
                 </Button>
@@ -261,15 +264,15 @@ export default function Register() {
               {renderForm()}
 
               <div className="flex space-x-4 justify-center">
-                <Button type="submit" className="button">
+                <Button className="button" type="submit">
                   Register
                 </Button>
               </div>
 
               <div className="flex justify-center mt-4">
                 <Button
-                  onPress={() => router.push(callbackUrl)}
                   className="button"
+                  onPress={() => router.push(callbackUrl)}
                 >
                   Cancel
                 </Button>

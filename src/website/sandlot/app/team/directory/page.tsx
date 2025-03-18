@@ -14,8 +14,9 @@ import {
   Spinner,
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
-import { title } from "@/components/primitives";
 import { getSession } from "next-auth/react";
+
+import { title } from "@/components/primitives";
 // import getStandings from "../functions/getStandings";
 import "./TeamDirectoryPage.css";
 import getTeamsDirectory from "@/app/functions/getTeamsDirectory";
@@ -39,6 +40,7 @@ export default function TeamsDirectoryPage() {
   useEffect(() => {
     (async () => {
       let standings = await getTeamsDirectory();
+
       console.log(standings);
       console.log(standings[0]);
       // console.log(list)

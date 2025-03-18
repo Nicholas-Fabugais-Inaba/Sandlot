@@ -5,7 +5,6 @@
 import { useEffect, useState } from "react";
 import { getSession, signOut, signIn } from "next-auth/react";
 import { Session } from "next-auth";
-import { title } from "@/components/primitives";
 import {
   Button,
   Card,
@@ -16,6 +15,8 @@ import {
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
+import { title } from "@/components/primitives";
+
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
@@ -24,6 +25,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
+
       setSession(session);
       setLoading(false);
     };
@@ -43,14 +45,14 @@ export default function ProfilePage() {
           </h1>
           <div className="flex space-x-4 mt-4">
             <Button
-              onPress={() => signIn(undefined, { callbackUrl: "/profile" })}
               className="button"
+              onPress={() => signIn(undefined, { callbackUrl: "/profile" })}
             >
               Sign In
             </Button>
             <Button
-              onPress={() => router.push("/profile/register")}
               className="button"
+              onPress={() => router.push("/profile/register")}
             >
               Register
             </Button>
@@ -129,8 +131,8 @@ export default function ProfilePage() {
       {/* Sign Out Button */}
       <div className="flex justify-center mt-8">
         <Button
-          onPress={() => signOut({ callbackUrl: "/profile/signin" })}
           className="button"
+          onPress={() => signOut({ callbackUrl: "/profile/signin" })}
         >
           Sign Out
         </Button>

@@ -8,12 +8,13 @@ import { Snippet } from "@heroui/snippet";
 import { Code } from "@heroui/code";
 import { Card } from "@heroui/react";
 import { button as buttonStyles } from "@heroui/theme";
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
+
+import { siteConfig } from "@/config/site";
+import { title, subtitle } from "@/components/primitives";
+import { GithubIcon } from "@/components/icons";
 import "./HomePage.css"; // Import the new CSS file
 
 export default function Home() {
@@ -34,6 +35,7 @@ export default function Home() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
+
       setSession(session);
       setLoading(false);
     };
@@ -62,6 +64,7 @@ export default function Home() {
 
   const handleSaveEdit = (index: number) => {
     const updatedAnnouncements = [...announcements];
+
     updatedAnnouncements[index] = editValue;
     setAnnouncements(updatedAnnouncements);
     setEditingIndex(null);
@@ -69,6 +72,7 @@ export default function Home() {
 
   const handleDeleteAnnouncement = (index: number) => {
     const updatedAnnouncements = announcements.filter((_, i) => i !== index);
+
     setAnnouncements(updatedAnnouncements);
   };
 
@@ -106,9 +110,10 @@ export default function Home() {
                 <li>Click park for free to register plate.</li>
                 <li>
                   <a
-                    href="https://www.gsasoftball.ca/PrintDocs/Mc%20Master-18x24-4916.pdf"
-                    target="_blank"
                     className="text-blue-600"
+                    href="https://www.gsasoftball.ca/PrintDocs/Mc%20Master-18x24-4916.pdf"
+                    rel="noreferrer"
+                    target="_blank"
                   >
                     HONK Parking QR code
                   </a>
@@ -121,8 +126,8 @@ export default function Home() {
               <p className="mb-4">
                 If you have any questions, let me know at{" "}
                 <a
-                  href="mailto:j.a.nease@outlook.com"
                   className="text-blue-600"
+                  href="mailto:j.a.nease@outlook.com"
                 >
                   j.a.nease@outlook.com
                 </a>
@@ -144,9 +149,10 @@ export default function Home() {
               </p>
               <p className="mb-4">
                 <a
-                  href="https://www.gsasoftball.ca/Phoenix%20Cup/Phoenix%20Cup.htm"
-                  target="_blank"
                   className="text-blue-600"
+                  href="https://www.gsasoftball.ca/Phoenix%20Cup/Phoenix%20Cup.htm"
+                  rel="noreferrer"
+                  target="_blank"
                 >
                   Phoenix Cup:
                 </a>{" "}
@@ -267,15 +273,15 @@ export default function Home() {
                   {session?.user.role === "commissioner" && (
                     <div className="flex gap-2 mt-4">
                       <input
+                        className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                        placeholder="Enter announcement..."
                         type="text"
                         value={newAnnouncement}
                         onChange={(e) => setNewAnnouncement(e.target.value)}
-                        placeholder="Enter announcement..."
-                        className="border border-gray-300 rounded-md px-3 py-2 w-full"
                       />
                       <button
-                        onClick={handleAddAnnouncement}
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                        onClick={handleAddAnnouncement}
                       >
                         Post
                       </button>
@@ -291,10 +297,10 @@ export default function Home() {
                       >
                         {editingIndex === index ? (
                           <input
+                            className="border border-gray-300 rounded-md px-2 py-1 flex-grow"
                             type="text"
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
-                            className="border border-gray-300 rounded-md px-2 py-1 flex-grow"
                           />
                         ) : (
                           <span className="text-gray-800">{announcement}</span>
@@ -305,22 +311,22 @@ export default function Home() {
                           <div className="flex space-x-2 ml-2">
                             {editingIndex === index ? (
                               <button
-                                onClick={() => handleSaveEdit(index)}
                                 className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                                onClick={() => handleSaveEdit(index)}
                               >
                                 Save
                               </button>
                             ) : (
                               <button
-                                onClick={() => handleEditAnnouncement(index)}
                                 className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+                                onClick={() => handleEditAnnouncement(index)}
                               >
                                 Edit
                               </button>
                             )}
                             <button
-                              onClick={() => handleDeleteAnnouncement(index)}
                               className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                              onClick={() => handleDeleteAnnouncement(index)}
                             >
                               Delete
                             </button>
@@ -344,33 +350,33 @@ export default function Home() {
           <h2 className="text-xl font-bold mb-4">Directory</h2>
           <div className="space-y-4">
             <button
-              onClick={() => setActiveSection("home")}
               className="directory-item text-left font-semibold w-full"
+              onClick={() => setActiveSection("home")}
             >
               Announcements
             </button>
             <button
-              onClick={() => setActiveSection("parking")}
               className="directory-item text-left font-semibold w-full"
+              onClick={() => setActiveSection("parking")}
             >
               Parking Information
             </button>
             <button
-              onClick={() => setActiveSection("dates")}
               className="directory-item text-left font-semibold w-full"
+              onClick={() => setActiveSection("dates")}
             >
               Key Season Dates
             </button>
             <button
-              onClick={() => router.push("/team/directory")}
               className="directory-item text-left font-semibold w-full"
+              onClick={() => router.push("/team/directory")}
             >
               Team Directory
             </button>
             <div className="relative">
               <button
-                onClick={handleWeatherClick}
                 className="directory-item text-left font-semibold w-full"
+                onClick={handleWeatherClick}
               >
                 Weather Information
               </button>
@@ -379,17 +385,18 @@ export default function Home() {
                   <ul className="list-disc list-inside mb-4 space-y-2">
                     <li>
                       <button
-                        onClick={handleRainoutsClick}
                         className="text-left text-blue-600"
+                        onClick={handleRainoutsClick}
                       >
                         Rainouts
                       </button>
                     </li>
                     <li>
                       <a
-                        href="https://tempestwx.com/station/48603/"
-                        target="_blank"
                         className="text-blue-600"
+                        href="https://tempestwx.com/station/48603/"
+                        rel="noreferrer"
+                        target="_blank"
                       >
                         Ainsley Wood Station
                       </a>

@@ -5,9 +5,11 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation"; // To handle the query parameters
-import { title } from "@/components/primitives";
 import { Button } from "@heroui/react";
+
 import styles from "./SignIn.module.css";
+
+import { title } from "@/components/primitives";
 
 export default function SignIn() {
   const [userID, setUserID] = useState("");
@@ -42,25 +44,25 @@ export default function SignIn() {
             <div className={styles.inputGroup}>
               <label>Email or Team Username:</label>
               <input
+                required
                 className={styles.input}
                 type="text"
                 value={userID}
                 onChange={(e) => setUserID(e.target.value)}
-                required
               />
             </div>
             <div className={styles.inputGroup}>
               <label>Password:</label>
               <input
+                required
                 className={styles.input}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
               />
             </div>
             <div className="flex space-x-4 justify-center">
-              <Button type="submit" className="button">
+              <Button className="button" type="submit">
                 Sign In
               </Button>
             </div>
@@ -68,16 +70,16 @@ export default function SignIn() {
           <div className={styles.newUserContainer}>
             <p className={styles.newUserText}>New User?</p>
             <Button
-              onPress={() => router.push("/profile/register")}
               className="button"
+              onPress={() => router.push("/profile/register")}
             >
               Create an Account
             </Button>
           </div>
           <div className="flex justify-center mt-4">
             <Button
-              onPress={() => router.push(callbackUrl)} // Redirect to the previous page (team or profile)
               className="button"
+              onPress={() => router.push(callbackUrl)} // Redirect to the previous page (team or profile)
             >
               Cancel
             </Button>

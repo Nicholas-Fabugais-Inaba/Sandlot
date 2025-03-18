@@ -2,6 +2,7 @@
 
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+
 import { mockUsers } from "../database"; // Mock storage
 import { createTeam } from "../../teams/create/route"; // Import the team creation function
 
@@ -14,6 +15,7 @@ async function registerUser(
   gender?: string,
 ) {
   const existingUser = mockUsers.find((user) => user.email === email);
+
   if (existingUser) {
     throw new Error("Email is already registered");
   }
@@ -28,6 +30,7 @@ async function registerUser(
 
     // Create the team
     let newTeam;
+
     try {
       newTeam = await createTeam({ teamName: teamName, captainEmail: email });
       console.log("Team created successfully:", newTeam);
@@ -47,6 +50,7 @@ async function registerUser(
       teamName,
       accountType,
     };
+
     mockUsers.push(newUser);
     console.log("Team registered:", newUser);
 
@@ -60,8 +64,10 @@ async function registerUser(
       gender,
       accountType,
     };
+
     mockUsers.push(newPlayer);
     console.log("Player registered:", newPlayer);
+
     return newPlayer;
   }
 
@@ -109,6 +115,7 @@ export async function POST(req: Request) {
       teamName,
       gender,
     );
+
     return NextResponse.json(
       { message: "Registration successful", user: newUser },
       { status: 200 },
@@ -116,6 +123,7 @@ export async function POST(req: Request) {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Failed to register";
+
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -1,8 +1,9 @@
 // app/api/users/login/route.ts
 
 import bcrypt from "bcrypt";
-import { mockUsers } from "../database"; // Use shared array
 import { NextRequest, NextResponse } from "next/server";
+
+import { mockUsers } from "../database"; // Use shared array
 
 export async function authenticateUser(email: string, password: string) {
   const user = mockUsers.find((user) => user.email === email);
@@ -10,6 +11,7 @@ export async function authenticateUser(email: string, password: string) {
   if (user && (await bcrypt.compare(password, user.password))) {
     return { id: user.id, name: "John Doe", email: user.email };
   }
+
   return null;
 }
 

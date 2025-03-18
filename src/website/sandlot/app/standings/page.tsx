@@ -14,9 +14,11 @@ import {
   Spinner,
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
-import { title } from "@/components/primitives";
 import { getSession } from "next-auth/react";
+
 import getStandings from "../functions/getStandings";
+
+import { title } from "@/components/primitives";
 import "./StandingsPage.css";
 
 export default function StandingsPage() {
@@ -66,6 +68,7 @@ export default function StandingsPage() {
   useEffect(() => {
     (async () => {
       let standings = await getStandings();
+
       console.log(standings);
       console.log(standings[0]);
       // console.log(list)

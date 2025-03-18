@@ -1,6 +1,7 @@
 // app/api/teams/my-team/route.ts
 
 import { NextResponse } from "next/server";
+
 import { mockTeams } from "../database";
 
 export async function GET(req: Request) {

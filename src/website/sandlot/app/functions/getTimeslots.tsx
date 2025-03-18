@@ -6,5 +6,6 @@ export default async function getTimeslots(): Promise<any> {
   const response = await axios.get(
     `http://${APIHOST}/season-setup/get_timeslots`,
   );
+
   return response.data;
 }

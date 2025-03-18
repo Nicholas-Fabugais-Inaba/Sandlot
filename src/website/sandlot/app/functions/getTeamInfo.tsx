@@ -7,6 +7,8 @@ export default async function getTeamInfo(userTeamID: any): Promise<any> {
     `http://${APIHOST}/team/get_players`,
     userTeamID,
   );
+
   console.log(response.data);
+
   return response.data;
 }

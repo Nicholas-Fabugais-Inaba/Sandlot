@@ -1,12 +1,14 @@
 // app/api/teams/[team-id]/accept/route.ts
 
 import { NextResponse } from "next/server";
+
 import { findTeamById } from "../../database";
 
 export async function POST(req: Request) {
   const { teamId, playerEmail, captainEmail } = await req.json();
 
   const team = findTeamById(teamId);
+
   if (!team) {
     return NextResponse.json({ error: "Team not found" }, { status: 404 });
   }

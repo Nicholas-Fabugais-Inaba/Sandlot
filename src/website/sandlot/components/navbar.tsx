@@ -18,13 +18,13 @@ import { Input } from "@heroui/input";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import React, { useEffect, useState } from "react";
+import { Session } from "next-auth";
+import { getSession } from "next-auth/react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
-import React, { useEffect, useState } from "react";
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
 
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -33,9 +33,11 @@ export const Navbar = () => {
   useEffect(() => {
     const fetchSession = async () => {
       const userSession = await getSession();
+
       setSession(userSession);
       setLoading(false);
     };
+
     fetchSession();
   }, []);
 
@@ -49,6 +51,7 @@ export const Navbar = () => {
     } else if (item.label === "Accept RR" && session?.user.role !== "team") {
       return false; // Hide if the user is not part of a team
     }
+
     return true;
   });
 

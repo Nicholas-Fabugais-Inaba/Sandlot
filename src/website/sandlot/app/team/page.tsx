@@ -3,8 +3,8 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+
 // import { useSession } from "next-auth/react";
-import { title } from "@/components/primitives";
 import {
   Input,
   Modal,
@@ -19,8 +19,11 @@ import {
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
-import getTeamInfo from "../functions/getTeamInfo";
 import { user } from "@heroui/theme";
+
+import getTeamInfo from "../functions/getTeamInfo";
+
+import { title } from "@/components/primitives";
 
 // Define the interface for Team and User data
 interface Team {
@@ -77,6 +80,7 @@ export default function TeamPage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
+
       setSession(session);
     };
 
@@ -95,6 +99,7 @@ export default function TeamPage() {
       setUserTeamID(session?.user.team_id || null);
       if (session?.user.team_id) {
         let teamInfo = await getTeamInfo({ team_id: session?.user.team_id });
+
         setRoster(teamInfo);
       }
     })();
@@ -200,14 +205,14 @@ export default function TeamPage() {
           </h1>
           <div className="flex space-x-4 mt-4">
             <Button
-              onPress={() => router.push("/profile/signin?callbackUrl=/team")}
               className="button"
+              onPress={() => router.push("/profile/signin?callbackUrl=/team")}
             >
               Sign In
             </Button>
             <Button
-              onPress={() => router.push("/profile/register?callbackUrl=/team")}
               className="button"
+              onPress={() => router.push("/profile/register?callbackUrl=/team")}
             >
               Register
             </Button>
@@ -232,10 +237,10 @@ export default function TeamPage() {
               <div key={team.id} className="p-4 border mb-2 rounded">
                 <p>{team.teamName}</p>
                 <Button
-                  disabled={actionLoading}
                   className="button"
-                  onPress={() =>
-                    handleAction()
+                  disabled={actionLoading}
+                  onPress={
+                    () => handleAction()
                     // `/api/teams/${team.id}/join`,
                     // "POST",
                     // { playerEmail: session.user.email },
@@ -289,24 +294,24 @@ export default function TeamPage() {
               {session?.user.teamName}'s Info
             </h2>
             <Button
+              className="button mb-4"
               onPress={() =>
                 alert(
                   `Captain's Info: ${"Temp captain name"} (${"Temp captain contact"})`,
                 )
               }
-              className="button mb-4"
             >
               Captain's Info
             </Button>
             <Button
-              onPress={() =>
-                handleAction()
+              className="button"
+              onPress={
+                () => handleAction()
                 // `/api/teams/${userTeam.id}/leave`,
                 // "POST",
                 // { playerEmail: session.user.email },
                 // "You have left the team"
               }
-              className="button"
             >
               Leave Team
             </Button>
@@ -362,10 +367,10 @@ export default function TeamPage() {
                   {request.name} ({request.email})
                 </p>
                 <Button
-                  disabled={actionLoading}
                   className="button mr-2"
-                  onPress={() =>
-                    handleAction()
+                  disabled={actionLoading}
+                  onPress={
+                    () => handleAction()
                     // `/api/teams/${session.user.teamName}/accept`,
                     // "POST",
                     // { playerEmail: request.email },
@@ -375,10 +380,10 @@ export default function TeamPage() {
                   Accept
                 </Button>
                 <Button
-                  disabled={actionLoading}
                   className="button"
-                  onPress={() =>
-                    handleAction()
+                  disabled={actionLoading}
+                  onPress={
+                    () => handleAction()
                     // `/api/teams/${session.user.teamName}/deny`,
                     // "POST",
                     // { playerEmail: request.email },

@@ -4,8 +4,11 @@
 
 import { useState, useEffect } from "react";
 import { getSession } from "next-auth/react";
+
 import { title } from "@/components/primitives";
+
 import { Card } from "@heroui/react"; // Import NextUI Card
+
 import CustomModal from "./CustomModal"; // Import Custom Modal
 import "./AcceptRescheduleRequest.css"; // Custom styles
 
@@ -47,6 +50,7 @@ export default function AcceptRescheduleRequest() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
+
       if (session) {
         setUserRole(session.user?.role || null);
         setUserTeamId(session.user?.team_id || null);
@@ -62,6 +66,7 @@ export default function AcceptRescheduleRequest() {
     (async () => {
       const session = await getSession();
       const formattedRequests = await getRR({ team_id: session?.user.team_id });
+
       setRescheduleRequests(formattedRequests);
     })();
   }, []);
@@ -69,6 +74,7 @@ export default function AcceptRescheduleRequest() {
   const handleAccept = (id: string) => {
     const selectedDate = selectedDates[id];
     const request = rescheduleRequests.find((req) => req.id === id);
+
     if (selectedDate && request) {
       setModalContent({
         id,
@@ -84,6 +90,7 @@ export default function AcceptRescheduleRequest() {
 
   const handleDeny = (id: string) => {
     const request = rescheduleRequests.find((req) => req.id === id);
+
     if (request) {
       setModalContent({
         id,
@@ -101,9 +108,11 @@ export default function AcceptRescheduleRequest() {
         const request = rescheduleRequests.find(
           (req) => req.id === modalContent.id,
         );
+
         if (request) {
           let splitNewDate = parseNewDate(modalContent.newDate);
           let timeslot = deriveTimeslot(splitNewDate[0]);
+
           acceptRR({
             rr_id: parseInt(request.id, 10),
             old_game_id: request.game_id,
@@ -128,6 +137,7 @@ export default function AcceptRescheduleRequest() {
 
   function parseNewDate(newDate: string): [Date, string] {
     let splitNewDate = newDate.split(" ");
+
     return [new Date(splitNewDate[0]), splitNewDate[1]];
   }
 
@@ -141,6 +151,7 @@ export default function AcceptRescheduleRequest() {
     } else if (date.getHours() === 21) {
       return "4";
     }
+
     return "0";
   }
 
@@ -177,7 +188,7 @@ export default function AcceptRescheduleRequest() {
                   })
                 }
               >
-                <option value="" disabled>
+                <option disabled value="">
                   Select a date
                 </option>
                 {request.proposedDates.map((date, i) => (
@@ -194,14 +205,14 @@ export default function AcceptRescheduleRequest() {
             </div>
             <div className="flex space-x-4">
               <button
-                onClick={() => handleAccept(request.id)}
                 className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                onClick={() => handleAccept(request.id)}
               >
                 Accept
               </button>
               <button
-                onClick={() => handleDeny(request.id)}
                 className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                onClick={() => handleDeny(request.id)}
               >
                 Deny
               </button>
@@ -211,10 +222,6 @@ export default function AcceptRescheduleRequest() {
       </div>
 
       <CustomModal
-        isVisible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onConfirm={confirmAction}
-        title={`Confirm ${modalContent?.action === "accept" ? "Acceptance" : "Denial"}`}
         body={
           <>
             <p>
@@ -232,6 +239,10 @@ export default function AcceptRescheduleRequest() {
             )}
           </>
         }
+        isVisible={modalVisible}
+        title={`Confirm ${modalContent?.action === "accept" ? "Acceptance" : "Denial"}`}
+        onClose={() => setModalVisible(false)}
+        onConfirm={confirmAction}
       />
     </div>
   );

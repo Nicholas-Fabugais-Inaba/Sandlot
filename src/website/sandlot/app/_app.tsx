@@ -1,6 +1,7 @@
 // app/_app.tsx
 
 import { AppProps } from "next/app";
+
 import { Providers } from "./providers";
 import "../styles/globals.css";
 

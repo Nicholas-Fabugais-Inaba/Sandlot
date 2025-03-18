@@ -1,6 +1,7 @@
 import axios from "axios";
-import { Event, GenSchedResponse } from "../types";
 import { Dictionary } from "@fullcalendar/core/internal";
+
+import { Event, GenSchedResponse } from "../types";
 
 const APIHOST = `127.0.0.1:8000`;
 const currDate = new Date("2025-06-20");
@@ -33,6 +34,7 @@ export default async function getSchedule(): Promise<Event[]> {
     return formattedEvents;
   } catch (error) {
     console.error("Error fetching schedule:", error);
+
     return [];
   }
 }
@@ -53,6 +55,7 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
     return formattedEvents;
   } catch (error) {
     console.error("Error fetching schedule:", error);
+
     return [];
   }
 }
@@ -70,6 +73,7 @@ export async function genSampleSchedule(
     console.log(response.data);
     const games = convertSchedData(response.data.schedule, response.data.teams);
     const events = getFormattedEvents(games);
+
     console.log(events);
 
     return {
@@ -79,12 +83,14 @@ export async function genSampleSchedule(
     };
   } catch (error) {
     console.error("Error generating schedule:", error);
+
     return { events: [], schedule: {}, score: 0 };
   }
 }
 
 function convertSchedData(schedule: Dictionary, teams: Dictionary): Game[] {
   const games: Game[] = [];
+
   // Response is a dictionary with keys being gameslots and values being lists of two teams.
   // Loop through each key and value of response:
   for (const key in schedule) {
@@ -101,6 +107,7 @@ function convertSchedData(schedule: Dictionary, teams: Dictionary): Game[] {
         away_team_name: teams[game_teams[1]]["name"],
         away_team_id: teams[game_teams[1]]["id"],
       };
+
       // Add the game object to the games array.
       games.push(game);
     }
@@ -119,6 +126,7 @@ function getFormattedEvents(games: any): Event[] {
     if (!(dateTime in eventsTemp)) {
       var start = new Date(game.date);
       var end = new Date(game.date);
+
       if (game.time === "1") {
         start.setHours(17);
         end.setHours(18);
@@ -181,6 +189,7 @@ function getFormattedEvents(games: any): Event[] {
 
   // Convert the dictionary to an array of events
   const formattedEvents: Event[] = [];
+
   for (const key in eventsTemp) {
     if (eventsTemp.hasOwnProperty(key)) {
       formattedEvents.push(eventsTemp[key]);
@@ -196,6 +205,7 @@ export function addEmptyEvents(events: Event[]): Event[] {
   }
 
   let startDate;
+
   if (currDate > seasonStart) {
     startDate = currDate;
   } else {
@@ -232,6 +242,7 @@ export function addEmptyEvents(events: Event[]): Event[] {
 
     if (!eventExists) {
       let end = new Date(startDate);
+
       end.setHours(20);
       end.setMinutes(0);
       events.push({

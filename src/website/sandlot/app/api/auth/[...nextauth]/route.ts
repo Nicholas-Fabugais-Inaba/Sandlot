@@ -3,6 +3,7 @@
 import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
+
 import getPlayer from "@/app/functions/getPlayer";
 import getTeam from "@/app/functions/getTeam";
 
@@ -21,10 +22,13 @@ const authOptions: NextAuthOptions = {
           let user = null;
           // TODO: if statments here are poor, should have better way of checking for email/password or player/team
           const regex = /[@]/;
+
           if (regex.test(credentials.userID)) {
             const player = await getPlayer({ email: credentials.userID });
+
             if (credentials.password == player.password) {
               let role;
+
               if (player.is_commissioner == true) {
                 role = "commissioner";
               } else {
@@ -47,6 +51,7 @@ const authOptions: NextAuthOptions = {
             }
           } else if (credentials.userID != "admin") {
             const team = await getTeam({ username: credentials.userID });
+
             if (credentials.password == team.password) {
               user = {
                 id: team.id,
@@ -69,6 +74,7 @@ const authOptions: NextAuthOptions = {
             return user;
           }
         }
+
         return null;
       },
     }),
@@ -91,6 +97,7 @@ const authOptions: NextAuthOptions = {
         };
       }
       console.log("Session callback session:", session); // Debugging log
+
       return session;
     },
     async jwt({ token, user }: { token: JWT; user?: any }) {
@@ -101,6 +108,7 @@ const authOptions: NextAuthOptions = {
         token.teamName = user.teamName;
         token.team_id = user.team_id;
       }
+
       return token;
     },
   },

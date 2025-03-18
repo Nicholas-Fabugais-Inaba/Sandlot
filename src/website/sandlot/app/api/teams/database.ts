@@ -38,8 +38,10 @@ export function findTeamById(teamId: string): Team | undefined {
 
 export function updateTeam(teamId: string, updatedData: Partial<Team>) {
   const team = findTeamById(teamId);
+
   if (!team) return null;
 
   Object.assign(team, updatedData);
+
   return team;
 }

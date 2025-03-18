@@ -10,11 +10,13 @@ export default async function getRR(team_id: any): Promise<any> {
 
   // TODO: insanely giga scuffed formatting need to be fixed
   let formmattedRequests = [];
+
   for (let i = 0; i < response.data.length; i++) {
     console.log(response.data[i].reciever_id);
     console.log(team_id);
     if (response.data[i].reciever_id == team_id.team_id) {
       let proposedDates = [];
+
       if (response.data[i].option1 != "") {
         proposedDates.push(new Date(response.data[i].option1));
       }
@@ -32,6 +34,7 @@ export default async function getRR(team_id: any): Promise<any> {
       }
 
       let proposedFields = [];
+
       if (response.data[i].option1_field != "") {
         proposedFields.push(response.data[i].option1_field);
       }
@@ -62,5 +65,6 @@ export default async function getRR(team_id: any): Promise<any> {
       });
     }
   }
+
   return formmattedRequests;
 }

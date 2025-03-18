@@ -23,16 +23,16 @@ const CustomModal: React.FC<CustomModalProps> = ({
       <div className="modal-container">
         <div className="modal-header">
           <h2>{title}</h2>
-          <button onClick={onClose} className="modal-close-button">
+          <button className="modal-close-button" onClick={onClose}>
             &times;
           </button>
         </div>
         <div className="modal-body">{body}</div>
         <div className="modal-footer">
-          <button onClick={onClose} className="modal-cancel-button">
+          <button className="modal-cancel-button" onClick={onClose}>
             Cancel
           </button>
-          <button onClick={onConfirm} className="modal-confirm-button">
+          <button className="modal-confirm-button" onClick={onConfirm}>
             Confirm
           </button>
         </div>

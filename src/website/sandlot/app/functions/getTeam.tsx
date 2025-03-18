@@ -7,5 +7,6 @@ export default async function getTeam(username: any): Promise<any> {
     `http://${APIHOST}/user/get_team`,
     username,
   );
+
   return response.data;
 }

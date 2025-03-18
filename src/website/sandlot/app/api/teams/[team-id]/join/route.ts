@@ -1,6 +1,7 @@
 // app/api/teams/[team-id]/join/route.ts
 
 import { NextResponse } from "next/server";
+
 import { findTeamById } from "../../database"; // Keeps team-related data
 import { findUserByEmail, findUserByName } from "../../../users/database"; // Import user lookup function
 
@@ -15,6 +16,7 @@ export async function POST(req: Request) {
   const { playerEmail, playerName } = await req.json();
 
   const team = findTeamById(teamId);
+
   if (!team) {
     return NextResponse.json({ error: "Team not found" }, { status: 404 });
   }
@@ -41,6 +43,7 @@ export async function POST(req: Request) {
 
   // Fetch the user's email
   const userEmail = findUserByEmail(playerEmail);
+
   if (!userEmail) {
     return NextResponse.json(
       { error: "User's email not found" },
@@ -50,6 +53,7 @@ export async function POST(req: Request) {
 
   // Fetch the user's name
   const userName = findUserByName(playerName);
+
   if (!userName) {
     return NextResponse.json(
       { error: "User's name not found" },

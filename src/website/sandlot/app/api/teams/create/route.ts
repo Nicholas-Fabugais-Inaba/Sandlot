@@ -1,6 +1,7 @@
 // app/api/teams/create/route.ts
 
 import { NextResponse } from "next/server";
+
 import { mockTeams } from "../database";
 
 // This function is used to programmatically create a team from another module
@@ -23,6 +24,7 @@ export async function createTeam({
     players: [],
     joinRequests: [],
   };
+
   mockTeams.push(newTeam);
 
   return newTeam; // Return the newly created team object
@@ -48,6 +50,7 @@ export async function POST(req: Request) {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Failed to create team";
+
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

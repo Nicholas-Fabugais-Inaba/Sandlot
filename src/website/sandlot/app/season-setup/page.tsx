@@ -1,9 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
+import getSeasonSettings from "../functions/getSeasonSettings";
+
 import SchedulePage from "@/app/schedule/page"; // Import the schedule page
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
-import getSeasonSettings from "../functions/getSeasonSettings";
+
 import "./SeasonSetupPage.css";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
 
@@ -21,14 +24,14 @@ export default function SeasonSetupPage() {
       case "general":
         return (
           <GeneralSettings
-            seasonName={seasonName}
-            setSeasonName={setSeasonName}
-            startDate={startDate}
-            setStartDate={setStartDate}
             endDate={endDate}
-            setEndDate={setEndDate}
             gamesPerTeam={gamesPerTeam}
+            seasonName={seasonName}
+            setEndDate={setEndDate}
             setGamesPerTeam={setGamesPerTeam}
+            setSeasonName={setSeasonName}
+            setStartDate={setStartDate}
+            startDate={startDate}
           />
         );
       case "teams":
@@ -40,14 +43,14 @@ export default function SeasonSetupPage() {
       default:
         return (
           <GeneralSettings
-            seasonName={seasonName}
-            setSeasonName={setSeasonName}
-            startDate={startDate}
-            setStartDate={setStartDate}
             endDate={endDate}
-            setEndDate={setEndDate}
             gamesPerTeam={gamesPerTeam}
+            seasonName={seasonName}
+            setEndDate={setEndDate}
             setGamesPerTeam={setGamesPerTeam}
+            setSeasonName={setSeasonName}
+            setStartDate={setStartDate}
+            startDate={startDate}
           />
         );
     }
@@ -101,6 +104,7 @@ function GeneralSettings({
 }: GeneralSettingsProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     switch (name) {
       case "seasonName":
         setSeasonName(value);
@@ -126,6 +130,7 @@ function GeneralSettings({
       end_date: endDate,
       games_per_team: gamesPerTeam,
     };
+
     console.log(settings);
     updateSeasonSettings(settings);
   };
@@ -135,6 +140,7 @@ function GeneralSettings({
   useEffect(() => {
     const loadFormData = async () => {
       const data = await getSeasonSettings();
+
       if (data.season_name != null) {
         setSeasonName(data.season_name || "");
       }
@@ -159,31 +165,31 @@ function GeneralSettings({
         <div className="mb-4">
           <label className="block text-gray-700">Season Name</label>
           <input
-            type="text"
+            className="w-full px-4 py-2 border rounded-lg"
             name="seasonName"
+            type="text"
             value={seasonName}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Start Date</label>
           <input
-            type="date"
+            className="w-full px-4 py-2 border rounded-lg"
             name="startDate"
+            type="date"
             value={startDate}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">End Date</label>
           <input
-            type="date"
+            className="w-full px-4 py-2 border rounded-lg"
             name="endDate"
+            type="date"
             value={endDate}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="mb-4">
@@ -191,19 +197,19 @@ function GeneralSettings({
             Number of games played by each team
           </label>
           <input
-            type="number"
+            className="w-full px-4 py-2 border rounded-lg"
             name="gamesPerTeam"
+            type="number"
             value={gamesPerTeam}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="flex items-center mb-4">
           <button
-            type="submit"
             className={`px-4 py-2 rounded-lg text-white ${isSaveDisabled ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
-            onClick={handleSave}
             disabled={isSaveDisabled}
+            type="submit"
+            onClick={handleSave}
           >
             Save
           </button>
@@ -227,14 +233,14 @@ function TeamsSettings() {
         <div className="mb-4">
           <label className="block text-gray-700">Add Team</label>
           <input
-            type="text"
             className="w-full px-4 py-2 border rounded-lg"
             placeholder="Team Name"
+            type="text"
           />
         </div>
         <button
-          type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+          type="submit"
         >
           Add Team
         </button>
@@ -258,14 +264,11 @@ function RulesSettings() {
       <form>
         <div className="mb-4">
           <label className="block text-gray-700">Game Rules</label>
-          <textarea
-            className="w-full px-4 py-2 border rounded-lg"
-            rows={5}
-          ></textarea>
+          <textarea className="w-full px-4 py-2 border rounded-lg" rows={5} />
         </div>
         <button
-          type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+          type="submit"
         >
           Save Rules
         </button>
