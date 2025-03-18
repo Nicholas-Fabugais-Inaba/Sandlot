@@ -1,5 +1,5 @@
-import React from 'react';
-import './CustomModal.css';  // Import Custom Modal CSS
+import React from "react";
+import "./CustomModal.css"; // Import Custom Modal CSS
 
 interface CustomModalProps {
   isVisible: boolean;
@@ -9,7 +9,13 @@ interface CustomModalProps {
   body: React.ReactNode;
 }
 
-const CustomModal: React.FC<CustomModalProps> = ({ isVisible, onClose, onConfirm, title, body }) => {
+const CustomModal: React.FC<CustomModalProps> = ({
+  isVisible,
+  onClose,
+  onConfirm,
+  title,
+  body,
+}) => {
   if (!isVisible) return null;
 
   return (
@@ -17,14 +23,18 @@ const CustomModal: React.FC<CustomModalProps> = ({ isVisible, onClose, onConfirm
       <div className="modal-container">
         <div className="modal-header">
           <h2>{title}</h2>
-          <button onClick={onClose} className="modal-close-button">&times;</button>
+          <button className="modal-close-button" onClick={onClose}>
+            &times;
+          </button>
         </div>
-        <div className="modal-body">
-          {body}
-        </div>
+        <div className="modal-body">{body}</div>
         <div className="modal-footer">
-          <button onClick={onClose} className="modal-cancel-button">Cancel</button>
-          <button onClick={onConfirm} className="modal-confirm-button">Confirm</button>
+          <button className="modal-cancel-button" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="modal-confirm-button" onClick={onConfirm}>
+            Confirm
+          </button>
         </div>
       </div>
     </div>
