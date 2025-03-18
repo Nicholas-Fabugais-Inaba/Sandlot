@@ -1,4 +1,4 @@
-// app/schedule/schedule.tsx
+// app/schedule/page.tsx
 
 "use client";
 
