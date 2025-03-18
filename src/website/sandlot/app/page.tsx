@@ -10,15 +10,24 @@ import { Session } from 'next-auth';
 import { getSession, signIn } from 'next-auth/react';
 import "./HomePage.css";  // Import the new CSS file
 
+// announcement function imports
+import getAnnouncements from "./functions/getAnnouncements";
+import createAnnouncement from "./functions/createAnnouncement";
+import updateAnnouncement from "./functions/updateAnnouncement";
+import deleteAnnouncement from "./functions/deleteAnnouncement";
+
+interface Announcement {
+  id: number;
+  date: string;
+  title: string;
+  body: string;
+}
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [isWeatherDropdownOpen, setWeatherDropdownOpen] = useState(false);
   const router = useRouter();
-  const [announcements, setAnnouncements] = useState([
-    { title: "Season Start", body: "Season starts on April 1st!", date: new Date('2025-04-01') },
-    { title: "Registration", body: "Registration opens on March 1st.", date: new Date('2025-03-01') },
-    { title: "New Teams", body: "New teams welcome to join.", date: new Date('2025-02-15') }
-  ]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [newAnnouncementTitle, setNewAnnouncementTitle] = useState("");
   const [newAnnouncementBody, setNewAnnouncementBody] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -31,22 +40,27 @@ export default function Home() {
     const fetchSession = async () => {
       const session = await getSession();
       setSession(session);
+      const announcements = await getAnnouncements();
+      setAnnouncements(announcements);
+
       setLoading(false);
     };
 
     fetchSession();
   }, []);
 
-  const handleAddAnnouncement = () => {
+  const handleAddAnnouncement = async () => {
     if (newAnnouncementTitle.trim() && newAnnouncementBody.trim()) {
       const newAnnouncement = {
+        id: announcements[announcements.length - 1].id + 1, // Increment the ID based on existing IDs to match the assigned ID in the database
+        date: new Date().toLocaleDateString(), // Set the current date for new announcements
         title: newAnnouncementTitle,
         body: newAnnouncementBody,
-        date: new Date(), // Set the current date for new announcements
       };
-  
-      setAnnouncements((prevAnnouncements) => [
-        ...prevAnnouncements,
+
+      await createAnnouncement(newAnnouncement);
+      setAnnouncements([
+        ...announcements,
         newAnnouncement,
       ]);
   
@@ -61,17 +75,19 @@ export default function Home() {
     setEditBody(announcements[index].body);
   };
 
-  const handleSaveEdit = (index: number) => {
+  const handleSaveEdit = async (index: number) => {
     if (editTitle.trim() && editBody.trim()) {
       const updatedAnnouncements = [...announcements];
-      // Keep the original date and update only title and body
+      // Keep the original date and id and update only title and body
       updatedAnnouncements[index] = {
+        id: announcements[index].id,
         title: editTitle,
         body: editBody,
-        date: announcements[index].date, // Retain the original date
+        date: announcements[index].date,
       };
-  
+      await updateAnnouncement(updatedAnnouncements[index]);
       setAnnouncements(updatedAnnouncements);
+
       setEditingIndex(null); // Reset editing index
     } else {
       // Optionally, show an error message if the title or body is empty
@@ -79,8 +95,9 @@ export default function Home() {
     }
   };
 
-  const handleDeleteAnnouncement = (index: number) => {
+  const handleDeleteAnnouncement = async (index: number) => {
     const updatedAnnouncements = announcements.filter((_, i) => i !== index);
+    await deleteAnnouncement({announcement_id: announcements[index].id})
     setAnnouncements(updatedAnnouncements);
   };
 

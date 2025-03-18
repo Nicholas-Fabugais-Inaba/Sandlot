@@ -88,10 +88,10 @@ class NewAnnouncement(BaseModel):
     body: str
 
 class AnnouncementData(BaseModel):
-    announcement_id: int
-    new_date: str
-    new_title: str
-    new_body: str
+    id: int
+    date: str
+    title: str
+    body: str
 
 class AnnouncementID(BaseModel):
     announcement_id: int
