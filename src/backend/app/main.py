@@ -7,12 +7,15 @@ from .routers.standings_router import router as standings_router
 from .routers.season_setup_router import router as season_setup_router
 from .routers.announcement_router import router as announcement_router
 from .routers.join_router import router as join_router
+from dotenv import load_dotenv
+import os
 
-
+load_dotenv()
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    os.getenv('REMOTE_HOST')
 ]
 app.add_middleware(
     CORSMiddleware,
