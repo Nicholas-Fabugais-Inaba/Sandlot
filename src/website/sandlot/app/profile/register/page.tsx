@@ -12,6 +12,7 @@ import styles from "./Register.module.css";
 import { title } from "@/components/primitives";
 import registerPlayer from "@/app/functions/registerPlayer";
 import registerTeam from "@/app/functions/registerTeam";
+import getCallbackUrl from "@/app/profile/getCallbackUrl"
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -29,11 +30,11 @@ export default function Register() {
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
-  const searchParams = useSearchParams(); // Access the query params
+  //const searchParams = useSearchParams(); // Access the query params
 
-  function getCallbackUrl() {
-    return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
-  }
+  // function getCallbackUrl() {
+  //   return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
+  // }
 
   // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
   // const handleRegistration = async (e: React.FormEvent) => {
