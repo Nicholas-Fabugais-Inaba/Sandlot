@@ -98,3 +98,14 @@ def update_team_password(team_id, new_password):
         session.execute(stmt)
         session.commit()
         return "password updated"
+
+def get_teams_season_setup():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Team.id, Team.team_name, Team.division, Team.preferred_division, Division.division_name)
+            .select_from(Team)
+            .join(Division, Division.id == Team.division)
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
