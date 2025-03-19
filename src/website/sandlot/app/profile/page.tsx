@@ -58,6 +58,7 @@ export default function ProfilePage() {
           first_name: firstName,
           last_name: lastName ? lastName : "",
         });
+        session.user.firstname = firstName;
       }
       setIsModalOpen(false);
     });
@@ -72,6 +73,7 @@ export default function ProfilePage() {
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
         updateTeamName({ team_id: session.user.id, new_team_name: value });
+        session.user.teamName = value;
       }
       setIsModalOpen(false);
     });
@@ -86,6 +88,7 @@ export default function ProfilePage() {
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
         updateTeamUsername({ team_id: session.user.id, new_username: value });
+        session.user.username = value;
       }
       setIsModalOpen(false);
     });
@@ -103,6 +106,7 @@ export default function ProfilePage() {
         session?.user.role === "commissioner"
       ) {
         updatePlayerEmail({ player_id: session.user.id, new_email: value });
+        session.user.email = value;
       }
       setIsModalOpen(false);
     });

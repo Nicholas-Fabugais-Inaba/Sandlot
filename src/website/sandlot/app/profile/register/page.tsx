@@ -2,9 +2,9 @@
 
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation"; // To handle the query parameters
+import { useRouter } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
 
 import styles from "./Register.module.css";
@@ -88,7 +88,7 @@ export default function Register() {
       if (result?.error) {
         setError(result.error);
       } else {
-        window.location.href = getCallbackUrl(); // Full page reload to ensure a complete refresh
+        window.location.href = "/profile"; // Full page reload to ensure a complete refresh
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -288,45 +288,39 @@ export default function Register() {
                 </Button>
               </div>
               <div className="flex justify-center mt-48">
-                <Suspense>
-                  <Button
-                    className="button"
-                    onPress={() => router.push(getCallbackUrl())}
-                  >
-                    Cancel
-                  </Button>
-                </Suspense>
+                <Button
+                  className="button"
+                  onPress={() => router.push("/profile")}
+                >
+                  Cancel
+                </Button>
               </div>
             </div>
           ) : (
-            <Suspense>
-              <form className="form" onSubmit={(e) => handleRegister(e)}>
-                {renderForm()}
+            <form className="form" onSubmit={(e) => handleRegister(e)}>
+              {renderForm()}
 
-                <div className="flex space-x-4 justify-center">
-                  <Button className="button" type="submit">
-                    Register
-                  </Button>
-                </div>
+              <div className="flex space-x-4 justify-center">
+                <Button className="button" type="submit">
+                  Register
+                </Button>
+              </div>
 
-                <div className="flex space-x-4 justify-center mt-4">
-                  <Button
-                    className="button"
-                    onPress={() => setAccountType(null)}
-                  >
-                    Back
-                  </Button>
-                  <Suspense>
-                    <Button
-                      className="button"
-                      onPress={() => router.push(getCallbackUrl())}
-                    >
-                      Cancel
-                    </Button>
-                  </Suspense>
-                </div>
-              </form>
-            </Suspense>
+              <div className="flex space-x-4 justify-center mt-4">
+                <Button
+                  className="button"
+                  onPress={() => setAccountType(null)}
+                >
+                  Back
+                </Button>
+                <Button
+                  className="button"
+                  onPress={() => router.push("/profile")}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
           )}
         </div>
       </div>
