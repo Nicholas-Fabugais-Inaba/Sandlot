@@ -25,7 +25,7 @@ async def get_SS():
     settings = get_season_settings()
     return settings
 
-@router.put("/update_season_settings", response_model=None)
+@router.put("/update_season_settings", response_model=Nne)
 async def update_SS(settings: SeasonSettings):
     update_season_settings(settings.start_date, settings.end_date, settings.games_per_team)
     return True
