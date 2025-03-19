@@ -124,7 +124,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
           })();
         }
       }
-      else {
+      if (events === undefined) {
         (async () => {
           let formattedEvents = await getSchedule();
 
