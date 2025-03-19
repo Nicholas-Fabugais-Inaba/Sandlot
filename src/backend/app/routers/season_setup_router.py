@@ -1,10 +1,11 @@
 from fastapi import APIRouter
-from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData
+from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, Division
 from ..db.queries.season_settings_queries import update_season_settings, get_season_settings
 from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
 from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
-from ..db.queries.team_queries import update_division, get_all_teams
+from ..db.queries.team_queries import update_division, get_all_teams, get_teams_season_setup
 from ..db.queries.game_queries import insert_game
+from ..db.queries.division_queries import insert_division_with_id, delete_all_divisions_except_team_bank, get_divisions_season_setup
 
 
 router = APIRouter(tags=["season-setup"])
