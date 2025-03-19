@@ -27,16 +27,13 @@ export default async function getSchedule(): Promise<Event[]> {
 
     console.log(response.data);
 
-
     let formattedEvents = getFormattedEvents(response.data);
-
 
     console.log(formattedEvents);
 
     return formattedEvents;
   } catch (error) {
     console.error("Error fetching schedule:", error);
-
 
     return [];
   }
@@ -51,16 +48,13 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
 
     console.log(response.data);
 
-
     let formattedEvents = getFormattedEvents(response.data);
-
 
     console.log(formattedEvents);
 
     return formattedEvents;
   } catch (error) {
     console.error("Error fetching schedule:", error);
-
 
     return [];
   }

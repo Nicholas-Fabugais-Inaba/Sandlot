@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { useState, useEffect } from "react";
 
@@ -7,7 +6,6 @@ import getSeasonSettings from "../functions/getSeasonSettings";
 
 import Schedule from "@/app/schedule/schedule"; // Import the schedule page
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
-
 
 import "./SeasonSetupPage.css";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
@@ -106,7 +104,6 @@ function GeneralSettings({
 }: GeneralSettingsProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
 
     switch (name) {
       case "seasonName":
