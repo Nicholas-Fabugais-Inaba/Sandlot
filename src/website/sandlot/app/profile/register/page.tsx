@@ -13,6 +13,11 @@ import { title } from "@/components/primitives";
 import registerPlayer from "@/app/functions/registerPlayer";
 import registerTeam from "@/app/functions/registerTeam";
 
+function getCallbackUrl() {
+  const searchParams = useSearchParams(); // Access the query params
+  return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
+}
+
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,8 +33,6 @@ export default function Register() {
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
-  const searchParams = useSearchParams(); // Access the query params
-  const callbackUrl = searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
 
   // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
   // const handleRegistration = async (e: React.FormEvent) => {
@@ -83,7 +86,7 @@ export default function Register() {
       if (result?.error) {
         setError(result.error);
       } else {
-        window.location.href = callbackUrl; // Full page reload to ensure a complete refresh
+        window.location.href = getCallbackUrl(); // Full page reload to ensure a complete refresh
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -275,7 +278,7 @@ export default function Register() {
                 <Suspense>
                   <Button
                     className="button"
-                    onPress={() => router.push(callbackUrl)}
+                    onPress={() => router.push(getCallbackUrl())}
                   >
                     Cancel
                   </Button>
@@ -300,7 +303,7 @@ export default function Register() {
                   <Suspense>
                     <Button
                       className="button"
-                      onPress={() => router.push(callbackUrl)}
+                      onPress={() => router.push(getCallbackUrl())}
                     >
                       Cancel
                     </Button>
