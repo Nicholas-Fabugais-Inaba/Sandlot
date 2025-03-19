@@ -312,6 +312,7 @@ interface TeamProps {
     targetDivisionId: number,
   ) => void;
   setIsDragging: (isDragging: boolean) => void; // Add this prop
+  setSourceDivision: (division_id: number | null) => void; // Add this prop
 }
 
 const Team: React.FC<TeamProps> = ({
@@ -320,16 +321,23 @@ const Team: React.FC<TeamProps> = ({
   division_id,
   moveTeam,
   setIsDragging,
+  setSourceDivision, // Add this prop
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.TEAM,
-    item: { index, division_id },
+    item: () => {
+      setSourceDivision(division_id); // Set source division when drag starts
+      return { index, division_id };
+    },
     collect: (monitor: DragSourceMonitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    end: () => setIsDragging(false), // Reset dragging state when drag ends
+    end: () => {
+      setIsDragging(false), // Reset dragging state when drag ends
+      setSourceDivision(null); // Reset source division when drag ends
+    }
   });
 
   useEffect(() => {
@@ -342,7 +350,7 @@ const Team: React.FC<TeamProps> = ({
     <div
       ref={ref}
       className="flex items-center justify-between p-2 border rounded-lg mb-2"
-      style={{ opacity: isDragging ? 0.5 : 1 }}
+      // style={{ opacity: isDragging ? 0.5 : 1 }}
     >
       <span>{team.name}</span>
       <span className="text-xs text-gray-500">
@@ -362,12 +370,17 @@ interface DivisionProps {
   ) => void;
   isDragging: boolean; // Add this prop to track dragging state
   setIsDragging: (isDragging: boolean) => void; // Add this prop to set dragging state
+  sourceDivision: number | null; // Add this prop to track source division
+  setSourceDivision: (division_id: number | null) => void; // Add this prop to set source division
 }
+
 const Division: React.FC<DivisionProps> = ({
   division,
   moveTeam,
   isDragging,
   setIsDragging,
+  sourceDivision, // Add this prop
+  setSourceDivision, // Add this prop
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<DragItem>({
@@ -386,7 +399,10 @@ const Division: React.FC<DivisionProps> = ({
   drop(ref);
 
   return (
-    <div ref={ref} className="division drop-target">
+    <div
+      ref={ref}
+      className={`division drop-target ${sourceDivision === division.id ? "highlight" : ""}`} // Apply highlight style
+    >
       <h3>{division.name}</h3>
       {division.teams.length === 0 ||
       (isDragging && division.name !== "Team Bank") ? (
@@ -399,6 +415,7 @@ const Division: React.FC<DivisionProps> = ({
             index={index}
             moveTeam={moveTeam}
             setIsDragging={setIsDragging} // Pass the setIsDragging callback
+            setSourceDivision={setSourceDivision} // Pass the setSourceDivision callback
             team={team}
           />
         ))
@@ -414,6 +431,7 @@ function DivisionsSettings() {
   ]);
   const [newDivision, setNewDivision] = useState("");
   const [isDragging, setIsDragging] = useState(false); // Lift the dragging state up
+  const [sourceDivision, setSourceDivision] = useState<number | null>(null); // Add state to track source division
 
   // Load state from localStorage on mount
   useEffect(() => {
@@ -545,6 +563,8 @@ function DivisionsSettings() {
                       isDragging={isDragging} // Pass the isDragging state
                       moveTeam={moveTeam}
                       setIsDragging={setIsDragging} // Pass the setIsDragging function
+                      sourceDivision={sourceDivision} // Pass the sourceDivision state
+                      setSourceDivision={setSourceDivision} // Pass the setSourceDivision function
                     />
                   </div>
                 ))}
@@ -563,6 +583,8 @@ function DivisionsSettings() {
               isDragging={isDragging} // Pass the isDragging state
               moveTeam={moveTeam}
               setIsDragging={setIsDragging} // Pass the setIsDragging function
+              sourceDivision={sourceDivision} // Pass the sourceDivision state
+              setSourceDivision={setSourceDivision} // Pass the setSourceDivision function
             />
             <div style={{ textAlign: "right", marginTop: "20px" }}>
               <button
