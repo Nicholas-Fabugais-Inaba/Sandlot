@@ -7,6 +7,12 @@ import { title } from "@/components/primitives";
 import { Button, Card, CardBody } from '@heroui/react';
 import { useRouter } from 'next/navigation';
 import ChangeInfoModal from './ChangeInfoModal'; // Import the ChangeInfoModal component
+import updatePlayerEmail from "../functions/updatePlayerEmail";
+import updatePlayerName from "../functions/updatePlayerName";
+import updatePlayerPassword from "../functions/updatePlayerPassword";
+import updateTeamName from "../functions/updateTeamName";
+import updateTeamUsername from '../functions/updateTeamUsername';
+import updateTeamPassword from "../functions/updateTeamPassword";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -36,6 +42,9 @@ export default function ProfilePage() {
     setModalSubmitHandler(() => (firstName: string, lastName?: string) => {
       // Implement the logic to change the name
       alert(`Name changed to: ${firstName} ${lastName}`);
+      if (session) {
+        updatePlayerName({player_id: session.user.id, first_name: firstName, last_name: lastName ? lastName : ""});
+      }
       setIsModalOpen(false);
     });
     setIsPasswordModal(false);
@@ -47,8 +56,23 @@ export default function ProfilePage() {
     setModalTitle('Change Team Name');
     setModalInitialValue(session?.user?.teamName || '');
     setModalSubmitHandler(() => (value: string) => {
-      // Implement the logic to change the team name
-      alert(`Team Name changed to: ${value}`);
+      if (session) {
+        updateTeamName({team_id: session.user.id, new_team_name: value});
+      }
+      setIsModalOpen(false);
+    });
+    setIsPasswordModal(false);
+    setIsNameChange(false);
+    setIsModalOpen(true);
+  };
+
+  const handleChangeTeamUsername = () => {
+    setModalTitle('Change Team Username');
+    setModalInitialValue(session?.user?.username || '');
+    setModalSubmitHandler(() => (value: string) => {
+      if (session) {
+        updateTeamUsername({team_id: session.user.id, new_username: value});
+      }
       setIsModalOpen(false);
     });
     setIsPasswordModal(false);
@@ -60,8 +84,9 @@ export default function ProfilePage() {
     setModalTitle('Change Email');
     setModalInitialValue(session?.user?.email || '');
     setModalSubmitHandler(() => (value: string) => {
-      // Implement the logic to change the email
-      alert(`Email changed to: ${value}`);
+      if (session?.user.role === "player" || session?.user.role === "commissioner") {
+        updatePlayerEmail({player_id: session.user.id, new_email: value});
+      }
       setIsModalOpen(false);
     });
     setIsPasswordModal(false);
@@ -77,8 +102,11 @@ export default function ProfilePage() {
         alert('Passwords do not match');
         return;
       }
-      // Implement the logic to change the password
-      alert(`Password changed to: ${value}`);
+      if (session?.user.role === "player" || session?.user.role === "commissioner") {
+        updatePlayerPassword({player_id: session.user.id, new_password: value});
+      } else if (session?.user.role === "team") {
+        updateTeamPassword({team_id: session.user.id, new_password: value});
+      }
       setIsModalOpen(false);
     });
     setIsPasswordModal(true);
@@ -110,6 +138,7 @@ export default function ProfilePage() {
   }
 
   const displayName = session.user?.firstname || session.user?.teamName || "User";
+  const teamUsername = session.user?.username;
   const userRole = session.user?.role;
   const userGender = session.user?.gender || "Not specified";
   const userTeam = session.user?.teamName || "Not assigned to a team";
@@ -134,7 +163,8 @@ export default function ProfilePage() {
           <h2 className="text-xl font-semibold mb-4">Account Info</h2>
           <Card className="max-w-full">
             <CardBody>
-              <p><strong>Name:</strong> {displayName} {session.user?.lastname}</p>
+              <p><strong>Display Name:</strong> {displayName} {session.user?.lastname}</p>
+              {userRole === "team" && (<p><strong>Username:</strong> {teamUsername}</p>)}
               <p><strong>Role:</strong> {userRole}</p>
               {userRole === "player" && (<p><strong>Gender:</strong> {userGender}</p>)}
               {userRole === "player" && (<p><strong>Team:</strong> {userTeam}</p>)}
@@ -144,7 +174,7 @@ export default function ProfilePage() {
 
         {/* Right side: Buttons */}
         <div className="w-2/5">
-          <h2 className="text-xl font-semibold mb-4">Modify Info</h2>
+          <h2 className="text-xl font-semibold mb-4">Modify Team Info</h2>
           {userRole === "player" && (
             <Button
               className="button mb-4 w-full"
@@ -158,7 +188,15 @@ export default function ProfilePage() {
               className="button mb-4 w-full"
               onPress={handleChangeTeamName}
             >
-              Change Team Name
+              Change Display Name
+            </Button>
+          )}
+          {userRole === "team" && (
+            <Button
+              className="button mb-4 w-full"
+              onPress={handleChangeTeamUsername}
+            >
+              Change Username
             </Button>
           )}
           {/* Only show if userRole is a player */}

@@ -108,3 +108,15 @@ class UpdateName(BaseModel):
     player_id: int
     first_name: str
     last_name: str
+
+class UpdateTeamPassword(BaseModel):
+    team_id: int
+    new_password: str
+
+class UpdateTeamUsername(BaseModel):
+    team_id: int
+    new_username: str
+
+class UpdateTeamName(BaseModel):
+    team_id: int
+    new_team_name: str
