@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from ..create_engine import create_connection
 from ..models import Player
 
@@ -35,4 +35,27 @@ def delete_player(player_id):
         session.execute(stmt)
         session.commit()
         return "player deleted"
-    
+
+def update_player_password(player_id, new_password):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Player).where(Player.id == player_id).values(password=new_password)
+        session.execute(stmt)
+        session.commit()
+        return "password updated"
+
+def update_player_email(player_id, new_email):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Player).where(Player.id == player_id).values(email=new_email)
+        session.execute(stmt)
+        session.commit()
+        return "email updated"
+
+def update_player_name(player_id, first_name, last_name):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Player).where(Player.id == player_id).values(first_name=first_name, last_name=last_name)
+        session.execute(stmt)
+        session.commit()
+        return "name updated"

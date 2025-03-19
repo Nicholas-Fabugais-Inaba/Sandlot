@@ -96,3 +96,15 @@ class AnnouncementData(BaseModel):
 class AnnouncementID(BaseModel):
     announcement_id: int
 
+class UpdatePassword(BaseModel):
+    player_id: int
+    new_password: str
+
+class UpdateEmail(BaseModel):
+    player_id: int
+    new_email: str
+
+class UpdateName(BaseModel):
+    player_id: int
+    first_name: str
+    last_name: str
