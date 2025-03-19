@@ -2,16 +2,12 @@ import axios from "axios";
 
 const APIHOST = `127.0.0.1:8000`;
 
-export default async function createAnnouncement(newAnnouncement: {
-  date: String;
-  title: String;
-  body: String;
-}): Promise<void> {
+export default async function createJR(joinRequest: any): Promise<void> {
   axios
-    .post(`http://${APIHOST}/announcement/create_announcement`, newAnnouncement)
+    .post(`http://${APIHOST}/join/create_join_request`, joinRequest)
     .then((response) => {
       console.log("server response: " + response.status);
-      console.log("announcement created");
+      console.log("JR created");
     })
     .catch((error) => {
       console.log(error.response);

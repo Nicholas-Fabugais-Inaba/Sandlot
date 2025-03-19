@@ -38,6 +38,9 @@ class RescheduleRequest(BaseModel):
 class TeamID(BaseModel):
     team_id: Optional[int]
 
+class GameID(BaseModel):
+    game_id: Optional[int]
+
 class RRAccept(BaseModel):
     rr_id: int
     old_game_id: int
@@ -75,8 +78,10 @@ class DivisionData(BaseModel):
 
 class ScoreData(BaseModel):
     game_id: int
-    home_team_score: int
-    away_team_score: int
+    home_score: int
+    home_name: str
+    away_score: int
+    away_name: str
     forfeit: int
 
 class PlayerID(BaseModel):
@@ -120,3 +125,14 @@ class UpdateTeamUsername(BaseModel):
 class UpdateTeamName(BaseModel):
     team_id: int
     new_team_name: str
+class JoinRequest(BaseModel):
+    email: str
+    team_id: int
+
+class JRAccept(BaseModel):
+    jr_id: int
+    player_id: int
+    team_id: int
+
+class JRDecline(BaseModel):
+    jr_id: int

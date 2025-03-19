@@ -27,6 +27,19 @@ def get_player(login_email):
         stmt = select(Player.id, Player.first_name, Player.last_name, Player.email, Player.password, Player.phone_number, Player.gender, Player.team_id, Player.is_commissioner).where(Player.email == login_email)
         result = session.execute(stmt).mappings().first()
         return result
+    
+def update_players_team(player_id, team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Player).where(Player.id == player_id).values(team_id=team_id)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
         
 def delete_player(player_id):
     engine = create_connection()

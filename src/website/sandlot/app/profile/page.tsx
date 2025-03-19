@@ -1,26 +1,33 @@
-'use client';
+// app/profile/page.tsx
 
-import { useEffect, useState } from 'react';
-import { getSession, signOut, signIn } from 'next-auth/react';
-import { Session } from 'next-auth'; 
-import { title } from "@/components/primitives";
-import { Button, Card, CardBody } from '@heroui/react';
-import { useRouter } from 'next/navigation';
-import ChangeInfoModal from './ChangeInfoModal'; // Import the ChangeInfoModal component
+"use client";
+
+import { useEffect, useState } from "react";
+import { getSession, signOut, signIn } from "next-auth/react";
+import { Session } from "next-auth";
+import { Button, Card, CardBody } from "@heroui/react";
+import { useRouter } from "next/navigation";
+
 import updatePlayerEmail from "../functions/updatePlayerEmail";
 import updatePlayerName from "../functions/updatePlayerName";
 import updatePlayerPassword from "../functions/updatePlayerPassword";
 import updateTeamName from "../functions/updateTeamName";
-import updateTeamUsername from '../functions/updateTeamUsername';
+import updateTeamUsername from "../functions/updateTeamUsername";
 import updateTeamPassword from "../functions/updateTeamPassword";
+
+import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal component
+
+import { title } from "@/components/primitives";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState('');
-  const [modalInitialValue, setModalInitialValue] = useState('');
-  const [modalSubmitHandler, setModalSubmitHandler] = useState<(value: string, confirmValue?: string) => void>(() => {});
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalInitialValue, setModalInitialValue] = useState("");
+  const [modalSubmitHandler, setModalSubmitHandler] = useState<
+    (value: string, confirmValue?: string) => void
+  >(() => {});
   const [isPasswordModal, setIsPasswordModal] = useState(false);
   const [isNameChange, setIsNameChange] = useState(false);
 
@@ -29,6 +36,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
+
       setSession(session);
       setLoading(false);
     };
@@ -37,13 +45,19 @@ export default function ProfilePage() {
   }, []);
 
   const handleChangeName = () => {
-    setModalTitle('Change Name');
-    setModalInitialValue(`${session?.user?.firstname || ''} ${session?.user?.lastname || ''}`);
+    setModalTitle("Change Name");
+    setModalInitialValue(
+      `${session?.user?.firstname || ""} ${session?.user?.lastname || ""}`,
+    );
     setModalSubmitHandler(() => (firstName: string, lastName?: string) => {
       // Implement the logic to change the name
       alert(`Name changed to: ${firstName} ${lastName}`);
       if (session) {
-        updatePlayerName({player_id: session.user.id, first_name: firstName, last_name: lastName ? lastName : ""});
+        updatePlayerName({
+          player_id: session.user.id,
+          first_name: firstName,
+          last_name: lastName ? lastName : "",
+        });
       }
       setIsModalOpen(false);
     });
@@ -53,11 +67,11 @@ export default function ProfilePage() {
   };
 
   const handleChangeTeamName = () => {
-    setModalTitle('Change Team Name');
-    setModalInitialValue(session?.user?.teamName || '');
+    setModalTitle("Change Team Name");
+    setModalInitialValue(session?.user?.teamName || "");
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
-        updateTeamName({team_id: session.user.id, new_team_name: value});
+        updateTeamName({ team_id: session.user.id, new_team_name: value });
       }
       setIsModalOpen(false);
     });
@@ -67,11 +81,11 @@ export default function ProfilePage() {
   };
 
   const handleChangeTeamUsername = () => {
-    setModalTitle('Change Team Username');
-    setModalInitialValue(session?.user?.username || '');
+    setModalTitle("Change Team Username");
+    setModalInitialValue(session?.user?.username || "");
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
-        updateTeamUsername({team_id: session.user.id, new_username: value});
+        updateTeamUsername({ team_id: session.user.id, new_username: value });
       }
       setIsModalOpen(false);
     });
@@ -81,11 +95,14 @@ export default function ProfilePage() {
   };
 
   const handleChangeEmail = () => {
-    setModalTitle('Change Email');
-    setModalInitialValue(session?.user?.email || '');
+    setModalTitle("Change Email");
+    setModalInitialValue(session?.user?.email || "");
     setModalSubmitHandler(() => (value: string) => {
-      if (session?.user.role === "player" || session?.user.role === "commissioner") {
-        updatePlayerEmail({player_id: session.user.id, new_email: value});
+      if (
+        session?.user.role === "player" ||
+        session?.user.role === "commissioner"
+      ) {
+        updatePlayerEmail({ player_id: session.user.id, new_email: value });
       }
       setIsModalOpen(false);
     });
@@ -95,17 +112,24 @@ export default function ProfilePage() {
   };
 
   const handleChangePassword = () => {
-    setModalTitle('Change Password');
-    setModalInitialValue('');
+    setModalTitle("Change Password");
+    setModalInitialValue("");
     setModalSubmitHandler(() => (value: string, confirmValue?: string) => {
       if (value !== confirmValue) {
-        alert('Passwords do not match');
+        alert("Passwords do not match");
+
         return;
       }
-      if (session?.user.role === "player" || session?.user.role === "commissioner") {
-        updatePlayerPassword({player_id: session.user.id, new_password: value});
+      if (
+        session?.user.role === "player" ||
+        session?.user.role === "commissioner"
+      ) {
+        updatePlayerPassword({
+          player_id: session.user.id,
+          new_password: value,
+        });
       } else if (session?.user.role === "team") {
-        updateTeamPassword({team_id: session.user.id, new_password: value});
+        updateTeamPassword({ team_id: session.user.id, new_password: value });
       }
       setIsModalOpen(false);
     });
@@ -125,10 +149,16 @@ export default function ProfilePage() {
             You need to be signed in to view this page.
           </h1>
           <div className="flex space-x-4 mt-4">
-            <Button onPress={() => signIn(undefined, { callbackUrl: "/profile" })} className="button">
+            <Button
+              className="button"
+              onPress={() => signIn(undefined, { callbackUrl: "/profile" })}
+            >
               Sign In
             </Button>
-            <Button onPress={() => router.push('/profile/register')} className="button">
+            <Button
+              className="button"
+              onPress={() => router.push("/profile/register")}
+            >
               Register
             </Button>
           </div>
@@ -137,7 +167,8 @@ export default function ProfilePage() {
     );
   }
 
-  const displayName = session.user?.firstname || session.user?.teamName || "User";
+  const displayName =
+    session.user?.firstname || session.user?.teamName || "User";
   const teamUsername = session.user?.username;
   const userRole = session.user?.role;
   const userGender = session.user?.gender || "Not specified";
@@ -148,12 +179,8 @@ export default function ProfilePage() {
       {/* Profile Header with Welcome Message */}
       <h1 className={title()}>Profile</h1>
       <div className="text-center mb-8">
-        <p className="text-lg mt-2">
-          Welcome {displayName}!
-        </p>
-        <p>
-          Manage your account details here
-        </p>
+        <p className="text-lg mt-2">Welcome {displayName}!</p>
+        <p>Manage your account details here</p>
       </div>
 
       {/* Main Content Layout */}
@@ -163,11 +190,28 @@ export default function ProfilePage() {
           <h2 className="text-xl font-semibold mb-4">Account Info</h2>
           <Card className="max-w-full">
             <CardBody>
-              <p><strong>Display Name:</strong> {displayName} {session.user?.lastname}</p>
-              {userRole === "team" && (<p><strong>Username:</strong> {teamUsername}</p>)}
-              <p><strong>Role:</strong> {userRole}</p>
-              {userRole === "player" && (<p><strong>Gender:</strong> {userGender}</p>)}
-              {userRole === "player" && (<p><strong>Team:</strong> {userTeam}</p>)}
+              <p>
+                <strong>Display Name:</strong> {displayName}{" "}
+                {session.user?.lastname}
+              </p>
+              {userRole === "team" && (
+                <p>
+                  <strong>Username:</strong> {teamUsername}
+                </p>
+              )}
+              <p>
+                <strong>Role:</strong> {userRole}
+              </p>
+              {userRole === "player" && (
+                <p>
+                  <strong>Gender:</strong> {userGender}
+                </p>
+              )}
+              {userRole === "player" && (
+                <p>
+                  <strong>Team:</strong> {userTeam}
+                </p>
+              )}
             </CardBody>
           </Card>
         </div>
@@ -176,10 +220,7 @@ export default function ProfilePage() {
         <div className="w-2/5">
           <h2 className="text-xl font-semibold mb-4">Modify Team Info</h2>
           {userRole === "player" && (
-            <Button
-              className="button mb-4 w-full"
-              onPress={handleChangeName}
-            >
+            <Button className="button mb-4 w-full" onPress={handleChangeName}>
               Change Name
             </Button>
           )}
@@ -208,17 +249,11 @@ export default function ProfilePage() {
               Change Gender
             </Button>
           )} */}
-          <Button
-            className="button mb-4 w-full"
-            onPress={handleChangePassword}
-          >
+          <Button className="button mb-4 w-full" onPress={handleChangePassword}>
             Change Password
           </Button>
           {userRole != "team" && (
-            <Button
-              className="button mb-4 w-full"
-              onPress={handleChangeEmail}
-            >
+            <Button className="button mb-4 w-full" onPress={handleChangeEmail}>
               Change Email
             </Button>
           )}
@@ -226,20 +261,23 @@ export default function ProfilePage() {
       </div>
       {/* Sign Out Button */}
       <div className="flex justify-center mt-8">
-        <Button onPress={() => signOut({ callbackUrl: '/profile/signin' })} className="button">
+        <Button
+          className="button"
+          onPress={() => signOut({ callbackUrl: "/profile/signin" })}
+        >
           Sign Out
         </Button>
       </div>
 
       {/* Modal for changing name, email, or password */}
       <ChangeInfoModal
+        initialValue={modalInitialValue}
+        isNameChange={isNameChange}
         isOpen={isModalOpen}
+        isPassword={isPasswordModal}
+        title={modalTitle}
         onClose={() => setIsModalOpen(false)}
         onSubmit={modalSubmitHandler}
-        title={modalTitle}
-        initialValue={modalInitialValue}
-        isPassword={isPasswordModal}
-        isNameChange={isNameChange}
       />
     </div>
   );
