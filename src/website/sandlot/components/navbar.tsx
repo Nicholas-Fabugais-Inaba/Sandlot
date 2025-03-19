@@ -29,6 +29,7 @@ export const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
+  const [unreadCount, setUnreadCount] = useState(0);
   const bellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -114,7 +115,11 @@ export const Navbar = () => {
           <div ref={bellRef}>
             {" "}
             {/* Bell icon wrapper to track position */}
-            <BellIcon className="cursor-pointer" onClick={handleBellClick} />
+            <BellIcon
+              className="cursor-pointer"
+              onClick={handleBellClick}
+              unreadCount={unreadCount}
+            />
           </div>
         </NavbarItem>
         <NavbarItem className="flex gap-2">
@@ -145,6 +150,8 @@ export const Navbar = () => {
         anchorRef={bellRef}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        team_id={session?.user.team_id ?? 0} // Adjust this value
+        setUnreadCount={setUnreadCount}
       />
     </HeroUINavbar>
   );
