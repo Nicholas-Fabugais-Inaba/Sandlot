@@ -112,3 +112,7 @@ class JRAccept(BaseModel):
 
 class JRDecline(BaseModel):
     jr_id: int
+
+class Division(BaseModel):
+    division_id: int
+    division_name: str

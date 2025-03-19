@@ -10,8 +10,7 @@ export default async function submitScore(scoreData: any): Promise<void> {
       console.log("server response: " + response.status);
       console.log("score reported");
     })
-    .catch((error) => {
-    })
+    .catch((error) => {})
     .catch((error) => {
       console.log(error.response);
       console.log(

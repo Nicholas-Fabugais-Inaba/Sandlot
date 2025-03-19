@@ -7,7 +7,7 @@ export default async function updateDivision(divisionData: {
   division: Number;
 }): Promise<void> {
   axios
-    .put(`http://${APIHOST}/season-setup/update_division`, divisionData)
+    .put(`http://${APIHOST}/season-setup/update_team_division`, divisionData)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("team's division updated");

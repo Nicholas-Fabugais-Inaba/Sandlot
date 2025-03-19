@@ -59,7 +59,34 @@ async def remove_timeslot(data: TimeslotID):
     delete_timeslot(data.timeslot_id)
     return True
 
-@router.post("/update_division", response_model=None)
+@router.post("/update_team_division", response_model=None)
 async def update_team_division(data: DivisionData):
     update_division(data.team_id, data.division)
+    return True
+
+@router.put("/update_team_divisions", response_model=None)
+async def update_team_divisions(data: list[DivisionData]):
+    for division_data in data:
+        update_division(division_data.team_id, division_data.division)
+    return True
+
+@router.get("/get_teams", response_model=list)
+async def get_teams():
+    teams = get_teams_season_setup()
+    teams = [dict(row) for row in teams]
+    return teams
+
+@router.get("/get_divisions", response_model=list)
+async def get_divisions():
+    divisions = get_divisions_season_setup()
+    divisions = [dict(row) for row in divisions]
+    return divisions
+
+@router.put("/update_divisions", response_model=None)
+async def update_divisions(data: list[Division]):
+    # Delete all divisions except team bank
+    delete_all_divisions_except_team_bank()
+    # Insert all updated divisions
+    for division in data:
+        insert_division_with_id(division.division_id, division.division_name)
     return True

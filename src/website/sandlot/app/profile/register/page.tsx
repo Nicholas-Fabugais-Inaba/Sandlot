@@ -15,6 +15,7 @@ import registerTeam from "@/app/functions/registerTeam";
 
 function getCallbackUrl() {
   const searchParams = useSearchParams(); // Access the query params
+
   return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
 }
 
@@ -297,7 +298,10 @@ export default function Register() {
                 </div>
 
                 <div className="flex space-x-4 justify-center mt-4">
-                  <Button className="button" onPress={() => setAccountType(null)}>
+                  <Button
+                    className="button"
+                    onPress={() => setAccountType(null)}
+                  >
                     Back
                   </Button>
                   <Suspense>

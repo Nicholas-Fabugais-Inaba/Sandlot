@@ -13,6 +13,7 @@ import { title } from "@/components/primitives";
 
 function getCallbackUrl() {
   const searchParams = useSearchParams(); // Access the query params
+
   return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
 }
 
