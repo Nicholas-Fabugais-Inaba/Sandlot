@@ -11,24 +11,25 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Button } from "@heroui/button";
-import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, SearchIcon, Logo } from "@/components/icons";
+import { Logo, BellIcon } from "@/components/icons";
+import { NotificationModal } from "@/components/NotificationModal"; // Import modal
 
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
+  const bellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -61,8 +62,21 @@ export const Navbar = () => {
     return true;
   });
 
+  const handleBellClick = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
+    <HeroUINavbar
+      isMenuOpen={isMenuOpen}
+      maxWidth="xl"
+      position="sticky"
+      onMenuOpenChange={setIsMenuOpen}
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -93,25 +107,45 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
+        className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
+        <NavbarItem className="flex gap-2">
+          <div ref={bellRef}>
+            {" "}
+            {/* Bell icon wrapper to track position */}
+            <BellIcon className="cursor-pointer" onClick={handleBellClick} />
+          </div>
+        </NavbarItem>
+        <NavbarItem className="flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="lg:hidden"
+        />
       </NavbarContent>
 
       <NavbarMenu>
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link href={item.href} size="lg">
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
+        {siteConfig.navMenuItems.map((item, index) => (
+          <NavbarMenuItem key={`${item.label}-${index}`}>
+            <Link
+              href={item.href}
+              size="lg"
+              onPress={() => setIsMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          </NavbarMenuItem>
+        ))}
       </NavbarMenu>
+
+      {/* Modal */}
+      <NotificationModal
+        anchorRef={bellRef}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </HeroUINavbar>
   );
 };

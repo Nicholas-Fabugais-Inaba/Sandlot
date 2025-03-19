@@ -2,17 +2,16 @@ import axios from "axios";
 
 const APIHOST = `127.0.0.1:8000`;
 
-export default async function updateAnnouncement(
-  announcementData: any,
-): Promise<void> {
+export default async function updatePlayerName(playerNameData: {
+  player_id: Number;
+  first_name: String;
+  last_name: String;
+}): Promise<void> {
   axios
-    .post(
-      `http://${APIHOST}/announcement/update_announcement`,
-      announcementData,
-    )
+    .put(`http://${APIHOST}/user/update_player_name`, playerNameData)
     .then((response) => {
       console.log("server response: " + response.status);
-      console.log("announcement updated");
+      console.log("player's name updated");
     })
     .catch((error) => {
       console.log(error.response);
