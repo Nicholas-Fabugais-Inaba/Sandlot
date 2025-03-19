@@ -17,11 +17,6 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  function getCallbackUrl() {
-    const searchParams = useSearchParams(); // Access the query params
-    return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
-  }
-
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await signIn("credentials", {

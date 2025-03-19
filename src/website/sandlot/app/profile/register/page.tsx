@@ -30,11 +30,6 @@ export default function Register() {
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
 
-  function getCallbackUrl() {
-    const searchParams = useSearchParams(); // Access the query params
-    return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
-  }
-
   // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
   // const handleRegistration = async (e: React.FormEvent) => {
   //   e.preventDefault();
