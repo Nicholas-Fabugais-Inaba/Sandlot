@@ -3,7 +3,7 @@ from datetime import datetime, date, timedelta
 from .scheduler import gen_schedule_w_skip, send_schedule_to_db
 # from scheduler import gen_schedule_w_skip
 from random import shuffle
-from ..db.queries.team_queries import get_all_teams
+from ..db.queries.team_queries import get_all_teams, get_all_season_teams
 from ..db.queries.season_settings_queries import get_season_settings
 
 from ..db.mock_data import insert_mock_schedule
@@ -212,20 +212,26 @@ def gen_schedule_repeated():
     teams = {}
     divs = {}
 
-    Teams = get_all_teams()
+    # Teams = get_all_teams()
+    Teams = get_all_season_teams()
     Settings = get_season_settings()
 
-    skipped_teams = 0
-
     for i in range(len(Teams)):
-        if Teams[i]["division"] != -1:
-            teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
-            # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
-            if Teams[i]["division"] not in divs:
-                divs[Teams[i]["division"]] = {}
-            divs[Teams[i]["division"]][Teams[i]["id"]] = teams[Teams[i]["id"]]
-        else:
-            skipped_teams += 1
+        teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
+        # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
+        if Teams[i]["division"] not in divs:
+            divs[Teams[i]["division"]] = {}
+        divs[Teams[i]["division"]][Teams[i]["id"]] = teams[Teams[i]["id"]]
+
+    # for i in range(len(Teams)):
+    #     if Teams[i]["division"] != -1:
+    #         teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
+    #         # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
+    #         if Teams[i]["division"] not in divs:
+    #             divs[Teams[i]["division"]] = {}
+    #         divs[Teams[i]["division"]][Teams[i]["id"]] = teams[Teams[i]["id"]]
+    #     else:
+    #         skipped_teams += 1
 
     start_date = datetime.strptime(Settings["start_date"], "%Y-%m-%d").date()
     end_date = datetime.strptime(Settings["end_date"], "%Y-%m-%d").date()
@@ -244,7 +250,6 @@ def gen_schedule_repeated():
             best_score = score
     print(best_schedule, teams)
     return best_schedule, best_score, teams
-
 
 def get_teams():
     teams = {}
