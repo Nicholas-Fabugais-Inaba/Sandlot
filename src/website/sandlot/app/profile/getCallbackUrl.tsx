@@ -1,5 +1,3 @@
-"use client";
-
 import { useSearchParams } from "next/navigation"; // To handle the query parameters
 
 export default function getCallbackUrl() {
