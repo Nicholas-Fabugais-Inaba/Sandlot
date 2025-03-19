@@ -38,9 +38,9 @@ export default function SignIn() {
     <div>
       <h1 className={title()}>Sign In</h1>
       <div className={styles.container}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <div className="centered-container">
-            {error && <p className={styles.error}>{error}</p>}
+        <div className="centered-container">
+          {error && <p className={styles.error}>{error}</p>}
+          <Suspense>
             <form className="form" onSubmit={handleSignIn}>
               <div className={styles.inputGroup}>
                 <label>Email or Team Username:</label>
@@ -68,25 +68,27 @@ export default function SignIn() {
                 </Button>
               </div>
             </form>
-            <div className={styles.newUserContainer}>
-              <p className={styles.newUserText}>New User?</p>
-              <Button
-                className="button"
-                onPress={() => router.push("/profile/register")}
-              >
-                Create an Account
-              </Button>
-            </div>
-            <div className="flex justify-center mt-4">
+          </Suspense>
+          <div className={styles.newUserContainer}>
+            <p className={styles.newUserText}>New User?</p>
+            <Button
+              className="button"
+              onPress={() => router.push("/profile/register")}
+            >
+              Create an Account
+            </Button>
+          </div>
+          <div className="flex justify-center mt-4">
+            <Suspense>
               <Button
                 className="button"
                 onPress={() => router.push(callbackUrl)} // Redirect to the previous page (team or profile)
               >
                 Cancel
               </Button>
-            </div>
+            </Suspense>
           </div>
-        </Suspense>
+        </div>
       </div>
     </div>
   );
