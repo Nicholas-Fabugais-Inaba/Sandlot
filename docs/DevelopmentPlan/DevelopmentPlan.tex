@@ -23,14 +23,17 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 September 24, 2024 & NFI, JL, CG, AV & Initial Draft\\
-... & ... & ...\\
+October 13 & JL & Updated GitHub Project Link, fixed typos, updated section 6 based on TA feedback\\
+November 6 & CG & Scaled back POC demo plans to remove menstions of system architecture and advanced UI based on TA feedback\\
+November 11 & JL & Updated POC demo plan with specific plan\\
+January 6, 2025 & JL & Updated sections 7 and 8 with additional procedures including when to branch for issues, how to connect issues to commits, and adding information on items for the project board.\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \newpage{}
 
-This document contains our development plan for the "Sandlot" project, a
+This document contains our development plan for the 'Sandlot' project, a
 softball league scheduler. It includes team members, team meetings, workflows,
 standards, expected technologies, reflections and our team charter.
 
@@ -54,15 +57,15 @@ between lectures. We ask every team member to be in attendance unless a valid
 excuse is given. These meetings will be in person if possible.\newline
 
 During scrum meetings, the scrum master will ask each team member to describe
-work they've done since the last meeting, what they plan to work on, and any
-pain points or blockers they've ran into while working.\newline
+work they have done since the last meeting, what they plan to work on, and any
+pain points or blockers the have ran into while working.\newline
 
 We will also have flexible meetings if a specific issue arrises. These meetings can be in
 person or online. We ask all group members to attend these meetings, but
 flexiblity is allowed if a member cannot attend.\newline
 
 Supervisor meetings will be held biweekly in the supervisor's office. If the
-team and supervisor agree a meeting isn't necessary, it can be cancelled.
+team and supervisor agree a meeting is not necessary, it can be cancelled.
 \newline
 
 The meeting chair will head non-scrum meetings and will present the weekly
@@ -72,41 +75,46 @@ record the meeting minutes, and add them to the meeting issue.
 
 \section{Team Communication Plan}
 
-GitHub issues will be used to communicate technical information 
-between group members.\newline
+All source code and technical documentation will be managed in a shared GitHub 
+repository. Issue tracking will be used to communicate technical information 
+about bugs, feature requests, and tasks between group members. By leveraging 
+GitHub and issue tracking, the team ensures that technical details and 
+contributions are documented, and accessible. This approach promotes 
+collaboration and traceability, while minimizing miscommunication.\newline
 
 Discord will be used as the main group communication channel for the team. A majority 
 of group communication will be held through Discord including online meetings, admin details, 
-and general unplanned discussions.\newline
-
-Call and text will be used for direct communication
-and will generally be reserved for high priority and urgent communication or 
-campus location coordination. 
+and general unplanned discussions. Call and text will be used for direct 
+communication and will generally be reserved for high priority and urgent 
+communication or campus location coordination. 
 
 \section{Team Member Roles}
 
 \begin{itemize}
 	\item Jung Woo Lee
 	\begin{itemize}
-	  \item Scrum Master
+	  \item Scrum Master: Leads scrum meetings
 	  \item Developer
   \end{itemize}
 	\item Alex Verity
   \begin{itemize}
-    \item Scribe
+    \item Scribe: Takes meeting minutes of any team meetings
 	  \item Developer
   \end{itemize}
   \item Nicholas Fabugais-Inaba
   \begin{itemize}
-    \item Meeting Chair
+    \item Meeting Chair: Provides agenda for any team meetings
 	  \item Developer
   \end{itemize}
   \item Casra Ghazanfari
   \begin{itemize}
-    \item Domain Expert
+    \item Domain Expert: Provides expertise on solution architecture
 	  \item Developer
   \end{itemize}
 \end{itemize}
+
+If a team member is unable fulfill their role for a time, the rest of the members will
+unanimously decide on a person to take their place. 
 
 \section{Workflow Plan}
 
@@ -118,6 +126,7 @@ and developing software respectively.
 The main branch will be merged and updated for milestones, proof of concepts, and
 final deployments.
 For new features, bug fixes or documents, a branch can be made from the documenation or development branch.
+For documentation, each section of the document is to be given a branch and issue pertaining to the completion of that section.
 Before any changes are be made, the local repository should be updated to the latest changes on
 the remote branch.\newline
 
@@ -133,7 +142,9 @@ For each issue, a team member should be assigned to the issue on Github. The des
 of the issues should be explained in detail and labeled appropriately with a Git label. New labels
 should be created, if none of the existing labels match the description of the issue in question.
 Issue templates should be used where possible for maintaining the quality and consistency of the
-issues.\newline
+issues. Commits made to solve an issue should reference the specific issue using GitHub's keywords in the commit message.
+This allows for better tracking and automatic closing of the issues when the commit is merged to the main branch. Otherwise,
+issues should be closed when a pull request is made for the branch.\newline
 
 Milestones and checklists will be used to help keep the team on track. The team will
 utilize these from the already existing templates within the Github repository.
@@ -142,9 +153,10 @@ utilize these from the already existing templates within the Github repository.
 
 GitHub Projects will be used to keep track of the team’s tasks. The ‘board’ feature will be primarily used for tracking issues during scrum meetings. This will ensure the team stays organized and understands what tasks to complete next.
 The board will contain the sections ’Todo’, ‘Backlog’, ‘In Progress’, and ‘Done’, with subsections open to be added. ‘Todo’ will contain planned tasks that have not been started. ‘Backlog’ will contain the previous sprint’s items that carry over as well as any items that are currently on hold. ‘In Progress’ will hold items actively being worked on by team members. ‘Done’ will contain items that have been completed.
+Items should each be assigned a priority from P0 being the highest priority, to P2 being the lowest priority. Each item should also be given a workload size estimate, from XS being the smallest to XL being the largest.
 Tasks should be small in scope and based around features. For example, “Implement Module X”, or “Document Y Section A.B”. Tasks should be specific and measurable.
 \\\\
-\href{https://github.com/users/saltA-saurus/projects/5}{GitHub project link}
+\href{https://github.com/users/Nicholas-Fabugais-Inaba/projects/3}{GitHub project link}
 \\\\
 Project Schedule:\\
 \indent \textbf{Revision 0}\\
@@ -165,19 +177,31 @@ Project Schedule:\\
 
 To be a successful project, the project should be able to intake a set of 
 availability data and generate an optimized schedule based on that data. 
-Additionally, it should be able to display this schedule in a user-friendly 
-way such that those with minimal technology experience can understand and 
-utilize the results. The main risks for the success of this project are whether 
+Additionally, it should be able to display this schedule through a basic
+user interface. The main risks for the success of this project are whether 
 we are able to optimize schedule generation to a point which satisfies our 
-stakeholders, the required high levels of user-friendliness specified by 
-stakeholders, and our team's lack of domain knowledge on scheduling systems 
-and web development. In order to demonstrate that these obstacles can be 
-overcome, the goal of this proof of concept demonstration is to set up a 
-working database and middleware infrastructure that can communicate with 
-each other in addition to being able to generate and store highly optimized 
-schedules based on team availability data. Furthermore these optimized 
-schedules should be displayed through a consciously user-friendly UI hosted 
-on a web server. 
+stakeholders, and our team's lack of domain knowledge on scheduling problems 
+and web development. \\
+
+In order to demonstrate that these obstacles can be 
+overcome, the goal of this proof of concept demonstration is to develop
+an algorithm to generate highly optimized schedules based on team availability 
+data. Furthermore these optimized schedules should be displayed through a 
+basic UI hosted on a webserver.
+
+Demonstration Plan:
+\begin{itemize}
+  \item Quick overview of the POC demonstration
+    \subitem Scheduling algorithm and UI visualizer
+  \item Explanation of scheduling algorithm
+    \subitem Problem formulation
+    \subitem Algorithm to solve
+    \subitem Algorithm details and other notes
+  \item Demonstration of POC
+    \subitem Show UI
+    \subitem Generate schedule
+    \subitem Show that each constraint is satisfied
+\end{itemize}
 
 \section{Expected Technology}
 
@@ -232,7 +256,7 @@ ensure that minimal migrations are required during development.
 \item Code coverage measuring tools
 \subitem The Coverage.py Python library will be used to measure the code coverage
 of our middleware program. For the webserver's React code, Jest is included by 
-default when using the "create-react-app" command and will be used to measure 
+default when using the 'create-react-app' command and will be used to measure 
 the code coverage of the webserver.
 \item Performance measuring tools
 \subitem The webserver will be hosted on Azure's web app services, meaning that
@@ -383,7 +407,7 @@ to changes later if needed.\newline
 
 It is important to create a development plan before starting a project because
 of the number of benefits it provide to a project’s development cycle. One
-of it's main benefits is increased clarity on the objectives of the project
+of its main benefits is increased clarity on the objectives of the project
 for those involved. Development plans achieve this by identifying and defining
 the project’s goals/objectives early in the development cycle, meaning that
 those involved in the project will more easily and quickly understand the \
@@ -446,7 +470,7 @@ a meeting they make an effort to be informed on what was discussed.
 
 \subsubsection*{Acceptable Excuse}
 
-An acceptable excuse for missing a meeting would be illness, family emergency. If the excuse doesn't fall within a listed category,
+An acceptable excuse for missing a meeting would be illness, family emergency. If the excuse does not fall within a listed category,
 the entire team can unanimously accept the excuse. Excuses that will not be considered acceptable
 are missing a meeting due to an upcoming assignment due date or test, or due to recreational
 activity.
@@ -461,7 +485,7 @@ emergency is resolved, the team member comes back ready and willing to get back 
 
 \subsubsection*{Quality} 
 
-Our expectations are that every member come to meetings ready to show what they've acomplished
+Our expectations are that every member come to meetings ready to show what they have acomplished
 in the time since last meeting. The deliverables should have no compilation errors and should
 have no obvious faults. Deliverables should follow the coding standard and should not be
 difficult to understand.
@@ -475,7 +499,7 @@ Each team member will be respectful to the supervisor and any outside party dire
 \subsubsection*{Stay on Track}
 
 The primary method our team will use to keep on track will be scrum meetings.
-Our scrum master will ask each member what they've worked on since the last
+Our scrum master will ask each member what they have worked on since the last
 meeting, which will inform the group of each other's progress. This will let
 the group know if we are falling behind on the project, and will let any team
 member know if they are less productive than the others.\newline

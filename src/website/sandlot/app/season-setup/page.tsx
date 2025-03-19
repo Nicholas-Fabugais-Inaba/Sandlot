@@ -1,18 +1,27 @@
-'use client';
+"use client";
 
-'use client';
+"use client";
 
 import { useState, useEffect, useRef } from "react";
-import { DndProvider, useDrag, useDrop, DragSourceMonitor, DropTargetMonitor } from "react-dnd";
+import {
+  DndProvider,
+  useDrag,
+  useDrop,
+  DragSourceMonitor,
+  DropTargetMonitor,
+} from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import SchedulePage from "@/app/schedule/page"; // Import the schedule page
-import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
+
 import getSeasonSettings from "../functions/getSeasonSettings";
+
 import "./SeasonSetupPage.css";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
 import getTeamsSeasonSetup from "../functions/getTeamsSeasonSetup";
 import updateTeamDivisions from "../functions/updateTeamDivisions";
 import updateDivisions from "../functions/updateDivisions";
+
+import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
+import Schedule from "@/app/schedule/schedule"; // Import the schedule page
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
@@ -29,16 +38,16 @@ export default function SeasonSetupPage() {
       case "general":
         return (
           <GeneralSettings
-            seasonName={seasonName}
-            setSeasonName={setSeasonName}
-            startDate={startDate}
-            setStartDate={setStartDate}
             endDate={endDate}
-            setEndDate={setEndDate}
-            gamesPerTeam={gamesPerTeam}
-            setGamesPerTeam={setGamesPerTeam}
             gameDays={gameDays}
+            gamesPerTeam={gamesPerTeam}
+            seasonName={seasonName}
+            setEndDate={setEndDate}
             setGameDays={setGameDays}
+            setGamesPerTeam={setGamesPerTeam}
+            setSeasonName={setSeasonName}
+            setStartDate={setStartDate}
+            startDate={startDate}
           />
         );
       case "divisions":
@@ -52,16 +61,16 @@ export default function SeasonSetupPage() {
       default:
         return (
           <GeneralSettings
-            seasonName={seasonName}
-            setSeasonName={setSeasonName}
-            startDate={startDate}
-            setStartDate={setStartDate}
             endDate={endDate}
-            setEndDate={setEndDate}
-            gamesPerTeam={gamesPerTeam}
-            setGamesPerTeam={setGamesPerTeam}
             gameDays={gameDays}
+            gamesPerTeam={gamesPerTeam}
+            seasonName={seasonName}
+            setEndDate={setEndDate}
             setGameDays={setGameDays}
+            setGamesPerTeam={setGamesPerTeam}
+            setSeasonName={setSeasonName}
+            setStartDate={setStartDate}
+            startDate={startDate}
           />
         );
     }
@@ -114,22 +123,24 @@ function GeneralSettings({
   gamesPerTeam,
   setGamesPerTeam,
   gameDays,
-  setGameDays
+  setGameDays,
 }: GeneralSettingsProps) {
-
   const toggleGameDay = (day: string) => {
     setGameDays((prevDays: string[]) => {
       console.log("Previous state:", prevDays);
       const updatedDays = prevDays.includes(day)
-      ? prevDays.filter((d) => d !== day)
-      : [...prevDays, day];
+        ? prevDays.filter((d) => d !== day)
+        : [...prevDays, day];
+
       console.log("Updated state:", updatedDays);
+
       return updatedDays;
     });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     switch (name) {
       case "seasonName":
         setSeasonName(value);
@@ -150,13 +161,14 @@ function GeneralSettings({
 
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const settings = { 
+    const settings = {
       season_name: seasonName,
-      start_date: startDate, 
-      end_date: endDate, 
+      start_date: startDate,
+      end_date: endDate,
       games_per_team: gamesPerTeam,
-      game_days: gameDays 
+      game_days: gameDays,
     };
+
     console.log(settings);
     updateSeasonSettings(settings);
   };
@@ -166,6 +178,7 @@ function GeneralSettings({
   useEffect(() => {
     const loadFormData = async () => {
       const data = await getSeasonSettings();
+
       setSeasonName(data.season_name || "");
       setStartDate(data.start_date || "");
       setEndDate(data.end_date || "");
@@ -177,59 +190,69 @@ function GeneralSettings({
   }, [setSeasonName, setStartDate, setEndDate, setGamesPerTeam, setGameDays]);
 
   return (
-    <div className="general-settings-container" style={{ width: '50%' }}>
+    <div className="general-settings-container" style={{ width: "50%" }}>
       <h2 className="text-2xl font-semibold mb-4">General Settings</h2>
       <form>
         <div className="mb-4">
           <label className="block text-gray-700">Season Name</label>
           <input
-            type="text"
+            className="w-full px-4 py-2 border rounded-lg"
             name="seasonName"
+            type="text"
             value={seasonName}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Start Date</label>
           <input
-            type="date"
+            className="w-full px-4 py-2 border rounded-lg"
             name="startDate"
+            type="date"
             value={startDate}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">End Date</label>
           <input
-            type="date"
+            className="w-full px-4 py-2 border rounded-lg"
             name="endDate"
+            type="date"
             value={endDate}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Number of games played by each team</label>
+          <label className="block text-gray-700">
+            Number of games played by each team
+          </label>
           <input
-            type="number"
+            className="w-full px-4 py-2 border rounded-lg"
             name="gamesPerTeam"
+            type="number"
             value={gamesPerTeam}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-lg"
           />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Game Days</label>
           <div className="grid grid-cols-4 gap-2">
-            {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+            {[
+              "Sunday",
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ].map((day) => (
               <label key={day} className="flex items-center">
                 <input
-                  type="checkbox"
                   checked={gameDays.includes(day)}
-                  onChange={() => toggleGameDay(day)}
                   className="mr-2"
+                  type="checkbox"
+                  onChange={() => toggleGameDay(day)}
                 />
                 {day}
               </label>
@@ -238,16 +261,17 @@ function GeneralSettings({
         </div>
         <div className="flex items-center mb-4">
           <button
-            type="submit"
-            className={`px-4 py-2 rounded-lg text-white ${isSaveDisabled ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
-            onClick={handleSave}
+            className={`px-4 py-2 rounded-lg text-white ${isSaveDisabled ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
             disabled={isSaveDisabled}
+            type="submit"
+            onClick={handleSave}
           >
             Save
           </button>
           {isSaveDisabled && (
-            <div className="ml-4 text-red-500" style={{ width: '60%' }}>
-              Must input valid start date, end date and number of games played by each team before saving
+            <div className="ml-4 text-red-500" style={{ width: "60%" }}>
+              Must input valid start date, end date and number of games played
+              by each team before saving
             </div>
           )}
         </div>
@@ -257,7 +281,7 @@ function GeneralSettings({
 }
 
 const ItemTypes = {
-  TEAM: 'team',
+  TEAM: "team",
 };
 
 interface DragItem {
@@ -281,11 +305,22 @@ interface TeamProps {
   team: Team;
   index: number;
   division_id: number;
-  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => void;
+  moveTeam: (
+    dragIndex: number,
+    hoverIndex: number,
+    sourceDivisionId: number,
+    targetDivisionId: number,
+  ) => void;
   setIsDragging: (isDragging: boolean) => void; // Add this prop
 }
 
-const Team: React.FC<TeamProps> = ({ team, index, division_id, moveTeam, setIsDragging }) => {
+const Team: React.FC<TeamProps> = ({
+  team,
+  index,
+  division_id,
+  moveTeam,
+  setIsDragging,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag] = useDrag({
@@ -306,27 +341,40 @@ const Team: React.FC<TeamProps> = ({ team, index, division_id, moveTeam, setIsDr
   return (
     <div
       ref={ref}
-      style={{ opacity: isDragging ? 0.5 : 1 }}
       className="flex items-center justify-between p-2 border rounded-lg mb-2"
+      style={{ opacity: isDragging ? 0.5 : 1 }}
     >
       <span>{team.name}</span>
-      <span className="text-xs text-gray-500">Preferred: {team.preferredDivision}</span>
+      <span className="text-xs text-gray-500">
+        Preferred: {team.preferredDivision}
+      </span>
     </div>
   );
 };
 
 interface DivisionProps {
   division: Division;
-  moveTeam: (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => void;
+  moveTeam: (
+    dragIndex: number,
+    hoverIndex: number,
+    sourceDivisionId: number,
+    targetDivisionId: number,
+  ) => void;
   isDragging: boolean; // Add this prop to track dragging state
   setIsDragging: (isDragging: boolean) => void; // Add this prop to set dragging state
 }
-const Division: React.FC<DivisionProps> = ({ division, moveTeam, isDragging, setIsDragging }) => {
+const Division: React.FC<DivisionProps> = ({
+  division,
+  moveTeam,
+  isDragging,
+  setIsDragging,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<DragItem>({
     accept: ItemTypes.TEAM,
     drop(item: DragItem, monitor: DropTargetMonitor) {
       const hoverIndex = division.teams.length; // Drop at the end of the list if dropped in the overall target
+
       if (item.division_id !== division.id || item.index !== hoverIndex) {
         moveTeam(item.index, hoverIndex, item.division_id, division.id);
         item.index = hoverIndex;
@@ -340,17 +388,18 @@ const Division: React.FC<DivisionProps> = ({ division, moveTeam, isDragging, set
   return (
     <div ref={ref} className="division drop-target">
       <h3>{division.name}</h3>
-      {division.teams.length === 0 || (isDragging && division.name !== "Team Bank") ? (
+      {division.teams.length === 0 ||
+      (isDragging && division.name !== "Team Bank") ? (
         <div className="empty-division">Drop teams here</div>
       ) : (
         division.teams.map((team, index) => (
           <Team
             key={team.id}
-            team={team}
-            index={index}
             division_id={division.id}
+            index={index}
             moveTeam={moveTeam}
             setIsDragging={setIsDragging} // Pass the setIsDragging callback
+            team={team}
           />
         ))
       )}
@@ -360,7 +409,9 @@ const Division: React.FC<DivisionProps> = ({ division, moveTeam, isDragging, set
 
 function DivisionsSettings() {
   const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(true);
-  const [divisions, setDivisions] = useState<Division[]>([{ id: 0, name: "Team Bank", teams: [] }]);
+  const [divisions, setDivisions] = useState<Division[]>([
+    { id: 0, name: "Team Bank", teams: [] },
+  ]);
   const [newDivision, setNewDivision] = useState("");
   const [isDragging, setIsDragging] = useState(false); // Lift the dragging state up
 
@@ -368,6 +419,7 @@ function DivisionsSettings() {
   useEffect(() => {
     const loadDivisionData = async () => {
       const data = await getTeamsSeasonSetup();
+
       setDivisions(data);
     };
 
@@ -380,20 +432,34 @@ function DivisionsSettings() {
   // Add a division
   const addDivision = () => {
     if (newDivision.trim() !== "") {
-      const newDivisionId = divisions.length > 0 ? Math.max(...divisions.map(d => d.id)) + 1 : 1;
-      setDivisions((prev) => [...prev, { id: newDivisionId, name: newDivision, teams: [] }]);
+      const newDivisionId =
+        divisions.length > 0 ? Math.max(...divisions.map((d) => d.id)) + 1 : 1;
+
+      setDivisions((prev) => [
+        ...prev,
+        { id: newDivisionId, name: newDivision, teams: [] },
+      ]);
       setNewDivision("");
     }
   };
 
   // Move a team between divisions
-  const moveTeam = (dragIndex: number, hoverIndex: number, sourceDivisionId: number, targetDivisionId: number) => {
+  const moveTeam = (
+    dragIndex: number,
+    hoverIndex: number,
+    sourceDivisionId: number,
+    targetDivisionId: number,
+  ) => {
     if (sourceDivisionId === targetDivisionId) {
       return;
     }
 
-    const sourceDivision = divisions.find((division) => division.id === sourceDivisionId);
-    const targetDivision = divisions.find((division) => division.id === targetDivisionId);
+    const sourceDivision = divisions.find(
+      (division) => division.id === sourceDivisionId,
+    );
+    const targetDivision = divisions.find(
+      (division) => division.id === targetDivisionId,
+    );
 
     if (!sourceDivision || !targetDivision) {
       return;
@@ -402,6 +468,7 @@ function DivisionsSettings() {
     const sourceTeams = [...sourceDivision.teams];
     const [movedTeam] = sourceTeams.splice(dragIndex, 1);
     const targetTeams = [...targetDivision.teams];
+
     targetTeams.splice(hoverIndex, 0, movedTeam);
 
     setDivisions((prev) =>
@@ -409,9 +476,9 @@ function DivisionsSettings() {
         division.id === sourceDivisionId
           ? { ...division, teams: sourceTeams }
           : division.id === targetDivisionId
-          ? { ...division, teams: targetTeams }
-          : division
-      )
+            ? { ...division, teams: targetTeams }
+            : division,
+      ),
     );
   };
 
@@ -429,66 +496,79 @@ function DivisionsSettings() {
       {/* Toggle to enable/disable divisions */}
       <div className="mb-4 flex items-center">
         <input
-          type="checkbox"
-          id="toggleDivisions"
           checked={isDivisionsEnabled}
-          onChange={toggleDivisions}
           className="mr-2"
+          id="toggleDivisions"
+          type="checkbox"
+          onChange={toggleDivisions}
         />
-        <label htmlFor="toggleDivisions" className="text-gray-700">
+        <label className="text-gray-700" htmlFor="toggleDivisions">
           Enable Divisions
         </label>
       </div>
 
       {isDivisionsEnabled && (
         <div className="flex">
-          <div className="divisions-container flex-grow" style={{ width: '60%' }}>
+          <div
+            className="divisions-container flex-grow"
+            style={{ width: "60%" }}
+          >
             {/* Add Division */}
             <div className="mb-4 flex">
               <input
+                className="w-full px-4 py-2 border rounded-lg"
+                placeholder="Division Name"
                 type="text"
                 value={newDivision}
                 onChange={(e) => setNewDivision(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Division Name"
               />
               <button
+                className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
                 type="button"
                 onClick={addDivision}
-                className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
               >
                 Add Division
               </button>
             </div>
 
             {/* List of Divisions */}
-            <div className="divisions-list overflow-y-auto" style={{ maxHeight: "60vh" }}>
-              {divisions.filter(division => division.name !== "Team Bank").map((division) => (
-                <div key={division.id} className="division-container">
-                  <Division
-                    division={division}
-                    moveTeam={moveTeam}
-                    isDragging={isDragging} // Pass the isDragging state
-                    setIsDragging={setIsDragging} // Pass the setIsDragging function
-                  />
-                </div>
-              ))}
+            <div
+              className="divisions-list overflow-y-auto"
+              style={{ maxHeight: "60vh" }}
+            >
+              {divisions
+                .filter((division) => division.name !== "Team Bank")
+                .map((division) => (
+                  <div key={division.id} className="division-container">
+                    <Division
+                      division={division}
+                      isDragging={isDragging} // Pass the isDragging state
+                      moveTeam={moveTeam}
+                      setIsDragging={setIsDragging} // Pass the setIsDragging function
+                    />
+                  </div>
+                ))}
             </div>
           </div>
 
           {/* Team Bank */}
-          <div className="team-bank-container flex-shrink-0 ml-4" style={{ width: '40%', position: 'sticky', top: '10px' }}>
+          <div
+            className="team-bank-container flex-shrink-0 ml-4"
+            style={{ width: "40%", position: "sticky", top: "10px" }}
+          >
             <Division
-              division={divisions.find(division => division.name === "Team Bank")!}
-              moveTeam={moveTeam}
+              division={
+                divisions.find((division) => division.name === "Team Bank")!
+              }
               isDragging={isDragging} // Pass the isDragging state
+              moveTeam={moveTeam}
               setIsDragging={setIsDragging} // Pass the setIsDragging function
             />
-            <div style={{ textAlign: 'right', marginTop: '20px' }}>
+            <div style={{ textAlign: "right", marginTop: "20px" }}>
               <button
+                className="px-4 py-2 bg-green-500 text-white rounded-lg"
                 type="button"
                 onClick={saveDivisions}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg"
               >
                 Save
               </button>
@@ -503,7 +583,7 @@ function DivisionsSettings() {
 function ScheduleSettings() {
   return (
     <div>
-      <SchedulePage viewer={true} />
+      <Schedule viewer={true} />
     </div>
   );
 }
