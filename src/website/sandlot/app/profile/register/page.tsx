@@ -13,11 +13,6 @@ import { title } from "@/components/primitives";
 import registerPlayer from "@/app/functions/registerPlayer";
 import registerTeam from "@/app/functions/registerTeam";
 
-function getCallbackUrl() {
-  const searchParams = useSearchParams(); // Access the query params
-  return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
-}
-
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +20,8 @@ export default function Register() {
     null,
   );
   const [teamName, setTeamName] = useState("");
-  const [name, setName] = useState("");
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
   const [gender, setGender] = useState("");
   const [error, setError] = useState("");
   const [teamUsername, setTeamUsername] = useState("");
@@ -33,6 +29,11 @@ export default function Register() {
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
+
+  function getCallbackUrl() {
+    const searchParams = useSearchParams(); // Access the query params
+    return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
+  }
 
   // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
   // const handleRegistration = async (e: React.FormEvent) => {
@@ -57,7 +58,8 @@ export default function Register() {
     try {
       if (accountType === "player") {
         const newUser = {
-          name: name,
+          firstname: firstname,
+          lastname: lastname,
           email: email,
           password: password,
         };
@@ -104,6 +106,28 @@ export default function Register() {
       return (
         <div>
           <div className={styles.inputGroup}>
+            <label>First Name:</label>
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={firstname}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Last Name:</label>
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={lastname}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
             <label>Email:</label>
             <input
               required
@@ -122,17 +146,6 @@ export default function Register() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label>Name:</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
             />
           </div>
 
@@ -297,7 +310,10 @@ export default function Register() {
                 </div>
 
                 <div className="flex space-x-4 justify-center mt-4">
-                  <Button className="button" onPress={() => setAccountType(null)}>
+                  <Button
+                    className="button"
+                    onPress={() => setAccountType(null)}
+                  >
                     Back
                   </Button>
                   <Suspense>

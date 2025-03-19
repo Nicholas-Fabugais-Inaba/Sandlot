@@ -1,16 +1,11 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
-export default async function updateAnnouncement(announcementData: {
-  announcement_id: Number;
-  new_date: String;
-  new_title: String;
-  new_body: String;
-}): Promise<void> {
+export default async function updateAnnouncement(
+  announcementData: any,
+): Promise<void> {
   axios
     .post(
-      `http://${APIHOST}/announcement/update_announcement`,
+      `${process.env.NEXT_PUBLIC_APIHOST}/announcement/update_announcement`,
       announcementData,
     )
     .then((response) => {

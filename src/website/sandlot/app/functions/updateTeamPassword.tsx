@@ -1,11 +1,14 @@
 import axios from "axios";
 
-export default async function createJR(joinRequest: any): Promise<void> {
+export default async function updateTeamPassword(teamPasswordData: {
+  team_id: Number;
+  new_password: String;
+}): Promise<void> {
   axios
-    .post(`${process.env.NEXT_PUBLIC_APIHOST}/join/create_join_request`, joinRequest)
+    .put(`${process.env.NEXT_PUBLIC_APIHOST}/team/update_team_password`, teamPasswordData)
     .then((response) => {
       console.log("server response: " + response.status);
-      console.log("JR created");
+      console.log("team's password updated");
     })
     .catch((error) => {
       console.log(error.response);

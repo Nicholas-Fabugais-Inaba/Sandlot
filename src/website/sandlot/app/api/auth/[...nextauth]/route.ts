@@ -36,7 +36,8 @@ const authOptions: NextAuthOptions = {
               }
               user = {
                 id: player.id,
-                name: player.first_name,
+                firstname: player.first_name,
+                lastname: player.last_name,
                 email: player.email,
                 role: role,
                 gender: player.gender,
@@ -55,7 +56,8 @@ const authOptions: NextAuthOptions = {
             if (credentials.password == team.password) {
               user = {
                 id: team.id,
-                name: "temp_name",
+                firstname: "temp_firstname",
+                lastname: "temp_lastname",
                 email: "temp_email",
                 role: "team",
                 gender: "temp_gender",
@@ -90,9 +92,24 @@ const authOptions: NextAuthOptions = {
       if (token) {
         session.user = {
           ...session.user,
-          name: token.name ?? "",
+          id: typeof token.id === "number" ? token.id : 0,
+          firstname: typeof token.firstname === "string" ? token.firstname : "",
+          lastname: typeof token.lastname === "string" ? token.lastname : "",
+          email: typeof token.email === "string" ? token.email : "",
           role: typeof token.role === "string" ? token.role : "",
+          gender: typeof token.role === "string" ? token.role : "",
           teamName: typeof token.teamName === "string" ? token.teamName : "",
+          username: typeof token.username === "string" ? token.username : "",
+          division: typeof token.division === "string" ? token.division : "",
+          offday: typeof token.offday === "string" ? token.offday : "",
+          preferred_division:
+            typeof token.preferred_division === "string"
+              ? token.preferred_division
+              : "",
+          preferred_time:
+            typeof token.preferred_time === "string"
+              ? token.preferred_time
+              : "",
           team_id: typeof token.team_id === "number" ? token.team_id : 0,
         };
       }
@@ -102,10 +119,18 @@ const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
-        token.name = user.name;
+        token.id = user.id;
+        token.firstname = user.name;
+        token.lastname = user.name;
         token.email = user.email;
         token.role = user.role;
+        token.gender = user.gender;
         token.teamName = user.teamName;
+        token.username = user.username;
+        token.division = user.division;
+        token.offday = user.offday;
+        token.preferred_division = user.preferred_division;
+        token.preferred_time = user.preferred_time;
         token.team_id = user.team_id;
       }
 
@@ -116,4 +141,5 @@ const authOptions: NextAuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };
