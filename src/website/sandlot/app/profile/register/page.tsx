@@ -26,7 +26,8 @@ export default function Register() {
     null,
   );
   const [teamName, setTeamName] = useState("");
-  const [name, setName] = useState("");
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
   const [gender, setGender] = useState("");
   const [error, setError] = useState("");
   const [teamUsername, setTeamUsername] = useState("");
@@ -58,7 +59,8 @@ export default function Register() {
     try {
       if (accountType === "player") {
         const newUser = {
-          name: name,
+          firstname: firstname,
+          lastname: lastname,
           email: email,
           password: password,
         };
@@ -105,6 +107,28 @@ export default function Register() {
       return (
         <div>
           <div className={styles.inputGroup}>
+            <label>First Name:</label>
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={firstname}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Last Name:</label>
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={lastname}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
             <label>Email:</label>
             <input
               required
@@ -123,17 +147,6 @@ export default function Register() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label>Name:</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
             />
           </div>
 
