@@ -15,13 +15,13 @@ import { Link } from "@heroui/link";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import React, { useEffect, useState, useRef } from "react";
+import { Session } from "next-auth";
+import { getSession } from "next-auth/react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo, BellIcon } from "@/components/icons";
-import React, { useEffect, useState, useRef } from "react";
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
 import { NotificationModal } from "@/components/NotificationModal"; // Import modal
 
 export const Navbar = () => {
@@ -34,26 +34,36 @@ export const Navbar = () => {
   useEffect(() => {
     const fetchSession = async () => {
       const userSession = await getSession();
+
       setSession(userSession);
       setLoading(false);
     };
+
     fetchSession();
   }, []);
 
   // Filter nav items based on user role
   const filteredNavItems = siteConfig.navItems.filter((item) => {
-    if (item.label === "Season Setup" && session?.user.role !== "commissioner") {
+    if (
+      item.label === "Season Setup" &&
+      session?.user.role !== "commissioner"
+    ) {
       return false; // Hide for non-commissioners
     } else if (item.label === "Rescheduler" && session?.user.role !== "team") {
       return false; // Hide if the user is not part of a team
-    } else if (item.label === "Team" && session?.user.role !== "player" && session?.user.role !== "team") {
+    } else if (
+      item.label === "Team" &&
+      session?.user.role !== "player" &&
+      session?.user.role !== "team"
+    ) {
       return false; // Hide if the user is not signed in as a team or player
     }
+
     return true;
   });
 
   const handleBellClick = () => {
-    setIsModalOpen(prev => !prev);
+    setIsModalOpen((prev) => !prev);
   };
 
   const handleCloseModal = () => {
@@ -61,7 +71,12 @@ export const Navbar = () => {
   };
 
   return (
-    <HeroUINavbar isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen} maxWidth="xl" position="sticky">
+    <HeroUINavbar
+      isMenuOpen={isMenuOpen}
+      maxWidth="xl"
+      position="sticky"
+      onMenuOpenChange={setIsMenuOpen}
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -69,7 +84,7 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">Sandlot</p>
           </NextLink>
         </NavbarBrand>
-        
+
         {/* Prevent rendering navbar items until session is loaded */}
         {!loading && (
           <ul className="hidden lg:flex gap-4 justify-start ml-2">
@@ -78,7 +93,7 @@ export const Navbar = () => {
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium"
+                    "data-[active=true]:text-primary data-[active=true]:font-medium",
                   )}
                   color="foreground"
                   href={item.href}
@@ -90,29 +105,35 @@ export const Navbar = () => {
           </ul>
         )}
       </NavbarContent>
-  
-      <NavbarContent className="flex basis-1/5 sm:basis-full gap-2" justify="end">
+
+      <NavbarContent
+        className="flex basis-1/5 sm:basis-full gap-2"
+        justify="end"
+      >
         <NavbarItem className="flex gap-2">
-          <div ref={bellRef}> {/* Bell icon wrapper to track position */}
-            <BellIcon
-              onClick={handleBellClick}
-              className="cursor-pointer"
-            />
+          <div ref={bellRef}>
+            {" "}
+            {/* Bell icon wrapper to track position */}
+            <BellIcon className="cursor-pointer" onClick={handleBellClick} />
           </div>
         </NavbarItem>
         <NavbarItem className="flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
         <NavbarMenuToggle
-          className="lg:hidden"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="lg:hidden"
         />
       </NavbarContent>
 
       <NavbarMenu>
         {siteConfig.navMenuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.label}-${index}`}>
-            <Link href={item.href} size="lg" onPress={() => setIsMenuOpen(false)}>
+            <Link
+              href={item.href}
+              size="lg"
+              onPress={() => setIsMenuOpen(false)}
+            >
               {item.label}
             </Link>
           </NavbarMenuItem>
@@ -120,7 +141,11 @@ export const Navbar = () => {
       </NavbarMenu>
 
       {/* Modal */}
-      <NotificationModal isOpen={isModalOpen} onClose={handleCloseModal} anchorRef={bellRef} />
+      <NotificationModal
+        anchorRef={bellRef}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </HeroUINavbar>
   );
 };

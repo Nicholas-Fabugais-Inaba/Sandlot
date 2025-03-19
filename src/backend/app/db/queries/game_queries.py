@@ -38,6 +38,7 @@ def get_all_games():
                 Game.home_team_score,
                 Game.away_team_score,
                 Game.played,
+                Game.forfeit,
                 home_team_alias.id.label("home_team_id"),
                 home_team_alias.team_name.label("home_team_name"),
                 away_team_alias.id.label("away_team_id"),
@@ -64,6 +65,7 @@ def get_team_games(team_id):
                 Game.home_team_score,
                 Game.away_team_score,
                 Game.played,
+                Game.forfeit,
                 home_team_alias.id.label("home_team_id"),
                 home_team_alias.team_name.label("home_team_name"),
                 away_team_alias.id.label("away_team_id"),
@@ -88,10 +90,28 @@ def update_game(game_id, new_date, new_time, new_field):
         else:
             session.commit()
 
-def update_score(game_id, home_team_score, away_team_score):
+def delete_all_games():
     engine = create_connection()
     with Session(engine) as session:
-        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, played=1)
+        try:
+            session.query(Game).delete()
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+
+def get_score(game_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Game.home_team_score, Game.away_team_score, Game.forfeit).where(Game.id == game_id)
+        result = session.execute(stmt).mappings().first()
+        return result
+
+def update_score(game_id, home_team_score, away_team_score, forfeit):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, forfeit=forfeit, played=1)
         try:
             session.execute(stmt)
         except:

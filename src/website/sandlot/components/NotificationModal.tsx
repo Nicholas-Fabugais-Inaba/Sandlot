@@ -15,11 +15,30 @@ interface NotificationModalProps {
   anchorRef: React.RefObject<HTMLDivElement>; // Reference to the bell icon
 }
 
-export const NotificationModal: FC<NotificationModalProps> = ({ isOpen, onClose, anchorRef }) => {
+export const NotificationModal: FC<NotificationModalProps> = ({
+  isOpen,
+  onClose,
+  anchorRef,
+}) => {
   const [notifications, setNotifications] = useState<Notification[]>([
-    { id: 1, message: "Notification 1", isRead: false, timestamp: "2025-03-18T12:30:00" },
-    { id: 2, message: "Notification 2", isRead: false, timestamp: "2025-03-18T12:35:00" },
-    { id: 3, message: "Notification 3", isRead: true, timestamp: "2025-03-17T10:00:00" },
+    {
+      id: 1,
+      message: "Notification 1",
+      isRead: false,
+      timestamp: "2025-03-18T12:30:00",
+    },
+    {
+      id: 2,
+      message: "Notification 2",
+      isRead: false,
+      timestamp: "2025-03-18T12:35:00",
+    },
+    {
+      id: 3,
+      message: "Notification 3",
+      isRead: true,
+      timestamp: "2025-03-17T10:00:00",
+    },
     // Add more notifications as needed
   ]);
 
@@ -36,11 +55,11 @@ export const NotificationModal: FC<NotificationModalProps> = ({ isOpen, onClose,
     updateBellPosition();
 
     // Update position on resize
-    window.addEventListener('resize', updateBellPosition);
+    window.addEventListener("resize", updateBellPosition);
 
     // Cleanup event listener on unmount
     return () => {
-      window.removeEventListener('resize', updateBellPosition);
+      window.removeEventListener("resize", updateBellPosition);
     };
   }, [anchorRef]);
 
@@ -61,25 +80,27 @@ export const NotificationModal: FC<NotificationModalProps> = ({ isOpen, onClose,
 
     const isSameYear = now.getFullYear() === date.getFullYear();
     const options: Intl.DateTimeFormatOptions = {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
       hour12: true,
     };
+
     if (!isSameYear) {
-      options.year = 'numeric';
+      options.year = "numeric";
     }
-    return date.toLocaleString('en-US', options);
+
+    return date.toLocaleString("en-US", options);
   };
 
   // Function to mark all notifications as read
   const markAllRead = () => {
-    setNotifications(prevNotifications =>
-      prevNotifications.map(notification => ({
+    setNotifications((prevNotifications) =>
+      prevNotifications.map((notification) => ({
         ...notification,
         isRead: true,
-      }))
+      })),
     );
   };
 
@@ -88,30 +109,29 @@ export const NotificationModal: FC<NotificationModalProps> = ({ isOpen, onClose,
       className="fixed z-50 bg-transparent"
       style={{
         top: bellPosition?.bottom ?? 0, // Position the modal just below the bell
-        left: (bellPosition?.left ?? 0) - 300,   // Adjust the left position as needed
-        width: bellPosition?.width ?? 'auto',
+        left: (bellPosition?.left ?? 0) - 300, // Adjust the left position as needed
+        width: bellPosition?.width ?? "auto",
       }}
     >
       <div className="bg-white rounded-lg shadow-lg w-96 max-h-80">
         {/* Header with title, close button, and Mark All Read button */}
         <div className="flex justify-between items-center p-4 border-b">
-            <span className="font-bold text-lg">Notifications</span>
-            <div className="flex items-center space-x-2">
-                <button
-                onClick={markAllRead}
-                className="text-sm text-blue-500 hover:underline"
-                >
-                Mark All Read
-                </button>
-                <button
-                onClick={onClose}
-                className="text-gray-600 hover:text-gray-900 text-2xl"
-                >
-                &times; {/* Close button (X) */}
-                </button>
-            </div>
+          <span className="font-bold text-lg">Notifications</span>
+          <div className="flex items-center space-x-2">
+            <button
+              className="text-sm text-blue-500 hover:underline"
+              onClick={markAllRead}
+            >
+              Mark All Read
+            </button>
+            <button
+              className="text-gray-600 hover:text-gray-900 text-2xl"
+              onClick={onClose}
+            >
+              &times; {/* Close button (X) */}
+            </button>
+          </div>
         </div>
-
 
         {/* Scrollable content */}
         <div className="p-4 overflow-y-auto max-h-64">
@@ -119,10 +139,12 @@ export const NotificationModal: FC<NotificationModalProps> = ({ isOpen, onClose,
             {notifications.map((notification) => (
               <li
                 key={notification.id}
-                className={`p-4 border rounded-lg ${notification.isRead ? 'bg-white' : 'bg-blue-100'}`}
+                className={`p-4 border rounded-lg ${notification.isRead ? "bg-white" : "bg-blue-100"}`}
               >
                 <p>{notification.message}</p>
-                <p className="text-xs text-gray-500">{timeAgo(notification.timestamp)}</p>
+                <p className="text-xs text-gray-500">
+                  {timeAgo(notification.timestamp)}
+                </p>
               </li>
             ))}
           </ul>

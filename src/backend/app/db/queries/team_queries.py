@@ -28,7 +28,7 @@ def insert_team(team_name, username, password, division, preferred_division, pre
 def get_all_teams():
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(Team.id, Team.team_name, Team.division, Team.offday)
+        stmt = select(Team.id, Team.team_name, Team.division, Team.offday, Team.preferred_time)
         result = session.execute(stmt).mappings().all()
         return result
         

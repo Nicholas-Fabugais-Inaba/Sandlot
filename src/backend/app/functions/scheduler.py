@@ -66,26 +66,55 @@ def constraint3(game, game_slot, schedule):
     return True
 
 
-# Constraint 4: Teams should avoid playing on their recorded offday
+# Constraint 4: Teams should never play on their recorded offday
 def constraint4(game, game_slot, schedule):
     global teams
     # Checks each team involved in the game
-    weekday: int = game_slot[2].weekday()# - 1 # weekday() lies, Monday is 1, so we must subtract one to convert it to the correct weekday.
+    weekday: int = game_slot[2].weekday()
     for team in game:
         if teams[team]["offday"] == weekday:
-            return False # ISSUE: If both teams have an offday on this day it will be weighted the same as one team having an offday
+            return False
     return True
+
+# Soft Constraint 1: Teams should avoid playing on their recorded offday
+def soft_constraint1(game, game_slot, schedule):
+    global teams
+    # Checks each team involved in the game
+    weekday: int = game_slot[2].weekday()
+    score = 0
+    for team in game:
+        if teams[team]["offday"] == weekday:
+            score += 3
+    return score
+
+# Soft Constraint 2: Teams should avoid playing timeslots they don't prefer
+# 0 = No preference, 1 = Early, 2 = Balanced, 3 = Late
+def soft_constraint2(game, game_slot, schedule):
+    global teams
+    # Checks each team involved in the game
+    time = game_slot[1]
+    score = 0
+    for team in game:
+        if teams[team]["pref_time"] == 1: # Early preference
+            if time == 3 or time == 4:
+                score += 1
+        elif teams[team]["pref_time"] == 2: # Balanced preference
+            continue
+        elif teams[team]["pref_time"] == 3: # Late preference
+            if time == 1 or time == 2:
+                score += 1
+    return score
 
 
 def find_least_played_weeks(team1, team2):
     # weeks_played is a dictionary where keys are teams and values are dictionaries of weeks and number of games played
     team1_weeks = weeks_played[team1]
     team2_weeks = weeks_played[team2]
-    
+
     # Find the weeks with the least number of games played between team1 and team2
     min_play_count = float('inf')
     least_played_weeks = []
-    
+
     for week in team1_weeks.keys():
         total_games = team1_weeks[week] + team2_weeks[week]
         if total_games < min_play_count:
@@ -93,45 +122,30 @@ def find_least_played_weeks(team1, team2):
             least_played_weeks = [week]
         elif total_games == min_play_count:
             least_played_weeks.append(week)
-    
+
     return least_played_weeks
 
 
 # Recusive function that takes an index from the games list that refers to a game
 def backtrack_scheduler_w_skip():
     global games, game_slots, hard_constraints, soft_constraints, best_schedule, best_score
-    # Base case, no more games to assign game_slots
-    # if curr_game >= len(games):
-    #     if curr_score < best_score:
-    #         best_score = curr_score
-    #         best_schedule = schedule.copy()
-    #         # print(best_schedule)
-    #     # If no soft constraints are violated, return the schedule as it is optimal
-    #     if best_score == 0:
-    #         return schedule
-    #     # Else continue searching
-    #     return False
+
     schedule = {}
     start_week = 0
     curr_score = 0
-    
+
     # If the start_week is greater than the number of weeks, reset it to 0
     if start_week >= len(game_slots):
             start_week = 0
-    
-    # print(best_score)
-    # if best_score == 1:
-    #     print(best_schedule)
-    # time.sleep(0.1)
+
     for game in games: # Loop through all games
-    
         soft_constrained_slots = []
 
         # Find the least played weeks for the teams in the game
         # CURRENTLY this just uses a week from the list as a starting place, if the week is full it will move to the next week sequentially.
         least_played_weeks = find_least_played_weeks(game[0], game[1])
         # print(least_played_weeks)
-        # Select a random week from the least played weeks
+        # Select a random week from the least played weeks to keep games from piling up early in the season
         start_week = random.choice(least_played_weeks)
         curr_week = start_week
 
@@ -140,7 +154,7 @@ def backtrack_scheduler_w_skip():
             # print(schedule)
             # print("Week: ", curr_week)
             week_slots = game_slots[curr_week]
-            # SHUFFLE WEEK_SLOTS
+            # Shuffle week_slots to keep games from piling up early in the week
             random.shuffle(week_slots)
             for game_slot in week_slots:
                 passesConstraints = True
@@ -155,19 +169,16 @@ def backtrack_scheduler_w_skip():
                     # new_score: int = 0
                     soft_constrained = False
                     for soft_constraint in soft_constraints:
-                        if not soft_constraint[0](game, game_slot, schedule):
-                            # If constraint fails, add the weight to the score
-                            # new_score += soft_constraint[1]
-
+                        soft_constraint_score = soft_constraint(game, game_slot, schedule)
+                        if soft_constraint_score != 0:
+                            # If timeslot adds to score (fails soft constraint), mark as soft constrained and skip it
                             soft_constrained = True
-                            soft_constrained_slots.append((game_slot, soft_constraint[1]))
-                            # Maybe skip to next iteration here and add game_slot to an array of slots that pass hard but fail soft
-                            # Then test that array after all game_slots are tested
+                            # All soft constrained slots will be added to a list to be considered later
+                            soft_constrained_slots.append((game_slot, soft_constraint_score))
                     # If soft constrained, skip this iteration
                     if soft_constrained:
                         continue
 
-                    # curr_score += new_score
                     schedule[game_slot] = game
                     # Update the weeks list for teams played
                     for team in game:
@@ -175,18 +186,6 @@ def backtrack_scheduler_w_skip():
 
                     slot_chosen = True
                     break
-
-                    # new_schedule = backtrack_scheduler_w_skip(curr_game + 1, schedule, curr_score)
-                    # # If the returned schedule is valid, pass it back
-                    # if new_schedule:
-                    #     return new_schedule
-
-                    # # Backtracking requires unassigning game_slot and undoing score
-                    # # curr_score -= new_score
-                    # schedule.pop(game_slot)
-                    # # Un-update the weeks list for teams played
-                    # for team in game:
-                    #     weeks_played[team][curr_week] -= 1
             if slot_chosen:
                 break
 
@@ -197,15 +196,15 @@ def backtrack_scheduler_w_skip():
             if curr_week == start_week:
                 break
 
-        if not slot_chosen:
-            for constrained_slot in soft_constrained_slots:
-                curr_score += constrained_slot[1]
-                schedule[constrained_slot[0]] = game
-                slot_chosen = True
-                break
+        if not slot_chosen and len(soft_constrained_slots) > 0:
+            # Find the soft constrained slot with the lowest score
+            lowest_score_slot = min(soft_constrained_slots, key=lambda x: x[1])
+            curr_score += lowest_score_slot[1]
+            schedule[lowest_score_slot[0]] = game
+            slot_chosen = True
 
         if not slot_chosen:
-            return False
+            return False, maxsize
 
     return schedule, curr_score
 
@@ -218,13 +217,14 @@ def gen_constraints():
     hard_constraints.append(constraint1)
     hard_constraints.append(constraint2)
     # hard_constraints.append(constraint3)
-    # soft_constraints.append((constraint4, 1))
     hard_constraints.append(constraint4)
+    # soft_constraints.append(soft_constraint1)
+    soft_constraints.append(soft_constraint2)
 
 
-def initialize_weeks_played(num_teams, num_weeks):
+def initialize_weeks_played(teams, num_weeks):
     # Initialize the weeks_played dictionary
-    for team in range(num_teams):
+    for team in teams:
         weeks_played[team] = {week: 0 for week in range(0, num_weeks)}
 
     return weeks_played
@@ -236,11 +236,13 @@ def gen_schedule_w_skip(games_to_sched, game_slots_to_sched, teams_to_sched):
     game_slots = game_slots_to_sched
     teams = teams_to_sched
     gen_constraints()
-    initialize_weeks_played(len(teams), len(game_slots))
+    initialize_weeks_played(teams, len(game_slots))
     print("starting schedule generation")
     schedule, score = backtrack_scheduler_w_skip()
     if schedule:
         return schedule, score, teams
+    else:
+        return [], maxsize, teams
 
 
 def send_schedule_to_db(schedule: dict, score: int, teams: dict):
