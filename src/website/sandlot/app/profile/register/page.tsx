@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
@@ -250,61 +250,63 @@ export default function Register() {
             : "Register"}
       </h1>
       <div className={styles.container}>
-        <div className="centered-container">
-          {error && <p className={styles.error}>{error}</p>}
+        <Suspense>
+          <div className="centered-container">
+            {error && <p className={styles.error}>{error}</p>}
 
-          {accountType === null ? (
-            <div className="form">
-              <h1 className="text-xl font-semibold text-center mt-8">
-                Choose an Account Type:
-              </h1>
-              <div className="flex space-x-4 mt-4">
-                <Button
-                  className="button"
-                  onPress={() => setAccountType("player")}
-                >
-                  Player
-                </Button>
-                <Button
-                  className="button"
-                  onPress={() => setAccountType("team")}
-                >
-                  Team
-                </Button>
+            {accountType === null ? (
+              <div className="form">
+                <h1 className="text-xl font-semibold text-center mt-8">
+                  Choose an Account Type:
+                </h1>
+                <div className="flex space-x-4 mt-4">
+                  <Button
+                    className="button"
+                    onPress={() => setAccountType("player")}
+                  >
+                    Player
+                  </Button>
+                  <Button
+                    className="button"
+                    onPress={() => setAccountType("team")}
+                  >
+                    Team
+                  </Button>
+                </div>
+                <div className="flex justify-center mt-48">
+                  <Button
+                    className="button"
+                    onPress={() => router.push(callbackUrl)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
               </div>
-              <div className="flex justify-center mt-48">
-                <Button
-                  className="button"
-                  onPress={() => router.push(callbackUrl)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <form className="form" onSubmit={(e) => handleRegister(e)}>
-              {renderForm()}
+            ) : (
+              <form className="form" onSubmit={(e) => handleRegister(e)}>
+                {renderForm()}
 
-              <div className="flex space-x-4 justify-center">
-                <Button className="button" type="submit">
-                  Register
-                </Button>
-              </div>
+                <div className="flex space-x-4 justify-center">
+                  <Button className="button" type="submit">
+                    Register
+                  </Button>
+                </div>
 
-              <div className="flex space-x-4 justify-center mt-4">
-                <Button className="button" onPress={() => setAccountType(null)}>
-                  Back
-                </Button>
-                <Button
-                  className="button"
-                  onPress={() => router.push(callbackUrl)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          )}
-        </div>
+                <div className="flex space-x-4 justify-center mt-4">
+                  <Button className="button" onPress={() => setAccountType(null)}>
+                    Back
+                  </Button>
+                  <Button
+                    className="button"
+                    onPress={() => router.push(callbackUrl)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            )}
+          </div>
+        </Suspense>
       </div>
     </div>
   );
