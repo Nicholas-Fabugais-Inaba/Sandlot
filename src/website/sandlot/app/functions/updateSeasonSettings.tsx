@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function updateSeasonSettings(SeasonSettings: {
   start_date: String;
   end_date: String;
@@ -9,7 +7,7 @@ export default async function updateSeasonSettings(SeasonSettings: {
 }): Promise<void> {
   axios
     .put(
-      `http://${APIHOST}/season-setup/update_season_settings`,
+      `${process.env.NEXT_PUBLIC_APIHOST}/season-setup/update_season_settings`,
       SeasonSettings,
     )
     .then((response) => {

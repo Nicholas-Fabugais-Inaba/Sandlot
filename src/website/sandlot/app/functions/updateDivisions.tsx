@@ -12,8 +12,6 @@ interface Division {
   teams: Team[];
 }
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function updateTeamDivisions(
   divisions: Division[],
 ): Promise<void> {
@@ -28,7 +26,7 @@ export default async function updateTeamDivisions(
   console.log("divisionDataList: ", divisionDataList);
 
   axios
-    .put(`http://${APIHOST}/season-setup/update_divisions`, divisionDataList)
+    .put(`${process.env.NEXT_PUBLIC_APIHOST}/season-setup/update_divisions`, divisionDataList)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("team's division updated");
