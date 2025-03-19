@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
@@ -38,53 +38,55 @@ export default function SignIn() {
     <div>
       <h1 className={title()}>Sign In</h1>
       <div className={styles.container}>
-        <div className="centered-container">
-          {error && <p className={styles.error}>{error}</p>}
-          <form className="form" onSubmit={handleSignIn}>
-            <div className={styles.inputGroup}>
-              <label>Email or Team Username:</label>
-              <input
-                required
-                className={styles.input}
-                type="text"
-                value={userID}
-                onChange={(e) => setUserID(e.target.value)}
-              />
-            </div>
-            <div className={styles.inputGroup}>
-              <label>Password:</label>
-              <input
-                required
-                className={styles.input}
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="flex space-x-4 justify-center">
-              <Button className="button" type="submit">
-                Sign In
+        <Suspense fallback={<div>Loading...</div>}>
+          <div className="centered-container">
+            {error && <p className={styles.error}>{error}</p>}
+            <form className="form" onSubmit={handleSignIn}>
+              <div className={styles.inputGroup}>
+                <label>Email or Team Username:</label>
+                <input
+                  required
+                  className={styles.input}
+                  type="text"
+                  value={userID}
+                  onChange={(e) => setUserID(e.target.value)}
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label>Password:</label>
+                <input
+                  required
+                  className={styles.input}
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="flex space-x-4 justify-center">
+                <Button className="button" type="submit">
+                  Sign In
+                </Button>
+              </div>
+            </form>
+            <div className={styles.newUserContainer}>
+              <p className={styles.newUserText}>New User?</p>
+              <Button
+                className="button"
+                onPress={() => router.push("/profile/register")}
+              >
+                Create an Account
               </Button>
             </div>
-          </form>
-          <div className={styles.newUserContainer}>
-            <p className={styles.newUserText}>New User?</p>
-            <Button
-              className="button"
-              onPress={() => router.push("/profile/register")}
-            >
-              Create an Account
-            </Button>
+            <div className="flex justify-center mt-4">
+              <Button
+                className="button"
+                onPress={() => router.push(callbackUrl)} // Redirect to the previous page (team or profile)
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
-          <div className="flex justify-center mt-4">
-            <Button
-              className="button"
-              onPress={() => router.push(callbackUrl)} // Redirect to the previous page (team or profile)
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
+        </Suspense>
       </div>
     </div>
   );

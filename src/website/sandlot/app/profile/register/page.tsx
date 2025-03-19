@@ -250,7 +250,7 @@ export default function Register() {
             : "Register"}
       </h1>
       <div className={styles.container}>
-        <Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
           <div className="centered-container">
             {error && <p className={styles.error}>{error}</p>}
 
