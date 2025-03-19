@@ -5,22 +5,34 @@ export type Event = {
     id: number;
     home: string;
     home_id: number;
+    home_score: number;
     away: string;
     away_id: number;
+    away_score: number;
+    played: boolean;
+    forfeit: number;
   };
   field2?: {
     id: number;
     home: string;
     home_id: number;
+    home_score: number;
     away: string;
     away_id: number;
+    away_score: number;
+    played: boolean;
+    forfeit: number;
   };
   field3?: {
     id: number;
     home: string;
     home_id: number;
+    home_score: number;
     away: string;
     away_id: number;
+    away_score: number;
+    played: boolean;
+    forfeit: number;
   };
 };
 

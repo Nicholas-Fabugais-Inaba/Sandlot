@@ -2,7 +2,8 @@
 
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
 
@@ -11,6 +12,11 @@ import styles from "./Register.module.css";
 import { title } from "@/components/primitives";
 import registerPlayer from "@/app/functions/registerPlayer";
 import registerTeam from "@/app/functions/registerTeam";
+
+function getCallbackUrl() {
+  const searchParams = useSearchParams(); // Access the query params
+  return searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
+}
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -27,8 +33,6 @@ export default function Register() {
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
-  const searchParams = useSearchParams(); // Access the query params
-  const callbackUrl = searchParams?.get("callbackUrl") || "/profile"; // Default to '/profile' if no callbackUrl
 
   // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
   // const handleRegistration = async (e: React.FormEvent) => {
@@ -48,30 +52,51 @@ export default function Register() {
   // };
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault(); // default action on submit is to redirect to callbackUrl
-    if (accountType == "player") {
-      let newUser = {
-        name: name,
-        email: email,
-        password: password,
-      };
+    e.preventDefault(); // Prevent default form submission behavior
 
-      // TODO: error checking to make sure response is OK on registration
-      await registerPlayer(newUser);
-    } else {
-      let newTeam = {
-        team_name: teamName,
-        username: teamUsername,
-        password: password,
-        preferred_division: preferredDivision,
-        preferred_offday: preferredOffday,
-        preferred_time: preferredTime,
-      };
+    try {
+      if (accountType === "player") {
+        const newUser = {
+          name: name,
+          email: email,
+          password: password,
+        };
 
-      // TODO: error checking to make sure response is OK on registration
-      await registerTeam(newTeam);
+        await registerPlayer(newUser);
+      } else {
+        const newTeam = {
+          team_name: teamName,
+          username: teamUsername,
+          password: password,
+          preferred_division: preferredDivision,
+          preferred_offday: preferredOffday,
+          preferred_time: preferredTime,
+        };
+
+        await registerTeam(newTeam);
+      }
+
+      // Automatically sign in the user after successful registration
+      const result = await signIn("credentials", {
+        redirect: false, // Prevent automatic redirect
+        userID: accountType === "player" ? email : teamUsername,
+        password: password,
+      });
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        window.location.href = getCallbackUrl(); // Full page reload to ensure a complete refresh
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(
+          (error as any).response?.data?.detail || "Registration failed",
+        );
+      } else {
+        setError("Registration failed");
+      }
     }
-    router.push(callbackUrl);
   };
 
   const renderForm = () => {
@@ -230,7 +255,6 @@ export default function Register() {
       <div className={styles.container}>
         <div className="centered-container">
           {error && <p className={styles.error}>{error}</p>}
-
           {accountType === null ? (
             <div className="form">
               <h1 className="text-xl font-semibold text-center mt-8">
@@ -251,33 +275,42 @@ export default function Register() {
                 </Button>
               </div>
               <div className="flex justify-center mt-48">
-                <Button
-                  className="button"
-                  onPress={() => router.push(callbackUrl)}
-                >
-                  Cancel
-                </Button>
+                <Suspense>
+                  <Button
+                    className="button"
+                    onPress={() => router.push(getCallbackUrl())}
+                  >
+                    Cancel
+                  </Button>
+                </Suspense>
               </div>
             </div>
           ) : (
-            <form className="form" onSubmit={(e) => handleRegister(e)}>
-              {renderForm()}
+            <Suspense>
+              <form className="form" onSubmit={(e) => handleRegister(e)}>
+                {renderForm()}
 
-              <div className="flex space-x-4 justify-center">
-                <Button className="button" type="submit">
-                  Register
-                </Button>
-              </div>
+                <div className="flex space-x-4 justify-center">
+                  <Button className="button" type="submit">
+                    Register
+                  </Button>
+                </div>
 
-              <div className="flex justify-center mt-4">
-                <Button
-                  className="button"
-                  onPress={() => router.push(callbackUrl)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
+                <div className="flex space-x-4 justify-center mt-4">
+                  <Button className="button" onPress={() => setAccountType(null)}>
+                    Back
+                  </Button>
+                  <Suspense>
+                    <Button
+                      className="button"
+                      onPress={() => router.push(getCallbackUrl())}
+                    >
+                      Cancel
+                    </Button>
+                  </Suspense>
+                </div>
+              </form>
+            </Suspense>
           )}
         </div>
       </div>

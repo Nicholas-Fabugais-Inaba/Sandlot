@@ -48,8 +48,14 @@ export const Navbar = () => {
       session?.user.role !== "commissioner"
     ) {
       return false; // Hide for non-commissioners
-    } else if (item.label === "Accept RR" && session?.user.role !== "team") {
+    } else if (item.label === "Rescheduler" && session?.user.role !== "team") {
       return false; // Hide if the user is not part of a team
+    } else if (
+      item.label === "Team" &&
+      session?.user.role !== "player" &&
+      session?.user.role !== "team"
+    ) {
+      return false; // Hide if the user is not signed in as a team or player
     }
 
     return true;
@@ -91,36 +97,15 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <GithubIcon className="text-default-500" />
-          </Link>
           <ThemeSwitch />
         </NavbarItem>
-      </NavbarContent>
-
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
-        <ThemeSwitch />
-        <NavbarMenuToggle />
       </NavbarContent>
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href={item.href}
-                size="lg"
-              >
+              <Link href={item.href} size="lg">
                 {item.label}
               </Link>
             </NavbarMenuItem>

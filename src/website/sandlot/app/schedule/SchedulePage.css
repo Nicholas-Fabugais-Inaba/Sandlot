@@ -47,3 +47,49 @@
   white-space: nowrap;
   max-width: 100%;
 }
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-color {
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+}
+
+.legend-field1 {
+  background-color: #ffedd5; /* Orange for Field 1 */
+}
+
+.legend-field2 {
+  background-color: #cffafe; /* Cyan for Field 2 */
+}
+
+.legend-field3 {
+  background-color: #f3e8ff; /* Purple for Field 3 */
+}
+
+.legend-game-played {
+  background-color: #d1d5db; /* Light gray for games played */
+}
+
+.legend-full-slot {
+  background-color: #fee2e2; /* Red for game already being played in slot */
+}
+
+.legend-free-slot {
+  background-color: #dbeafe; /* Blue for available slot */
+}
+
+.legend-chosen-slot {
+  background-color: #dcfce7; /* Green for chosen game slot */
+}

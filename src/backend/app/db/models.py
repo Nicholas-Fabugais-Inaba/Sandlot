@@ -53,7 +53,7 @@ class Game(Base):
     home_team_score: Mapped[Optional[int]] = mapped_column()
     away_team_score: Mapped[Optional[int]] = mapped_column()
     played: Mapped[Optional[bool]] = mapped_column(default=False)
-    forfeit: Mapped[Optional[int]] = mapped_column()
+    forfeit: Mapped[Optional[int]] = mapped_column(default=0) # 0 = no forfeit, 1 = 9-1 soft forfeit, 2 = 9-0 hard forfeit
     home_team = relationship("Team", foreign_keys=[home_team_id], backref="home_games")
     away_team = relationship("Team", foreign_keys=[away_team_id], backref="away_games")
 
@@ -100,6 +100,13 @@ class TimeSlot(Base):
     start: Mapped[Optional[str]] = mapped_column(String(50))
     end: Mapped[Optional[str]] = mapped_column(String(50))
     field_id: Mapped[Optional[int]] = mapped_column(ForeignKey("field.id"))
+
+class Announcement(Base):
+    __tablename__ = "announcement"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    date: Mapped[Optional[str]] = mapped_column(String(50))
+    title: Mapped[Optional[str]] = mapped_column(String(100))
+    body: Mapped[Optional[str]] = mapped_column(String(500))
 
 class Division(Base):
     __tablename__ = "division"

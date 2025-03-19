@@ -1,6 +1,10 @@
 from fastapi import APIRouter
 from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData
-from ..db.queries import update_season_settings, get_season_settings, insert_field, get_all_fields, delete_field, insert_timeslot, get_all_timeslots, delete_timeslot, update_division, get_all_teams, insert_game
+from ..db.queries.season_settings_queries import update_season_settings, get_season_settings
+from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
+from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
+from ..db.queries.team_queries import update_division, get_all_teams
+from ..db.queries.game_queries import insert_game
 
 
 router = APIRouter(tags=["season-setup"])
@@ -10,7 +14,7 @@ async def create_schedule(schedule: dict):
     teams = {}
     Teams = get_all_teams()
     for i in range(len(Teams)):
-        teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
+        teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
     for gameslot, game in schedule.items():
         gameslot = gameslot.split(",")
         insert_game(int(teams[game[0]]["id"]), int(teams[game[1]]["id"]), gameslot[2], gameslot[1], gameslot[0])

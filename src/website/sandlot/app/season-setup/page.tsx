@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import getSeasonSettings from "../functions/getSeasonSettings";
 
-import SchedulePage from "@/app/schedule/page"; // Import the schedule page
+import Schedule from "@/app/schedule/schedule"; // Import the schedule page
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
 
 import "./SeasonSetupPage.css";
@@ -252,7 +252,7 @@ function TeamsSettings() {
 function ScheduleSettings() {
   return (
     <div>
-      <SchedulePage viewer={true} />
+      <Schedule viewer={true} />
     </div>
   );
 }
