@@ -208,73 +208,124 @@ function getFormattedEvents(games: any): Event[] {
   return formattedEvents;
 }
 
-export function addEmptyEvents(events: Event[]): Event[] {
+export function addEmptyEvents(events: Event[], currDate: Date): Event[] {
   if (currDate > seasonEnd) {
     return events;
   }
 
-  let startDate;
+  let dateCount: Date;
 
   if (currDate > seasonStart) {
-    startDate = currDate;
+    dateCount = currDate;
   } else {
-    startDate = seasonStart;
+    dateCount = seasonStart;
   }
+  // for (let eventya of events) {
+  //   if (eventya.start.getUTCDate() === 23) {
+  //     console.log("23th ", eventya);
+  //   }
+  // }
 
-  while (startDate < seasonEnd) {
+  while (dateCount < seasonEnd) {
     // Skip weekends
-    if (startDate.getDay() === 0 || startDate.getDay() === 6) {
-      startDate.setDate(startDate.getDate() + 1);
+    if (dateCount.getDay() === 0 || dateCount.getDay() === 6) {
+      dateCount.setDate(dateCount.getDate() + 1);
       continue;
     }
-    console.log(startDate);
-    startDate.setHours(17);
-    startDate.setMinutes(0);
+    // console.log(dateCount);
+    let startDate = new Date(dateCount);
+    startDate.setUTCHours(21, 0, 0);
+
+    // console.log("Test start: ", startDate);
+    // console.log("Date: ", startDate.getUTCDate());
+    // console.log("Hours: ", startDate.getUTCHours());
 
     let eventExists = events.some(
-      (event) => event.start.getTime() === startDate.getTime(),
+      (event) => (
+        event.start.getUTCFullYear() === startDate.getUTCFullYear()
+        && event.start.getUTCMonth() === startDate.getUTCMonth()
+        && event.start.getUTCDate() === startDate.getUTCDate()
+        && event.start.getUTCHours() === startDate.getUTCHours()
+      ),
     );
 
-    if (!eventExists) {
-      events.push({
-        start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
-      });
-    }
-
-    startDate.setHours(18);
-    startDate.setMinutes(30);
-
-    eventExists = events.some(
-      (event) => event.start.getTime() === startDate.getTime(),
-    );
+    console.log("Event exists: ", eventExists);
 
     if (!eventExists) {
       let end = new Date(startDate);
-
-      end.setHours(20);
-      end.setMinutes(0);
+      end.setUTCHours(end.getUTCHours() + 1);
+      end.setUTCMinutes(end.getUTCMinutes() + 30);
       events.push({
         start: new Date(startDate),
         end: end,
       });
     }
 
-    startDate.setHours(20);
-    startDate.setMinutes(0);
+    startDate.setUTCHours(22, 30, 0);
 
     eventExists = events.some(
-      (event) => event.start.getTime() === startDate.getTime(),
+      (event) => (
+        event.start.getUTCFullYear() === startDate.getUTCFullYear()
+        && event.start.getUTCMonth() === startDate.getUTCMonth()
+        && event.start.getUTCDate() === startDate.getUTCDate()
+        && event.start.getUTCHours() === startDate.getUTCHours()
+      ),
     );
 
     if (!eventExists) {
+      let end = new Date(startDate);
+      end.setUTCHours(end.getUTCHours() + 1);
+      end.setUTCMinutes(end.getUTCMinutes() + 30);
       events.push({
         start: new Date(startDate),
-        end: new Date(startDate.setHours(startDate.getHours() + 1, 30)),
+        end: end,
       });
     }
 
-    startDate.setDate(startDate.getDate() + 1);
+    startDate.setUTCHours(24, 0, 0);
+
+    eventExists = events.some(
+      (event) => (
+        event.start.getUTCFullYear() === startDate.getUTCFullYear()
+        && event.start.getUTCMonth() === startDate.getUTCMonth()
+        && event.start.getUTCDate() === startDate.getUTCDate()
+        && event.start.getUTCHours() === startDate.getUTCHours()
+      ),
+    );
+
+    if (!eventExists) {
+      let end = new Date(startDate);
+      end.setUTCHours(end.getUTCHours() + 1);
+      end.setUTCMinutes(end.getUTCMinutes() + 30);
+      events.push({
+        start: new Date(startDate),
+        end: end,
+      });
+    }
+
+    startDate.setUTCHours(1, 30, 0);
+
+    eventExists = events.some(
+      (event) => (
+        event.start.getUTCFullYear() === startDate.getUTCFullYear()
+        && event.start.getUTCMonth() === startDate.getUTCMonth()
+        && event.start.getUTCDay() === startDate.getUTCDay()
+        && event.start.getUTCDate() === startDate.getUTCDate()
+        && event.start.getUTCHours() === startDate.getUTCHours()
+      ),
+    );
+
+    if (!eventExists) {
+      let end = new Date(startDate);
+      end.setUTCHours(end.getUTCHours() + 1);
+      end.setUTCMinutes(end.getUTCMinutes() + 30);
+      events.push({
+        start: new Date(startDate),
+        end: end,
+      });
+    }
+
+    dateCount.setDate(dateCount.getDate() + 1);
   }
 
   return events;

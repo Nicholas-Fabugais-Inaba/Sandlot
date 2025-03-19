@@ -53,6 +53,7 @@ interface RescheduleGame {
 
 interface GameScore {
   game_id: number;
+  date: Date;
   home_score: number;
   home_name: string;
   away_score: number;
@@ -213,7 +214,6 @@ export default function Schedule({ viewer }: ScheduleProps) {
       date &&
       !viewer &&
       (userRole === "commissioner" ||
-        userRole === "role" ||
         (userRole === "team" &&
           (game.home_id === userTeamId || game.away_id === userTeamId)))
     ) {
@@ -226,20 +226,11 @@ export default function Schedule({ viewer }: ScheduleProps) {
         home_id: game.home_id,
         away_id: game.away_id,
       });
-      // setGameScore({
-      //   game_id: game.id,
-      //   home_score: game.home_score,
-      //   home_name: game.home,
-      //   away_score: game.away_score,
-      //   away_name: game.away,
-      //   forfeit: game.forfeit
-      // });
-      // If the game already has a score set it here
-      // NOT IMPLEMENTED FULLY
       await getScore(game.id).then(
         (res) => {
           setGameScore({
             game_id: game.id,
+            date: date,
             home_score: res.home_team_score,
             home_name: game.home,
             away_score: res.away_team_score,
@@ -261,27 +252,12 @@ export default function Schedule({ viewer }: ScheduleProps) {
 
   const handleScoreSubmit = async () => {
     if (gameScore) {
-      submitScore(gameScore);
-
-      // const response = await fetch('/api/submit-score', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     game_id: rescheduleGame?.game_id,
-      //     homeScore: homeScore,
-      //     awayScore: awayScore,
-      //     homeName: gameScore.homeName,
-      //     awayName: gameScore.awayName,
-      //   }),
-      // });
-
-      // if (response.ok) {
-      //   console.log("Scores submitted successfully");
-      // } else {
-      //   console.error("Failed to submit scores");
-      // }
+      submitScore({
+        game_id: gameScore.game_id,
+        home_score: gameScore.home_score,
+        away_score: gameScore.away_score,
+        forfeit: gameScore.forfeit,
+      });
     }
     setSubmitScoreVisible(false);
   };
@@ -300,7 +276,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
     (async () => {
       let formattedEvents = await getSchedule();
 
-      formattedEvents = addEmptyEvents(formattedEvents);
+      formattedEvents = addEmptyEvents(formattedEvents, currDate);
       console.log("Here", formattedEvents);
       setEvents(formattedEvents);
     })();
@@ -312,14 +288,11 @@ export default function Schedule({ viewer }: ScheduleProps) {
   };
 
   const handleReturnClick = () => {
-    if (userRole === "player" || userRole === "team" || userRole === "role") {
+    if (userRole === "player" || userRole === "team") {
       setSchedType(1);
       setLoading(true);
       (async () => {
-        let formattedEvents = await getTeamSchedule(
-          userTeamId ? userTeamId : 0,
-        );
-
+        let formattedEvents = await getTeamSchedule(userTeamId ? userTeamId : 0);
         setEvents(formattedEvents);
       })();
       setView("dayGridMonth");
@@ -329,6 +302,12 @@ export default function Schedule({ viewer }: ScheduleProps) {
       setLoading(false);
     } else {
       setSchedType(0);
+      setLoading(true);
+      (async () => {
+        let formattedEvents = await getSchedule();
+        setEvents(formattedEvents);
+      })();
+      setLoading(false);
     }
   };
 
@@ -491,20 +470,32 @@ export default function Schedule({ viewer }: ScheduleProps) {
                 text: "View Full Schedule",
                 click: () => {
                   setSchedType(0);
+                  setLoading(true);
                   setView("timeGridWeek");
                   if (calendarRef.current) {
                     calendarRef.current.getApi().changeView("timeGridWeek"); // Force calendar to change view
                   }
+                  (async () => {
+                    let formattedEvents = await getSchedule();
+                    setEvents(formattedEvents);
+                  })();
+                  setLoading(false);
                 },
               },
               viewTeamScheduleButton: {
                 text: "View Team Schedule",
                 click: () => {
                   setSchedType(1);
+                  setLoading(true);
                   setView("dayGridMonth");
                   if (calendarRef.current) {
                     calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
                   }
+                  (async () => {
+                    let formattedEvents = await getTeamSchedule(userTeamId ? userTeamId : 0);
+                    setEvents(formattedEvents);
+                  })();
+                  setLoading(false);
                 },
               },
               customToday: {
@@ -544,8 +535,6 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   return eventInfo.event.extendedProps.field3?.played;
                 }
               };
-              // const isPastEvent = eventInfo.event.start && new Date(eventInfo.event.start) < currDate;
-              // const isRescheduleGame = rescheduleGame && eventInfo.event.start && eventInfo.event.extendedProps.field1?.home_id === rescheduleGame.home_id && eventInfo.event.extendedProps.field1?.away_id === rescheduleGame.away_id;
 
               return schedType === 0 ? ( // Full Schedule
                 <div
@@ -847,7 +836,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 1"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) &&
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start?.getUTCHours() && (eventInfo.event.start.getUTCHours() === 21 || eventInfo.event.start.getUTCHours() === 22) &&
                     eventInfo.event.start &&
                     eventInfo.event.start > currNextDate ? (
                     <div
@@ -888,7 +877,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) &&
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start?.getUTCHours() && (eventInfo.event.start.getUTCHours() === 21 || eventInfo.event.start.getUTCHours() === 22) &&
                     eventInfo.event.start &&
                     eventInfo.event.start > currNextDate ? (
                     <div
@@ -1070,20 +1059,21 @@ export default function Schedule({ viewer }: ScheduleProps) {
         >
           <div className="flex flex-col items-center">
             <button
-              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currNextDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
               disabled={rescheduleGame && rescheduleGame.date < currNextDate}
               onClick={handleRescheduleClick}
             >
               Reschedule
             </button>
             <button
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
+              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${gameScore && gameScore.date > currDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+              disabled={gameScore && gameScore.date > currDate}
               onClick={handleSubmitScoreClick}
             >
               Submit Score
             </button>
             <button
-              className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg"
+              className="w-full px-4 py-2 bg-gray-400 text-white rounded-lg"
               onClick={closePopup}
             >
               Close
