@@ -217,6 +217,9 @@ def gen_schedule_repeated():
     Settings = get_season_settings()
 
     for i in range(len(Teams)):
+        # Skip teams in the "Team Bank" division
+        if Teams[i]["division"] == 0:
+            continue
         teams[Teams[i]["id"]] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"], "pref_time": Teams[i]["preferred_time"]}
         # If a team is in a division, create a dict, add it to divs with division number as key and add the team to the division dict
         if Teams[i]["division"] not in divs:
