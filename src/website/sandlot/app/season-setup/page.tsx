@@ -20,11 +20,14 @@ import getTeamsSeasonSetup from "../functions/getTeamsSeasonSetup";
 import updateTeamDivisions from "../functions/updateTeamDivisions";
 import updateDivisions from "../functions/updateDivisions";
 
-import { ScheduleProvider } from "@/app/schedule/ScheduleContext"; // Import the ScheduleProvider
-import Schedule from "@/app/schedule/schedule"; // Import the schedule page
+import { ScheduleProvider } from "@/app/schedule/ScheduleContext";
+import Schedule from "@/app/schedule/schedule";
+
+import PreSeasonLaunch from "./pre-season-launch";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
+  const [seasonState, setSeasonState] = useState("offseason");
 
   // Individual state variables for form data
   const [seasonName, setSeasonName] = useState("");
@@ -32,6 +35,8 @@ export default function SeasonSetupPage() {
   const [endDate, setEndDate] = useState("");
   const [gamesPerTeam, setGamesPerTeam] = useState(0);
   const [gameDays, setGameDays] = useState<string[]>([]);
+
+  const scheduleDesc = <p className="mb-4">Generating a schedule isn't available until preseason is launched.</p>
 
   const renderSection = () => {
     switch (activeSection) {
@@ -48,6 +53,7 @@ export default function SeasonSetupPage() {
             setSeasonName={setSeasonName}
             setStartDate={setStartDate}
             startDate={startDate}
+            seasonState={seasonState}
           />
         );
       case "divisions":
@@ -57,7 +63,9 @@ export default function SeasonSetupPage() {
           </DndProvider>
         );
       case "schedule":
-        return <ScheduleSettings />;
+        return seasonState === "offseason" ? scheduleDesc: <ScheduleSettings />;
+      case "launchpad":
+        return seasonState === "offseason" ? <PreSeasonLaunch />: <></>;
       default:
         return (
           <GeneralSettings
@@ -71,6 +79,7 @@ export default function SeasonSetupPage() {
             setSeasonName={setSeasonName}
             setStartDate={setStartDate}
             startDate={startDate}
+            seasonState={seasonState}
           />
         );
     }
@@ -79,7 +88,7 @@ export default function SeasonSetupPage() {
   return (
     <ScheduleProvider>
       <div>
-        <Toolbar setActiveSection={setActiveSection} />
+        <Toolbar setActiveSection={setActiveSection} seasonState={seasonState} />
         <div className="p-6">{renderSection()}</div>
       </div>
     </ScheduleProvider>
@@ -88,14 +97,18 @@ export default function SeasonSetupPage() {
 
 interface ToolbarProps {
   setActiveSection: (section: string) => void;
+  seasonState: string;
 }
 
-function Toolbar({ setActiveSection }: ToolbarProps) {
+function Toolbar({ setActiveSection, seasonState }: ToolbarProps) {
   return (
     <div className="toolbar">
       <button onClick={() => setActiveSection("general")}>General</button>
       <button onClick={() => setActiveSection("divisions")}>Divisions</button>
       <button onClick={() => setActiveSection("schedule")}>Schedule</button>
+      <button onClick={() => setActiveSection("launchpad")}>
+        {seasonState === "offseason" ? "Launch Preseason" : seasonState === "preseason" ? "Launch Season" : "End Season"}
+      </button>
     </div>
   );
 }
@@ -111,6 +124,7 @@ interface GeneralSettingsProps {
   setGamesPerTeam: (games: number) => void;
   gameDays: string[];
   setGameDays: React.Dispatch<React.SetStateAction<string[]>>;
+  seasonState: string;
 }
 
 function GeneralSettings({
@@ -124,6 +138,7 @@ function GeneralSettings({
   setGamesPerTeam,
   gameDays,
   setGameDays,
+  seasonState,
 }: GeneralSettingsProps) {
   const toggleGameDay = (day: string) => {
     setGameDays((prevDays: string[]) => {
@@ -189,11 +204,19 @@ function GeneralSettings({
     loadFormData();
   }, [setSeasonName, setStartDate, setEndDate, setGamesPerTeam, setGameDays]);
 
+  const seasonDesc = seasonState === "offseason" 
+    ? "The season is currently in the offseason. You can prepare for the upcoming season by setting up dates and divisions. Once these settings are set up the preseason can be launched, which will allow the creation of team accounts. All settings changed in the offseason can be changed in the preseason as well."
+    : seasonState === "preseason"
+    ? "The season is currently in the preseason. Once all team accounts are made, divisions can be assigned and a schedule can be generated. Once a schedule is made the season is ready to launch."
+    : "The season is currently active. Monitor the progress and make adjustments as needed.";
+
   return (
     <div className="general-settings-container" style={{ width: "50%" }}>
       <h2 className="text-2xl font-semibold mb-4">General Settings</h2>
+      <h3 className="text-1xl text-gray-700 mb-4">Season Status: <span className="font-bold text-gray-900">{seasonState === "offseason" ? "Offseason" : seasonState === "preseason" ? "Preseason" : "Season Active"}</span></h3>
+      <p className="mb-4">{seasonDesc}</p>
       <form>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-gray-700">Season Name</label>
           <input
             className="w-full px-4 py-2 border rounded-lg"
@@ -202,7 +225,7 @@ function GeneralSettings({
             value={seasonName}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
         <div className="mb-4">
           <label className="block text-gray-700">Start Date</label>
           <input
