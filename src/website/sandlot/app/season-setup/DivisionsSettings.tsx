@@ -130,7 +130,7 @@ const Division: React.FC<DivisionProps> = ({
   const handleRemoveClick = () => {
     if (division.teams.length > 0) {
       setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 1000);
+      setTimeout(() => setShowMessage(false), 2000);
     } else {
       removeDivision(division.id);
     }
@@ -140,6 +140,7 @@ const Division: React.FC<DivisionProps> = ({
     <div
       ref={ref}
       className={`division drop-target ${sourceDivision === division.id ? "highlight" : ""}`}
+      style={division.name === "Team Bank" ? { minHeight: "150px" } : {}}
     >
       <h3>{division.name}</h3>
       {division.teams.length === 0 ||
