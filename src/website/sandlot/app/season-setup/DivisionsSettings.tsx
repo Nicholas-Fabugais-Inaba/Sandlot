@@ -335,6 +335,7 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
             className="team-bank-container flex-shrink-0 ml-4"
             style={{ width: "40%", position: "sticky", top: "10px" }}
           >
+            <p className="mb-4">Drag and drop teams to their divisions. Teams left in the team bank will not be scheduled games.</p>
             <Division
               division={
                 divisions.find((division) => division.name === "Team Bank")!
