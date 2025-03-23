@@ -1,41 +1,45 @@
-// app/season-setup/Launchpad.tsx
-
 "use client";
 
 import { useState } from "react";
-import { Button, Modal } from "@heroui/react";
+import { Button } from "@heroui/react";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 interface LaunchProps {
-  seasonState: "offseason" | "preseason" | "season";
+  seasonState: string;
 }
 
 export default function Launchpad({ seasonState }: LaunchProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogAction, setDialogAction] = useState<string>();
 
-  const handleLaunchClick = () => {
-    setIsModalOpen(true);
+  const handleLaunchClick = (action: string) => {
+    console.log("dialog opening with action:", action);
+    setDialogAction(action);
+    setIsDialogOpen(true);
   };
-  
-  const handleConfirmLaunchSeason = () => {
-    setIsModalOpen(false);
-    // Add logic to launch the respective mode here
-    alert(`Season Launched!`);
-  }
 
-  const handleConfirmEndSeason = () => {
-    setIsModalOpen(false);
-    // Add logic to launch the respective mode here
-    alert(`Season ended!`);
-  }
-
-  const handleConfirmLaunchPreseason = () => {
-    setIsModalOpen(false);
-    // Add logic to launch the respective mode here
-    alert(`Preseason Launched!`);
-  }
+  const handleConfirm = () => {
+    setIsDialogOpen(false);
+    switch (dialogAction) {
+      case "launchPreseason":
+        alert(`Preseason Launched!`);
+        break;
+      case "launchSeason":
+        alert(`Season Launched!`);
+        break;
+      case "endSeason":
+        alert(`Season ended!`);
+        break;
+      case "returnPreseason":
+        alert(`Returned to Preseason!`);
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsDialogOpen(false);
   };
 
   const getDescription = () => {
@@ -64,52 +68,43 @@ export default function Launchpad({ seasonState }: LaunchProps) {
     }
   };
 
-  const handleConfirm = () => {
-    switch (seasonState) {
-      case "offseason":
-        handleConfirmLaunchPreseason();
-        break;
-      case "preseason":
-        handleConfirmLaunchSeason();
-        break;
-      case "season":
-        handleConfirmEndSeason();
-        break;
-      default:
-        break;
-    }
-  };
+  const returnWarning = "Warning, returning to the preseason may revert changes team accounts have made to the schedule."
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">{`${seasonState.charAt(0).toUpperCase() + seasonState.slice(1)} Launch`}</h1>
       <p className="mb-4">{getDescription()}</p>
-      <Button
-        className="bg-red-500 text-white px-6 py-3 rounded-lg"
-        onPress={handleLaunchClick}
-      >
-        {getButtonText()}
-      </Button>
-
-      {isModalOpen && (
-        <Modal
-          isOpen={isModalOpen}
-          onClose={handleCancel}
-          title="Confirm Launch"
-        >
-          <div className="p-4">
-            <p>Are you sure?</p>
-            <div className="flex justify-end mt-4">
-              <Button className="mr-2" onPress={handleCancel}>
-                Cancel
-              </Button>
-              <Button className="bg-red-500 text-white" onPress={handleConfirm}>
-                Confirm
-              </Button>
-            </div>
-          </div>
-        </Modal>
+      {seasonState === "season" && (
+        <div className="flex space-x-4">
+          <Button
+            className="bg-red-500 text-white px-6 py-3 rounded-lg"
+            onPress={() => handleLaunchClick("endSeason")}
+          >
+            End Season
+          </Button>
+          <Button
+            className="bg-yellow-500 text-white px-6 py-3 rounded-lg"
+            onPress={() => handleLaunchClick("returnPreseason")}
+          >
+            Return to Preseason
+          </Button>
+        </div>
       )}
+      {seasonState !== "season" && (
+        <Button
+          className="bg-red-500 text-white px-6 py-3 rounded-lg"
+          onPress={() => handleLaunchClick(seasonState === "offseason" ? "launchPreseason" : "launchSeason")}
+        >
+          {getButtonText()}
+        </Button>
+      )}
+
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        title="Confirm Launch"
+        message={`Are you sure you want to ${dialogAction === "launchPreseason" ? "launch the preseason" : dialogAction === "launchSeason" ? "launch the season" : dialogAction === "endSeason" ? "end the season" : "return to preseason. " + returnWarning}?`}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 }

@@ -17,7 +17,7 @@ import Launchpad from "./Launchpad";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
-  const [seasonState, setSeasonState] = useState("preseason");
+  const [seasonState, setSeasonState] = useState("offseason");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   // Individual state variables for form data
@@ -57,7 +57,7 @@ export default function SeasonSetupPage() {
       case "schedule":
         return seasonState === "offseason" ? scheduleDesc : <ScheduleSettings setUnsavedChanges={setUnsavedChanges} />;
       case "launchpad":
-        return seasonState === "offseason" ? <Launchpad seasonState={seasonState} /> : <></>;
+        return <Launchpad seasonState={seasonState} />;
       default:
         return (
           <GeneralSettings
