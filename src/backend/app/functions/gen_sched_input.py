@@ -225,6 +225,9 @@ def gen_schedule_repeated():
         if Teams[i]["division"] not in divs:
             divs[Teams[i]["division"]] = {}
         divs[Teams[i]["division"]][Teams[i]["id"]] = teams[Teams[i]["id"]]
+    
+    # If a division has one team remove the division
+    divs = {k: v for k, v in divs.items() if len(v) > 1}
 
     # for i in range(len(Teams)):
     #     if Teams[i]["division"] != -1:
