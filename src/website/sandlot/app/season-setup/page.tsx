@@ -1,34 +1,24 @@
 "use client";
 
-"use client";
-
-import { useState, useEffect, useRef } from "react";
-import {
-  DndProvider,
-  useDrag,
-  useDrop,
-  DragSourceMonitor,
-  DropTargetMonitor,
-} from "react-dnd";
+import { useState, useEffect } from "react";
+import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
 import getSeasonSettings from "../functions/getSeasonSettings";
 
 import "./SeasonSetupPage.css";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
-import getTeamsSeasonSetup from "../functions/getTeamsSeasonSetup";
-import updateTeamDivisions from "../functions/updateTeamDivisions";
-import updateDivisions from "../functions/updateDivisions";
 
 import { ScheduleProvider } from "@/app/schedule/ScheduleContext";
 import Schedule from "@/app/schedule/schedule";
 
-import PreSeasonLaunch from "./PreseasonLaunch";
 import DivisionsSettings from "./DivisionsSettings";
+import Launchpad from "./Launchpad";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
-  const [seasonState, setSeasonState] = useState("offseason");
+  const [seasonState, setSeasonState] = useState("preseason");
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   // Individual state variables for form data
   const [seasonName, setSeasonName] = useState("");
@@ -55,18 +45,19 @@ export default function SeasonSetupPage() {
             setStartDate={setStartDate}
             startDate={startDate}
             seasonState={seasonState}
+            setUnsavedChanges={setUnsavedChanges}
           />
         );
       case "divisions":
         return (
           <DndProvider backend={HTML5Backend}>
-            <DivisionsSettings />
+            <DivisionsSettings setUnsavedChanges={setUnsavedChanges} />
           </DndProvider>
         );
       case "schedule":
-        return seasonState === "offseason" ? scheduleDesc: <ScheduleSettings />;
+        return seasonState === "offseason" ? scheduleDesc : <ScheduleSettings setUnsavedChanges={setUnsavedChanges} />;
       case "launchpad":
-        return seasonState === "offseason" ? <PreSeasonLaunch />: <></>;
+        return seasonState === "offseason" ? <Launchpad seasonState={seasonState} /> : <></>;
       default:
         return (
           <GeneralSettings
@@ -81,15 +72,27 @@ export default function SeasonSetupPage() {
             setStartDate={setStartDate}
             startDate={startDate}
             seasonState={seasonState}
+            setUnsavedChanges={setUnsavedChanges}
           />
         );
+    }
+  };
+
+  const handleSetActiveSection = (section: string) => {
+    if (unsavedChanges) {
+      if (window.confirm("You may have unsaved changes. Are you sure you want to switch sections?")) {
+        setActiveSection(section);
+        setUnsavedChanges(false);
+      }
+    } else {
+      setActiveSection(section);
     }
   };
 
   return (
     <ScheduleProvider>
       <div>
-        <Toolbar setActiveSection={setActiveSection} seasonState={seasonState} />
+        <Toolbar setActiveSection={handleSetActiveSection} seasonState={seasonState} />
         <div className="p-6">{renderSection()}</div>
       </div>
     </ScheduleProvider>
@@ -126,6 +129,7 @@ interface GeneralSettingsProps {
   gameDays: string[];
   setGameDays: React.Dispatch<React.SetStateAction<string[]>>;
   seasonState: string;
+  setUnsavedChanges: (hasChanges: boolean) => void;
 }
 
 function GeneralSettings({
@@ -140,6 +144,7 @@ function GeneralSettings({
   gameDays,
   setGameDays,
   seasonState,
+  setUnsavedChanges,
 }: GeneralSettingsProps) {
   const toggleGameDay = (day: string) => {
     setGameDays((prevDays: string[]) => {
@@ -150,12 +155,15 @@ function GeneralSettings({
 
       console.log("Updated state:", updatedDays);
 
+      setUnsavedChanges(true);
       return updatedDays;
     });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    setUnsavedChanges(true);
 
     switch (name) {
       case "seasonName":
@@ -187,6 +195,7 @@ function GeneralSettings({
 
     console.log(settings);
     updateSeasonSettings(settings);
+    setUnsavedChanges(false);
   };
 
   const isSaveDisabled = !startDate || !endDate || gamesPerTeam <= 0;
@@ -304,10 +313,16 @@ function GeneralSettings({
   );
 }
 
-function ScheduleSettings() {
+interface ScheduleSettingsProps {
+  setUnsavedChanges: (hasChanges: boolean) => void;
+}
+
+function ScheduleSettings({ setUnsavedChanges }: ScheduleSettingsProps) {
+  // Your ScheduleSettings component logic here
+  // Call setUnsavedChanges(true) whenever there are unsaved changes
   return (
     <div>
-      <Schedule viewer={true} />
+      <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
     </div>
   );
 }

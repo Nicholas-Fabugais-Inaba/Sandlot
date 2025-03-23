@@ -176,7 +176,11 @@ const Division: React.FC<DivisionProps> = ({
   );
 };
 
-export default function DivisionsSettings() {
+interface DivisionsSettingsProps {
+  setUnsavedChanges: (hasChanges: boolean) => void;
+}
+
+export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettingsProps) {
   const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(true);
   const [divisions, setDivisions] = useState<Division[]>([
     { id: 0, name: "Team Bank", teams: [] },
@@ -195,7 +199,10 @@ export default function DivisionsSettings() {
     loadDivisionData();
   }, []);
 
-  const toggleDivisions = () => setIsDivisionsEnabled((prev) => !prev);
+  const toggleDivisions = () => {
+    setIsDivisionsEnabled((prev) => !prev);
+    setUnsavedChanges(true);
+  };
 
   const addDivision = () => {
     if (newDivision.trim() !== "") {
@@ -207,6 +214,7 @@ export default function DivisionsSettings() {
         { id: newDivisionId, name: newDivision, teams: [] },
       ]);
       setNewDivision("");
+      setUnsavedChanges(true);
     }
   };
 
@@ -246,16 +254,19 @@ export default function DivisionsSettings() {
             : division,
       ),
     );
+    setUnsavedChanges(true);
   };
 
   const removeDivision = (divisionId: number) => {
     setDivisions((prev) => prev.filter((division) => division.id !== divisionId));
+    setUnsavedChanges(true);
   };
 
   const saveDivisions = async () => {
     alert("Divisions save button pressed.");
     updateDivisions(divisions);
     updateTeamDivisions(divisions);
+    setUnsavedChanges(false);
   };
 
   return (
