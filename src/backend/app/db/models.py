@@ -26,6 +26,7 @@ class Player(Base):
     gender: Mapped[Optional[str]] = mapped_column(String(30))
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
     is_commissioner: Mapped[bool] = mapped_column(default=False)
+    active: Mapped[bool] = mapped_column(default=True)
 
 class Team(Base):
     __tablename__ = "team"
@@ -41,6 +42,7 @@ class Team(Base):
     preferred_division: Mapped[Optional[int]] = mapped_column() # 0 = A
     offday: Mapped[Optional[int]] = mapped_column() # 0 = Monday
     preferred_time: Mapped[Optional[int]] = mapped_column() # 0 = balanced, 1 = early, 2 = late
+    active: Mapped[bool] = mapped_column(default=True)
 
 class Game(Base):
     __tablename__ = "game"
@@ -88,6 +90,7 @@ class SeasonSettings(Base):
     start_date: Mapped[Optional[str]] = mapped_column(String(50))
     end_date: Mapped[Optional[str]] = mapped_column(String(50))
     games_per_team: Mapped[Optional[int]] = mapped_column()
+    state: Mapped[String] = mapped_column(String(50), default="preseason")
 
 class Field(Base):
     __tablename__ = "field"
@@ -112,6 +115,29 @@ class Division(Base):
     __tablename__ = "division"
     id: Mapped[int] = mapped_column(primary_key=True)
     division_name: Mapped[Optional[str]] = mapped_column(String(50))
+
+class Waiver(Base):
+    __tablename__ = "waiver"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
+    signature: Mapped[Optional[String]] = mapped_column(String(50))
+    date: Mapped[Optional[String]] = mapped_column(String(50))
+
+class ArchivedTeam(Base):
+    __tablename__ = "archived_team"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[String]] = mapped_column(String(50))
+    division_name: Mapped[Optional[String]] = mapped_column(String(50))
+    standing: Mapped[Optional[str]] = mapped_column(String(50))
+    year: Mapped[Optional[str]] = mapped_column(String(50))
+
+class ArchivedPlayer(Base):
+    __tablename__ = "archived_player"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    archived_team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("archived_team.id"))
+    first_name: Mapped[Optional[str]] = mapped_column(String(30))
+    last_name: Mapped[Optional[str]] = mapped_column(String(30))
+
 
 # function which creates defined models as tables in DB
 def create_tables():
