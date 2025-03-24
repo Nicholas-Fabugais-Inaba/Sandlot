@@ -443,7 +443,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
         <></>
       )}
       <div className="items-center p-6">
-        <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
+        <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
           {schedType === 0 || schedType === 1 ? (
             <div className="legend flex justify-center items-center">
               <div className="legend-item">
@@ -1093,10 +1093,10 @@ export default function Schedule({ viewer }: ScheduleProps) {
       )}
       {submitScoreVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800">
             <h2 className="text-xl font-semibold mb-4">Submit Score</h2>
             <div className="mb-4">
-              <label className="block text-gray-700">
+              <label className="block">
                 Home Team: {gameScore?.home_name}
               </label>
               <input
@@ -1116,7 +1116,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">
+              <label className="block">
                 Away Team: {gameScore?.away_name}
               </label>
               <input

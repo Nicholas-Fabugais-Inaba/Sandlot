@@ -90,7 +90,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Parking Information</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Parking has changed their approach to the situation this year,
                 so please pass along this important set of instructions to your
@@ -142,7 +142,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Key Season Dates</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Dates and Tournaments (Null dates indicate event will not
                 happen)
@@ -194,7 +194,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Procedure for Rainouts</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Our current policy is to follow the lead of City of Hamilton
                 Recreation and close fields when the city closes theirs. This
@@ -377,7 +377,7 @@ export default function Home() {
                 Weather Information
               </button>
               {isWeatherDropdownOpen && (
-                <div className="absolute left-0 top-full mt-2 p-2 bg-white shadow rounded-md z-10">
+                <div className="absolute left-0 top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
                     <li>
                       <button
