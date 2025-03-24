@@ -54,6 +54,7 @@ interface RescheduleGame {
 
 interface GameScore {
   game_id: number;
+  played: boolean;
   date: Date;
   home_score: number;
   home_name: string;
@@ -228,10 +229,24 @@ export default function Schedule({ viewer }: ScheduleProps) {
         home_id: game.home_id,
         away_id: game.away_id,
       });
+
+      // Set inital attributes while getScore is loading.
+      setGameScore({
+        game_id: game.id,
+        played: true,
+        date: new Date,
+        home_score: 0,
+        home_name: "",
+        away_score: 0,
+        away_name: "",
+        forfeit: 0,
+      });
+
       await getScore(game.id).then(
         (res) => {
           setGameScore({
             game_id: game.id,
+            played: game.played,
             date: date,
             home_score: res.home_team_score,
             home_name: game.home,
@@ -260,6 +275,20 @@ export default function Schedule({ viewer }: ScheduleProps) {
         away_score: gameScore.away_score,
         forfeit: gameScore.forfeit,
       });
+
+      // Fetch event data to reflect the changes
+      if (userRole === "team") {
+        if (userTeamId && view === "dayGridMonth") {
+          const updatedEvents = await getTeamSchedule(userTeamId);
+          setEvents(updatedEvents);
+        } else {
+          const updatedEvents = await getSchedule();
+          setEvents(updatedEvents);
+        }
+      } else {
+        const updatedEvents = await getSchedule();
+        setEvents(updatedEvents);
+      }
     }
     setSubmitScoreVisible(false);
   };
@@ -350,6 +379,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
         field: selectedDates[0].field.toString()
       })
     }
+    handleReturnClick()
   };
 
   const isSelected = (start: Date | null, field: number) => {
@@ -490,6 +520,10 @@ export default function Schedule({ viewer }: ScheduleProps) {
                 <div className="legend-color legend-chosen-slot" />
                 <span>Chosen Slot</span>
               </div>
+              <div className="legend-item">
+                <div className="legend-color legend-rescheduled-teams" />
+                <span>Game with Rescheduled Team</span>
+              </div>
             </div>
           ) : null}
           <FullCalendar
@@ -563,6 +597,16 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   return eventInfo.event.extendedProps.field2?.played;
                 } else if (field === 3) {
                   return eventInfo.event.extendedProps.field3?.played;
+                }
+              };
+
+              const containsRescheduleTeams = (field: number) => {
+                if (field === 1) {
+                  return eventInfo.event.extendedProps.field1?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field1?.away_id === rescheduleGame?.away_id
+                } else if (field === 2) {
+                  return eventInfo.event.extendedProps.field2?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field2?.away_id === rescheduleGame?.away_id
+                } else if (field === 3) {
+                  return eventInfo.event.extendedProps.field3?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field3?.away_id === rescheduleGame?.away_id
                 }
               };
 
@@ -853,7 +897,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   {eventInfo.event.extendedProps.field1?.home &&
                   eventInfo.event.extendedProps.field1?.away ? (
                     <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(1) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}
+                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(1) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
                     >
                       <div className="event-team font-semibold">
                         {eventInfo.event.extendedProps.field1.home}
@@ -894,7 +938,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   {eventInfo.event.extendedProps.field2?.home &&
                   eventInfo.event.extendedProps.field2?.away ? (
                     <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(2) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}
+                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(2) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
                     >
                       <div className="event-team font-semibold">
                         {eventInfo.event.extendedProps.field2.home}
@@ -935,7 +979,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   {eventInfo.event.extendedProps.field3?.home &&
                   eventInfo.event.extendedProps.field3?.away ? (
                     <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(3) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}
+                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(3) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
                     >
                       <div className="event-team font-semibold">
                         {eventInfo.event.extendedProps.field3.home}
@@ -1090,8 +1134,8 @@ export default function Schedule({ viewer }: ScheduleProps) {
           <div className="flex flex-col items-center">
             {userRole != "commissioner" ? (
               <button
-                className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currNextDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
-                disabled={rescheduleGame && rescheduleGame.date < currNextDate}
+                className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && (userRole != "commissioner" && (rescheduleGame.date < currNextDate || gameScore?.played)) ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+                disabled={rescheduleGame && (userRole != "commissioner" && (rescheduleGame.date < currNextDate || gameScore?.played))}
                 onClick={handleRescheduleClick}
               >
                 Reschedule
@@ -1105,8 +1149,8 @@ export default function Schedule({ viewer }: ScheduleProps) {
               </button>
             )}
             <button
-              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${gameScore && gameScore.date > currDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
-              disabled={gameScore && gameScore.date > currDate}
+              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${gameScore && (userRole != "commissioner" && (gameScore.date > currDate || gameScore.played)) ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+              disabled={gameScore && (userRole != "commissioner" && (gameScore.date > currDate || gameScore.played))}
               onClick={handleSubmitScoreClick}
             >
               Submit Score

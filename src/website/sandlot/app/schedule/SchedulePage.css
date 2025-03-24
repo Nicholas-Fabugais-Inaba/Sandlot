@@ -93,3 +93,7 @@
 .legend-chosen-slot {
   background-color: #dcfce7; /* Green for chosen game slot */
 }
+
+.legend-rescheduled-teams {
+  background-color: #fef9c3; /* Green for chosen game slot */
+}
