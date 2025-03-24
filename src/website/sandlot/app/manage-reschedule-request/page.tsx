@@ -123,13 +123,14 @@ export default function ManageRescheduleRequest() {
         if (request) {
           let splitNewDate = parseNewDate(modalContent.newDate);
           let timeslot = deriveTimeslot(splitNewDate[0]);
+          let formattedDate: string = splitNewDate[0].toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
           acceptRR({
             rr_id: parseInt(request.id, 10),
             old_game_id: request.game_id,
             home_team_id: request.reciever_id,
             away_team_id: request.requester_id,
-            date: splitNewDate[0].toLocaleDateString(),
+            date: formattedDate,
             time: timeslot,
             field: splitNewDate[1],
           });

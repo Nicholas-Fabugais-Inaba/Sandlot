@@ -135,3 +135,9 @@ class JRAccept(BaseModel):
 
 class JRDecline(BaseModel):
     jr_id: int
+
+class CommissionerReschedule(BaseModel):
+    game_id: int
+    date: str
+    time: str
+    field: str

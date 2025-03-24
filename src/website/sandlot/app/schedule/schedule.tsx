@@ -24,6 +24,7 @@ import createRR from "../functions/createRR";
 import saveSchedule from "../functions/saveSchedule";
 import getScore from "../functions/getScore";
 import submitScore from "../functions/submitScore";
+import commissionerReschedule from "../functions/commissionerReschedule";
 
 import { useSchedule } from "./ScheduleContext";
 
@@ -181,7 +182,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
           selectedDate.date.getTime() === start.getTime() &&
           selectedDate.field === field,
       );
-
+  
       if (isDuplicate) {
         const newSelectedDates = selectedDates.filter(
           (selectedDate) =>
@@ -190,14 +191,15 @@ export default function Schedule({ viewer }: ScheduleProps) {
               selectedDate.field === field
             ),
         );
-
+  
         setSelectedDates(newSelectedDates);
       } else {
-        if (selectedDates.length >= maxSelectedDates) {
-          return;
+        let newSelectedDates = [...selectedDates, { date: start, field }];
+  
+        if (newSelectedDates.length > maxSelectedDates) {
+          newSelectedDates = newSelectedDates.slice(1); // Remove the first selected date
         }
-        const newSelectedDates = [...selectedDates, { date: start, field }];
-
+  
         setSelectedDates(newSelectedDates);
       }
     }
@@ -267,9 +269,9 @@ export default function Schedule({ viewer }: ScheduleProps) {
   };
 
   const handleRescheduleClick = () => {
-    if (rescheduleGame && rescheduleGame?.date < currDate) {
-      return;
-    }
+    // if (rescheduleGame && rescheduleGame?.date < currDate) {
+    //   return;
+    // }
     setSchedType(3);
     setLoading(true);
     setView("timeGridWeek");
@@ -339,6 +341,15 @@ export default function Schedule({ viewer }: ScheduleProps) {
       " to reschedule game: ",
       rescheduleGame,
     );
+    if (rescheduleGame && selectedDates[0]) {
+      const formattedDate: string = selectedDates[0].date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      commissionerReschedule({
+        game_id: rescheduleGame?.game_id,
+        date: formattedDate,
+        time: deriveTimeslot(selectedDates[0].date),
+        field: selectedDates[0].field.toString()
+      })
+    }
   };
 
   const isSelected = (start: Date | null, field: number) => {
@@ -396,6 +407,19 @@ export default function Schedule({ viewer }: ScheduleProps) {
     setRescheduleGame(undefined);
   };
 
+  function deriveTimeslot(date: Date): string {
+    if (date.getHours() === 17) {
+      return "1";
+    } else if (date.getHours() === 18) {
+      return "2";
+    } else if (date.getHours() === 20) {
+      return "3";
+    } else if (date.getHours() === 21) {
+      return "4";
+    }
+    return "0";
+  }
+
   if (loading) {
     return <div>Loading...</div>; // Show loading indicator while fetching session
   }
@@ -411,11 +435,17 @@ export default function Schedule({ viewer }: ScheduleProps) {
         <p className="text-2xl text-center mt-2">
           <em>Click up to 5 free game slots to reschedule your team's game</em>
         </p>
-      ) : (userRole === "team" || userRole === "commissioner") && !viewer ? (
+      ) : (userRole === "team") && !viewer ? (
         <p className="text-2xl text-center mt-2">
           <em>
             Click on one of your team's games to reschedule the game or submit a
             score
+          </em>
+        </p>
+      ) : (userRole === "commissioner") && !viewer ? (
+        <p className="text-2xl text-center mt-2">
+          <em>
+            Click on a game to reschedule or submit a score
           </em>
         </p>
       ) : (
@@ -1058,13 +1088,22 @@ export default function Schedule({ viewer }: ScheduleProps) {
           }}
         >
           <div className="flex flex-col items-center">
-            <button
-              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currNextDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
-              disabled={rescheduleGame && rescheduleGame.date < currNextDate}
-              onClick={handleRescheduleClick}
-            >
-              Reschedule
-            </button>
+            {userRole != "commissioner" ? (
+              <button
+                className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currNextDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+                disabled={rescheduleGame && rescheduleGame.date < currNextDate}
+                onClick={handleRescheduleClick}
+              >
+                Reschedule
+              </button>
+            ) : (
+              <button
+                className={"w-full px-4 py-2 text-white rounded-lg mb-2 bg-blue-500"}
+                onClick={handleRescheduleClick}
+              >
+                Reschedule
+              </button>
+            )}
             <button
               className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${gameScore && gameScore.date > currDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
               disabled={gameScore && gameScore.date > currDate}
