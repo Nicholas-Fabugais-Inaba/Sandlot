@@ -1,5 +1,3 @@
-// components/navbar.tsx
-
 "use client";
 
 import {
@@ -27,11 +25,11 @@ import { NotificationModal } from "@/components/NotificationModal"; // Import mo
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 
-const mockTeams = [
-  { id: "1", name: "Team A" },
-  { id: "2", name: "Team B" },
-  { id: "3", name: "Team C" },
-];
+const mockTeams: { [key: number]: string } = {
+  1: "Team A",
+  2: "Team B",
+  3: "Team C",
+};
 
 import getRR from "../app/functions/getRR";
 
@@ -41,7 +39,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
   const [unreadCount, setUnreadCount] = useState(0);
-  const [currentTeam, setCurrentTeam] = useState(mockTeams[0]);
+  const [currentTeam, setCurrentTeam] = useState(mockTeams[1]);
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
 
@@ -88,9 +86,9 @@ export const Navbar = () => {
     return true;
   });
 
-  const handleTeamSwitch = (team: { id: string; name: string }) => {
-    setCurrentTeam(team);
-    console.log(`Switched to team: ${team.name}`);
+  const handleTeamSwitch = (teamId: number) => {
+    setCurrentTeam(mockTeams[teamId]);
+    console.log(`Switched to team: ${mockTeams[teamId]}`);
   };
 
   const handleBellClick = () => {
@@ -145,16 +143,16 @@ export const Navbar = () => {
         <NavbarItem className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-              {currentTeam.name} <ChevronDown size={16} />
+              {currentTeam} <ChevronDown size={16} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
-              {mockTeams.map((team) => (
+              {Object.entries(mockTeams).map(([id, name]) => (
                 <DropdownMenuItem
-                  key={team.id}
+                  key={id}
                   className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
-                  onClick={() => handleTeamSwitch(team)}
+                  onClick={() => handleTeamSwitch(Number(id))}
                 >
-                  {team.name}
+                  {name}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
