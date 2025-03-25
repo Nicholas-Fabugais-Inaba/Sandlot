@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function createField(fieldName: String): Promise<void> {
   axios
-    .post(`http://${APIHOST}/season-setup/insert_field`, fieldName)
+    .post(`${process.env.NEXT_PUBLIC_APIHOST}/season-setup/insert_field`, fieldName)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("field created");

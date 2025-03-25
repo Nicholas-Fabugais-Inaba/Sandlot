@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { IconSvgProps } from "@/types";
+import { IconSvgProps, BellIconProps } from "@/types";
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
@@ -184,4 +184,52 @@ export const SearchIcon = (props: IconSvgProps) => (
       strokeWidth="2"
     />
   </svg>
+);
+
+export const BellIcon: React.FC<BellIconProps> = ({
+  size = 24,
+  unreadCount,
+  ...props
+}) => (
+  <div>
+    <svg
+      className="icon icon-tabler icons-tabler-outline icon-tabler-bell"
+      fill="none"
+      height={24}
+      stroke="#71717a"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+      width={24}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M0 0h24v24H0z" fill="none" stroke="none" />
+      <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+      <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+    </svg>
+    {unreadCount > 0 && (
+      <div
+        style={{
+          position: 'absolute',
+          top: 12,
+          right: 76,
+          width: '16px',
+          height: '16px',
+          backgroundColor: 'red',
+          borderRadius: '50%',
+          color: 'white',
+          fontSize: '10px',
+          fontWeight: 'bold',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          border: '2px solid white',
+        }}
+      >
+        {unreadCount}
+      </div>
+    )}
+  </div>
 );

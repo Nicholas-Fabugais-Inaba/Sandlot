@@ -1,4 +1,4 @@
-// app/team/directory/page.tsx
+// app/directory/page.tsx
 
 "use client";
 
@@ -15,6 +15,7 @@ import {
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
 import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 import { title } from "@/components/primitives";
 // import getStandings from "../functions/getStandings";
@@ -22,6 +23,7 @@ import "./TeamDirectoryPage.css";
 import getTeamsDirectory from "@/app/functions/getTeamsDirectory";
 
 export default function TeamsDirectoryPage() {
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sortDescriptors, setSortDescriptors] = useState<
     Record<
@@ -30,32 +32,44 @@ export default function TeamsDirectoryPage() {
     >
   >({});
   const [teams, setTeams] = useState<Team[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null); // State for selected team
 
   interface Team {
     id: number;
     name: string;
     division: string;
+    players: { id: string; name: string; email: string; phone_number: string }[];
   }
 
   useEffect(() => {
-    (async () => {
-      let standings = await getTeamsDirectory();
 
-      console.log(standings);
-      console.log(standings[0]);
-      // console.log(list)
-      setTeams(standings);
+    // fetches session info
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+    };
+    
+    fetchSession();
+
+    // fetches teams info
+    (async () => {
+      let teams = await getTeamsDirectory();
+      
+      console.log(teams);
+      console.log(teams[0]);
+      setTeams(teams);
     })();
 
-    setIsLoading(false); // Set loading to false after fetching session
   }, []);
 
-  // Extract unique divisions
+  useEffect(() => {
+    setIsLoading(false);  // Set loading to false after fetching session
+}, [teams]);
+
   const uniqueDivisions = Array.from(
     new Set(teams.map((team) => team.division)),
   );
 
-  // Function to handle sorting within a division
   const handleSort = (
     division: string,
     sortDescriptor: {
@@ -65,10 +79,15 @@ export default function TeamsDirectoryPage() {
   ) => {
     setSortDescriptors((prev) => ({
       ...prev,
-      [division]: sortDescriptor, // Directly update the sortDescriptor state
+      [division]: sortDescriptor,
     }));
   };
 
+ if (isLoading || !session) {
+    return <Spinner label="Loading..." />;
+  }
+
+  if (session?.user.role === "commissioner" || session?.user.role === "team") {
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -111,7 +130,7 @@ export default function TeamsDirectoryPage() {
                 <Table
                   aria-label={`Standings for ${division}`}
                   classNames={{ table: "w-full" }}
-                  sortDescriptor={sortDescriptors[division]} // Ensure correct state is used
+                  sortDescriptor={sortDescriptors[division]}
                   onSortChange={(sort) =>
                     handleSort(
                       division,
@@ -136,7 +155,10 @@ export default function TeamsDirectoryPage() {
                   >
                     {(item) => (
                       <TableRow key={item.name} className="py-2">
-                        <TableCell className="py-2 column-name">
+                        <TableCell
+                          className="py-2 column-name cursor-pointer text-white-600 hover:underline"
+                          onClick={() => setSelectedTeam(item)} // Set selected team on click
+                        >
                           {item.name}
                         </TableCell>
                       </TableRow>
@@ -148,13 +170,26 @@ export default function TeamsDirectoryPage() {
           })}
         </div>
         <div className="right-half">
-          {/* Add your content for the right half here */}
+          {/* Display selected team info */}
           <div className="right-box">
-            <h2>Right Half Content</h2>
-            <p>This is the content for the right half of the screen.</p>
+            {selectedTeam ? (
+              <>
+                <h2 className="text-xl font-bold mb-2">
+                  {selectedTeam.name}
+                </h2>
+                <p>
+                  <strong>Division:</strong> {selectedTeam.division}
+                </p>
+                {/* Add more team details here if available */}
+              </>
+            ) : (
+              <p>Select a team to view details</p>
+            )}
           </div>
         </div>
       </div>
     </div>
-  );
+  )}
+
+  else{ return <h1>Unauthorized</h1> }
 }

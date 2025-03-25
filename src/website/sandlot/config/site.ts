@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Sandlot",
-  description: "Make beautiful websites regardless of your design experience.",
+  description: "A web-based service that enables league and schedule management from a convenient user interface",
   navItems: [
     {
       label: "Home",
@@ -21,8 +21,8 @@ export const siteConfig = {
       href: "/team",
     },
     {
-      label: "Profile",
-      href: "/profile",
+      label: "Account",
+      href: "/account",
     },
     {
       label: "Rescheduler",
@@ -47,12 +47,8 @@ export const siteConfig = {
       href: "/standings",
     },
     {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Profile",
-      href: "/profile",
+      label: "Account",
+      href: "/account",
     },
   ],
   links: {

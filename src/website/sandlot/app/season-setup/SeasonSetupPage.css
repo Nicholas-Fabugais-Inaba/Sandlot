@@ -27,3 +27,26 @@
 .general-settings-container {
   width: 50%;
 }
+
+.empty-division {
+  padding: 10px;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  text-align: center;
+  color: #999;
+}
+
+.drop-target {
+  padding: 10px;
+  border: 2px dashed transparent;
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+
+.drop-target:hover {
+  border-color: #ccc;
+}
+
+.highlight {
+  border: 2px solid grey;
+}

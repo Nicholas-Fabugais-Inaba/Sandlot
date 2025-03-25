@@ -3,32 +3,41 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Link } from "@heroui/link";
-import { Snippet } from "@heroui/snippet";
-import { Code } from "@heroui/code";
 import { Button, Card } from "@heroui/react";
 import { button as buttonStyles } from "@heroui/theme";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import { getSession, signIn } from "next-auth/react";
 
-import { siteConfig } from "@/config/site";
-import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
 import "./HomePage.css"; // Import the new CSS file
+
+// announcement function imports
+import getAnnouncements from "./functions/getAnnouncements";
+import createAnnouncement from "./functions/createAnnouncement";
+import updateAnnouncement from "./functions/updateAnnouncement";
+import deleteAnnouncement from "./functions/deleteAnnouncement";
+
+import { GithubIcon } from "@/components/icons";
+import { title, subtitle } from "@/components/primitives";
+import { siteConfig } from "@/config/site";
+
+interface Announcement {
+  id: number;
+  date: string;
+  title: string;
+  body: string;
+}
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [isWeatherDropdownOpen, setWeatherDropdownOpen] = useState(false);
   const router = useRouter();
-  const [announcements, setAnnouncements] = useState([
-    "Season starts on April 1st!",
-    "Registration opens on March 1st.",
-    "New teams welcome to join.",
-  ]);
-  const [newAnnouncement, setNewAnnouncement] = useState("");
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [newAnnouncementTitle, setNewAnnouncementTitle] = useState("");
+  const [newAnnouncementBody, setNewAnnouncementBody] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editValue, setEditValue] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,42 +46,64 @@ export default function Home() {
       const session = await getSession();
 
       setSession(session);
+      const announcements = await getAnnouncements();
+
+      setAnnouncements(announcements);
+
       setLoading(false);
     };
 
     fetchSession();
   }, []);
 
-  const handlePostAnnouncement = () => {
-    if (newAnnouncement.trim()) {
-      setAnnouncements([...announcements, newAnnouncement]);
-      setNewAnnouncement("");
-    }
-  };
+  const handleAddAnnouncement = async () => {
+    if (newAnnouncementTitle.trim() && newAnnouncementBody.trim()) {
+      const newAnnouncement = {
+        id: announcements[announcements.length - 1].id + 1, // Increment the ID based on existing IDs to match the assigned ID in the database
+        date: new Date().toLocaleDateString(), // Set the current date for new announcements
+        title: newAnnouncementTitle,
+        body: newAnnouncementBody,
+      };
 
-  const handleAddAnnouncement = () => {
-    if (newAnnouncement.trim() !== "") {
+      await createAnnouncement(newAnnouncement);
       setAnnouncements([...announcements, newAnnouncement]);
-      setNewAnnouncement("");
+
+      setNewAnnouncementTitle(""); // Reset title field
+      setNewAnnouncementBody(""); // Reset body field
     }
   };
 
   const handleEditAnnouncement = (index: number) => {
     setEditingIndex(index);
-    setEditValue(announcements[index]);
+    setEditTitle(announcements[index].title);
+    setEditBody(announcements[index].body);
   };
 
-  const handleSaveEdit = (index: number) => {
-    const updatedAnnouncements = [...announcements];
+  const handleSaveEdit = async (index: number) => {
+    if (editTitle.trim() && editBody.trim()) {
+      const updatedAnnouncements = [...announcements];
 
-    updatedAnnouncements[index] = editValue;
-    setAnnouncements(updatedAnnouncements);
-    setEditingIndex(null);
+      // Keep the original date and id and update only title and body
+      updatedAnnouncements[index] = {
+        id: announcements[index].id,
+        title: editTitle,
+        body: editBody,
+        date: announcements[index].date,
+      };
+      await updateAnnouncement(updatedAnnouncements[index]);
+      setAnnouncements(updatedAnnouncements);
+
+      setEditingIndex(null); // Reset editing index
+    } else {
+      // Optionally, show an error message if the title or body is empty
+      alert("Both title and body must be filled out.");
+    }
   };
 
-  const handleDeleteAnnouncement = (index: number) => {
+  const handleDeleteAnnouncement = async (index: number) => {
     const updatedAnnouncements = announcements.filter((_, i) => i !== index);
 
+    await deleteAnnouncement({ announcement_id: announcements[index].id });
     setAnnouncements(updatedAnnouncements);
   };
 
@@ -90,7 +121,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Parking Information</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Parking has changed their approach to the situation this year,
                 so please pass along this important set of instructions to your
@@ -142,7 +173,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Key Season Dates</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Dates and Tournaments (Null dates indicate event will not
                 happen)
@@ -194,7 +225,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Procedure for Rainouts</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Our current policy is to follow the lead of City of Hamilton
                 Recreation and close fields when the city closes theirs. This
@@ -229,7 +260,7 @@ export default function Home() {
           <section className="w-full px-6 py-8 md:py-10">
             {/* Scrollable container */}
             <div className="w-full mx-auto">
-              <div className="flex flex-row gap-6 min-w-[800px]">
+              <div className="flex flex-row gap-6 min-w-[900px]">
                 {/* Welcome Section */}
                 <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 min-w-0">
                   <div className="inline-block max-w-xl">
@@ -244,7 +275,7 @@ export default function Home() {
                       <Button
                         className="button"
                         onPress={() =>
-                          signIn(undefined, { callbackUrl: "/profile" })
+                          signIn(undefined, { callbackUrl: "/account" })
                         }
                       >
                         Sign In
@@ -254,7 +285,7 @@ export default function Home() {
                       </p>
                       <Button
                         className="button"
-                        onPress={() => router.push("/profile/register")}
+                        onPress={() => router.push("/account/register")}
                       >
                         Register
                       </Button>
@@ -263,75 +294,123 @@ export default function Home() {
                 </div>
 
                 {/* Announcements Section */}
-                <section className="flex-1 min-w-[300px]">
-                  <h2 className="text-xl font-bold">Announcements</h2>
+                <div
+                  className="max-h-96 overflow-y-auto border border-gray-300 rounded-lg p-4"
+                  id="announcements"
+                >
+                  <section className="flex-1 w-[500px]">
+                    <h2 className="text-xl font-bold">Announcements</h2>
 
-                  {session?.user.role === "commissioner" && (
-                    <div className="flex gap-2 mt-4">
-                      <input
-                        className="border border-gray-300 rounded-md px-3 py-2 w-full"
-                        placeholder="Enter announcement..."
-                        type="text"
-                        value={newAnnouncement}
-                        onChange={(e) => setNewAnnouncement(e.target.value)}
-                      />
-                      <button
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                        onClick={handleAddAnnouncement}
-                      >
-                        Post
-                      </button>
-                    </div>
-                  )}
+                    {session?.user.role === "commissioner" && (
+                      <div className="flex flex-col gap-2 mt-4">
+                        <input
+                          className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                          placeholder="Enter announcement title..."
+                          type="text"
+                          value={newAnnouncementTitle}
+                          onChange={(e) =>
+                            setNewAnnouncementTitle(e.target.value)
+                          }
+                        />
+                        <textarea
+                          className="border border-gray-300 rounded-md px-3 py-2 w-full h-24"
+                          placeholder="Enter announcement body..."
+                          value={newAnnouncementBody}
+                          onChange={(e) =>
+                            setNewAnnouncementBody(e.target.value)
+                          }
+                        />
+                        <button
+                          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                          onClick={handleAddAnnouncement}
+                        >
+                          Post
+                        </button>
+                      </div>
+                    )}
 
-                  {/* Announcements List */}
-                  <ul className="mt-4 space-y-2">
-                    {announcements.map((announcement, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center justify-between bg-gray-100 p-3 rounded-lg shadow-sm"
-                      >
-                        {editingIndex === index ? (
-                          <input
-                            className="border border-gray-300 rounded-md px-2 py-1 flex-grow"
-                            type="text"
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                          />
-                        ) : (
-                          <span className="text-gray-800">{announcement}</span>
-                        )}
+                    {/* Announcements List */}
+                    <ul className="mt-4 space-y-2">
+                      {announcements.map((announcement, index) => {
+                        const currentDate = new Date().toLocaleDateString(); // Format the current date
 
-                        {/* Buttons for Edit and Delete */}
-                        {session?.user.role === "commissioner" && (
-                          <div className="flex space-x-2 ml-2">
-                            {editingIndex === index ? (
-                              <button
-                                className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
-                                onClick={() => handleSaveEdit(index)}
-                              >
-                                Save
-                              </button>
-                            ) : (
-                              <button
-                                className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
-                                onClick={() => handleEditAnnouncement(index)}
-                              >
-                                Edit
-                              </button>
-                            )}
-                            <button
-                              className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
-                              onClick={() => handleDeleteAnnouncement(index)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+                        return (
+                          <li
+                            key={index}
+                            className="flex flex-col bg-gray-100 p-3 rounded-lg shadow-sm"
+                          >
+                            <div className="relative w-full">
+                              {/* Date in the top right corner */}
+                              <div className="absolute top-2 right-2 text-xs text-gray-500">
+                                {currentDate}
+                              </div>
+
+                              {editingIndex === index ? (
+                                <>
+                                  <input
+                                    className="border border-gray-300 rounded-md px-2 py-1 w-full"
+                                    type="text"
+                                    value={editTitle}
+                                    onChange={(e) =>
+                                      setEditTitle(e.target.value)
+                                    }
+                                  />
+                                  <textarea
+                                    className="border border-gray-300 rounded-md px-2 py-1 w-full h-24 mt-2"
+                                    value={editBody}
+                                    onChange={(e) =>
+                                      setEditBody(e.target.value)
+                                    }
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <h3 className="text-lg font-bold text-gray-800">
+                                    {announcement.title}
+                                  </h3>
+                                  <p className="text-gray-800 break-words whitespace-pre-wrap">
+                                    {announcement.body}
+                                  </p>
+                                </>
+                              )}
+
+                              {/* Buttons for Edit and Delete */}
+                              {session?.user.role === "commissioner" && (
+                                <div className="flex space-x-2 mt-2">
+                                  {editingIndex === index ? (
+                                    <button
+                                      className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                                      onClick={() => handleSaveEdit(index)}
+                                    >
+                                      Save
+                                    </button>
+                                  ) : (
+                                    <button
+                                      className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+                                      onClick={() =>
+                                        handleEditAnnouncement(index)
+                                      }
+                                    >
+                                      Edit
+                                    </button>
+                                  )}
+                                  <button
+                                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                                    onClick={() =>
+                                      handleDeleteAnnouncement(index)
+                                    }
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                </div>
               </div>
             </div>
           </section>
@@ -346,38 +425,40 @@ export default function Home() {
           <h2 className="text-xl font-bold mb-4">Directory</h2>
           <div className="space-y-4">
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "home" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("home")}
             >
               Announcements
             </button>
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "parking" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("parking")}
             >
               Parking Information
             </button>
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "dates" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("dates")}
             >
               Key Season Dates
             </button>
+            {(session?.user.role === "commissioner" || session?.user.role === "team") && (
             <button
-              className="directory-item text-left font-semibold w-full"
-              onClick={() => router.push("/team/directory")}
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "team" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+              onClick={() => router.push("/directory")}
             >
               Team Directory
             </button>
+            )}
             <div className="relative">
               <button
-                className="directory-item text-left font-semibold w-full"
+                className={`directory-item text-left font-semibold inline-block ${activeSection === "weather" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
                 onClick={handleWeatherClick}
               >
                 Weather Information
               </button>
               {isWeatherDropdownOpen && (
-                <div className="absolute left-0 top-full mt-2 p-2 bg-white shadow rounded-md z-10">
+                <div className="absolute left-0 top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
                     <li>
                       <button
@@ -408,5 +489,5 @@ export default function Home() {
         {renderContent()}
       </main>
     </div>
-  );
+  );  
 }
