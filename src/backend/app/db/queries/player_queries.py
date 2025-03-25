@@ -4,13 +4,15 @@ from ..create_engine import create_connection
 from ..models import Player
 
 
-def insert_player(name, email, password):
+def insert_player(first_name, last_name, email, password, gender):
     engine = create_connection()
     with Session(engine) as session:
         account = Player(
-            first_name=name,
-            email=email,
-            password=password,
+            first_name= first_name,
+            last_name = last_name,
+            email = email,
+            password = password,
+            gender = gender
         )
         try:
             session.add_all([account])

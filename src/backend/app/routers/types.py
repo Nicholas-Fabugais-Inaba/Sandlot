@@ -2,9 +2,11 @@ from pydantic import BaseModel
 from typing import Optional
 
 class NewPlayer(BaseModel):
-    name: str
+    first_name: str
+    last_name: str
     email: str
     password: str
+    gender: str
 
 class NewTeam(BaseModel):
     team_name: str
