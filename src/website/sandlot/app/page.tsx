@@ -425,32 +425,32 @@ export default function Home() {
           <h2 className="text-xl font-bold mb-4">Directory</h2>
           <div className="space-y-4">
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "home" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("home")}
             >
               Announcements
             </button>
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "parking" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("parking")}
             >
               Parking Information
             </button>
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "dates" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("dates")}
             >
               Key Season Dates
             </button>
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "team" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => router.push("/team/directory")}
             >
               Team Directory
             </button>
             <div className="relative">
               <button
-                className="directory-item text-left font-semibold w-full"
+                className={`directory-item text-left font-semibold inline-block ${activeSection === "weather" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
                 onClick={handleWeatherClick}
               >
                 Weather Information
@@ -487,5 +487,5 @@ export default function Home() {
         {renderContent()}
       </main>
     </div>
-  );
+  );  
 }
