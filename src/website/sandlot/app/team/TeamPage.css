@@ -13,3 +13,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.small-button {
+  padding: 6px 6px; /* Further reduce padding */
+  font-size: 14px; /* Reduce font size */
+  line-height: 1; /* Maintain line-height */
+  margin: 0px;
+  height: auto; /* Ensure height is auto */
+}

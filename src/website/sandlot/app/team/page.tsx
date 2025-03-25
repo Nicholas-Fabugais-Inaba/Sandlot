@@ -31,6 +31,8 @@ import declineJR from "../functions/declineJR";
 
 import { title } from "@/components/primitives";
 
+import "./TeamPage.css";
+
 interface JoinRequest {
   id: number;
   player_id: number;
@@ -91,6 +93,24 @@ export default function TeamPage() {
 
     initializeStates();
   }, []);
+
+  const handlePromoteToCaptain = async (playerId: number) => {
+    setActionLoading(true);
+    // await promoteToCaptain({ team_id: session?.user.team_id, player_id: playerId });
+    setActionLoading(false);
+    // Update the team info and roster
+    const updatedTeamInfo = await getTeamInfo({ team_id: session?.user.team_id });
+    setRoster(updatedTeamInfo);
+  };
+
+  const handleDemoteToPlayer = async (playerId: number) => {
+    setActionLoading(true);
+    // await demoteToPlayer({ team_id: session?.user.team_id, player_id: playerId });
+    setActionLoading(false);
+    // Update the team info and roster
+    const updatedTeamInfo = await getTeamInfo({ team_id: session?.user.team_id });
+    setRoster(updatedTeamInfo);
+  };
 
   const handleAction = async () => {};
 
@@ -202,7 +222,7 @@ export default function TeamPage() {
                 classNames={{ table: "min-w-full" }}
               >
                 <TableHeader>
-                  {["name", "contact"].map((key) => (
+                  {["name", "contact", "action"].map((key) => (
                     <TableColumn key={key} allowsSorting>
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </TableColumn>
@@ -217,6 +237,25 @@ export default function TeamPage() {
                         </TableCell>
                         <TableCell className="py-2 column-contact">
                           {player.email}
+                        </TableCell>
+                        <TableCell>
+                          {true ? (
+                            <Button
+                              className="button small-button"
+                              disabled={actionLoading}
+                              onPress={() => handlePromoteToCaptain(player.id)}
+                            >
+                              Promote to Captain
+                            </Button>
+                          ) : (
+                            <Button
+                              className="button small-button"
+                              disabled={actionLoading}
+                              onPress={() => handleDemoteToPlayer(player.id)}
+                            >
+                              Demote to Player
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))
