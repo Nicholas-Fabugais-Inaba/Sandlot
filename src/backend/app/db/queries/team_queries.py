@@ -39,6 +39,17 @@ def get_all_teams():
         )
         result = session.execute(stmt).mappings().all()
         return result
+    
+def get_all_season_teams():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Team.id, Team.team_name, Team.division, Team.offday, Team.preferred_time)
+            .select_from(Team)
+            .join(Division, Team.division == Division.id)  # Ensure the division exists in the Division table
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
         
 def get_team(login_username):
     engine = create_connection()
