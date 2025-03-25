@@ -37,21 +37,34 @@ export const NotificationModal: FC<NotificationModalProps> = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [bellPosition, setBellPosition] = useState<DOMRect | null>(null);
+  const [bellPosition, setBellPosition] = useState<{top: number, left: number, width: number} | null>(null);
 
   const router = useRouter();
 
   const [fetchTime, setFetchTime] = useState<Date | null>(null);
 
+  // Compute position immediately when modal opens
+  useEffect(() => {
+    if (!isOpen || !anchorRef.current) return;
+
+    const rect = anchorRef.current.getBoundingClientRect();
+    setBellPosition({
+      top: rect.bottom,  // Directly position under the bell
+      left: rect.left - 300,  // Center horizontally
+      width: rect.width
+    });
+  }, [isOpen, anchorRef]);
+
   useEffect(() => {
     if (!isOpen) return;
 
-    (async () => {
+    const fetchNotifications = async () => {
       try {
         const session = await getSession();
         const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id });
 
-        setFetchTime(new Date()); 
+        const currentTime = new Date();
+        setFetchTime(currentTime); 
 
         const formattedNotifications = rrList
           .filter((rr: RescheduleRequest) => !rr.isRead)
@@ -59,7 +72,7 @@ export const NotificationModal: FC<NotificationModalProps> = ({
             id: rr.id,
             message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
             isRead: false,
-            timestamp: fetchTime ? fetchTime.toISOString() : new Date().toISOString(), 
+            timestamp: currentTime.toISOString(), 
           }));
 
         setNotifications(formattedNotifications);
@@ -70,25 +83,27 @@ export const NotificationModal: FC<NotificationModalProps> = ({
         console.error("Error fetching reschedule requests:", error);
         setLoading(false);
       }
-    })();
-  }, [isOpen, team_id]);
-
-  useEffect(() => {
-    const updateBellPosition = () => {
-      if (anchorRef.current) {
-        setBellPosition(anchorRef.current.getBoundingClientRect());
-      }
     };
 
-    if (!loading) {
-      updateBellPosition();
-    }
+    fetchNotifications();
+
+    // Resize listener to update position
+    const updateBellPosition = () => {
+      if (anchorRef.current) {
+        const rect = anchorRef.current.getBoundingClientRect();
+        setBellPosition({
+          top: rect.bottom,
+          left: rect.left - 300,
+          width: rect.width
+        });
+      }
+    };
 
     window.addEventListener("resize", updateBellPosition);
     return () => {
       window.removeEventListener("resize", updateBellPosition);
     };
-  }, [loading, anchorRef]);
+  }, [isOpen, team_id, anchorRef]);
 
   if (!isOpen) return null;
 
@@ -134,8 +149,8 @@ export const NotificationModal: FC<NotificationModalProps> = ({
     <div
       className="fixed z-50 bg-transparent"
       style={{
-        top: bellPosition?.bottom ?? 0,
-        left: (bellPosition?.left ?? 0) - 300,
+        top: bellPosition?.top ?? 0,
+        left: bellPosition?.left ?? 0,
         width: bellPosition?.width ?? "auto",
       }}
     >
