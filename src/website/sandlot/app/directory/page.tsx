@@ -185,6 +185,7 @@ export default function TeamsDirectoryPage() {
                             console.log("Selected team", item);
                             set_players_in_team(item); // Fetch players for the selected team
                           }}
+                          title="Click to view team details"
                         >
                           {item.name}
                         </TableCell>
