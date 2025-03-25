@@ -22,6 +22,7 @@ const AvailableTeams: React.FC = () => {
   const [pendingRequests, setPendingRequests] = useState<JoinRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
+  const [userTeamId, setUserTeamId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchTeamsAndRequests = async () => {
@@ -30,6 +31,7 @@ const AvailableTeams: React.FC = () => {
 
       const session = await getSession();
       if (session) {
+        setUserTeamId(session.user.team_id);
         const requests = await getPendingRequests(session.user.email);
         setPendingRequests(requests);
       }
@@ -60,7 +62,7 @@ const AvailableTeams: React.FC = () => {
         <h2 className="text-xl font-semibold text-center mb-4 mt-4">
           Request to join a team from the list below:
         </h2>
-        {teams.length > 0 ? (
+        {teams.length > 0 && userTeamId !== null ? (
           <Table aria-label="Available Teams" classNames={{ table: "min-w-full" }}>
             <TableHeader>
               <TableColumn className="req-table-col">Team Name</TableColumn>
@@ -68,7 +70,9 @@ const AvailableTeams: React.FC = () => {
               <TableColumn className="req-table-col">Action</TableColumn>
             </TableHeader>
             <TableBody>
-              {teams.map((team) => (
+              {teams
+                .filter((team) => team.id !== userTeamId)
+                .map((team) => (
                 <TableRow key={team.id}>
                   <TableCell className="team-name">{team.name}</TableCell>
                   <TableCell className="division-name">{team.division}</TableCell>
