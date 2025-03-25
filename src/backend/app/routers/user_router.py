@@ -2,11 +2,11 @@ from fastapi import APIRouter
 from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData, UpdatePassword, UpdateEmail, UpdateName
 from ..db.queries.player_queries import insert_player, get_player, update_player_password, update_player_email, update_player_name
 from ..db.queries.team_queries import insert_team, get_team
+from ..db.queries.team_players_queries import get_players_teams
 
 
 router = APIRouter(tags=["user"])
 
-# TODO: temporary response_model
 @router.post("/create_player", response_model=None)
 async def create_player_account(newPlayer: NewPlayer):
     response = insert_player(newPlayer.name, newPlayer.email, newPlayer.password)
@@ -20,8 +20,14 @@ async def create_team_account(newTeam: NewTeam):
 
 @router.post("/get_player", response_model=object)
 async def get_player_account(data: PlayerLoginData):
-    response = dict(get_player(data.email))
-    return response
+    # get player info
+    player = dict(get_player(data.email))
+    # get list of teams player has joined
+    player_teams = get_players_teams(player["id"])
+    player_teams = [dict(row) for row in player_teams]
+    # add a key to the existing player dict to store the list of teams
+    player["teams"] = player_teams
+    return player
 
 @router.post("/get_team", response_model=object)
 async def get_team_account(data: TeamLoginData):
