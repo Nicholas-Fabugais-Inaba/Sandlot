@@ -48,6 +48,7 @@ export const Navbar = () => {
       try {
         const userSession = await getSession();
         setSession(userSession);
+        console.log("Teams dict:", userSession?.user.teams)
 
         // Fetch unread notifications immediately
         if (userSession?.user.team_id) {
@@ -146,7 +147,7 @@ export const Navbar = () => {
               {currentTeam} <ChevronDown size={16} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
-              {Object.entries(mockTeams).map(([id, name]) => (
+              {session && Object.entries(session.user.teams).map(([id, name]) => (
                 <DropdownMenuItem
                   key={id}
                   className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
