@@ -228,7 +228,7 @@ export function addEmptyEvents(events: Event[], currDate: Date): Event[] {
 
   while (dateCount < seasonEnd) {
     // Skip weekends
-    if (dateCount.getDay() === 0 || dateCount.getDay() === 6) {
+    if (dateCount.getDay() === 5 || dateCount.getDay() === 6) {
       dateCount.setDate(dateCount.getDate() + 1);
       continue;
     }
