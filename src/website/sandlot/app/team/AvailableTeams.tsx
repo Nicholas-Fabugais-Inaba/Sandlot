@@ -40,7 +40,7 @@ const AvailableTeams: React.FC = () => {
   return (
     <div>
       <h2 className="text-xl font-semibold text-center mb-4 mt-4">
-        Available Teams
+        Request to join a team from the list below:
       </h2>
       {teams.length > 0 ? (
         <Table aria-label="Available Teams" classNames={{ table: "min-w-full" }}>
