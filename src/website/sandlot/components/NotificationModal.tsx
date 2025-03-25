@@ -10,6 +10,7 @@ interface RescheduleRequest {
   id: number;
   requester_name: string;
   originalDate: Date;
+  isRead?: boolean;
 }
 
 interface Notification {
@@ -41,34 +42,23 @@ export const NotificationModal: FC<NotificationModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) return;
-
+  
     (async () => {
       try {
         const session = await getSession();
         const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id });
-        // Mock reschedule requests
-        // const rrList = [
-        //   {
-        //     id: 1,
-        //     requester_name: "John Doe",
-        //     originalDate: new Date("2025-03-18T15:30:00"),
-        //   },
-        //   {
-        //     id: 2,
-        //     requester_name: "Jane Smith",
-        //     originalDate: new Date("2025-03-17T12:00:00"),
-        //   },
-        // ];
-
-        const formattedNotifications = rrList.map((rr: RescheduleRequest) => ({
-          id: rr.id,
-          message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
-          isRead: false,
-          timestamp: rr.originalDate.toISOString(),
-        }));
-
+  
+        const formattedNotifications = rrList
+          .filter((rr: RescheduleRequest) => !rr.isRead) // Only show unread notifications
+          .map((rr: RescheduleRequest) => ({
+            id: rr.id,
+            message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
+            isRead: false,
+            timestamp: rr.originalDate.toISOString(),
+          }));
+  
         setNotifications(formattedNotifications);
-        setUnreadCount(formattedNotifications.filter((notification) => !notification.isRead).length); // Set unread count
+        setUnreadCount(formattedNotifications.length);
       } catch (error) {
         console.error("Error fetching reschedule requests:", error);
       }
