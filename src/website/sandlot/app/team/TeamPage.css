@@ -1,9 +1,21 @@
-.column-name {
-  width: 50%;
-  min-width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  max-width: 30%;
+  justify-content: space-between;
+}
+
+.team-name {
+  margin-right: 10px;
+  font-size: 12px;
+  /* font-weight: bold; */
+}
+
+.division-name,
+.status {
+  margin-right: 10px;
+  font-size: 12px;
 }
 
 .column-contact {

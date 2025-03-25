@@ -1,6 +1,11 @@
 import axios from "axios";
 
-export default async function createJR(joinRequest: any): Promise<void> {
+interface JoinRequest {
+  email: string;
+  team_id: number;
+}
+
+export default async function createJR(joinRequest: JoinRequest): Promise<void> {
   axios
     .post(`${process.env.NEXT_PUBLIC_APIHOST}/join/create_join_request`, joinRequest)
     .then((response) => {

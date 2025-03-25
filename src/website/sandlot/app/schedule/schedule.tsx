@@ -9,7 +9,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Card, user } from "@heroui/react"; // Import NextUI Card
+import { Card, user, Spinner } from "@heroui/react"; // Import NextUI Card
 
 import "./SchedulePage.css"; // Custom styles
 import { Dictionary } from "@fullcalendar/core/internal";
@@ -24,6 +24,7 @@ import createRR from "../functions/createRR";
 import saveSchedule from "../functions/saveSchedule";
 import getScore from "../functions/getScore";
 import submitScore from "../functions/submitScore";
+import commissionerReschedule from "../functions/commissionerReschedule";
 
 import { useSchedule } from "./ScheduleContext";
 
@@ -53,6 +54,8 @@ interface RescheduleGame {
 
 interface GameScore {
   game_id: number;
+  played: boolean;
+  date: Date;
   home_score: number;
   home_name: string;
   away_score: number;
@@ -62,9 +65,10 @@ interface GameScore {
 
 interface ScheduleProps {
   viewer?: boolean;
+  setUnsavedChanges?: (hasChanges: boolean) => void;
 }
 
-export default function Schedule({ viewer }: ScheduleProps) {
+export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const context = useSchedule();
   const [events, setEvents] =
     context && context.events
@@ -97,44 +101,50 @@ export default function Schedule({ viewer }: ScheduleProps) {
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
     const fetchSession = async () => {
-      const session = await getSession();
-
-      if (session) {
-        setUserRole(session.user?.role || null);
-        setUserTeamId(session.user?.team_id || null);
-        if (session.user?.role === "player" || session.user?.role === "team") {
-          setSchedType(1);
-          setView("dayGridMonth");
-          if (calendarRef.current) {
-            calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
-          }
-        } else if (
-          session.user?.role === "commissioner" ||
-          session.user?.role === "role"
-        ) {
-          setSchedType(0);
-          setMaxSelectedDates(1); // Set maxSelectedDates to 1 for commissioner
-        }
-
-        if (session.user?.role === "player" || session.user?.role === "team") {
-          (async () => {
-            let formattedEvents = await getTeamSchedule(session.user?.team_id);
-
+      setLoading(true); // Set loading to true at the start of fetching
+      try {
+        const session = await getSession();
+  
+        if (session) {
+          setUserRole(session.user?.role || null);
+          setUserTeamId(session.user?.team_id || null);
+          
+          // Adjust schedule type based on user role
+          if (session.user?.role === "player" || session.user?.role === "team") {
+            setSchedType(1);
+            setView("dayGridMonth");
+            if (calendarRef.current) {
+              calendarRef.current.getApi().changeView("dayGridMonth");
+            }
+  
+            // Fetch team schedule
+            const formattedEvents = await getTeamSchedule(session.user?.team_id);
             setEvents(formattedEvents);
-          })();
-        }
-      }
-      if (events === undefined) {
-        (async () => {
-          let formattedEvents = await getSchedule();
-
+          } else if (
+            session.user?.role === "commissioner" ||
+            session.user?.role === "role"
+          ) {
+            setSchedType(0);
+            setMaxSelectedDates(1);
+  
+            // Fetch full schedule
+            const formattedEvents = await getSchedule();
+            setEvents(formattedEvents);
+          }
+        } else {
+          // Fetch default schedule if no session
+          const formattedEvents = await getSchedule();
           setEvents(formattedEvents);
-        })();
+        }
+      } catch (error) {
+        console.error("Error fetching schedule:", error);
+        // Optionally set a default or empty events array
+        setEvents([]);
+      } finally {
+        setLoading(false); // Ensure loading is set to false
       }
     };
-
-    setLoading(false); // Set loading to false after fetching session
-
+  
     fetchSession();
   }, []);
 
@@ -180,7 +190,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
           selectedDate.date.getTime() === start.getTime() &&
           selectedDate.field === field,
       );
-
+  
       if (isDuplicate) {
         const newSelectedDates = selectedDates.filter(
           (selectedDate) =>
@@ -189,14 +199,15 @@ export default function Schedule({ viewer }: ScheduleProps) {
               selectedDate.field === field
             ),
         );
-
+  
         setSelectedDates(newSelectedDates);
       } else {
-        if (selectedDates.length >= maxSelectedDates) {
-          return;
+        let newSelectedDates = [...selectedDates, { date: start, field }];
+  
+        if (newSelectedDates.length > maxSelectedDates) {
+          newSelectedDates = newSelectedDates.slice(1); // Remove the first selected date
         }
-        const newSelectedDates = [...selectedDates, { date: start, field }];
-
+  
         setSelectedDates(newSelectedDates);
       }
     }
@@ -213,7 +224,6 @@ export default function Schedule({ viewer }: ScheduleProps) {
       date &&
       !viewer &&
       (userRole === "commissioner" ||
-        userRole === "role" ||
         (userRole === "team" &&
           (game.home_id === userTeamId || game.away_id === userTeamId)))
     ) {
@@ -226,20 +236,25 @@ export default function Schedule({ viewer }: ScheduleProps) {
         home_id: game.home_id,
         away_id: game.away_id,
       });
-      // setGameScore({
-      //   game_id: game.id,
-      //   home_score: game.home_score,
-      //   home_name: game.home,
-      //   away_score: game.away_score,
-      //   away_name: game.away,
-      //   forfeit: game.forfeit
-      // });
-      // If the game already has a score set it here
-      // NOT IMPLEMENTED FULLY
+
+      // Set inital attributes while getScore is loading.
+      setGameScore({
+        game_id: game.id,
+        played: true,
+        date: new Date,
+        home_score: 0,
+        home_name: "",
+        away_score: 0,
+        away_name: "",
+        forfeit: 0,
+      });
+
       await getScore(game.id).then(
         (res) => {
           setGameScore({
             game_id: game.id,
+            played: game.played,
+            date: date,
             home_score: res.home_team_score,
             home_name: game.home,
             away_score: res.away_team_score,
@@ -261,27 +276,26 @@ export default function Schedule({ viewer }: ScheduleProps) {
 
   const handleScoreSubmit = async () => {
     if (gameScore) {
-      submitScore(gameScore);
+      submitScore({
+        game_id: gameScore.game_id,
+        home_score: gameScore.home_score,
+        away_score: gameScore.away_score,
+        forfeit: gameScore.forfeit,
+      });
 
-      // const response = await fetch('/api/submit-score', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     game_id: rescheduleGame?.game_id,
-      //     homeScore: homeScore,
-      //     awayScore: awayScore,
-      //     homeName: gameScore.homeName,
-      //     awayName: gameScore.awayName,
-      //   }),
-      // });
-
-      // if (response.ok) {
-      //   console.log("Scores submitted successfully");
-      // } else {
-      //   console.error("Failed to submit scores");
-      // }
+      // Fetch event data to reflect the changes
+      if (userRole === "team") {
+        if (userTeamId && view === "dayGridMonth") {
+          const updatedEvents = await getTeamSchedule(userTeamId);
+          setEvents(updatedEvents);
+        } else {
+          const updatedEvents = await getSchedule();
+          setEvents(updatedEvents);
+        }
+      } else {
+        const updatedEvents = await getSchedule();
+        setEvents(updatedEvents);
+      }
     }
     setSubmitScoreVisible(false);
   };
@@ -291,16 +305,16 @@ export default function Schedule({ viewer }: ScheduleProps) {
   };
 
   const handleRescheduleClick = () => {
-    if (rescheduleGame && rescheduleGame?.date < currDate) {
-      return;
-    }
+    // if (rescheduleGame && rescheduleGame?.date < currDate) {
+    //   return;
+    // }
     setSchedType(3);
     setLoading(true);
     setView("timeGridWeek");
     (async () => {
       let formattedEvents = await getSchedule();
 
-      formattedEvents = addEmptyEvents(formattedEvents);
+      formattedEvents = addEmptyEvents(formattedEvents, currDate);
       console.log("Here", formattedEvents);
       setEvents(formattedEvents);
     })();
@@ -312,14 +326,11 @@ export default function Schedule({ viewer }: ScheduleProps) {
   };
 
   const handleReturnClick = () => {
-    if (userRole === "player" || userRole === "team" || userRole === "role") {
+    if (userRole === "player" || userRole === "team") {
       setSchedType(1);
       setLoading(true);
       (async () => {
-        let formattedEvents = await getTeamSchedule(
-          userTeamId ? userTeamId : 0,
-        );
-
+        let formattedEvents = await getTeamSchedule(userTeamId ? userTeamId : 0);
         setEvents(formattedEvents);
       })();
       setView("dayGridMonth");
@@ -329,6 +340,12 @@ export default function Schedule({ viewer }: ScheduleProps) {
       setLoading(false);
     } else {
       setSchedType(0);
+      setLoading(true);
+      (async () => {
+        let formattedEvents = await getSchedule();
+        setEvents(formattedEvents);
+      })();
+      setLoading(false);
     }
   };
 
@@ -336,11 +353,18 @@ export default function Schedule({ viewer }: ScheduleProps) {
     // Implement the logic to generate the schedule
     console.log("Generate Schedule button clicked");
 
+    if (setUnsavedChanges) {
+      setUnsavedChanges(true)
+    }
+
     // Set events to a schedule generated by the backend
     (async () => {
+      console.log("generating schedule...")
       let sampleSched = await genSampleSchedule(20);
 
+      console.log("schedule generated.")
       setEvents(sampleSched.events);
+      console.log("events set")
       setSchedule(sampleSched.schedule);
       setSchedScore(sampleSched.score);
     })();
@@ -351,6 +375,9 @@ export default function Schedule({ viewer }: ScheduleProps) {
     console.log("Submit Schedule button clicked");
     console.log(schedule);
     saveSchedule(schedule);
+    if (setUnsavedChanges) {
+      setUnsavedChanges(false);
+    }
   };
 
   const handleCommissionerReschedule = () => {
@@ -360,6 +387,16 @@ export default function Schedule({ viewer }: ScheduleProps) {
       " to reschedule game: ",
       rescheduleGame,
     );
+    if (rescheduleGame && selectedDates[0]) {
+      const formattedDate: string = selectedDates[0].date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      commissionerReschedule({
+        game_id: rescheduleGame?.game_id,
+        date: formattedDate,
+        time: deriveTimeslot(selectedDates[0].date),
+        field: selectedDates[0].field.toString()
+      })
+    }
+    handleReturnClick()
   };
 
   const isSelected = (start: Date | null, field: number) => {
@@ -417,14 +454,32 @@ export default function Schedule({ viewer }: ScheduleProps) {
     setRescheduleGame(undefined);
   };
 
+  function deriveTimeslot(date: Date): string {
+    if (date.getHours() === 17) {
+      return "1";
+    } else if (date.getHours() === 18) {
+      return "2";
+    } else if (date.getHours() === 20) {
+      return "3";
+    } else if (date.getHours() === 21) {
+      return "4";
+    }
+    return "0";
+  }
+
+  // Existing loading check at the end of the component
   if (loading) {
-    return <div>Loading...</div>; // Show loading indicator while fetching session
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Schedule..." size="lg" />
+      </div>
+    );
   }
 
   return (
     <div>
       {viewer ? (
-        <h1 className={title()}>Schedule Generator</h1>
+        null
       ) : (
         <h1 className={title()}>Schedule</h1>
       )}
@@ -432,18 +487,24 @@ export default function Schedule({ viewer }: ScheduleProps) {
         <p className="text-2xl text-center mt-2">
           <em>Click up to 5 free game slots to reschedule your team's game</em>
         </p>
-      ) : (userRole === "team" || userRole === "commissioner") && !viewer ? (
+      ) : (userRole === "team") && !viewer ? (
         <p className="text-2xl text-center mt-2">
           <em>
             Click on one of your team's games to reschedule the game or submit a
             score
           </em>
         </p>
+      ) : (userRole === "commissioner") && !viewer ? (
+        <p className="text-2xl text-center mt-2">
+          <em>
+            Click on a game to reschedule or submit a score
+          </em>
+        </p>
       ) : (
         <></>
       )}
       <div className="items-center p-6">
-        <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white">
+        <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
           {schedType === 0 || schedType === 1 ? (
             <div className="legend flex justify-center items-center">
               <div className="legend-item">
@@ -481,6 +542,10 @@ export default function Schedule({ viewer }: ScheduleProps) {
                 <div className="legend-color legend-chosen-slot" />
                 <span>Chosen Slot</span>
               </div>
+              <div className="legend-item">
+                <div className="legend-color legend-rescheduled-teams" />
+                <span>Game with Rescheduled Team</span>
+              </div>
             </div>
           ) : null}
           <FullCalendar
@@ -491,20 +556,32 @@ export default function Schedule({ viewer }: ScheduleProps) {
                 text: "View Full Schedule",
                 click: () => {
                   setSchedType(0);
+                  setLoading(true);
                   setView("timeGridWeek");
                   if (calendarRef.current) {
                     calendarRef.current.getApi().changeView("timeGridWeek"); // Force calendar to change view
                   }
+                  (async () => {
+                    let formattedEvents = await getSchedule();
+                    setEvents(formattedEvents);
+                  })();
+                  setLoading(false);
                 },
               },
               viewTeamScheduleButton: {
                 text: "View Team Schedule",
                 click: () => {
                   setSchedType(1);
+                  setLoading(true);
                   setView("dayGridMonth");
                   if (calendarRef.current) {
                     calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
                   }
+                  (async () => {
+                    let formattedEvents = await getTeamSchedule(userTeamId ? userTeamId : 0);
+                    setEvents(formattedEvents);
+                  })();
+                  setLoading(false);
                 },
               },
               customToday: {
@@ -544,8 +621,16 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   return eventInfo.event.extendedProps.field3?.played;
                 }
               };
-              // const isPastEvent = eventInfo.event.start && new Date(eventInfo.event.start) < currDate;
-              // const isRescheduleGame = rescheduleGame && eventInfo.event.start && eventInfo.event.extendedProps.field1?.home_id === rescheduleGame.home_id && eventInfo.event.extendedProps.field1?.away_id === rescheduleGame.away_id;
+
+              const containsRescheduleTeams = (field: number) => {
+                if (field === 1) {
+                  return eventInfo.event.extendedProps.field1?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field1?.away_id === rescheduleGame?.away_id
+                } else if (field === 2) {
+                  return eventInfo.event.extendedProps.field2?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field2?.away_id === rescheduleGame?.away_id
+                } else if (field === 3) {
+                  return eventInfo.event.extendedProps.field3?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field3?.away_id === rescheduleGame?.away_id
+                }
+              };
 
               return schedType === 0 ? ( // Full Schedule
                 <div
@@ -834,7 +919,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   {eventInfo.event.extendedProps.field1?.home &&
                   eventInfo.event.extendedProps.field1?.away ? (
                     <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(1) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}
+                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(1) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
                     >
                       <div className="event-team font-semibold">
                         {eventInfo.event.extendedProps.field1.home}
@@ -847,7 +932,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 1"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) &&
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start?.getUTCHours() && (eventInfo.event.start.getUTCHours() === 21 || eventInfo.event.start.getUTCHours() === 22) &&
                     eventInfo.event.start &&
                     eventInfo.event.start > currNextDate ? (
                     <div
@@ -875,7 +960,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   {eventInfo.event.extendedProps.field2?.home &&
                   eventInfo.event.extendedProps.field2?.away ? (
                     <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(2) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}
+                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(2) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
                     >
                       <div className="event-team font-semibold">
                         {eventInfo.event.extendedProps.field2.home}
@@ -888,7 +973,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                       <div className="text-sm">{endTime}</div>
                       <div className="text-xs text-gray-600">{"Field 2"}</div>
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) &&
+                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start?.getUTCHours() && (eventInfo.event.start.getUTCHours() === 21 || eventInfo.event.start.getUTCHours() === 22) &&
                     eventInfo.event.start &&
                     eventInfo.event.start > currNextDate ? (
                     <div
@@ -916,7 +1001,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
                   {eventInfo.event.extendedProps.field3?.home &&
                   eventInfo.event.extendedProps.field3?.away ? (
                     <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(3) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-red-100 text-red-800"}`}
+                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(3) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
                     >
                       <div className="event-team font-semibold">
                         {eventInfo.event.extendedProps.field3.home}
@@ -1069,21 +1154,31 @@ export default function Schedule({ viewer }: ScheduleProps) {
           }}
         >
           <div className="flex flex-col items-center">
+            {userRole != "commissioner" ? (
+              <button
+                className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && (userRole != "commissioner" && (rescheduleGame.date < currNextDate || gameScore?.played)) ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+                disabled={rescheduleGame && (userRole != "commissioner" && (rescheduleGame.date < currNextDate || gameScore?.played))}
+                onClick={handleRescheduleClick}
+              >
+                Reschedule
+              </button>
+            ) : (
+              <button
+                className={"w-full px-4 py-2 text-white rounded-lg mb-2 bg-blue-500"}
+                onClick={handleRescheduleClick}
+              >
+                Reschedule
+              </button>
+            )}
             <button
-              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${rescheduleGame && rescheduleGame.date < currDate ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
-              disabled={rescheduleGame && rescheduleGame.date < currNextDate}
-              onClick={handleRescheduleClick}
-            >
-              Reschedule
-            </button>
-            <button
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
+              className={`w-full px-4 py-2 text-white rounded-lg mb-2 ${gameScore && (userRole != "commissioner" && (gameScore.date > currDate || gameScore.played)) ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"}`}
+              disabled={gameScore && (userRole != "commissioner" && (gameScore.date > currDate || gameScore.played))}
               onClick={handleSubmitScoreClick}
             >
               Submit Score
             </button>
             <button
-              className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg"
+              className="w-full px-4 py-2 bg-gray-400 text-white rounded-lg"
               onClick={closePopup}
             >
               Close
@@ -1093,10 +1188,10 @@ export default function Schedule({ viewer }: ScheduleProps) {
       )}
       {submitScoreVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800">
             <h2 className="text-xl font-semibold mb-4">Submit Score</h2>
             <div className="mb-4">
-              <label className="block text-gray-700">
+              <label className="block">
                 Home Team: {gameScore?.home_name}
               </label>
               <input
@@ -1116,7 +1211,7 @@ export default function Schedule({ viewer }: ScheduleProps) {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">
+              <label className="block">
                 Away Team: {gameScore?.away_name}
               </label>
               <input

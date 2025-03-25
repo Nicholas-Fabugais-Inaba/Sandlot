@@ -10,6 +10,7 @@ interface RescheduleRequest {
   id: number;
   requester_name: string;
   originalDate: Date;
+  isRead?: boolean;
 }
 
 interface Notification {
@@ -39,36 +40,29 @@ export const NotificationModal: FC<NotificationModalProps> = ({
 
   const router = useRouter();
 
+  const [fetchTime, setFetchTime] = useState<Date | null>(null);
+
   useEffect(() => {
     if (!isOpen) return;
 
     (async () => {
       try {
         const session = await getSession();
-        // const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id });
-        // Mock reschedule requests
-        const rrList = [
-          {
-            id: 1,
-            requester_name: "John Doe",
-            originalDate: new Date("2025-03-18T15:30:00"),
-          },
-          {
-            id: 2,
-            requester_name: "Jane Smith",
-            originalDate: new Date("2025-03-17T12:00:00"),
-          },
-        ];
+        const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id });
 
-        const formattedNotifications = rrList.map((rr: RescheduleRequest) => ({
-          id: rr.id,
-          message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
-          isRead: false,
-          timestamp: rr.originalDate.toISOString(),
-        }));
+        setFetchTime(new Date()); 
+
+        const formattedNotifications = rrList
+          .filter((rr: RescheduleRequest) => !rr.isRead)
+          .map((rr: RescheduleRequest) => ({
+            id: rr.id,
+            message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
+            isRead: false,
+            timestamp: fetchTime ? fetchTime.toISOString() : new Date().toISOString(), 
+          }));
 
         setNotifications(formattedNotifications);
-        setUnreadCount(formattedNotifications.filter((notification) => !notification.isRead).length); // Set unread count
+        setUnreadCount(formattedNotifications.length);
       } catch (error) {
         console.error("Error fetching reschedule requests:", error);
       }
@@ -137,7 +131,7 @@ export const NotificationModal: FC<NotificationModalProps> = ({
         width: bellPosition?.width ?? "auto",
       }}
     >
-      <div className="bg-white rounded-lg shadow-lg w-96 max-h-80">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-96 max-h-80">
         <div className="flex justify-between items-center p-4 border-b">
           <span className="font-bold text-lg">Notifications</span>
           <div className="flex items-center space-x-2">
@@ -162,13 +156,14 @@ export const NotificationModal: FC<NotificationModalProps> = ({
                 <li
                   key={notification.id}
                   className={`relative p-4 border rounded-lg ${
-                    notification.isRead ? "bg-gray-100" : "bg-blue-100"
+                    notification.isRead ? "bg-gray-100 dark:bg-gray-700" : "bg-blue-100 dark:bg-blue-500"
                   }`} // Change background based on isRead
                 >
                   <p>{notification.message}</p>
-                  <p className="text-xs text-gray-500">{timeAgo(notification.timestamp)}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-300">{timeAgo(notification.timestamp)}</p>
                   <Button
-                    className="absolute bottom-4 right-4 bg-blue-500 text-white rounded-full w-16 h-8 text-xs"
+                    className="absolute bottom-4 right-4 bg-blue-500 text-white rounded-full w-16 h-8 text-xs 
+                    hover:bg-blue-600 dark:bg-blue-400 dark:hover:bg-blue-300 dark:text-black"              
                     onPress={() => router.push("/manage-reschedule-request")}
                   >
                     View
@@ -177,7 +172,7 @@ export const NotificationModal: FC<NotificationModalProps> = ({
               ))}
             </ul>
           ) : (
-            <p className="text-center text-gray-500">No notifications</p>
+            <p className="text-center text-gray-500 dark:text-gray-300">No notifications</p>
           )}
         </div>
       </div>

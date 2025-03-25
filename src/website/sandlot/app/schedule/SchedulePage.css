@@ -24,6 +24,14 @@
   box-shadow: none !important;
 }
 
+.fc-scrollgrid-sync-inner {
+  background-color: white; /* Default light mode */
+}
+
+html.dark .fc-scrollgrid-sync-inner {
+  background-color: #1f2937; /* Equivalent to Tailwind's bg-gray-800 */
+}
+
 .event-content-grid {
   height: 100%;
   display: grid;
@@ -92,4 +100,8 @@
 
 .legend-chosen-slot {
   background-color: #dcfce7; /* Green for chosen game slot */
+}
+
+.legend-rescheduled-teams {
+  background-color: #fef9c3; /* Green for chosen game slot */
 }

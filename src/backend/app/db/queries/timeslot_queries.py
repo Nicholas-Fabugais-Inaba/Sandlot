@@ -37,5 +37,10 @@ def delete_timeslot(timeslot_id):
     engine = create_connection()
     with Session(engine) as session:
         stmt = delete(TimeSlot).where(TimeSlot.id == timeslot_id)
-        session.execute(stmt)
-        session.commit()
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()

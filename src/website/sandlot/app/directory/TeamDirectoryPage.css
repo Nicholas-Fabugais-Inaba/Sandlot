@@ -15,6 +15,8 @@
   border: 1px solid;
   padding: 20px;
   height: 100%;
+  text-align: left;
+  overflow: auto;
 }
 
 .right-half {
