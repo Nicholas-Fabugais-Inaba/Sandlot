@@ -26,21 +26,27 @@ class Player(Base):
     gender: Mapped[Optional[str]] = mapped_column(String(30))
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
     is_commissioner: Mapped[bool] = mapped_column(default=False)
+    active: Mapped[bool] = mapped_column(default=True)
 
 class Team(Base):
     __tablename__ = "team"
     id: Mapped[int] = mapped_column(primary_key=True)
-    team_name: Mapped[Optional[str]] = mapped_column(String(50)) # don't know what string limits we should use; also should prolly use constants
-    captain_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
-    #cocaptains: Mapped["Player"] = mapped_column()
-    #player_list: Mapped["Player"] = mapped_column()
+    team_name: Mapped[Optional[str]] = mapped_column(String(50), unique=True) # don't know what string limits we should use; also should prolly use constants
     standing: Mapped[Optional[str]] = mapped_column(String(50))
-    username: Mapped[Optional[str]] = mapped_column(String(50), unique=True)
+    username: Mapped[Optional[str]] = mapped_column(String(50))
     password: Mapped[Optional[str]] = mapped_column(String(50))
     division: Mapped[Optional[int]] = mapped_column(ForeignKey("division.id", ondelete="SET NULL"), nullable=True) # 0 = A
     preferred_division: Mapped[Optional[int]] = mapped_column() # 0 = A
     offday: Mapped[Optional[int]] = mapped_column() # 0 = Monday
     preferred_time: Mapped[Optional[int]] = mapped_column() # 0 = balanced, 1 = early, 2 = late
+    active: Mapped[bool] = mapped_column(default=True)
+
+# TODO: to be implemented
+class TeamPlayers(Base):
+    __tablename__ = "team_players"
+    team_id: Mapped[int] = mapped_column(ForeignKey("team.id"), primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("player.id"), primary_key=True)
+    captain: Mapped[bool] = mapped_column(default=False)
 
 class Game(Base):
     __tablename__ = "game"
@@ -78,16 +84,18 @@ class RescheduleRequest(Base):
 class JoinRequest(Base):
     __tablename__ = "join_request"
     id: Mapped[int] = mapped_column(primary_key=True)
-    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
     accepted: Mapped[Optional[bool]] = mapped_column()
 
 class SeasonSettings(Base):
     __tablename__ = "season_settings"
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(String(50), default="Default")
     start_date: Mapped[Optional[str]] = mapped_column(String(50))
     end_date: Mapped[Optional[str]] = mapped_column(String(50))
     games_per_team: Mapped[Optional[int]] = mapped_column()
+    state: Mapped[String] = mapped_column(String(50), default="pre-season")
 
 class Field(Base):
     __tablename__ = "field"
@@ -112,6 +120,29 @@ class Division(Base):
     __tablename__ = "division"
     id: Mapped[int] = mapped_column(primary_key=True)
     division_name: Mapped[Optional[str]] = mapped_column(String(50))
+
+class Waiver(Base):
+    __tablename__ = "waiver"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
+    signature: Mapped[Optional[str]] = mapped_column(String(50))
+    date: Mapped[Optional[str]] = mapped_column(String(50))
+
+class ArchivedTeam(Base):
+    __tablename__ = "archived_team"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(String(50))
+    division_name: Mapped[Optional[str]] = mapped_column(String(50))
+    standing: Mapped[Optional[str]] = mapped_column(String(50))
+    year: Mapped[Optional[str]] = mapped_column(String(50))
+
+class ArchivedPlayer(Base):
+    __tablename__ = "archived_player"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    archived_team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("archived_team.id"))
+    first_name: Mapped[Optional[str]] = mapped_column(String(30))
+    last_name: Mapped[Optional[str]] = mapped_column(String(30))
+
 
 # function which creates defined models as tables in DB
 def create_tables():

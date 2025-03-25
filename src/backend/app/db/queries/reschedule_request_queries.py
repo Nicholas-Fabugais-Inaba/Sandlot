@@ -72,8 +72,13 @@ def delete_reschedule_request(request_id):
     engine = create_connection()
     with Session(engine) as session:
         stmt = delete(RescheduleRequest).where(RescheduleRequest.id == request_id)
-        session.execute(stmt)
-        session.commit()
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
         return "reschedule request deleted"
     
 def delete_all_reschedule_requests():
