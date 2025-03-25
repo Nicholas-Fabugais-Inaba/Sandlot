@@ -9,7 +9,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Card, user } from "@heroui/react"; // Import NextUI Card
+import { Card, user, Spinner } from "@heroui/react"; // Import NextUI Card
 
 import "./SchedulePage.css"; // Custom styles
 import { Dictionary } from "@fullcalendar/core/internal";
@@ -100,44 +100,50 @@ export default function Schedule({ viewer }: ScheduleProps) {
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
     const fetchSession = async () => {
-      const session = await getSession();
-
-      if (session) {
-        setUserRole(session.user?.role || null);
-        setUserTeamId(session.user?.team_id || null);
-        if (session.user?.role === "player" || session.user?.role === "team") {
-          setSchedType(1);
-          setView("dayGridMonth");
-          if (calendarRef.current) {
-            calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
-          }
-        } else if (
-          session.user?.role === "commissioner" ||
-          session.user?.role === "role"
-        ) {
-          setSchedType(0);
-          setMaxSelectedDates(1); // Set maxSelectedDates to 1 for commissioner
-        }
-
-        if (session.user?.role === "player" || session.user?.role === "team") {
-          (async () => {
-            let formattedEvents = await getTeamSchedule(session.user?.team_id);
-
+      setLoading(true); // Set loading to true at the start of fetching
+      try {
+        const session = await getSession();
+  
+        if (session) {
+          setUserRole(session.user?.role || null);
+          setUserTeamId(session.user?.team_id || null);
+          
+          // Adjust schedule type based on user role
+          if (session.user?.role === "player" || session.user?.role === "team") {
+            setSchedType(1);
+            setView("dayGridMonth");
+            if (calendarRef.current) {
+              calendarRef.current.getApi().changeView("dayGridMonth");
+            }
+  
+            // Fetch team schedule
+            const formattedEvents = await getTeamSchedule(session.user?.team_id);
             setEvents(formattedEvents);
-          })();
-        }
-      }
-      if (events === undefined) {
-        (async () => {
-          let formattedEvents = await getSchedule();
-
+          } else if (
+            session.user?.role === "commissioner" ||
+            session.user?.role === "role"
+          ) {
+            setSchedType(0);
+            setMaxSelectedDates(1);
+  
+            // Fetch full schedule
+            const formattedEvents = await getSchedule();
+            setEvents(formattedEvents);
+          }
+        } else {
+          // Fetch default schedule if no session
+          const formattedEvents = await getSchedule();
           setEvents(formattedEvents);
-        })();
+        }
+      } catch (error) {
+        console.error("Error fetching schedule:", error);
+        // Optionally set a default or empty events array
+        setEvents([]);
+      } finally {
+        setLoading(false); // Ensure loading is set to false
       }
     };
-
-    setLoading(false); // Set loading to false after fetching session
-
+  
     fetchSession();
   }, []);
 
@@ -450,14 +456,19 @@ export default function Schedule({ viewer }: ScheduleProps) {
     return "0";
   }
 
+  // Existing loading check at the end of the component
   if (loading) {
-    return <div>Loading...</div>; // Show loading indicator while fetching session
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Schedule..." size="lg" />
+      </div>
+    );
   }
 
   return (
     <div>
       {viewer ? (
-        <h1 className={title()}>Schedule Generator</h1>
+        null
       ) : (
         <h1 className={title()}>Schedule</h1>
       )}

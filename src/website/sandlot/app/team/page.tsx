@@ -15,6 +15,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Spinner,
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
@@ -41,14 +42,10 @@ interface JoinRequest {
   gender: string;
 }
 
-// Define the interface for Team and User data
 interface Team {
   id: number;
   team_name: string;
   captain_id: number;
-  // players: { id: string; name: string; email: string }[];
-  // joinRequests: { id: number; first_name: string; last_name: string, email: string }[];
-  // captain: { id: string; name: string; email: string }; // Add captain info
 }
 
 interface Player {
@@ -72,27 +69,40 @@ export default function TeamPage() {
   const [userTeamID, setUserTeamID] = useState<number | null>(null);
 
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
-  // const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     const initializeStates = async () => {
-      const session = await getSession();
+      try {
+        const session = await getSession();
+        setSession(session);
 
-      setSession(session);
-      let teamInfo = await getTeamInfo({ team_id: session?.user.team_id });
+        if (session?.user.team_id) {
+          let teamInfo = await getTeamInfo({ team_id: session.user.team_id });
+          setRoster(teamInfo);
 
-      setRoster(teamInfo);
-      let requests = await getJR({ team_id: session?.user.team_id });
-
-      setJoinRequests(requests);
-
-      setLoading(false);
+          let requests = await getJR({ team_id: session.user.team_id });
+          setJoinRequests(requests);
+        }
+      } catch (error) {
+        console.error("Error fetching team information:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     initializeStates();
   }, []);
 
   const handleAction = async () => {};
+
+  // Loading spinner when data is being fetched
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Team Information..." size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -113,10 +123,6 @@ export default function TeamPage() {
                   disabled={actionLoading}
                   onPress={
                     () => handleAction()
-                    // `/api/teams/${team.id}/join`,
-                    // "POST",
-                    // { playerEmail: session.user.email },
-                    // "Join request sent!"
                   }
                 >
                   Request to Join
@@ -179,10 +185,6 @@ export default function TeamPage() {
               className="button"
               onPress={
                 () => handleAction()
-                // `/api/teams/${userTeam.id}/leave`,
-                // "POST",
-                // { playerEmail: session.user.email },
-                // "You have left the team"
               }
             >
               Leave Team
@@ -284,7 +286,6 @@ export default function TeamPage() {
                   </div>
                 ))
               ) : (
-                // TODO: this does not show up properly if there are no requests
                 <p>No pending requests</p>
               )}
             </div>
