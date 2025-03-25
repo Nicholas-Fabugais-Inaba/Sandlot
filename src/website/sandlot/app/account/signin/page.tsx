@@ -1,4 +1,4 @@
-// app/profile/signin/page.tsx
+// app/account/signin/page.tsx
 
 "use client";
 
@@ -28,7 +28,7 @@ export default function SignIn() {
     if (result?.error) {
       setError(result.error);
     } else {
-      window.location.href = "/profile"; // Full page reload to ensure a complete refresh
+      window.location.href = "/account"; // Full page reload to ensure a complete refresh
     }
   };
 
@@ -69,7 +69,7 @@ export default function SignIn() {
             <p className={styles.newUserText}>New User?</p>
             <Button
               className="button"
-              onPress={() => router.push("/profile/register")}
+              onPress={() => router.push("/account/register")}
             >
               Create an Account
             </Button>
@@ -77,7 +77,7 @@ export default function SignIn() {
           <div className="flex justify-center mt-4">
             <Button
               className="button"
-              onPress={() => router.push("/profile")} // Redirect to the previous page (team or profile)
+              onPress={() => router.push("/account")} // Redirect to the previous page (team or account)
             >
               Cancel
             </Button>
