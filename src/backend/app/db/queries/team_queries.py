@@ -38,7 +38,8 @@ def get_all_season_teams():
         stmt = (
             select(Team.id, Team.team_name, Division.division_name, Team.offday, Team.preferred_time)
             .select_from(Team)
-            .join(Division, Team.division == Division.id)  # Ensure the division exists in the Division table
+            .join(Division, Team.division == Division.id)
+            .where(Team.division > 0)
         )
         result = session.execute(stmt).mappings().all()
         return result

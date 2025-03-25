@@ -50,8 +50,8 @@ const AvailableTeams: React.FC = () => {
             <TableColumn className="req-table-col">Action</TableColumn>
           </TableHeader>
           <TableBody>
-            {teams.map((team) => (
-              <TableRow key={team.id}>
+            {teams.map((team, index) => (
+              <TableRow key={index}>
                 <TableCell className="team-name">{team.name}</TableCell>
                 <TableCell className="division-name">{team.division}</TableCell>
                 <TableCell>
