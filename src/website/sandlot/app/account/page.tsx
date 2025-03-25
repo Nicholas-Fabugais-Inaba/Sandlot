@@ -1,4 +1,4 @@
-// app/profile/page.tsx
+// app/account/page.tsx
 
 "use client";
 
@@ -19,7 +19,7 @@ import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal c
 
 import { title } from "@/components/primitives";
 
-export default function ProfilePage() {
+export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +58,7 @@ export default function ProfilePage() {
           first_name: firstName,
           last_name: lastName ? lastName : "",
         });
+        session.user.firstname = firstName;
       }
       setIsModalOpen(false);
     });
@@ -72,6 +73,7 @@ export default function ProfilePage() {
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
         updateTeamName({ team_id: session.user.id, new_team_name: value });
+        session.user.teamName = value;
       }
       setIsModalOpen(false);
     });
@@ -86,6 +88,7 @@ export default function ProfilePage() {
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
         updateTeamUsername({ team_id: session.user.id, new_username: value });
+        session.user.username = value;
       }
       setIsModalOpen(false);
     });
@@ -103,6 +106,7 @@ export default function ProfilePage() {
         session?.user.role === "commissioner"
       ) {
         updatePlayerEmail({ player_id: session.user.id, new_email: value });
+        session.user.email = value;
       }
       setIsModalOpen(false);
     });
@@ -143,7 +147,7 @@ export default function ProfilePage() {
   if (!session) {
     return (
       <div>
-        <h1 className={title()}>Profile</h1>
+        <h1 className={title()}>Account</h1>
         <div className="centered-container mt-32">
           <h1 className="text-xl font-semibold text-center">
             You need to be signed in to view this page.
@@ -151,13 +155,13 @@ export default function ProfilePage() {
           <div className="flex space-x-4 mt-4">
             <Button
               className="button"
-              onPress={() => signIn(undefined, { callbackUrl: "/profile" })}
+              onPress={() => signIn(undefined, { callbackUrl: "/account" })}
             >
               Sign In
             </Button>
             <Button
               className="button"
-              onPress={() => router.push("/profile/register")}
+              onPress={() => router.push("/account/register")}
             >
               Register
             </Button>
@@ -176,8 +180,8 @@ export default function ProfilePage() {
 
   return (
     <div>
-      {/* Profile Header with Welcome Message */}
-      <h1 className={title()}>Profile</h1>
+      {/* Account Header with Welcome Message */}
+      <h1 className={title()}>Account</h1>
       <div className="text-center mb-8">
         <p className="text-lg mt-2">Welcome {displayName}!</p>
         <p>Manage your account details here</p>
@@ -185,7 +189,7 @@ export default function ProfilePage() {
 
       {/* Main Content Layout */}
       <div className="flex justify-between">
-        {/* Left side: Profile Card */}
+        {/* Left side: Account Card */}
         <div className="w-3/5 mr-8">
           <h2 className="text-xl font-semibold mb-4">Account Info</h2>
           <Card className="max-w-full">
@@ -263,7 +267,7 @@ export default function ProfilePage() {
       <div className="flex justify-center mt-8">
         <Button
           className="button"
-          onPress={() => signOut({ callbackUrl: "/profile/signin" })}
+          onPress={() => signOut({ callbackUrl: "/account/signin" })}
         >
           Sign Out
         </Button>

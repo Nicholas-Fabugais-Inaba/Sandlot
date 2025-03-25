@@ -18,6 +18,7 @@ import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -29,7 +30,9 @@ export const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
+  const [unreadCount, setUnreadCount] = useState(0);
   const bellRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname(); // Get current URL path
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -93,16 +96,17 @@ export const Navbar = () => {
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium",
+                    pathname === item.href
+                      ? "text-primary font-semibold border-b-2 border-primary"
+                      : "hover:text-gray-600"
                   )}
-                  color="foreground"
                   href={item.href}
                 >
                   {item.label}
                 </NextLink>
               </NavbarItem>
             ))}
-          </ul>
+          </ul>        
         )}
       </NavbarContent>
 
@@ -114,7 +118,11 @@ export const Navbar = () => {
           <div ref={bellRef}>
             {" "}
             {/* Bell icon wrapper to track position */}
-            <BellIcon className="cursor-pointer" onClick={handleBellClick} />
+            <BellIcon
+              className="cursor-pointer"
+              onClick={handleBellClick}
+              unreadCount={unreadCount}
+            />
           </div>
         </NavbarItem>
         <NavbarItem className="flex gap-2">
@@ -133,6 +141,11 @@ export const Navbar = () => {
               href={item.href}
               size="lg"
               onPress={() => setIsMenuOpen(false)}
+              className={clsx(
+                pathname === item.href
+                  ? "text-primary font-semibold border-b-2 border-primary"
+                  : "hover:text-gray-600"
+              )}
             >
               {item.label}
             </Link>
@@ -145,6 +158,8 @@ export const Navbar = () => {
         anchorRef={bellRef}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        team_id={session?.user.team_id ?? 0} // Adjust this value
+        setUnreadCount={setUnreadCount}
       />
     </HeroUINavbar>
   );

@@ -121,7 +121,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Parking Information</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Parking has changed their approach to the situation this year,
                 so please pass along this important set of instructions to your
@@ -173,7 +173,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Key Season Dates</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Dates and Tournaments (Null dates indicate event will not
                 happen)
@@ -225,7 +225,7 @@ export default function Home() {
         return (
           <div>
             <h2 className="text-xl font-bold mb-4">Procedure for Rainouts</h2>
-            <Card className="rounded-2xl shadow-lg p-6 bg-white">
+            <Card className="rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
               <p className="mb-4">
                 Our current policy is to follow the lead of City of Hamilton
                 Recreation and close fields when the city closes theirs. This
@@ -275,7 +275,7 @@ export default function Home() {
                       <Button
                         className="button"
                         onPress={() =>
-                          signIn(undefined, { callbackUrl: "/profile" })
+                          signIn(undefined, { callbackUrl: "/account" })
                         }
                       >
                         Sign In
@@ -285,7 +285,7 @@ export default function Home() {
                       </p>
                       <Button
                         className="button"
-                        onPress={() => router.push("/profile/register")}
+                        onPress={() => router.push("/account/register")}
                       >
                         Register
                       </Button>
@@ -298,7 +298,7 @@ export default function Home() {
                   className="max-h-96 overflow-y-auto border border-gray-300 rounded-lg p-4"
                   id="announcements"
                 >
-                  <section className="flex-1 min-w-[500px]">
+                  <section className="flex-1 w-[500px]">
                     <h2 className="text-xl font-bold">Announcements</h2>
 
                     {session?.user.role === "commissioner" && (
@@ -368,7 +368,7 @@ export default function Home() {
                                   <h3 className="text-lg font-bold text-gray-800">
                                     {announcement.title}
                                   </h3>
-                                  <p className="text-gray-800">
+                                  <p className="text-gray-800 break-words whitespace-pre-wrap">
                                     {announcement.body}
                                   </p>
                                 </>
@@ -425,38 +425,39 @@ export default function Home() {
           <h2 className="text-xl font-bold mb-4">Directory</h2>
           <div className="space-y-4">
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "home" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("home")}
             >
               Announcements
             </button>
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "parking" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("parking")}
             >
               Parking Information
             </button>
             <button
-              className="directory-item text-left font-semibold w-full"
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "dates" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("dates")}
             >
               Key Season Dates
             </button>
+            {session?.user.role === "commissioner" || session?.user.role === "team" && (
             <button
-              className="directory-item text-left font-semibold w-full"
-              onClick={() => router.push("/team/directory")}
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "team" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+              onClick={() => router.push("/directory")}
             >
               Team Directory
-            </button>
+            </button>)}
             <div className="relative">
               <button
-                className="directory-item text-left font-semibold w-full"
+                className={`directory-item text-left font-semibold inline-block ${activeSection === "weather" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
                 onClick={handleWeatherClick}
               >
                 Weather Information
               </button>
               {isWeatherDropdownOpen && (
-                <div className="absolute left-0 top-full mt-2 p-2 bg-white shadow rounded-md z-10">
+                <div className="absolute left-0 top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
                     <li>
                       <button
@@ -487,5 +488,5 @@ export default function Home() {
         {renderContent()}
       </main>
     </div>
-  );
+  );  
 }

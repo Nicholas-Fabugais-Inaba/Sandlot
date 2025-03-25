@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function registerTeam(newTeam: any): Promise<void> {
   axios
-    .post(`http://${APIHOST}/user/create_team`, newTeam)
+    .post(`${process.env.NEXT_PUBLIC_APIHOST}/user/create_team`, newTeam)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("account created");

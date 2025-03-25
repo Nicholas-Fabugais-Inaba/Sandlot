@@ -33,5 +33,10 @@ def delete_field(field_id):
     engine = create_connection()
     with Session(engine) as session:
         stmt = delete(Field).where(Field.id == field_id)
-        session.execute(stmt)
-        session.commit()
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()

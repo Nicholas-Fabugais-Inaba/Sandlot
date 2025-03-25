@@ -1,14 +1,12 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function createTimeslot(timeslotData: {
   start: String;
   end: String;
   field_id: Number;
 }): Promise<void> {
   axios
-    .post(`http://${APIHOST}/season-setup/insert_timeslot`, timeslotData)
+    .post(`${process.env.NEXT_PUBLIC_APIHOST}/season-setup/insert_timeslot`, timeslotData)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("timeslot created");

@@ -12,14 +12,12 @@ interface Division {
   teams: Team[];
 }
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function getTeamsSeasonSetup(): Promise<Division[]> {
   const response_divisions = await axios.get(
-    `http://${APIHOST}/season-setup/get_divisions`,
+    `${process.env.NEXT_PUBLIC_APIHOST}/season-setup/get_divisions`,
   );
   const response_teams = await axios.get(
-    `http://${APIHOST}/season-setup/get_teams`,
+    `${process.env.NEXT_PUBLIC_APIHOST}/season-setup/get_teams`,
   );
   const teamsData = response_teams.data;
   const divisionsData = response_divisions.data;

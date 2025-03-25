@@ -1,6 +1,16 @@
 // components/NotificationModal.tsx
 
 import { FC, useState, useEffect } from "react";
+import getRR from "../app/functions/getRR"; // Adjust the import path
+import { getSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Button } from "@heroui/react";
+
+interface RescheduleRequest {
+  id: number;
+  requester_name: string;
+  originalDate: Date;
+}
 
 interface Notification {
   id: number;
@@ -13,36 +23,57 @@ interface NotificationModalProps {
   isOpen: boolean;
   onClose: () => void;
   anchorRef: React.RefObject<HTMLDivElement>; // Reference to the bell icon
+  team_id: number;
+  setUnreadCount: React.Dispatch<React.SetStateAction<number>>; // Function to update the unread count
 }
 
 export const NotificationModal: FC<NotificationModalProps> = ({
   isOpen,
   onClose,
   anchorRef,
+  team_id,
+  setUnreadCount, // Add the setUnreadCount function here
 }) => {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: 1,
-      message: "Notification 1",
-      isRead: false,
-      timestamp: "2025-03-18T12:30:00",
-    },
-    {
-      id: 2,
-      message: "Notification 2",
-      isRead: false,
-      timestamp: "2025-03-18T12:35:00",
-    },
-    {
-      id: 3,
-      message: "Notification 3",
-      isRead: true,
-      timestamp: "2025-03-17T10:00:00",
-    },
-    // Add more notifications as needed
-  ]);
-
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [bellPosition, setBellPosition] = useState<DOMRect | null>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    (async () => {
+      try {
+        const session = await getSession();
+        // const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id });
+        // Mock reschedule requests
+        const rrList = [
+          {
+            id: 1,
+            requester_name: "John Doe",
+            originalDate: new Date("2025-03-18T15:30:00"),
+          },
+          {
+            id: 2,
+            requester_name: "Jane Smith",
+            originalDate: new Date("2025-03-17T12:00:00"),
+          },
+        ];
+
+        const formattedNotifications = rrList.map((rr: RescheduleRequest) => ({
+          id: rr.id,
+          message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
+          isRead: false,
+          timestamp: rr.originalDate.toISOString(),
+        }));
+
+        setNotifications(formattedNotifications);
+        setUnreadCount(formattedNotifications.filter((notification) => !notification.isRead).length); // Set unread count
+      } catch (error) {
+        console.error("Error fetching reschedule requests:", error);
+      }
+    })();
+  }, [isOpen, team_id]);
 
   useEffect(() => {
     const updateBellPosition = () => {
@@ -50,22 +81,15 @@ export const NotificationModal: FC<NotificationModalProps> = ({
         setBellPosition(anchorRef.current.getBoundingClientRect());
       }
     };
-
-    // Update position on mount
     updateBellPosition();
-
-    // Update position on resize
     window.addEventListener("resize", updateBellPosition);
-
-    // Cleanup event listener on unmount
     return () => {
       window.removeEventListener("resize", updateBellPosition);
     };
   }, [anchorRef]);
 
-  if (!isOpen) return null; // Don't render if the modal is closed
+  if (!isOpen) return null;
 
-  // Function to calculate the time difference
   const timeAgo = (timestamp: string) => {
     const now = new Date();
     const date = new Date(timestamp);
@@ -94,27 +118,26 @@ export const NotificationModal: FC<NotificationModalProps> = ({
     return date.toLocaleString("en-US", options);
   };
 
-  // Function to mark all notifications as read
   const markAllRead = () => {
     setNotifications((prevNotifications) =>
       prevNotifications.map((notification) => ({
         ...notification,
         isRead: true,
-      })),
+      }))
     );
+    setUnreadCount(0); // Reset unread count when all are marked as read
   };
 
   return (
     <div
       className="fixed z-50 bg-transparent"
       style={{
-        top: bellPosition?.bottom ?? 0, // Position the modal just below the bell
-        left: (bellPosition?.left ?? 0) - 300, // Adjust the left position as needed
+        top: bellPosition?.bottom ?? 0,
+        left: (bellPosition?.left ?? 0) - 300,
         width: bellPosition?.width ?? "auto",
       }}
     >
       <div className="bg-white rounded-lg shadow-lg w-96 max-h-80">
-        {/* Header with title, close button, and Mark All Read button */}
         <div className="flex justify-between items-center p-4 border-b">
           <span className="font-bold text-lg">Notifications</span>
           <div className="flex items-center space-x-2">
@@ -128,26 +151,34 @@ export const NotificationModal: FC<NotificationModalProps> = ({
               className="text-gray-600 hover:text-gray-900 text-2xl"
               onClick={onClose}
             >
-              &times; {/* Close button (X) */}
+              &times;
             </button>
           </div>
         </div>
-
-        {/* Scrollable content */}
         <div className="p-4 overflow-y-auto max-h-64">
-          <ul className="space-y-2">
-            {notifications.map((notification) => (
-              <li
-                key={notification.id}
-                className={`p-4 border rounded-lg ${notification.isRead ? "bg-white" : "bg-blue-100"}`}
-              >
-                <p>{notification.message}</p>
-                <p className="text-xs text-gray-500">
-                  {timeAgo(notification.timestamp)}
-                </p>
-              </li>
-            ))}
-          </ul>
+          {notifications.length > 0 ? (
+            <ul className="space-y-2">
+              {notifications.map((notification) => (
+                <li
+                  key={notification.id}
+                  className={`relative p-4 border rounded-lg ${
+                    notification.isRead ? "bg-gray-100" : "bg-blue-100"
+                  }`} // Change background based on isRead
+                >
+                  <p>{notification.message}</p>
+                  <p className="text-xs text-gray-500">{timeAgo(notification.timestamp)}</p>
+                  <Button
+                    className="absolute bottom-4 right-4 bg-blue-500 text-white rounded-full w-16 h-8 text-xs"
+                    onPress={() => router.push("/manage-reschedule-request")}
+                  >
+                    View
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center text-gray-500">No notifications</p>
+          )}
         </div>
       </div>
     </div>
