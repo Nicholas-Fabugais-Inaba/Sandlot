@@ -25,7 +25,7 @@ async def get_player_account(data: PlayerLoginData):
     # get list of teams player has joined
     player_teams = get_players_teams(player["id"])
     # convert list of dicts to a single dict with ids as keys and names as values
-    player_teams_dict = {team["id"]: team["name"] for team in player_teams}
+    player_teams_dict = {team["team_id"]: team["team_name"] for team in player_teams}
     # add a key to the existing player dict to store the dict of teams
     player["teams"] = player_teams_dict
     return player
