@@ -59,7 +59,7 @@ export default function Home() {
   const handleAddAnnouncement = async () => {
     if (newAnnouncementTitle.trim() && newAnnouncementBody.trim()) {
       const newAnnouncement = {
-        id: announcements[announcements.length - 1].id + 1, // Increment the ID based on existing IDs to match the assigned ID in the database
+        id: announcements.length > 0 ? announcements[announcements.length - 1].id + 1 : 1, // Increment the ID based on existing IDs to match the assigned ID in the database
         date: new Date().toLocaleDateString(), // Set the current date for new announcements
         title: newAnnouncementTitle,
         body: newAnnouncementBody,

@@ -9,7 +9,7 @@ router = APIRouter(tags=["user"])
 
 @router.post("/create_player", response_model=None)
 async def create_player_account(newPlayer: NewPlayer):
-    response = insert_player(newPlayer.name, newPlayer.email, newPlayer.password)
+    response = insert_player(newPlayer.first_name, newPlayer.last_name, newPlayer.email, newPlayer.password, newPlayer.gender)
     return response
 
 @router.post("/create_team", response_model=None)
