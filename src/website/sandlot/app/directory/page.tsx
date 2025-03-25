@@ -32,6 +32,7 @@ export default function TeamsDirectoryPage() {
     >
   >({});
   const [teams, setTeams] = useState<Team[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null); // State for selected team
 
   interface Team {
     id: number;
@@ -45,19 +46,16 @@ export default function TeamsDirectoryPage() {
 
       console.log(standings);
       console.log(standings[0]);
-      // console.log(list)
       setTeams(standings);
     })();
 
     setIsLoading(false); // Set loading to false after fetching session
   }, []);
 
-  // Extract unique divisions
   const uniqueDivisions = Array.from(
     new Set(teams.map((team) => team.division)),
   );
 
-  // Function to handle sorting within a division
   const handleSort = (
     division: string,
     sortDescriptor: {
@@ -67,7 +65,7 @@ export default function TeamsDirectoryPage() {
   ) => {
     setSortDescriptors((prev) => ({
       ...prev,
-      [division]: sortDescriptor, // Directly update the sortDescriptor state
+      [division]: sortDescriptor,
     }));
   };
 
@@ -113,7 +111,7 @@ export default function TeamsDirectoryPage() {
                 <Table
                   aria-label={`Standings for ${division}`}
                   classNames={{ table: "w-full" }}
-                  sortDescriptor={sortDescriptors[division]} // Ensure correct state is used
+                  sortDescriptor={sortDescriptors[division]}
                   onSortChange={(sort) =>
                     handleSort(
                       division,
@@ -138,7 +136,10 @@ export default function TeamsDirectoryPage() {
                   >
                     {(item) => (
                       <TableRow key={item.name} className="py-2">
-                        <TableCell className="py-2 column-name">
+                        <TableCell
+                          className="py-2 column-name cursor-pointer text-white-600 hover:underline"
+                          onClick={() => setSelectedTeam(item)} // Set selected team on click
+                        >
                           {item.name}
                         </TableCell>
                       </TableRow>
@@ -150,10 +151,21 @@ export default function TeamsDirectoryPage() {
           })}
         </div>
         <div className="right-half">
-          {/* Add your content for the right half here */}
+          {/* Display selected team info */}
           <div className="right-box">
-            <h2>Right Half Content</h2>
-            <p>This is the content for the right half of the screen.</p>
+            {selectedTeam ? (
+              <>
+                <h2 className="text-xl font-bold mb-2">
+                  {selectedTeam.name}
+                </h2>
+                <p>
+                  <strong>Division:</strong> {selectedTeam.division}
+                </p>
+                {/* Add more team details here if available */}
+              </>
+            ) : (
+              <p>Select a team to view details</p>
+            )}
           </div>
         </div>
       </div>
