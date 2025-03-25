@@ -19,6 +19,10 @@
   max-width: 90%;
 }
 
+html.dark .modal-container {
+  background: #1f2937;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;

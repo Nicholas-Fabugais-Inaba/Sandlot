@@ -25,6 +25,8 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo, BellIcon } from "@/components/icons";
 import { NotificationModal } from "@/components/NotificationModal"; // Import modal
 
+import getRR from "../app/functions/getRR";
+
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,14 +37,26 @@ export const Navbar = () => {
   const pathname = usePathname(); // Get current URL path
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const userSession = await getSession();
+    const fetchSessionAndNotifications = async () => {
+      try {
+        const userSession = await getSession();
+        setSession(userSession);
 
-      setSession(userSession);
-      setLoading(false);
+        // Fetch unread notifications immediately
+        if (userSession?.user.team_id) {
+          const rrList = await getRR({ team_id: userSession.user.team_id });
+          const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
+          setUnreadCount(unreadNotifications.length);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching session and notifications:", error);
+        setLoading(false);
+      }
     };
 
-    fetchSession();
+    fetchSessionAndNotifications();
   }, []);
 
   // Filter nav items based on user role

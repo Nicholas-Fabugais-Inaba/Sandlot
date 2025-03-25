@@ -184,7 +184,7 @@ export default function ManageRescheduleRequest() {
           rescheduleRequests.map((request) => (
             <Card
               key={request.id}
-              className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white mb-6"
+              className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6"
             >
               <div className="mb-4">
                 <h2 className="text-xl font-semibold">
