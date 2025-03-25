@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, Division
-from ..db.queries.season_settings_queries import update_season_settings, get_season_settings
+from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, Division, SeasonState, SettingsID, SeasonPreset
+from ..db.queries.season_settings_queries import insert_season_settings, get_season_settings, update_season_settings, update_season_state, delete_season_settings
 from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
 from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
 from ..db.queries.team_queries import update_division, get_all_teams, get_teams_season_setup
@@ -20,14 +20,30 @@ async def create_schedule(schedule: dict):
         gameslot = gameslot.split(",")
         insert_game(int(teams[game[0]]["id"]), int(teams[game[1]]["id"]), gameslot[2], gameslot[1], gameslot[0])
 
+@router.post("/create_season_preset", response_model=dict)
+async def create_season_preset(settings: SeasonPreset):
+    insert_season_settings(settings.name, settings.start_date, settings.end_date, settings.games_per_team)
+    return True
+
 @router.get("/get_season_settings", response_model=dict)
 async def get_SS():
     settings = get_season_settings()
+    settings = [dict(row) for row in settings]
     return settings
 
 @router.put("/update_season_settings", response_model=None)
 async def update_SS(settings: SeasonSettings):
     update_season_settings(settings.start_date, settings.end_date, settings.games_per_team)
+    return True
+
+@router.put("/change_season_state", response_model=None)
+async def change_season_state(season_state: SeasonState):
+    update_season_state(season_state.state)
+    return True
+
+@router.post("/delete_season_preset", response_model=None)
+async def delete_season_preset(data: SettingsID):
+    delete_season_settings(data.settings_id)
     return True
 
 @router.post("/insert_field", response_model=None)
