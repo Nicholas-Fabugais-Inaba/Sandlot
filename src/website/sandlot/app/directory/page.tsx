@@ -37,15 +37,16 @@ export default function TeamsDirectoryPage() {
   const [players, setPlayers] = useState<Player[]>([]);
 
   interface Team {
-    id: number;
+    team_id: number;
     name: string;
     division: string;
-    players: { id: string; name: string; email: string; phone_number: string }[];
+    players: Player[];
   }
 
   interface Player {
-    id: string;
-    name: string;
+    player_id: string;
+    first_name: string;
+    last_name: string;
     email: string;
     phone_number: string;
     gender: string;
@@ -76,13 +77,14 @@ export default function TeamsDirectoryPage() {
     setIsLoading(false);  // Set loading to false after fetching session
   }, [teams]);
 
-  useEffect(() => {
-    (async () => {
-    let players_selected = await getDirectoryPlayers({team_id: selectedTeam?.id});
+  const set_players_in_team = async (selected_team: Team) => {
+    console.log("Selected team", selected_team);
+    setSelectedTeam(selected_team); // Set the selected team
+    console.log("HELLOWORLD", selected_team.team_id)
+    let players_selected = await getDirectoryPlayers({team_id: selected_team.team_id});
+    console.log("PLAYERS", players_selected);
     setPlayers(players_selected);
-    }
-    )();
-  }, [selectedTeam]);
+  };
 
   const uniqueDivisions = Array.from(
     new Set(teams.map((team) => team.division)),
@@ -175,7 +177,10 @@ export default function TeamsDirectoryPage() {
                       <TableRow key={item.name} className="py-2">
                         <TableCell
                           className="py-2 column-name cursor-pointer text-white-600 hover:underline"
-                          onClick={() => setSelectedTeam(item)} // Set selected team on click
+                          onClick={() => {
+                            console.log("Selected team", item);
+                            set_players_in_team(item); // Fetch players for the selected team
+                          }}
                         >
                           {item.name}
                         </TableCell>
@@ -198,14 +203,14 @@ export default function TeamsDirectoryPage() {
                 <p>
                   <strong>Division:</strong> {selectedTeam.division}
                 </p>
-                <p>
+                <div>
                   <strong>Players:</strong> 
-                  {/* <ul>
+                  <ul>
                     {players.map((player) => (
-                      <li key={player.id}>{player.name}</li>
+                      <li key={player.player_id}>{player.first_name}</li>
                     ))}
-                  </ul> */}
-                </p>
+                  </ul>
+                </div>
                 {/* Add more team details here if available */}
               </>
             ) : (
