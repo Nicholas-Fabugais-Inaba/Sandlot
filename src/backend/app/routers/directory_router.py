@@ -11,6 +11,7 @@ async def get_directory_teams():
 
     for team in teams_data:            
         teams[team['id']] = {
+            "team_id": team["id"],
             "name": team["team_name"], 
             "division": team["division_name"],
         }
@@ -24,6 +25,7 @@ async def get_directory_players(team_id: TeamID):
 
     for player in players_data:            
         players_data[player['id']] = {
+            "player_id": player["id"],
             "first_name": player["first_name"], 
             "last_name": player["last_name"], 
             "email": player["email"],

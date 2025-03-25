@@ -40,7 +40,6 @@ export default function TeamsDirectoryPage() {
     team_id: number;
     name: string;
     division: string;
-    players: Player[];
   }
 
   interface Player {
