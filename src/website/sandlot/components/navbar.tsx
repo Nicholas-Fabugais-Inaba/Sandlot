@@ -14,7 +14,7 @@ import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { getSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
@@ -25,21 +25,17 @@ import { NotificationModal } from "@/components/NotificationModal"; // Import mo
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 
-// const mockTeams: { [key: number]: string } = {
-//   1: "Team A",
-//   2: "Team B",
-//   3: "Team C",
-// };
-
 import getRR from "../app/functions/getRR";
 
 export const Navbar = () => {
-  const [session, setSession] = useState<Session | null>(null);
+  const { data: session, update: updateSession } = useSession();
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
   const [unreadCount, setUnreadCount] = useState(0);
-  // const [currentTeam, setCurrentTeam] = useState("");
+  const [userTeams, setUserTeams] = useState<{ [key: number]: string }>({});
+  const [userTeamId, setUserTeamId] = useState<number>(0);
+  const [userRole, setUserRole] = useState<string>("");
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
 
@@ -47,8 +43,14 @@ export const Navbar = () => {
     const fetchSessionAndNotifications = async () => {
       try {
         const userSession = await getSession();
-        setSession(userSession);
-        console.log("Teams dict:", userSession?.user.teams)
+        console.log("Session:", userSession);
+        console.log("Teams dict:", userSession?.user.teams);
+
+        if (userSession) {
+          setUserTeams(userSession.user.teams);
+          setUserTeamId(userSession.user.team_id);
+          setUserRole(userSession.user.role);
+        }
 
         // Fetch unread notifications immediately
         if (userSession?.user.team_id) {
@@ -69,17 +71,14 @@ export const Navbar = () => {
 
   // Filter nav items based on user role
   const filteredNavItems = siteConfig.navItems.filter((item) => {
-    if (
-      item.label === "Season Setup" &&
-      session?.user.role !== "commissioner"
-    ) {
+    if (item.label === "Season Setup" && userRole !== "commissioner") {
       return false; // Hide for non-commissioners
-    } else if (item.label === "Rescheduler" && session?.user.role !== "team") {
+    } else if (item.label === "Rescheduler" && userRole !== "team") {
       return false; // Hide if the user is not part of a team
     } else if (
       item.label === "Team" &&
-      session?.user.role !== "player" &&
-      session?.user.role !== "team"
+      userRole !== "player" &&
+      userRole !== "team"
     ) {
       return false; // Hide if the user is not signed in as a team or player
     }
@@ -87,9 +86,22 @@ export const Navbar = () => {
     return true;
   });
 
-  const handleTeamSwitch = (teamId: number) => {
-    // setCurrentTeam(mockTeams[teamId]);
-    console.log(`Switched to team: `);
+  const handleTeamSwitch = async (teamId: number) => {
+    if (session) {
+      await updateSession({
+        ...session,
+        user: {
+          ...session.user,
+          team_id: teamId,
+          teamName: userTeams[teamId],
+        },
+      });
+      setUserTeamId(teamId);
+      console.log(`Switched to team: ${userTeams[teamId]}`);
+    } else {
+      console.log("Team switch failed. Session is null.");
+    }
+    
   };
 
   const handleBellClick = () => {
@@ -144,10 +156,10 @@ export const Navbar = () => {
         <NavbarItem className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-            {session && session.user.teams[session.user.team_id]} <ChevronDown size={16} />
+              {userTeams[userTeamId]} <ChevronDown size={16} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
-              {session && Object.entries(session.user.teams).map(([id, name]) => (
+              {Object.entries(userTeams).map(([id, name]) => (
                 <DropdownMenuItem
                   key={id}
                   className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
@@ -203,7 +215,7 @@ export const Navbar = () => {
         anchorRef={bellRef}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        team_id={session?.user.team_id ?? 0} // Adjust this value
+        team_id={userTeamId} // Adjust this value
         setUnreadCount={setUnreadCount}
       />
     </HeroUINavbar>

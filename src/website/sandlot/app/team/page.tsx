@@ -160,8 +160,8 @@ export default function TeamPage() {
               </TableHeader>
               <TableBody>
                 {roster.length ? (
-                  roster.map((player) => (
-                    <TableRow key={player.id}>
+                  roster.map((player, index) => (
+                    <TableRow key={index}>
                       <TableCell>
                         {player.first_name + " " + player.last_name}
                       </TableCell>
