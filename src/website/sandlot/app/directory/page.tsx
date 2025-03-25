@@ -20,7 +20,8 @@ import { Session } from "next-auth";
 import { title } from "@/components/primitives";
 // import getStandings from "../functions/getStandings";
 import "./TeamDirectoryPage.css";
-import getTeamsDirectory from "@/app/functions/getTeamsDirectory";
+import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
+import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
 
 export default function TeamsDirectoryPage() {
   const [session, setSession] = useState<Session | null>(null);
@@ -33,12 +34,21 @@ export default function TeamsDirectoryPage() {
   >({});
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null); // State for selected team
+  const [players, setPlayers] = useState<Player[]>([]);
 
   interface Team {
     id: number;
     name: string;
     division: string;
     players: { id: string; name: string; email: string; phone_number: string }[];
+  }
+
+  interface Player {
+    id: string;
+    name: string;
+    email: string;
+    phone_number: string;
+    gender: string;
   }
 
   useEffect(() => {
@@ -53,7 +63,7 @@ export default function TeamsDirectoryPage() {
 
     // fetches teams info
     (async () => {
-      let teams = await getTeamsDirectory();
+      let teams = await getDirectoryTeams();
       
       console.log(teams);
       console.log(teams[0]);
@@ -64,7 +74,15 @@ export default function TeamsDirectoryPage() {
 
   useEffect(() => {
     setIsLoading(false);  // Set loading to false after fetching session
-}, [teams]);
+  }, [teams]);
+
+  useEffect(() => {
+    (async () => {
+    let players_selected = await getDirectoryPlayers({team_id: selectedTeam?.id});
+    setPlayers(players_selected);
+    }
+    )();
+  }, [selectedTeam]);
 
   const uniqueDivisions = Array.from(
     new Set(teams.map((team) => team.division)),
@@ -180,6 +198,14 @@ export default function TeamsDirectoryPage() {
                 <p>
                   <strong>Division:</strong> {selectedTeam.division}
                 </p>
+                <p>
+                  <strong>Players:</strong> 
+                  {/* <ul>
+                    {players.map((player) => (
+                      <li key={player.id}>{player.name}</li>
+                    ))}
+                  </ul> */}
+                </p>
                 {/* Add more team details here if available */}
               </>
             ) : (
@@ -191,5 +217,5 @@ export default function TeamsDirectoryPage() {
     </div>
   )}
 
-  else{ return <h1>Unauthorized</h1> }
+  else { return <h1>Unauthorized</h1> }
 }
