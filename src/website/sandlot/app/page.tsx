@@ -298,7 +298,7 @@ export default function Home() {
                   className="max-h-96 overflow-y-auto border border-gray-300 rounded-lg p-4"
                   id="announcements"
                 >
-                  <section className="flex-1 min-w-[500px]">
+                  <section className="flex-1 w-[500px]">
                     <h2 className="text-xl font-bold">Announcements</h2>
 
                     {session?.user.role === "commissioner" && (
@@ -368,7 +368,7 @@ export default function Home() {
                                   <h3 className="text-lg font-bold text-gray-800">
                                     {announcement.title}
                                   </h3>
-                                  <p className="text-gray-800">
+                                  <p className="text-gray-800 break-words whitespace-pre-wrap">
                                     {announcement.body}
                                   </p>
                                 </>
