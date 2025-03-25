@@ -60,5 +60,10 @@ def delete_join_request(request_id):
     engine = create_connection()
     with Session(engine) as session:
         stmt = delete(JoinRequest).where(JoinRequest.id == request_id)
-        session.execute(stmt)
-        session.commit()
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()

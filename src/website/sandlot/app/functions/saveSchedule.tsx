@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function saveSchedule(schedule: object): Promise<void> {
   axios
-    .post(`http://${APIHOST}/season-setup/create_schedule`, schedule)
+    .post(`${process.env.NEXT_PUBLIC_APIHOST}/season-setup/create_schedule`, schedule)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("schedule created");

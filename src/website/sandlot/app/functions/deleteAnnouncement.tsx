@@ -1,12 +1,10 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
 export default async function deleteAnnouncement(
-  announcementID: Number,
+  announcementID: any,
 ): Promise<void> {
   axios
-    .post(`http://${APIHOST}/announcement/delete_announcement`, announcementID)
+    .post(`${process.env.NEXT_PUBLIC_APIHOST}/announcement/delete_announcement`, announcementID)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("announcement deleted");

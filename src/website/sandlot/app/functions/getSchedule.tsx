@@ -3,7 +3,6 @@ import { Dictionary } from "@fullcalendar/core/internal";
 
 import { Event, GenSchedResponse } from "../types";
 
-const APIHOST = `127.0.0.1:8000`;
 const currDate = new Date("2025-06-20");
 const seasonStart = new Date("2025-05-05");
 const seasonEnd = new Date("2025-08-20");
@@ -22,7 +21,7 @@ interface Game {
 export default async function getSchedule(): Promise<Event[]> {
   try {
     const response = await axios.get(
-      `http://${APIHOST}/schedule/get_all_games`,
+      `${process.env.NEXT_PUBLIC_APIHOST}/schedule/get_all_games`,
     );
 
     console.log(response.data);
@@ -42,7 +41,7 @@ export default async function getSchedule(): Promise<Event[]> {
 export async function getTeamSchedule(team_id: number): Promise<Event[]> {
   try {
     const response = await axios.post(
-      `http://${APIHOST}/schedule/get_team_games`,
+      `${process.env.NEXT_PUBLIC_APIHOST}/schedule/get_team_games`,
       { team_id: team_id },
     );
 
@@ -66,7 +65,7 @@ export async function genSampleSchedule(
   try {
     // Currently the input is a placeholder
     const response = await axios.post(
-      `http://${APIHOST}/schedule/gen_schedule`,
+      `${process.env.NEXT_PUBLIC_APIHOST}/schedule/gen_schedule`,
       { num_games: num_games },
     );
 
