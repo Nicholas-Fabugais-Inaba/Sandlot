@@ -32,6 +32,10 @@ export const siteConfig = {
       label: "Season Setup",
       href: "/season-setup",
     },
+    {
+      label: "Broadcast",
+      href: "/broadcast",
+    },
   ],
   navMenuItems: [
     {

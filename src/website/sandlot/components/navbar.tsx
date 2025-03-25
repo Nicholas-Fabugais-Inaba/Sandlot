@@ -58,6 +58,8 @@ export const Navbar = () => {
       session?.user.role !== "team"
     ) {
       return false; // Hide if the user is not signed in as a team or player
+    } else if (item.label === "Broadcast" && session?.user.role !== "commissioner") {
+      return false; // Hide if the user is not a commissioner
     }
 
     return true;
