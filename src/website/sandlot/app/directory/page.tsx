@@ -23,6 +23,8 @@ import "./TeamDirectoryPage.css";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
 
+let notificationTimeout: NodeJS.Timeout | null = null; // Declare a variable to store the timeout
+
 export default function TeamsDirectoryPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,6 +37,7 @@ export default function TeamsDirectoryPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null); // State for selected team
   const [players, setPlayers] = useState<Player[]>([]);
+  const [copyNotification, setCopyNotification] = useState<string | null>(null);
 
   interface Team {
     team_id: number;
@@ -215,7 +218,21 @@ export default function TeamsDirectoryPage() {
                           <>
                             <div
                               className="ml-4 cursor-pointer text-white-600 hover:underline"
-                              onClick={() => navigator.clipboard.writeText(player.email)}
+                              onClick={() => {
+                                navigator.clipboard.writeText(player.email);
+                                setCopyNotification("Email copied to clipboard!");
+
+                                // Clear the existing timeout if it exists
+                                if (notificationTimeout) {
+                                  clearTimeout(notificationTimeout);
+                                }
+
+                                // Set a new timeout
+                                notificationTimeout = setTimeout(() => {
+                                  setCopyNotification(null);
+                                  notificationTimeout = null; // Reset the timeout variable
+                                }, 2000); // Clear notification after 2 seconds
+                              }}
                               title="Click to copy email"
                             >
                               {player.email}
@@ -234,6 +251,12 @@ export default function TeamsDirectoryPage() {
               </>
             ) : (
               <p>Select a team to view details</p>
+            )}
+
+            {copyNotification && (
+              <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
+                {copyNotification}
+              </div>
             )}
           </div>
         </div>
