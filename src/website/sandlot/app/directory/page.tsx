@@ -102,6 +102,8 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
+  // IF NOT LOGGED IN WILL INFINITE LOAD
+  // BUT WHEN LOGGED INTO A VALID ACCOUNT (com or team) WILL SAY NOT AUTHORIZED BEFORE SESSION IS GRABBED
  if (isLoading || !session) {
     return <Spinner label="Loading..." />;
   }
@@ -199,17 +201,31 @@ export default function TeamsDirectoryPage() {
                 <h2 className="text-xl font-bold mb-2">
                   {selectedTeam.name}
                 </h2>
-                <p>
+                <p className="mt-4">
                   <strong>Division:</strong> {selectedTeam.division}
                 </p>
-                <div>
+                <div className="mt-4">
                   <strong>Players:</strong>
                   {players.length > 0 ? (
-                    <ul>
-                      {players.map((player) => (
-                        <li key={player.player_id}>{player.first_name}</li>
-                      ))}
-                    </ul>
+                    <ul className="mt-2">
+                    {players.map((player) => (
+                      <li key={player.player_id} className="mb-2">
+                        <div>{player.first_name} {player.last_name}</div>
+                        {session?.user.role === "commissioner" && (
+                          <>
+                            <div
+                              className="ml-4 cursor-pointer text-white-600 hover:underline"
+                              onClick={() => navigator.clipboard.writeText(player.email)}
+                              title="Click to copy email"
+                            >
+                              {player.email}
+                            </div>
+                            <div className="ml-4">{player.phone_number}</div>
+                          </>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                   ) : (
                     <p>No players found for this team.</p>
                   )}
