@@ -69,7 +69,7 @@ const authOptions: NextAuthOptions = {
                 preferred_division: team.preferred_division,
                 preferred_time: team.preferred_time,
                 team_id: team.id,
-                teams: [],
+                teams: {},
               };
             }
           }
@@ -113,7 +113,7 @@ const authOptions: NextAuthOptions = {
               ? token.preferred_time
               : "",
           team_id: typeof token.team_id === "number" ? token.team_id : 0,
-          teams: Array.isArray(token.teams) ? token.teams : [],
+          teams: typeof token.teams === "object" && token.teams !== null ? token.teams as { [key: number]: string } : {},
         };
       }
       console.log("Session callback session:", session); // Debugging log
