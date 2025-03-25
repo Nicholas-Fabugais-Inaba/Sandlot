@@ -166,3 +166,29 @@ def get_teams_season_setup():
         )
         result = session.execute(stmt).mappings().all()
         return result
+
+def deactivate_all_teams():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).values(active=False)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return "all teams deactivated"
+
+def activate_all_teams(): # FOR DEVLOPMENT PURPOSES ONLY TODO REMOVE THIS
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).values(active=True)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return "all teams activated"

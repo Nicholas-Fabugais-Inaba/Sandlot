@@ -14,11 +14,13 @@ import Schedule from "@/app/schedule/schedule";
 
 import DivisionsSettings from "./DivisionsSettings";
 import Launchpad from "./Launchpad";
+import getSeasonState from "../functions/getSeasonState";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
   const [seasonState, setSeasonState] = useState("offseason");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   // Individual state variables for form data
   const [seasonName, setSeasonName] = useState("");
@@ -26,6 +28,21 @@ export default function SeasonSetupPage() {
   const [endDate, setEndDate] = useState("");
   const [gamesPerTeam, setGamesPerTeam] = useState(0);
   const [gameDays, setGameDays] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchSeasonState = async () => {
+      const state = await getSeasonState();
+      console.log(state)
+      setSeasonState(state.state);
+      setLoading(false);
+    };
+
+    fetchSeasonState();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const scheduleDesc = <p className="mb-4">Generating a schedule isn't available until preseason is launched.</p>
 

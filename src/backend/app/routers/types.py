@@ -137,6 +137,7 @@ class UpdateTeamUsername(BaseModel):
 class UpdateTeamName(BaseModel):
     team_id: int
     new_team_name: str
+
 class JoinRequest(BaseModel):
     email: str
     team_id: int
@@ -175,3 +176,6 @@ class NewWaiver(BaseModel):
     player_id: int
     signature: str
     date: str
+
+class EndSeasonData(BaseModel):
+    archiveTeams: bool
