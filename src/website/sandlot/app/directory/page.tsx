@@ -38,19 +38,33 @@ export default function TeamsDirectoryPage() {
     id: number;
     name: string;
     division: string;
+    players: { id: string; name: string; email: string; phone_number: string }[];
   }
 
   useEffect(() => {
-    (async () => {
-      let standings = await getTeamsDirectory();
 
-      console.log(standings);
-      console.log(standings[0]);
-      setTeams(standings);
+    // fetches session info
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+    };
+    
+    fetchSession();
+
+    // fetches teams info
+    (async () => {
+      let teams = await getTeamsDirectory();
+      
+      console.log(teams);
+      console.log(teams[0]);
+      setTeams(teams);
     })();
 
-    setIsLoading(false); // Set loading to false after fetching session
   }, []);
+
+  useEffect(() => {
+    setIsLoading(false);  // Set loading to false after fetching session
+}, [teams]);
 
   const uniqueDivisions = Array.from(
     new Set(teams.map((team) => team.division)),
@@ -69,6 +83,11 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
+ if (isLoading || !session) {
+    return <Spinner label="Loading..." />;
+  }
+
+  if (session?.user.role === "commissioner" || session?.user.role === "team") {
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -170,5 +189,7 @@ export default function TeamsDirectoryPage() {
         </div>
       </div>
     </div>
-  );
+  )}
+
+  else{ return <h1>Unauthorized</h1> }
 }

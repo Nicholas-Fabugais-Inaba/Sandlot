@@ -3,6 +3,7 @@ from ..db.queries.team_queries import insert_team
 from ..db.queries.mock_queries import insert_mock_player
 from ..db.queries.division_queries import insert_division_with_id
 from ..db.queries.season_settings_queries import insert_season_settings
+from ..db.queries.team_players_queries import insert_team_player
 
 
 class MockTeam(BaseModel):
@@ -334,12 +335,12 @@ mock_divisions = [
     MockDivision(division_id=4, division_name="D"),
 ]
 
-def insert_mock_season_settings():
-    insert_season_settings("Default", "2025-05-05", "2025-08-20", 20)
-
 def insert_mock_divisions():
     for division in mock_divisions:
         insert_division_with_id(division.division_id, division.division_name)
+
+def insert_mock_season_settings():
+    insert_season_settings("Default", "2025-05-05", "2025-08-20", 20)
 
 # function which inserts ~30 mock teams into the DB
 # note: always call insert_mock_divisions() before calling this function to ensure division_id foreign key integrity
@@ -350,12 +351,16 @@ def insert_mock_teams():
 # function which inserts ~30 mock players into the DB
 # note: always call insert_mock_teams() before calling this function to ensure team_id foreign key integrity
 def insert_mock_players():
+    i = 1
     for player in mock_players:
         insert_mock_player(player.first_name, player.last_name, player.email, player.password, player.phone_number, player.gender, player.team_id)
+        insert_team_player(player.team_id, i)
+        i += 1
+
 
 def insert_mock_schedule():
-    insert_mock_season_settings()
     insert_mock_divisions()
+    insert_mock_season_settings()
     insert_mock_teams()
     insert_mock_players()
     

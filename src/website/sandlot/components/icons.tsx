@@ -214,7 +214,6 @@ export const BellIcon: React.FC<BellIconProps> = ({
         style={{
           position: 'absolute',
           top: 12,
-          right: 76,
           width: '16px',
           height: '16px',
           backgroundColor: 'red',

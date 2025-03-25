@@ -20,7 +20,8 @@ def insert_player(name, email, password):
         else:
             session.commit()
             return "player created"
-        
+
+# TODO: change to work with TeamPlayer        
 def get_player(login_email):
     engine = create_connection()
     with Session(engine) as session:
@@ -38,7 +39,8 @@ def get_player(login_email):
         ).where(Player.email == login_email)
         result = session.execute(stmt).mappings().first()
         return result
-    
+
+# TODO: change to work with TeamPlayer    
 def update_players_team(player_id, team_id):
     engine = create_connection()
     with Session(engine) as session:

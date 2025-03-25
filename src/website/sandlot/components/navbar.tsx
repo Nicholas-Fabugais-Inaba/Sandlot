@@ -24,6 +24,16 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Logo, BellIcon } from "@/components/icons";
 import { NotificationModal } from "@/components/NotificationModal"; // Import modal
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+
+const mockTeams = [
+  { id: "1", name: "Team A" },
+  { id: "2", name: "Team B" },
+  { id: "3", name: "Team C" },
+];
+
+import getRR from "../app/functions/getRR";
 
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -31,18 +41,31 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
   const [unreadCount, setUnreadCount] = useState(0);
+  const [currentTeam, setCurrentTeam] = useState(mockTeams[0]);
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const userSession = await getSession();
+    const fetchSessionAndNotifications = async () => {
+      try {
+        const userSession = await getSession();
+        setSession(userSession);
 
-      setSession(userSession);
-      setLoading(false);
+        // Fetch unread notifications immediately
+        if (userSession?.user.team_id) {
+          const rrList = await getRR({ team_id: userSession.user.team_id });
+          const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
+          setUnreadCount(unreadNotifications.length);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching session and notifications:", error);
+        setLoading(false);
+      }
     };
 
-    fetchSession();
+    fetchSessionAndNotifications();
   }, []);
 
   // Filter nav items based on user role
@@ -64,6 +87,11 @@ export const Navbar = () => {
 
     return true;
   });
+
+  const handleTeamSwitch = (team: { id: string; name: string }) => {
+    setCurrentTeam(team);
+    console.log(`Switched to team: ${team.name}`);
+  };
 
   const handleBellClick = () => {
     setIsModalOpen((prev) => !prev);
@@ -114,6 +142,24 @@ export const Navbar = () => {
         className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
+        <NavbarItem className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
+              {currentTeam.name} <ChevronDown size={16} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
+              {mockTeams.map((team) => (
+                <DropdownMenuItem
+                  key={team.id}
+                  className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
+                  onClick={() => handleTeamSwitch(team)}
+                >
+                  {team.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </NavbarItem>
         <NavbarItem className="flex gap-2">
           <div ref={bellRef}>
             {" "}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Spinner } from "@heroui/react";
 
 import getSeasonSettings from "../functions/getSeasonSettings";
 
@@ -18,7 +19,7 @@ import getSeasonState from "../functions/getSeasonState";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
-  const [seasonState, setSeasonState] = useState("offseason");
+  const [seasonState, setSeasonState] = useState("preseason");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [loading, setLoading] = useState(true); // Add loading state
 

@@ -1,5 +1,3 @@
-// app/standings/page.tsx
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -10,11 +8,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   Spinner,
 } from "@heroui/react";
-import { useAsyncList } from "@react-stately/data";
-import { getSession } from "next-auth/react";
 
 import getStandings from "../functions/getStandings";
 
@@ -42,16 +37,19 @@ export default function StandingsPage() {
   }
 
   useEffect(() => {
-    (async () => {
-      let standings = await getStandings();
+    const fetchStandings = async () => {
+      try {
+        setIsLoading(true); // Set loading to true before fetching
+        const standings = await getStandings();
+        setTeams(standings);
+        setIsLoading(false); // Set loading to false after fetching
+      } catch (error) {
+        console.error("Error fetching standings:", error);
+        setIsLoading(false); // Ensure loading is set to false even if there's an error
+      }
+    };
 
-      console.log(standings);
-      console.log(standings[0]);
-      // console.log(list)
-      setTeams(standings);
-    })();
-
-    setIsLoading(false); // Set loading to false after fetching session
+    fetchStandings();
   }, []);
 
   // Extract unique divisions
@@ -69,9 +67,18 @@ export default function StandingsPage() {
   ) => {
     setSortDescriptors((prev) => ({
       ...prev,
-      [division]: sortDescriptor, // Directly update the sortDescriptor state
+      [division]: sortDescriptor,
     }));
   };
+
+  // If loading, show a global spinner
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Standings..." size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -113,7 +120,7 @@ export default function StandingsPage() {
             <Table
               aria-label={`Standings for ${division}`}
               classNames={{ table: "w-full" }}
-              sortDescriptor={sortDescriptors[division]} // Ensure correct state is used
+              sortDescriptor={sortDescriptors[division]}
               onSortChange={(sort) =>
                 handleSort(
                   division,
@@ -138,11 +145,7 @@ export default function StandingsPage() {
                   </TableColumn>
                 ))}
               </TableHeader>
-              <TableBody
-                isLoading={isLoading}
-                items={sortedTeams}
-                loadingContent={<Spinner label="Loading..." />}
-              >
+              <TableBody items={sortedTeams}>
                 {(item) => (
                   <TableRow key={item.name} className="py-2">
                     <TableCell className="py-2 column-name">

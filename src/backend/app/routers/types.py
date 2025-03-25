@@ -91,13 +91,14 @@ class DivisionData(BaseModel):
 class ScoreData(BaseModel):
     game_id: int
     home_score: int
-    home_name: str
     away_score: int
-    away_name: str
     forfeit: int
 
 class PlayerID(BaseModel):
     player_id: Optional[int]
+
+class PlayerEmail(BaseModel):
+    email: str
 
 class NewAnnouncement(BaseModel):
     date: str
@@ -149,6 +150,12 @@ class JRAccept(BaseModel):
 
 class JRDecline(BaseModel):
     jr_id: int
+
+class CommissionerReschedule(BaseModel):
+    game_id: int
+    date: str
+    time: str
+    field: str
 
 class Division(BaseModel):
     division_id: int
