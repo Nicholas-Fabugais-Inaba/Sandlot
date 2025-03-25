@@ -30,8 +30,10 @@ import acceptJR from "../functions/acceptJR";
 import declineJR from "../functions/declineJR";
 
 import { title } from "@/components/primitives";
+import AvailableTeams from "./AvailableTeams";
 
 import "./TeamPage.css";
+import getTeamsDirectory from "../functions/getTeamsDirectory";
 
 interface JoinRequest {
   id: number;
@@ -46,8 +48,9 @@ interface JoinRequest {
 // Define the interface for Team and User data
 interface Team {
   id: number;
-  team_name: string;
-  captain_id: number;
+  name: string;
+  division: string;
+  // captain_id: number;
   // players: { id: string; name: string; email: string }[];
   // joinRequests: { id: number; first_name: string; last_name: string, email: string }[];
   // captain: { id: string; name: string; email: string }; // Add captain info
@@ -79,14 +82,16 @@ export default function TeamPage() {
   useEffect(() => {
     const initializeStates = async () => {
       const session = await getSession();
-
       setSession(session);
+
       let teamInfo = await getTeamInfo({ team_id: session?.user.team_id });
-
       setRoster(teamInfo);
-      let requests = await getJR({ team_id: session?.user.team_id });
 
+      let requests = await getJR({ team_id: session?.user.team_id });
       setJoinRequests(requests);
+
+      let teams = await getTeamsDirectory();
+      setTeams(teams);
 
       setLoading(false);
     };
@@ -112,6 +117,15 @@ export default function TeamPage() {
     setRoster(updatedTeamInfo);
   };
 
+  const handleRequestJoin = async (team_id: number) => {
+    if (session) {
+      createJR({
+        email: session.user.email,
+        team_id: team_id
+      })
+    }
+  }
+
   const handleAction = async () => {};
 
   return (
@@ -120,33 +134,7 @@ export default function TeamPage() {
 
       {/* Player View: Available Teams */}
       {session?.user.role === "player" && !session.user.team_id ? (
-        <div>
-          <h2 className="text-xl font-semibold text-center mb-4 mt-4">
-            Available Teams
-          </h2>
-          {teams.length ? (
-            teams.map((team) => (
-              <div key={team.id} className="p-4 border mb-2 rounded">
-                <p>{team.team_name}</p>
-                <Button
-                  className="button"
-                  disabled={actionLoading}
-                  onPress={
-                    () => handleAction()
-                    // `/api/teams/${team.id}/join`,
-                    // "POST",
-                    // { playerEmail: session.user.email },
-                    // "Join request sent!"
-                  }
-                >
-                  Request to Join
-                </Button>
-              </div>
-            ))
-          ) : (
-            <p>No available teams at the moment.</p>
-          )}
-        </div>
+        <AvailableTeams />
       ) : session?.user.role === "player" && session.user.team_id ? (
         // Player View After Join Request Accepted
         <div className="flex">

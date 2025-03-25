@@ -14,8 +14,17 @@ async def get_player_data(data: TeamID):
 
 @router.get("/get_teams", response_model=list)
 async def get_team_data():
-
     teams = get_all_teams() # select(Team.id, Team.team_name, Team.division, Team.offday)
-    teams = {team['id']: {"id": team["id"], "name": team["team_name"], "division": get_division_name_by_division_id(team["division"])["division_name"]} for team in teams}
+    teams = {
+        team['id']: {
+            "id": team["id"],
+            "name": team["team_name"],
+            "division": "No Division" if team["division"] == 0 else (
+                get_division_name_by_division_id(team["division"])["division_name"]
+                if get_division_name_by_division_id(team["division"]) is not None else "No Division"
+            )
+        }
+        for team in teams if team["division"] >= 0
+    }
 
-    return teams.values()
+    return list(teams.values())

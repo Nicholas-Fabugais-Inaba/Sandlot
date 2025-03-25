@@ -1,9 +1,31 @@
-.column-name {
-  width: 50%;
-  min-width: 150px;
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  max-width: 30%;
+  justify-content: space-between;
+}
+
+.team-name {
+  margin-right: 10px;
+  font-size: 24px;
+  /* font-weight: bold; */
+}
+
+.division-name {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.req-table-col {
+  width: 20%;
+  min-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 16px; /* Increase font size */
+  font-weight: bold; /* Make text bold */
+  padding: 4px 8px; /* Reduce padding */
 }
 
 .column-contact {
@@ -15,8 +37,8 @@
 }
 
 .small-button {
-  padding: 6px 6px; /* Further reduce padding */
-  font-size: 14px; /* Reduce font size */
+  padding: 8px 8px; /* Further reduce padding */
+  font-size: 18px; /* Reduce font size */
   line-height: 1; /* Maintain line-height */
   margin: 0px;
   height: auto; /* Ensure height is auto */
