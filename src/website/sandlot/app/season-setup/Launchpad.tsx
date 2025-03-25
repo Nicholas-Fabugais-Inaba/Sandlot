@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { Button } from "@heroui/react";
 import ConfirmationDialog from "./ConfirmationDialog";
+import preseasonToSeason from "../functions/preseasonToSeason";
+import offseasonToPreseason from "../functions/offseasonToPreseason";
+import endSeason from "../functions/endSeason";
 
 interface LaunchProps {
   seasonState: string;
@@ -18,17 +21,17 @@ export default function Launchpad({ seasonState }: LaunchProps) {
     setIsDialogOpen(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setIsDialogOpen(false);
     switch (dialogAction) {
       case "launchPreseason":
-        alert(`Preseason Launched!`);
+        await offseasonToPreseason()
         break;
       case "launchSeason":
-        alert(`Season Launched!`);
+        await preseasonToSeason()
         break;
       case "endSeason":
-        alert(`Season ended!`);
+        await endSeason({archiveTeams:false})
         break;
       case "returnPreseason":
         alert(`Returned to Preseason!`);
@@ -36,6 +39,7 @@ export default function Launchpad({ seasonState }: LaunchProps) {
       default:
         break;
     }
+    window.location.reload();
   };
 
   const handleCancel = () => {
