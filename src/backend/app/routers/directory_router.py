@@ -19,12 +19,17 @@ async def get_directory_teams():
     return teams.values()
 
 @router.post("/get_players_in_team", response_model=list)
-async def get_directory_players(team_id: TeamID):
-    players_data = get_team_players(team_id)
-    players_data = {}
+async def get_directory_players(data: TeamID):
+    # print(type(data.team_id))
+    players_data = get_team_players(data.team_id)
+    players_data = [dict(row) for row in players_data]
+    # print("GET TEAM PLAYERS: ", get_team_players(data.team_id))
+
+    players = {}
+    # print("THIS IS DATA: ", data.team_id)
 
     for player in players_data:            
-        players_data[player['id']] = {
+        players[player['id']] = {
             "player_id": player["id"],
             "first_name": player["first_name"], 
             "last_name": player["last_name"], 
@@ -33,6 +38,7 @@ async def get_directory_players(team_id: TeamID):
             "gender": player["gender"]
         }
     
-    print("THIS IS THE PLAYERS_DATA:", players_data)
-    print("THIS IS THE PLAYERS_DATA.VALUES():", players_data.values())
-    return players_data.values()
+    # print("THIS IS THE PLAYERS_DATA:", players_data)
+    # print("THIS IS THE PLAYERS_DATA.VALUES():", players_data.values())
+    # return players_data.values()
+    return players.values()

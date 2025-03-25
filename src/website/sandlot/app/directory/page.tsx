@@ -203,12 +203,16 @@ export default function TeamsDirectoryPage() {
                   <strong>Division:</strong> {selectedTeam.division}
                 </p>
                 <div>
-                  <strong>Players:</strong> 
-                  <ul>
-                    {players.map((player) => (
-                      <li key={player.player_id}>{player.first_name}</li>
-                    ))}
-                  </ul>
+                  <strong>Players:</strong>
+                  {players.length > 0 ? (
+                    <ul>
+                      {players.map((player) => (
+                        <li key={player.player_id}>{player.first_name}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No players found for this team.</p>
+                  )}
                 </div>
                 {/* Add more team details here if available */}
               </>
