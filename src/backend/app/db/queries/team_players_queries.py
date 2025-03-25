@@ -46,7 +46,8 @@ def get_teams_players(team_id):
                 Player.last_name,
                 Player.email,
                 Player.phone_number,
-                Player.gender
+                Player.gender,
+                Player.active
             )
             .select_from(TeamPlayers)
             .join(Player, TeamPlayers.player_id == Player.id)
