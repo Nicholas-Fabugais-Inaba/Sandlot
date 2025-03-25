@@ -275,7 +275,7 @@ export default function Home() {
                       <Button
                         className="button"
                         onPress={() =>
-                          signIn(undefined, { callbackUrl: "/profile" })
+                          signIn(undefined, { callbackUrl: "/account" })
                         }
                       >
                         Sign In
@@ -285,7 +285,7 @@ export default function Home() {
                       </p>
                       <Button
                         className="button"
-                        onPress={() => router.push("/profile/register")}
+                        onPress={() => router.push("/account/register")}
                       >
                         Register
                       </Button>
