@@ -34,7 +34,7 @@ import { title } from "@/components/primitives";
 import AvailableTeams from "./AvailableTeams";
 
 import "./TeamPage.css";
-import getTeamsDirectory from "../functions/getTeamsDirectory";
+import getTeamsDirectory from "../functions/getDirectoryTeams";
 
 interface JoinRequest {
   id: number;
