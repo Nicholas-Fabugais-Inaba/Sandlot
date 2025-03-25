@@ -234,7 +234,7 @@ export default function TeamsDirectoryPage() {
                                   notificationTimeout = null; // Reset the timeout variable
                                 }, 2000); // Clear notification after 2 seconds
                               }}
-                              title="Click to copy email"
+                              title="Click to copy email to clipboard"
                             >
                               {player.email}
                             </div>
