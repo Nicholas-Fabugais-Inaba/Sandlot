@@ -40,23 +40,27 @@ export const NotificationModal: FC<NotificationModalProps> = ({
 
   const router = useRouter();
 
+  const [fetchTime, setFetchTime] = useState<Date | null>(null);
+
   useEffect(() => {
     if (!isOpen) return;
-  
+
     (async () => {
       try {
         const session = await getSession();
         const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id });
-  
+
+        setFetchTime(new Date()); 
+
         const formattedNotifications = rrList
-          .filter((rr: RescheduleRequest) => !rr.isRead) // Only show unread notifications
+          .filter((rr: RescheduleRequest) => !rr.isRead)
           .map((rr: RescheduleRequest) => ({
             id: rr.id,
             message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
             isRead: false,
-            timestamp: rr.originalDate.toISOString(),
+            timestamp: fetchTime ? fetchTime.toISOString() : new Date().toISOString(), 
           }));
-  
+
         setNotifications(formattedNotifications);
         setUnreadCount(formattedNotifications.length);
       } catch (error) {
