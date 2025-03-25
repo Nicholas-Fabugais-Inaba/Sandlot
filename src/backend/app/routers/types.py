@@ -93,14 +93,38 @@ class NewAnnouncement(BaseModel):
     body: str
 
 class AnnouncementData(BaseModel):
-    announcement_id: int
-    new_date: str
-    new_title: str
-    new_body: str
+    id: int
+    date: str
+    title: str
+    body: str
 
 class AnnouncementID(BaseModel):
     announcement_id: int
 
+class UpdatePassword(BaseModel):
+    player_id: int
+    new_password: str
+
+class UpdateEmail(BaseModel):
+    player_id: int
+    new_email: str
+
+class UpdateName(BaseModel):
+    player_id: int
+    first_name: str
+    last_name: str
+
+class UpdateTeamPassword(BaseModel):
+    team_id: int
+    new_password: str
+
+class UpdateTeamUsername(BaseModel):
+    team_id: int
+    new_username: str
+
+class UpdateTeamName(BaseModel):
+    team_id: int
+    new_team_name: str
 class JoinRequest(BaseModel):
     email: str
     team_id: int
@@ -112,3 +136,7 @@ class JRAccept(BaseModel):
 
 class JRDecline(BaseModel):
     jr_id: int
+
+class Division(BaseModel):
+    division_id: int
+    division_name: str

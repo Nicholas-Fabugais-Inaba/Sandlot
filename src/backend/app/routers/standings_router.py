@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData
 from ..db.queries.game_queries import get_standings
-from ..db.queries.team_queries import get_all_teams
+from ..db.queries.team_queries import get_all_teams, get_all_season_teams
 from ..db.queries.division_queries import get_division_name_by_division_id, get_division_name_by_team_id
 
 
@@ -14,10 +14,11 @@ async def get_standings_data():
     # gets standings from query and puts into dict
     games = get_standings()
     games = [dict(row) for row in games]
-    teams_data = get_all_teams()
+    # teams_data = get_all_teams()
+    teams_data = get_all_season_teams()
     teams = {}
 
-    for team in teams_data:
+    for team in teams_data:            
         teams[team['id']] = {
             "name": team["team_name"], 
             "wins": 0, 
@@ -28,6 +29,22 @@ async def get_standings_data():
             "division": get_division_name_by_division_id(team["division"])["division_name"]
             # "division": get_division_name_by_team_id(team["id"])["division_name"] # simply an alternate way; not needed
         }
+
+    # for team in teams_data:            
+    #     teams[team['id']] = {
+    #         "name": team["team_name"], 
+    #         "wins": 0, 
+    #         "losses": 0, 
+    #         "ties": 0, 
+    #         "forfeits": 0, 
+    #         "differential": 0, 
+            
+    #         # "division": get_division_name_by_team_id(team["id"])["division_name"] # simply an alternate way; not needed
+    #     }
+    #     if team["division"] < 0:
+    #         teams[team['id']]['division'] = None
+    #     else:
+    #         teams[team['id']]['division'] = get_division_name_by_division_id(team["division"])["division_name"]
         print("TEAMS IS: ", teams)
 
     for game in games:

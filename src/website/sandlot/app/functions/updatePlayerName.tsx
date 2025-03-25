@@ -1,11 +1,15 @@
 import axios from "axios";
 
-export default async function createJR(joinRequest: any): Promise<void> {
+export default async function updatePlayerName(playerNameData: {
+  player_id: Number;
+  first_name: String;
+  last_name: String;
+}): Promise<void> {
   axios
-    .post(`${process.env.NEXT_PUBLIC_APIHOST}/join/create_join_request`, joinRequest)
+    .put(`${process.env.NEXT_PUBLIC_APIHOST}/user/update_player_name`, playerNameData)
     .then((response) => {
       console.log("server response: " + response.status);
-      console.log("JR created");
+      console.log("player's name updated");
     })
     .catch((error) => {
       console.log(error.response);
