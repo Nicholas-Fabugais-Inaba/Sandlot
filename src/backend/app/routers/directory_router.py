@@ -22,7 +22,9 @@ async def get_standings_data():
     for team in teams_data:            
         teams[team['id']] = {
             "name": team["team_name"], 
-            "division": get_division_name_by_division_id(team["division"])["division_name"]
+            # "division": get_division_name_by_division_id(team["division"])["division_name"]
+            "division": team["division_name"],
+
         }
     
     return teams.values()

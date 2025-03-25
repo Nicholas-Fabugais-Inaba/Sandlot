@@ -36,7 +36,7 @@ def get_all_season_teams():
     engine = create_connection()
     with Session(engine) as session:
         stmt = (
-            select(Team.id, Team.team_name, Team.division, Team.offday, Team.preferred_time)
+            select(Team.id, Team.team_name, Division.division_name, Team.offday, Team.preferred_time)
             .select_from(Team)
             .join(Division, Team.division == Division.id)  # Ensure the division exists in the Division table
         )

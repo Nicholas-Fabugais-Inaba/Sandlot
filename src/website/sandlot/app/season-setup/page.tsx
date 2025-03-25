@@ -17,7 +17,7 @@ import Launchpad from "./Launchpad";
 
 export default function SeasonSetupPage() {
   const [activeSection, setActiveSection] = useState("general");
-  const [seasonState, setSeasonState] = useState("offseason");
+  const [seasonState, setSeasonState] = useState("preseason");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   // Individual state variables for form data
