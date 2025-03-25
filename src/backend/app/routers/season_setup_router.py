@@ -96,3 +96,21 @@ async def update_divisions(data: list[Division]):
     for division in data:
         insert_division_with_id(division.division_id, division.division_name)
     return True
+
+@router.put("/end_season", response_model=None)
+async def end_season_route():
+    # Archive all active team and player data
+    # Deactivate all active teams and players
+    # Switch season state in database to offseason
+    return True
+
+@router.put("/offseason_to_preseason", response_model=None)
+async def offseason_to_preseason_route():
+    # Switch season state in database to preseason
+    return True
+
+@router.put("/preseason_to_season", response_model=None)
+async def preseason_to_season_route():
+    # Switch season state in database to season
+    return True
+
