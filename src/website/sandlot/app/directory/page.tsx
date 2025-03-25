@@ -42,9 +42,19 @@ export default function TeamsDirectoryPage() {
   }
 
   useEffect(() => {
+
+    // fetches session info
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+    };
+    
+    fetchSession();
+
+    // fetches teams info
     (async () => {
       let teams = await getTeamsDirectory();
-
+      
       console.log(teams);
       console.log(teams[0]);
       setTeams(teams);
@@ -73,11 +83,11 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
- if (isLoading) {
+ if (isLoading || !session) {
     return <Spinner label="Loading..." />;
   }
 
-  if (session?.user.role === "commissioner" || session?.user.role === "team")
+  if (session?.user.role === "commissioner" || session?.user.role === "team") {
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -179,7 +189,7 @@ export default function TeamsDirectoryPage() {
         </div>
       </div>
     </div>
-  );
+  )}
 
   else{ return <h1>Unauthorized</h1> }
 }
