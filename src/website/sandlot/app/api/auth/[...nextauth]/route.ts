@@ -48,6 +48,7 @@ const authOptions: NextAuthOptions = {
                 preferred_division: "temp_preferred_division",
                 preferred_time: "temp_preferred_time",
                 team_id: player.team_id,
+                teams: player.teams,
               };
             }
           } else if (credentials.userID != "admin") {
@@ -68,6 +69,7 @@ const authOptions: NextAuthOptions = {
                 preferred_division: team.preferred_division,
                 preferred_time: team.preferred_time,
                 team_id: team.id,
+                teams: [],
               };
             }
           }
@@ -111,6 +113,7 @@ const authOptions: NextAuthOptions = {
               ? token.preferred_time
               : "",
           team_id: typeof token.team_id === "number" ? token.team_id : 0,
+          teams: Array.isArray(token.teams) ? token.teams : [],
         };
       }
       console.log("Session callback session:", session); // Debugging log
@@ -132,6 +135,7 @@ const authOptions: NextAuthOptions = {
         token.preferred_division = user.preferred_division;
         token.preferred_time = user.preferred_time;
         token.team_id = user.team_id;
+        token.teams = user.teams;
       }
 
       return token;
