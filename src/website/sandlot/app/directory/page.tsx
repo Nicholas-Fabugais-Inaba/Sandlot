@@ -1,4 +1,4 @@
-// app/team/directory/page.tsx
+// app/directory/page.tsx
 
 "use client";
 
@@ -15,6 +15,7 @@ import {
 } from "@heroui/react";
 import { useAsyncList } from "@react-stately/data";
 import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 import { title } from "@/components/primitives";
 // import getStandings from "../functions/getStandings";
@@ -22,6 +23,7 @@ import "./TeamDirectoryPage.css";
 import getTeamsDirectory from "@/app/functions/getTeamsDirectory";
 
 export default function TeamsDirectoryPage() {
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sortDescriptors, setSortDescriptors] = useState<
     Record<

@@ -442,12 +442,13 @@ export default function Home() {
             >
               Key Season Dates
             </button>
+            {session?.user.role === "commissioner" || session?.user.role === "team" && (
             <button
               className={`directory-item text-left font-semibold inline-block ${activeSection === "team" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
-              onClick={() => router.push("/team/directory")}
+              onClick={() => router.push("/directory")}
             >
               Team Directory
-            </button>
+            </button>)}
             <div className="relative">
               <button
                 className={`directory-item text-left font-semibold inline-block ${activeSection === "weather" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
