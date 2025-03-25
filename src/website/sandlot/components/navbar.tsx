@@ -14,8 +14,7 @@ import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
-import { useSession } from "next-auth/react";
-import { getSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
@@ -26,15 +25,15 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { ChevronDown } from "lucide-react";
 
 import getRR from "../app/functions/getRR";
+import { useGlobalState } from "../context/GlobalStateContext";
 
 export const Navbar = () => {
-  const { data: session, update: updateSession } = useSession();
+  const { teamId, teamName, setTeamId, setTeamName } = useGlobalState();
   const [loading, setLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
   const [unreadCount, setUnreadCount] = useState(0);
   const [userTeams, setUserTeams] = useState<{ [key: number]: string }>({});
-  const [userTeamId, setUserTeamId] = useState<number>(0);
   const [userRole, setUserRole] = useState<string>("");
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
@@ -48,8 +47,9 @@ export const Navbar = () => {
 
         if (userSession) {
           setUserTeams(userSession.user.teams);
-          setUserTeamId(userSession.user.team_id);
+          setTeamId(userSession.user.team_id);
           setUserRole(userSession.user.role);
+          setTeamName(userSession.user.teamName);
         }
 
         // Fetch unread notifications immediately
@@ -87,21 +87,10 @@ export const Navbar = () => {
   });
 
   const handleTeamSwitch = async (teamId: number) => {
-    if (session) {
-      await updateSession({
-        ...session,
-        user: {
-          ...session.user,
-          team_id: teamId,
-          teamName: userTeams[teamId],
-        },
-      });
-      setUserTeamId(teamId);
-      console.log(`Switched to team: ${userTeams[teamId]}`);
-    } else {
-      console.log("Team switch failed. Session is null.");
-    }
-    
+    setTeamId(teamId);
+    setTeamName(userTeams[teamId]);
+    console.log(`Switched to team: ${userTeams[teamId]}`);
+    window.location.reload(); // Refresh the page
   };
 
   const handleBellClick = () => {
@@ -156,7 +145,7 @@ export const Navbar = () => {
         <NavbarItem className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-              {userTeams[userTeamId]} <ChevronDown size={16} />
+              {userTeams[teamId]} <ChevronDown size={16} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
               {Object.entries(userTeams).map(([id, name]) => (
@@ -215,7 +204,7 @@ export const Navbar = () => {
         anchorRef={bellRef}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        team_id={userTeamId} // Adjust this value
+        team_id={teamId} // Adjust this value
         setUnreadCount={setUnreadCount}
       />
     </HeroUINavbar>
