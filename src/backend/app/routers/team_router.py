@@ -21,7 +21,7 @@ async def get_team_data():
             "name": team["team_name"],
             "division": team["division_name"]
         }
-        for team in teams if team["division"] > 0
+        for team in teams
     }
 
     return teams.values()

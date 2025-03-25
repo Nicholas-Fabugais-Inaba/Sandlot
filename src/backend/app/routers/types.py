@@ -87,6 +87,9 @@ class ScoreData(BaseModel):
 class PlayerID(BaseModel):
     player_id: Optional[int]
 
+class PlayerEmail(BaseModel):
+    email: str
+
 class NewAnnouncement(BaseModel):
     date: str
     title: str
@@ -125,6 +128,7 @@ class UpdateTeamUsername(BaseModel):
 class UpdateTeamName(BaseModel):
     team_id: int
     new_team_name: str
+
 class JoinRequest(BaseModel):
     email: str
     team_id: int

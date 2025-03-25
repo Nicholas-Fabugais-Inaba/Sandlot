@@ -12,7 +12,8 @@
   /* font-weight: bold; */
 }
 
-.division-name {
+.division-name,
+.status {
   margin-right: 10px;
   font-size: 18px;
 }

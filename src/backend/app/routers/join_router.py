@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from .types import JoinRequest, TeamID, JRAccept, JRDecline
-from ..db.queries.join_request_queries import insert_join_request, get_join_requests, decline_join_request, delete_join_request
+from .types import JoinRequest, TeamID, PlayerEmail, JRAccept, JRDecline
+from ..db.queries.join_request_queries import insert_join_request, get_join_requests, get_join_requests_by_player, decline_join_request, delete_join_request
 from ..db.queries.player_queries import get_player, update_players_team
 
 
@@ -16,6 +16,13 @@ async def create_join_request(data: JoinRequest):
 @router.post("/get_join_requests", response_model=list)
 async def get_team_join_requests(data: TeamID):
     requests = get_join_requests(data.team_id)
+    requests = [dict(row) for row in requests]
+    return requests
+
+@router.post("/get_join_requests_by_player", response_model=list)
+async def get_team_join_requests_by_player_route(data: PlayerEmail):
+    player = get_player(data.email)
+    requests = get_join_requests_by_player(player.id)
     requests = [dict(row) for row in requests]
     return requests
 
