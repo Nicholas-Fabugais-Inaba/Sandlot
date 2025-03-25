@@ -84,7 +84,7 @@ class RescheduleRequest(Base):
 class JoinRequest(Base):
     __tablename__ = "join_request"
     id: Mapped[int] = mapped_column(primary_key=True)
-    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
+    player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
     team_id: Mapped[Optional[int]] = mapped_column(ForeignKey("team.id"))
     accepted: Mapped[Optional[bool]] = mapped_column()
 
