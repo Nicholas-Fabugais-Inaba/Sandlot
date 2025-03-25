@@ -59,6 +59,7 @@ def get_team(login_username):
         return result
 
 # TODO: naming of this query was overhauled, make sure to update any imports of get_team_info_by_current_user
+# TODO: change to work with TeamPlayers
 def get_team_players(team_id):
     engine = create_connection()
     with Session(engine) as session:

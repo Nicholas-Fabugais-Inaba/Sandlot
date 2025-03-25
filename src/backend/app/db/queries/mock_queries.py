@@ -3,6 +3,7 @@ from ..create_engine import create_connection
 from ..models import Player, Game
 
 
+# TODO: change to work with TeamPlayer
 def insert_mock_player(first_name, last_name, email, password, phone_number, gender, team_id):
     engine = create_connection()
     with Session(engine) as session:
