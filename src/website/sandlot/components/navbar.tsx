@@ -25,11 +25,11 @@ import { NotificationModal } from "@/components/NotificationModal"; // Import mo
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 
-const mockTeams: { [key: number]: string } = {
-  1: "Team A",
-  2: "Team B",
-  3: "Team C",
-};
+// const mockTeams: { [key: number]: string } = {
+//   1: "Team A",
+//   2: "Team B",
+//   3: "Team C",
+// };
 
 import getRR from "../app/functions/getRR";
 
@@ -39,7 +39,7 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
   const [unreadCount, setUnreadCount] = useState(0);
-  const [currentTeam, setCurrentTeam] = useState(mockTeams[1]);
+  // const [currentTeam, setCurrentTeam] = useState("");
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
 
@@ -88,8 +88,8 @@ export const Navbar = () => {
   });
 
   const handleTeamSwitch = (teamId: number) => {
-    setCurrentTeam(mockTeams[teamId]);
-    console.log(`Switched to team: ${mockTeams[teamId]}`);
+    // setCurrentTeam(mockTeams[teamId]);
+    console.log(`Switched to team: `);
   };
 
   const handleBellClick = () => {
@@ -144,7 +144,7 @@ export const Navbar = () => {
         <NavbarItem className="flex gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-              {currentTeam} <ChevronDown size={16} />
+            {session && session.user.teams[session.user.team_id]} <ChevronDown size={16} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
               {session && Object.entries(session.user.teams).map(([id, name]) => (
