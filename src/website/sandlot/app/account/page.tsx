@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import { getSession, signOut, signIn } from "next-auth/react";
 import { Session } from "next-auth";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button, Card, CardBody, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import updatePlayerEmail from "../functions/updatePlayerEmail";
@@ -142,7 +142,14 @@ export default function AccountPage() {
     setIsModalOpen(true);
   };
 
-  if (loading) return <div>Loading...</div>;
+  // If loading, show a global spinner
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Account Information..." size="lg" />
+      </div>
+    );
+  }
 
   if (!session) {
     return (

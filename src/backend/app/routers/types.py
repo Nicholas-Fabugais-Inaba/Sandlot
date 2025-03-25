@@ -53,10 +53,22 @@ class RRAccept(BaseModel):
 class SchedParams(BaseModel):
     num_games: int
 
+class SeasonPreset(BaseModel):
+    name: str
+    start_date: str
+    end_date: str
+    games_per_team: int
+
 class SeasonSettings(BaseModel):
     start_date: str
     end_date: str
     games_per_team: int
+
+class SeasonState(BaseModel):
+    state: str
+
+class SettingsID(BaseModel):
+    settings_id: int
 
 class FieldName(BaseModel):
     field_name: str
@@ -79,9 +91,7 @@ class DivisionData(BaseModel):
 class ScoreData(BaseModel):
     game_id: int
     home_score: int
-    home_name: str
     away_score: int
-    away_name: str
     forfeit: int
 
 class PlayerID(BaseModel):
@@ -141,6 +151,36 @@ class JRAccept(BaseModel):
 class JRDecline(BaseModel):
     jr_id: int
 
+class CommissionerReschedule(BaseModel):
+    game_id: int
+    date: str
+    time: str
+    field: str
+
 class Division(BaseModel):
     division_id: int
     division_name: str
+
+class NewArchivedTeam(BaseModel):
+    name: str
+    division_name: str
+    standing: str
+    year: str
+
+class ArchivedTeam(BaseModel):
+    name: str
+    year: str
+
+class NewArchivedPlayer(BaseModel):
+    archived_team_id: int
+    first_name: str
+    last_name: str
+
+class ArchivedTeamID(BaseModel):
+    archived_team_id: int
+
+class NewWaiver(BaseModel):
+    player_id: int
+    signature: str
+    date: str
+ 

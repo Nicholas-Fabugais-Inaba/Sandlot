@@ -15,6 +15,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Spinner,
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
@@ -45,7 +46,6 @@ interface JoinRequest {
   gender: string;
 }
 
-// Define the interface for Team and User data
 interface Team {
   id: number;
   name: string;
@@ -77,7 +77,6 @@ export default function TeamPage() {
   const [userTeamID, setUserTeamID] = useState<number | null>(null);
 
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
-  // const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     const initializeStates = async () => {
@@ -127,6 +126,15 @@ export default function TeamPage() {
   }
 
   const handleAction = async () => {};
+
+  // Loading spinner when data is being fetched
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Team Information..." size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -187,10 +195,6 @@ export default function TeamPage() {
               className="button"
               onPress={
                 () => handleAction()
-                // `/api/teams/${userTeam.id}/leave`,
-                // "POST",
-                // { playerEmail: session.user.email },
-                // "You have left the team"
               }
             >
               Leave Team
@@ -311,7 +315,6 @@ export default function TeamPage() {
                   </div>
                 ))
               ) : (
-                // TODO: this does not show up properly if there are no requests
                 <p>No pending requests</p>
               )}
             </div>
