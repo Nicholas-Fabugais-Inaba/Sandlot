@@ -11,6 +11,7 @@ import {
   DropTargetMonitor,
 } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Spinner } from "@heroui/react";
 
 import getSeasonSettings from "../functions/getSeasonSettings";
 
@@ -413,14 +414,21 @@ function DivisionsSettings() {
     { id: 0, name: "Team Bank", teams: [] },
   ]);
   const [newDivision, setNewDivision] = useState("");
-  const [isDragging, setIsDragging] = useState(false); // Lift the dragging state up
+  const [isDragging, setIsDragging] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Load state from localStorage on mount
   useEffect(() => {
     const loadDivisionData = async () => {
-      const data = await getTeamsSeasonSetup();
-
-      setDivisions(data);
+      try {
+        setLoading(true);
+        const data = await getTeamsSeasonSetup();
+        setDivisions(data);
+      } catch (error) {
+        console.error("Error loading division data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadDivisionData();
@@ -489,6 +497,15 @@ function DivisionsSettings() {
     updateTeamDivisions(divisions);
   };
 
+  // If loading, show spinner
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Division Information..." size="lg" />
+      </div>
+    );
+  }
+
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-4">Division Settings</h2>
@@ -542,9 +559,9 @@ function DivisionsSettings() {
                   <div key={division.id} className="division-container">
                     <Division
                       division={division}
-                      isDragging={isDragging} // Pass the isDragging state
+                      isDragging={isDragging}
                       moveTeam={moveTeam}
-                      setIsDragging={setIsDragging} // Pass the setIsDragging function
+                      setIsDragging={setIsDragging}
                     />
                   </div>
                 ))}
@@ -560,9 +577,9 @@ function DivisionsSettings() {
               division={
                 divisions.find((division) => division.name === "Team Bank")!
               }
-              isDragging={isDragging} // Pass the isDragging state
+              isDragging={isDragging}
               moveTeam={moveTeam}
-              setIsDragging={setIsDragging} // Pass the setIsDragging function
+              setIsDragging={setIsDragging}
             />
             <div style={{ textAlign: "right", marginTop: "20px" }}>
               <button
@@ -583,6 +600,7 @@ function DivisionsSettings() {
 function ScheduleSettings() {
   return (
     <div>
+      <h2 className="text-2xl font-semibold mb-4">Schedule Generator</h2>
       <Schedule viewer={true} />
     </div>
   );

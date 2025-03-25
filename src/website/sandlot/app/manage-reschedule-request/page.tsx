@@ -8,10 +8,10 @@ import { getSession } from "next-auth/react";
 
 import { title } from "@/components/primitives";
 
-import { Card } from "@heroui/react"; // Import NextUI Card
+import { Card, Spinner } from "@heroui/react";
 
-import CustomModal from "./CustomModal"; // Import Custom Modal
-import "./ManageRescheduleRequest.css"; // Custom styles
+import CustomModal from "./CustomModal";
+import "./ManageRescheduleRequest.css";
 
 import getRR from "../functions/getRR";
 import acceptRR from "../functions/acceptRR";
@@ -33,9 +33,7 @@ export default function ManageRescheduleRequest() {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
-  const [rescheduleRequests, setRescheduleRequests] = useState<
-    RescheduleRequest[]
-  >([]);
+  const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>([]);
   const [selectedDates, setSelectedDates] = useState<{
     [key: string]: string | null;
   }>({});
@@ -51,29 +49,29 @@ export default function ManageRescheduleRequest() {
   } | null>(null);
   const router = useRouter();
 
-  // Fetch session data to get user role
+  // Combined fetch for session and reschedule requests
   useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const session = await getSession();
 
-      if (session) {
-        setUserRole(session.user?.role || null);
-        setUserTeamId(session.user?.team_id || null);
+        if (session) {
+          setUserRole(session.user?.role || null);
+          setUserTeamId(session.user?.team_id || null);
+
+          // Fetch reschedule requests immediately after session
+          const formattedRequests = await getRR({ team_id: session?.user.team_id });
+          setRescheduleRequests(formattedRequests);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false); // Set loading to false after fetching session
     };
 
-    fetchSession();
-  }, []);
-
-  // Fetch reschedule request data (mocked for this example)
-  useEffect(() => {
-    (async () => {
-      const session = await getSession();
-      const formattedRequests = await getRR({ team_id: session?.user.team_id });
-
-      setRescheduleRequests(formattedRequests);
-    })();
+    fetchData();
   }, []);
 
   const handleAccept = (id: string) => {
@@ -123,13 +121,14 @@ export default function ManageRescheduleRequest() {
         if (request) {
           let splitNewDate = parseNewDate(modalContent.newDate);
           let timeslot = deriveTimeslot(splitNewDate[0]);
+          let formattedDate: string = splitNewDate[0].toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
           acceptRR({
             rr_id: parseInt(request.id, 10),
             old_game_id: request.game_id,
             home_team_id: request.reciever_id,
             away_team_id: request.requester_id,
-            date: splitNewDate[0].toLocaleDateString(),
+            date: formattedDate,
             time: timeslot,
             field: splitNewDate[1],
           });
@@ -168,13 +167,17 @@ export default function ManageRescheduleRequest() {
   }
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading indicator while fetching session
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Reschedule Requests..." size="lg" />
+      </div>
+    );
   }
 
   return (
     <div>
       <h1 className={title()}>Manage Reschedule Requests</h1>
-      <div className="items-center p-6">
+      <div className="text-left p-6">
         {rescheduleRequests.length === 0 ? (
           <div>No reschedule requests found.</div>
         ) : (

@@ -91,9 +91,7 @@ class DivisionData(BaseModel):
 class ScoreData(BaseModel):
     game_id: int
     home_score: int
-    home_name: str
     away_score: int
-    away_name: str
     forfeit: int
 
 class PlayerID(BaseModel):
@@ -137,6 +135,7 @@ class UpdateTeamUsername(BaseModel):
 class UpdateTeamName(BaseModel):
     team_id: int
     new_team_name: str
+
 class JoinRequest(BaseModel):
     email: str
     team_id: int
@@ -148,6 +147,12 @@ class JRAccept(BaseModel):
 
 class JRDecline(BaseModel):
     jr_id: int
+
+class CommissionerReschedule(BaseModel):
+    game_id: int
+    date: str
+    time: str
+    field: str
 
 class Division(BaseModel):
     division_id: int
@@ -175,3 +180,4 @@ class NewWaiver(BaseModel):
     player_id: int
     signature: str
     date: str
+ 
