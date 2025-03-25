@@ -24,9 +24,10 @@ async def get_player_account(data: PlayerLoginData):
     player = dict(get_player(data.email))
     # get list of teams player has joined
     player_teams = get_players_teams(player["id"])
-    player_teams = [dict(row) for row in player_teams]
-    # add a key to the existing player dict to store the list of teams
-    player["teams"] = player_teams
+    # convert list of dicts to a single dict with ids as keys and names as values
+    player_teams_dict = {team["id"]: team["name"] for team in player_teams}
+    # add a key to the existing player dict to store the dict of teams
+    player["teams"] = player_teams_dict
     return player
 
 @router.post("/get_team", response_model=object)
