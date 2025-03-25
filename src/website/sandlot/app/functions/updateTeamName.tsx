@@ -1,16 +1,14 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
-export default async function updateDivision(divisionData: {
+export default async function updateTeamName(teamNameData: {
   team_id: Number;
-  division: Number;
+  new_team_name: String;
 }): Promise<void> {
   axios
-    .put(`http://${APIHOST}/season-setup/update_division`, divisionData)
+    .put(`${process.env.NEXT_PUBLIC_APIHOST}/team/update_team_name`, teamNameData)
     .then((response) => {
       console.log("server response: " + response.status);
-      console.log("team's division updated");
+      console.log("team's name updated");
     })
     .catch((error) => {
       console.log(error.response);

@@ -1,11 +1,9 @@
 import axios from "axios";
 
-const APIHOST = `127.0.0.1:8000`;
-
 // TODO: changes param types and output types
 export default async function registerPlayer(newUser: any): Promise<void> {
   axios
-    .post(`http://${APIHOST}/user/create_player`, newUser)
+    .post(`${process.env.NEXT_PUBLIC_APIHOST}/user/create_player`, newUser)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("account created");

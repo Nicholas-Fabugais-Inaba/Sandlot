@@ -31,6 +31,17 @@ def get_all_teams():
         stmt = select(Team.id, Team.team_name, Team.division, Team.offday, Team.preferred_time)
         result = session.execute(stmt).mappings().all()
         return result
+    
+def get_all_season_teams():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Team.id, Team.team_name, Team.division, Team.offday, Team.preferred_time)
+            .select_from(Team)
+            .join(Division, Team.division == Division.id)  # Ensure the division exists in the Division table
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
         
 def get_team(login_username):
     engine = create_connection()
@@ -74,3 +85,38 @@ def delete_team(team_id):
         session.execute(stmt)
         session.commit()
         return "team deleted"
+
+def update_team_name(team_id, new_name):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).where(Team.id == team_id).values(team_name=new_name)
+        session.execute(stmt)
+        session.commit()
+        return "team name updated"
+
+def update_team_username(team_id, new_username):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).where(Team.id == team_id).values(username=new_username)
+        session.execute(stmt)
+        session.commit()
+        return "team username updated"
+
+def update_team_password(team_id, new_password):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).where(Team.id == team_id).values(password=new_password)
+        session.execute(stmt)
+        session.commit()
+        return "password updated"
+
+def get_teams_season_setup():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            select(Team.id, Team.team_name, Team.division, Team.preferred_division, Division.division_name)
+            .select_from(Team)
+            .join(Division, Division.id == Team.division)
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
