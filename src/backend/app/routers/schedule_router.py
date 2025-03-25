@@ -40,8 +40,8 @@ async def RR_accepted(data: RRAccept):
 async def gen_schedule(data: SchedParams):
     # delete existing schedule when generating new one
     # TODO: need to delete all reschedule requests as well (also join requests evenutually)
-    delete_all_reschedule_requests()
-    delete_all_games()
+    # delete_all_reschedule_requests()
+    # delete_all_games()
     schedule, score, teams = gen_schedule_repeated()
     return {"schedule": schedule, "score": score, "teams": teams}   
 

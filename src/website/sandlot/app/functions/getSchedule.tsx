@@ -24,11 +24,11 @@ export default async function getSchedule(): Promise<Event[]> {
       `${process.env.NEXT_PUBLIC_APIHOST}/schedule/get_all_games`,
     );
 
-    console.log(response.data);
+    console.log("Response:", response.data);
 
     let formattedEvents = getFormattedEvents(response.data);
 
-    console.log(formattedEvents);
+    console.log("Formatted Events:",formattedEvents);
 
     return formattedEvents;
   } catch (error) {
@@ -45,11 +45,11 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
       { team_id: team_id },
     );
 
-    console.log(response.data);
+    console.log("Response:", response.data);
 
     let formattedEvents = getFormattedEvents(response.data);
 
-    console.log(formattedEvents);
+    console.log("Team Formatted Events:", formattedEvents);
 
     return formattedEvents;
   } catch (error) {

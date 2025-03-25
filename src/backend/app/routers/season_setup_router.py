@@ -4,14 +4,19 @@ from ..db.queries.season_settings_queries import insert_season_settings, get_sea
 from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
 from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
 from ..db.queries.team_queries import update_division, get_all_teams, get_teams_season_setup
-from ..db.queries.game_queries import insert_game
+from ..db.queries.game_queries import insert_game, delete_all_games
 from ..db.queries.division_queries import insert_division_with_id, delete_all_divisions_except_team_bank, get_divisions_season_setup
+from ..db.queries.reschedule_request_queries import delete_all_reschedule_requests
 
 
 router = APIRouter(tags=["season-setup"])
 
 @router.post("/create_schedule", response_model=None)
 async def create_schedule(schedule: dict):
+    # Clear previous data
+    delete_all_reschedule_requests()
+    delete_all_games()
+
     teams = {}
     Teams = get_all_teams()
     for i in range(len(Teams)):

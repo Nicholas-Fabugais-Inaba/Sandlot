@@ -97,6 +97,9 @@ class ScoreData(BaseModel):
 class PlayerID(BaseModel):
     player_id: Optional[int]
 
+class PlayerEmail(BaseModel):
+    email: str
+
 class NewAnnouncement(BaseModel):
     date: str
     title: str
