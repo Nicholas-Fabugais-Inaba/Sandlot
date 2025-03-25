@@ -60,6 +60,11 @@ def delete_all_divisions_except_team_bank():
     engine = create_connection()
     with Session(engine) as session:
         stmt = delete(Division).where(Division.id != 0)
-        session.execute(stmt)
-        session.commit()
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
     return True

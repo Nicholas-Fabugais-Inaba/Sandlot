@@ -3,7 +3,7 @@ from .types import RescheduleRequest, TeamID, RRAccept, SchedParams, ScoreData
 from ..db.queries.game_queries import get_all_games, get_team_games, update_game, delete_all_games, get_score, update_score
 from ..db.queries.reschedule_request_queries import insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, delete_all_reschedule_requests
 from ..functions.gen_sched_input import gen_schedule_repeated
-from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams
+from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams, CommissionerReschedule
 
 router = APIRouter(tags=["schedule"])
 
@@ -40,8 +40,8 @@ async def RR_accepted(data: RRAccept):
 async def gen_schedule(data: SchedParams):
     # delete existing schedule when generating new one
     # TODO: need to delete all reschedule requests as well (also join requests evenutually)
-    delete_all_reschedule_requests()
-    delete_all_games()
+    # delete_all_reschedule_requests()
+    # delete_all_games()
     schedule, score, teams = gen_schedule_repeated()
     return {"schedule": schedule, "score": score, "teams": teams}   
 
@@ -58,4 +58,9 @@ async def get_game_score(data: GameID):
 @router.post("/submit_score", response_model=None)
 async def submit_game_score(data: ScoreData):
     update_score(game_id=data.game_id, home_team_score=data.home_score, away_team_score=data.away_score, forfeit=data.forfeit)
+    return True
+
+@router.post("/commissioner_reschedule", response_model=None)
+async def commissioner_reschedule_route(data: CommissionerReschedule):
+    update_game(data.game_id, data.date, data.time, data.field)
     return True

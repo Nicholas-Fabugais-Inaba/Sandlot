@@ -1,4 +1,4 @@
-// app/profile/register/page.tsx
+// app/account/register/page.tsx
 
 "use client";
 
@@ -83,7 +83,7 @@ export default function Register() {
       if (result?.error) {
         setError(result.error);
       } else {
-        window.location.href = "/profile"; // Full page reload to ensure a complete refresh
+        window.location.href = "/account"; // Full page reload to ensure a complete refresh
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -285,7 +285,7 @@ export default function Register() {
               <div className="flex justify-center mt-48">
                 <Button
                   className="button"
-                  onPress={() => router.push("/profile")}
+                  onPress={() => router.push("/account")}
                 >
                   Cancel
                 </Button>
@@ -310,7 +310,7 @@ export default function Register() {
                 </Button>
                 <Button
                   className="button"
-                  onPress={() => router.push("/profile")}
+                  onPress={() => router.push("/account")}
                 >
                   Cancel
                 </Button>
