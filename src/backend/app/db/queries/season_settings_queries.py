@@ -22,6 +22,19 @@ def insert_season_settings(name, start_date, end_date, games_per_team):
             session.commit()
     return True
 
+def get_all_season_settings():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            SeasonSettings.id,
+            SeasonSettings.name,
+            SeasonSettings.start_date, 
+            SeasonSettings.end_date, 
+            SeasonSettings.games_per_team
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
+
 def get_season_settings():
     engine = create_connection()
     with Session(engine) as session:
@@ -31,7 +44,7 @@ def get_season_settings():
             SeasonSettings.end_date, 
             SeasonSettings.games_per_team
         )
-        result = session.execute(stmt).mappings().all()
+        result = session.execute(stmt).mappings().first()
         return result
 
 def update_season_settings(start_date, end_date, games_per_team):
@@ -70,4 +83,11 @@ def delete_season_settings(settings_id):
             raise
         else:
             session.commit()
+
+def get_season_state():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(SeasonSettings.state).where(SeasonSettings.id == 1)
+        result = session.execute(stmt).scalar_one_or_none()
+        return result
 

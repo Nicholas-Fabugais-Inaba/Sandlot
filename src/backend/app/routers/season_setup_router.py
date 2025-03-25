@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, Division, SeasonState, SettingsID, SeasonPreset
-from ..db.queries.season_settings_queries import insert_season_settings, get_season_settings, update_season_settings, update_season_state, delete_season_settings
+from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, Division, SeasonState, SettingsID, SeasonPreset, EndSeasonData
+from ..db.queries.season_settings_queries import insert_season_settings, get_season_settings, update_season_settings, update_season_state, delete_season_settings, get_season_state, get_all_season_settings
 from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
 from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
-from ..db.queries.team_queries import update_division, get_all_teams, get_teams_season_setup
+from ..db.queries.team_queries import update_division, get_all_teams, get_teams_season_setup, deactivate_all_teams, activate_all_teams
 from ..db.queries.game_queries import insert_game, delete_all_games
 from ..db.queries.division_queries import insert_division_with_id, delete_all_divisions_except_team_bank, get_divisions_season_setup
 from ..db.queries.reschedule_request_queries import delete_all_reschedule_requests
@@ -25,6 +25,11 @@ async def create_schedule(schedule: dict):
         gameslot = gameslot.split(",")
         insert_game(int(teams[game[0]]["id"]), int(teams[game[1]]["id"]), gameslot[2], gameslot[1], gameslot[0])
 
+@router.get("/get_season_state", response_model=dict)
+async def get_season_state_route():
+    state = get_season_state()
+    return {"state": state}
+
 @router.post("/create_season_preset", response_model=dict)
 async def create_season_preset(settings: SeasonPreset):
     insert_season_settings(settings.name, settings.start_date, settings.end_date, settings.games_per_team)
@@ -33,6 +38,11 @@ async def create_season_preset(settings: SeasonPreset):
 @router.get("/get_season_settings", response_model=dict)
 async def get_SS():
     settings = get_season_settings()
+    return settings
+
+@router.get("/get_all_season_settings", response_model=dict)
+async def get_all_SS():
+    settings = get_all_season_settings()
     settings = [dict(row) for row in settings]
     return settings
 
@@ -111,4 +121,29 @@ async def update_divisions(data: list[Division]):
     # Insert all updated divisions
     for division in data:
         insert_division_with_id(division.division_id, division.division_name)
+    return True
+
+@router.post("/end_season", response_model=None)
+async def end_season_route(data: EndSeasonData):
+    # Archive all active team and player data
+    if data.archiveTeams:
+        print("archive teams")
+    # Deactivate all active teams and players
+    deactivate_all_teams()
+    # Switch season state in database to offseason
+    update_season_state("offseason")
+    return True
+
+@router.get("/offseason_to_preseason", response_model=None)
+async def offseason_to_preseason_route():
+    # Switch season state in database to preseason
+    update_season_state("preseason")
+    return True
+
+@router.get("/preseason_to_season", response_model=None)
+async def preseason_to_season_route():
+    # DEV PURPOSES ONLY TODO REMOVE THIS
+    activate_all_teams()
+    # Switch season state in database to season
+    update_season_state("season")
     return True

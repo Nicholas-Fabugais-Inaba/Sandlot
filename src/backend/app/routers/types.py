@@ -183,4 +183,6 @@ class NewWaiver(BaseModel):
     player_id: int
     signature: str
     date: str
- 
+
+class EndSeasonData(BaseModel):
+    archiveTeams: bool
