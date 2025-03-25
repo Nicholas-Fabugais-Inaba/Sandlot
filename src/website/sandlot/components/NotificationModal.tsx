@@ -35,6 +35,7 @@ export const NotificationModal: FC<NotificationModalProps> = ({
   team_id,
   setUnreadCount, // Add the setUnreadCount function here
 }) => {
+  const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [bellPosition, setBellPosition] = useState<DOMRect | null>(null);
 
@@ -63,8 +64,11 @@ export const NotificationModal: FC<NotificationModalProps> = ({
 
         setNotifications(formattedNotifications);
         setUnreadCount(formattedNotifications.length);
+
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching reschedule requests:", error);
+        setLoading(false);
       }
     })();
   }, [isOpen, team_id]);
@@ -75,12 +79,16 @@ export const NotificationModal: FC<NotificationModalProps> = ({
         setBellPosition(anchorRef.current.getBoundingClientRect());
       }
     };
-    updateBellPosition();
+
+    if (!loading) {
+      updateBellPosition();
+    }
+
     window.addEventListener("resize", updateBellPosition);
     return () => {
       window.removeEventListener("resize", updateBellPosition);
     };
-  }, [anchorRef]);
+  }, [loading, anchorRef]);
 
   if (!isOpen) return null;
 

@@ -141,38 +141,48 @@ export const Navbar = () => {
         className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
-        <NavbarItem className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-            {session && session.user.teams[session.user.team_id]} <ChevronDown size={16} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
-              {session && Object.entries(session.user.teams).map(([id, name]) => (
-                <DropdownMenuItem
-                  key={id}
-                  className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
-                  onClick={() => handleTeamSwitch(Number(id))}
-                >
-                  {name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </NavbarItem>
-        <NavbarItem className="flex gap-2">
-          <div ref={bellRef}>
-            {" "}
-            {/* Bell icon wrapper to track position */}
-            <BellIcon
-              className="cursor-pointer"
-              onClick={handleBellClick}
-              unreadCount={unreadCount}
-            />
-          </div>
-        </NavbarItem>
+        {/* Dropdown for player role */}
+        {session && session?.user.role === "player" && (
+          <NavbarItem className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
+                {session.user.teams[session.user.team_id]} <ChevronDown size={16} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
+                {session && Object.entries(session.user.teams).map(([id, name]) => (
+                  <DropdownMenuItem
+                    key={id}
+                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
+                    onClick={() => handleTeamSwitch(Number(id))}
+                  >
+                    {name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </NavbarItem>
+        )}
+
+        {/* Bell icon for player or team roles */}
+        {(session && (session.user.role === "player" || session.user.role === "team")) && (
+          <NavbarItem className="flex gap-2">
+            <div ref={bellRef}>
+              {/* Bell icon wrapper to track position */}
+              <BellIcon
+                className="cursor-pointer"
+                onClick={handleBellClick}
+                unreadCount={unreadCount}
+              />
+            </div>
+          </NavbarItem>
+        )}
+
+        {/* Theme switcher */}
         <NavbarItem className="flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
+
+        {/* Menu toggle */}
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="lg:hidden"

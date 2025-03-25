@@ -72,38 +72,40 @@ const AvailableTeams: React.FC = () => {
           Request to join a team from the list below:
         </h2>
         {teams.length > 0 && userTeamId !== null ? (
-          <Table aria-label="Available Teams" classNames={{ table: "min-w-full" }}>
-            <TableHeader>
-              {[
-                "Team Name",
-                "Division",
-                "Action",
-              ].map((key) => (
-                <TableColumn key={key} allowsSorting>
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </TableColumn>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {teams
-                .filter((team) => team.id !== userTeamId)
-                .map((team) => (
-                <TableRow key={team.id}>
-                  <TableCell className="text-medium text-left mb-2">{team.name}</TableCell>
-                  <TableCell className="text-medium text-left mb-2">{team.division}</TableCell>
-                  <TableCell className="w-[200px]">
-                    <Button
-                      className="w-36 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
-                      disabled={actionLoading}
-                      onPress={() => handleRequestJoin(team.id)}
-                    >
-                      Request to Join
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <div className="max-h-80 overflow-y-auto p-2">
+            <Table aria-label="Available Teams" classNames={{ table: "min-w-full" }}>
+              <TableHeader>
+                {[
+                  "Team Name",
+                  "Division",
+                  "Action",
+                ].map((key) => (
+                  <TableColumn key={key} allowsSorting>
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                  </TableColumn>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {teams
+                  .filter((team) => team.id !== userTeamId)
+                  .map((team) => (
+                  <TableRow key={team.id}>
+                    <TableCell className="text-medium text-left mb-2">{team.name}</TableCell>
+                    <TableCell className="text-medium text-left mb-2">{team.division}</TableCell>
+                    <TableCell className="w-[200px]">
+                      <Button
+                        className="w-36 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                        disabled={actionLoading}
+                        onPress={() => handleRequestJoin(team.id)}
+                      >
+                        Request to Join
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         ) : loading ? (
           <div className="flex justify-center items-center min-h-[300px]">
             <Spinner label="Loading Teams..." size="lg" />
@@ -118,26 +120,28 @@ const AvailableTeams: React.FC = () => {
           Pending Requests
         </h2>
         {pendingRequests.length > 0 ? (
-          <Table aria-label="Pending Requests" classNames={{ table: "min-w-full" }}>
-            <TableHeader>
-              <TableColumn className="req-table-col">Team Name</TableColumn>
-              <TableColumn className="req-table-col">Status</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {pendingRequests.map((request, index) => (
-                <TableRow key={index}>
-                  <TableCell className="team-name">{request.team_name}</TableCell>
-                  <TableCell className="status">
-                    {request.accepted === true
-                      ? "Accepted"
-                      : request.accepted === false
-                      ? "Denied"
-                      : "Pending"}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <div className="max-h-80 overflow-y-auto p-2">
+            <Table aria-label="Pending Requests" classNames={{ table: "min-w-full" }}>
+              <TableHeader>
+                <TableColumn>Team Name</TableColumn>
+                <TableColumn>Status</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {pendingRequests.map((request, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="text-medium text-left mb-2">{request.team_name}</TableCell>
+                    <TableCell className="text-medium text-left mb-2">
+                      {request.accepted === true
+                        ? "Accepted"
+                        : request.accepted === false
+                        ? "Denied"
+                        : "Pending"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         ) : loading ? (
           <div className="flex justify-center items-center min-h-[300px]">
             <Spinner label="Loading Requests..." size="lg" />
