@@ -85,7 +85,7 @@ const authOptions: NextAuthOptions = {
     strategy: "jwt", // Ensure JWT is used for session handling
   },
   pages: {
-    signIn: "/profile/signin",
+    signIn: "/account/signin",
   },
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {

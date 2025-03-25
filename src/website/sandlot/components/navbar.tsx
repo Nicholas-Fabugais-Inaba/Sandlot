@@ -18,6 +18,7 @@ import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -31,6 +32,7 @@ export const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
   const [unreadCount, setUnreadCount] = useState(0);
   const bellRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname(); // Get current URL path
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -96,16 +98,17 @@ export const Navbar = () => {
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
-                    "data-[active=true]:text-primary data-[active=true]:font-medium",
+                    pathname === item.href
+                      ? "text-primary font-semibold border-b-2 border-primary"
+                      : "hover:text-gray-600"
                   )}
-                  color="foreground"
                   href={item.href}
                 >
                   {item.label}
                 </NextLink>
               </NavbarItem>
             ))}
-          </ul>
+          </ul>        
         )}
       </NavbarContent>
 
@@ -140,6 +143,11 @@ export const Navbar = () => {
               href={item.href}
               size="lg"
               onPress={() => setIsMenuOpen(false)}
+              className={clsx(
+                pathname === item.href
+                  ? "text-primary font-semibold border-b-2 border-primary"
+                  : "hover:text-gray-600"
+              )}
             >
               {item.label}
             </Link>
