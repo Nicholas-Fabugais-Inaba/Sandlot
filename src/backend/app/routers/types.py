@@ -2,9 +2,11 @@ from pydantic import BaseModel
 from typing import Optional
 
 class NewPlayer(BaseModel):
-    name: str
+    first_name: str
+    last_name: str
     email: str
     password: str
+    gender: str
 
 class NewTeam(BaseModel):
     team_name: str
@@ -186,3 +188,7 @@ class NewWaiver(BaseModel):
 
 class EndSeasonData(BaseModel):
     archiveTeams: bool
+
+class UpdateActiveTeam(BaseModel):
+    player_id: int
+    team_id: int

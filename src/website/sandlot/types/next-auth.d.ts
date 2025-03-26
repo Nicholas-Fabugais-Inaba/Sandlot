@@ -16,7 +16,7 @@ declare module "next-auth" {
       preferred_division: string;
       preferred_time: string;
       team_id: number;
-      teams: Array;
+      teams: { [key: number]: string };
     };
   }
 
@@ -34,6 +34,6 @@ declare module "next-auth" {
     preferred_division: string;
     preferred_time: string;
     team_id: number;
-    teams: Array;
+    teams: { [key: number]: string };
   }
 }
