@@ -16,7 +16,6 @@ import updateTeamPassword from "../functions/updateTeamPassword";
 import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal component
 
 import { title } from "@/components/primitives";
-import { useGlobalState } from "@/context/GlobalStateContext";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -25,7 +24,7 @@ function capitalizeFirstLetter(string: string) {
 export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
-  const { teamName } = useGlobalState();
+  const [teamName, setTeamName] = useState<string>("team_name");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalInitialValue, setModalInitialValue] = useState("");
@@ -40,7 +39,9 @@ export default function AccountPage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
-
+      if (session) {
+        setTeamName(session.user.teamName)
+      }
       setSession(session);
       setLoading(false);
     };
