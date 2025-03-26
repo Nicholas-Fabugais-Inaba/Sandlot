@@ -1,30 +1,44 @@
 from fastapi import APIRouter
-from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData
-from ..db.queries.game_queries import get_standings
-from ..db.queries.team_queries import get_all_season_teams
-from ..db.queries.division_queries import get_division_name_by_division_id
-
-
+from .types import TeamID
+from ..db.queries.team_queries import get_all_season_teams, get_team_players
 
 router = APIRouter(tags=["directory"])
 
-# need to add forfeiting functionality
-@router.get("/get", response_model=list)
-async def get_standings_data():
-    print("Entering directory_router")
-    # gets standings from query and puts into dict
-    games = get_standings()
-    games = [dict(row) for row in games]
+@router.post("/get_teams", response_model=list)
+async def get_directory_teams():
     teams_data = get_all_season_teams()
     teams = {}
-    print("TEAMS DATA IS: ", teams_data)
 
     for team in teams_data:            
         teams[team['id']] = {
+            "team_id": team["id"],
             "name": team["team_name"], 
-            # "division": get_division_name_by_division_id(team["division"])["division_name"]
             "division": team["division_name"],
-
         }
     
     return teams.values()
+
+@router.post("/get_players_in_team", response_model=list)
+async def get_directory_players(data: TeamID):
+    # print(type(data.team_id))
+    players_data = get_team_players(data.team_id)
+    players_data = [dict(row) for row in players_data]
+    # print("GET TEAM PLAYERS: ", get_team_players(data.team_id))
+
+    players = {}
+    # print("THIS IS DATA: ", data.team_id)
+
+    for player in players_data:            
+        players[player['id']] = {
+            "player_id": player["id"],
+            "first_name": player["first_name"], 
+            "last_name": player["last_name"], 
+            "email": player["email"],
+            "phone_number": player["phone_number"],
+            "gender": player["gender"]
+        }
+    
+    # print("THIS IS THE PLAYERS_DATA:", players_data)
+    # print("THIS IS THE PLAYERS_DATA.VALUES():", players_data.values())
+    # return players_data.values()
+    return players.values()
