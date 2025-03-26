@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { getSession, signOut, signIn } from "next-auth/react";
 import { Session } from "next-auth";
 import { Button, Card, CardBody, Spinner } from "@heroui/react";
@@ -16,6 +16,7 @@ import updateTeamPassword from "../functions/updateTeamPassword";
 import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal component
 
 import { title } from "@/components/primitives";
+import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -39,7 +40,10 @@ export default function AccountPage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
-      if (session) {
+      if (session && session.user.role === "player") {
+        const activeTeamData = await getPlayerActiveTeam(session.user.id)
+        setTeamName(activeTeamData.team_name)
+      } else if (session && session.user.role === "team") {
         setTeamName(session.user.teamName)
       }
       setSession(session);
