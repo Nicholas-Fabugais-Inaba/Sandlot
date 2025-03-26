@@ -162,13 +162,13 @@ export const Navbar = () => {
                   </span>
                   <ChevronDown size={16} className="text-gray-600" />
                 </div>
-                <div className="absolute left-0 mt-0 hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md rounded-lg p-2 z-10 w-42">
+                <div className="absolute hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md rounded-lg p-2 z-10 w-42">
                   <ul className="w-full">
                     {siteConfig.manageLeagueOptions.map((option) => (
                       <li
                         key={option.href}
                         className={clsx(
-                          "p-2 rounded-md cursor-pointer text-center w-full",
+                          "p-2 rounded-md cursor-pointer text-center w-full mt-1",
                           pathname === option.href
                             ? "text-primary font-semibold bg-gray-100 dark:bg-gray-700"
                             : "hover:bg-gray-100 dark:hover:bg-gray-700"
