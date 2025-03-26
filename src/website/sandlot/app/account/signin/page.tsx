@@ -26,7 +26,8 @@ export default function SignIn() {
     });
 
     if (result?.error) {
-      setError(result.error);
+      console.log (result.error);
+      setError("Invalid username/email or password.");
     } else {
       window.location.href = "/account"; // Full page reload to ensure a complete refresh
     }
