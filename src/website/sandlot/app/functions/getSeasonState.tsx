@@ -7,5 +7,5 @@ export default async function getSeasonState(): Promise<any> {
 
   console.log(response.data)
 
-  return response.data;
+  return response.data["state"];
 }

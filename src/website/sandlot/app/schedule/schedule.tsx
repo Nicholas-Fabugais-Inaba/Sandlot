@@ -29,6 +29,7 @@ import commissionerReschedule from "../functions/commissionerReschedule";
 import { useSchedule } from "./ScheduleContext";
 
 import { title } from "@/components/primitives";
+import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 
 const currDate = new Date();
 
@@ -93,7 +94,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const calendarRef = useRef<FullCalendar>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
-  const [userTeamId, setUserTeamId] = useState<number | null>(null);
+  const [teamId, setTeamId] = useState<number>(0);
+  const [teamName, setTeamName] = useState<string>("team_name");
   const [loading, setLoading] = useState(true);
   const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
   const [maxSelectedDates, setMaxSelectedDates] = useState(5); // Maximum number of dates that can be selected when rescheduling games
@@ -107,7 +109,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   
         if (session) {
           setUserRole(session.user?.role || null);
-          setUserTeamId(session.user?.team_id || null);
+          // setUserTeamId(session.user?.team_id || null);
           
           // Adjust schedule type based on user role
           if (session.user?.role === "player" || session.user?.role === "team") {
@@ -116,9 +118,22 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
             if (calendarRef.current) {
               calendarRef.current.getApi().changeView("dayGridMonth");
             }
+            // Set team id
+            let teamId = 0
+            let teamName = ""
+            if (session.user.role === "player") {
+              const teamData = await getPlayerActiveTeam(session?.user.id)
+              teamId = teamData.team_id
+              teamName = teamData.team_name
+            } else if (session.user.role === "team") {
+              teamId = session.user.id
+              teamName = session.user.teamName
+            }
+            setTeamId(teamId)
+            setTeamName(teamName)
   
             // Fetch team schedule
-            const formattedEvents = await getTeamSchedule(session.user?.team_id);
+            const formattedEvents = await getTeamSchedule(teamId);
             setEvents(formattedEvents);
           } else if (
             session.user?.role === "commissioner" ||
@@ -225,7 +240,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       !viewer &&
       (userRole === "commissioner" ||
         (userRole === "team" &&
-          (game.home_id === userTeamId || game.away_id === userTeamId)))
+          (game.home_id === teamId || game.away_id === teamId)))
     ) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
@@ -285,8 +300,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
 
       // Fetch event data to reflect the changes
       if (userRole === "team") {
-        if (userTeamId && view === "dayGridMonth") {
-          const updatedEvents = await getTeamSchedule(userTeamId);
+        if (teamId && view === "dayGridMonth") {
+          const updatedEvents = await getTeamSchedule(teamId);
           setEvents(updatedEvents);
         } else {
           const updatedEvents = await getSchedule();
@@ -330,7 +345,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       setSchedType(1);
       setLoading(true);
       (async () => {
-        let formattedEvents = await getTeamSchedule(userTeamId ? userTeamId : 0);
+        let formattedEvents = await getTeamSchedule(teamId ? teamId : 0);
         setEvents(formattedEvents);
       })();
       setView("dayGridMonth");
@@ -412,9 +427,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const handleSendRequest = async () => {
     handleReturnClick();
     const RRdata = {
-      requester_id: userTeamId,
+      requester_id: teamId,
       receiver_id:
-        rescheduleGame?.home_id === userTeamId
+        rescheduleGame?.home_id === teamId
           ? rescheduleGame?.away_id
           : rescheduleGame?.home_id,
       game_id: rescheduleGame?.game_id,
@@ -578,7 +593,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                     calendarRef.current.getApi().changeView("dayGridMonth"); // Force calendar to change view
                   }
                   (async () => {
-                    let formattedEvents = await getTeamSchedule(userTeamId ? userTeamId : 0);
+                    let formattedEvents = await getTeamSchedule(teamId ? teamId : 0);
                     setEvents(formattedEvents);
                   })();
                   setLoading(false);
@@ -726,9 +741,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                 <>
                   {eventInfo.event.extendedProps.field1?.home &&
                   eventInfo.event.extendedProps.field1?.away &&
-                  (userTeamId ===
+                  (teamId ===
                     eventInfo.event.extendedProps.field1?.home_id ||
-                    userTeamId ===
+                    teamId ===
                       eventInfo.event.extendedProps.field1?.away_id) ? (
                     <div
                       className={`event-content p-2 rounded-xl ${isPastEvent(1) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-orange-100 text-orange-800"}
@@ -757,9 +772,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                   ) : null}
                   {eventInfo.event.extendedProps.field2?.home &&
                   eventInfo.event.extendedProps.field2?.away &&
-                  (userTeamId ===
+                  (teamId ===
                     eventInfo.event.extendedProps.field2?.home_id ||
-                    userTeamId ===
+                    teamId ===
                       eventInfo.event.extendedProps.field2?.away_id) ? (
                     <div
                       className={`event-content p-2 rounded-xl ${isPastEvent(2) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-cyan-100 text-blue-800"}
@@ -788,9 +803,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                   ) : null}
                   {eventInfo.event.extendedProps.field3?.home &&
                   eventInfo.event.extendedProps.field3?.away &&
-                  (userTeamId ===
+                  (teamId ===
                     eventInfo.event.extendedProps.field3?.home_id ||
-                    userTeamId ===
+                    teamId ===
                       eventInfo.event.extendedProps.field3?.away_id) ? (
                     <div
                       className={`event-content p-2 rounded-xl ${isPastEvent(3) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-purple-100 text-purple-800"}
@@ -822,9 +837,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                 <>
                   {eventInfo.event.extendedProps.field1?.home &&
                   eventInfo.event.extendedProps.field1?.away &&
-                  (userTeamId ===
+                  (teamId ===
                     eventInfo.event.extendedProps.field1?.home_id ||
-                    userTeamId ===
+                    teamId ===
                       eventInfo.event.extendedProps.field1?.away_id) ? (
                     <div
                       className={`event-content p-2 rounded-xl bg-green-100 text-green-800
@@ -853,9 +868,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                   ) : null}
                   {eventInfo.event.extendedProps.field2?.home &&
                   eventInfo.event.extendedProps.field2?.away &&
-                  (userTeamId ===
+                  (teamId ===
                     eventInfo.event.extendedProps.field2?.home_id ||
-                    userTeamId ===
+                    teamId ===
                       eventInfo.event.extendedProps.field2?.away_id) ? (
                     <div
                       className={`event-content p-2 rounded-xl bg-green-100 text-green-800
@@ -884,9 +899,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                   ) : null}
                   {eventInfo.event.extendedProps.field3?.home &&
                   eventInfo.event.extendedProps.field3?.away &&
-                  (userTeamId ===
+                  (teamId ===
                     eventInfo.event.extendedProps.field3?.home_id ||
-                    userTeamId ===
+                    teamId ===
                       eventInfo.event.extendedProps.field3?.away_id) ? (
                     <div
                       className={`event-content p-2 rounded-xl bg-green-100 text-green-800

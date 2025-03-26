@@ -1,5 +1,3 @@
-// components/navbar.tsx
-
 "use client";
 
 import {
@@ -27,13 +25,9 @@ import { NotificationModal } from "@/components/NotificationModal"; // Import mo
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 
-const mockTeams = [
-  { id: "1", name: "Team A" },
-  { id: "2", name: "Team B" },
-  { id: "3", name: "Team C" },
-];
-
 import getRR from "../app/functions/getRR";
+import getPlayerActiveTeam from "../app/functions/getPlayerActiveTeam";
+import updatePlayerActiveTeam from "../app/functions/updatePlayerActiveTeam";
 
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -41,19 +35,30 @@ export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
   const [unreadCount, setUnreadCount] = useState(0);
-  const [currentTeam, setCurrentTeam] = useState(mockTeams[0]);
+  const [activeTeamId, setActiveTeamId] = useState<number>(0);
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
 
   useEffect(() => {
     const fetchSessionAndNotifications = async () => {
       try {
-        const userSession = await getSession();
-        setSession(userSession);
+        const session = await getSession();
+        setSession(session)
+        console.log("Session:", session);
+        console.log("Teams dict:", session?.user.teams);
+
+        if (session && session.user.role === "player") {
+          const activeTeamData = await getPlayerActiveTeam(session.user.id);
+          setActiveTeamId(activeTeamData.team_id);
+
+          if (!activeTeamId || activeTeamId <= 0) {
+            updatePlayerActiveTeam({player_id: session.user.id, team_id: session.user.team_id});
+          }
+        }
 
         // Fetch unread notifications immediately
-        if (userSession?.user.team_id) {
-          const rrList = await getRR({ team_id: userSession.user.team_id });
+        if (session?.user.team_id) {
+          const rrList = await getRR({ team_id: session.user.team_id });
           const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
           setUnreadCount(unreadNotifications.length);
         }
@@ -70,10 +75,7 @@ export const Navbar = () => {
 
   // Filter nav items based on user role
   const filteredNavItems = siteConfig.navItems.filter((item) => {
-    if (
-      item.label === "Season Setup" &&
-      session?.user.role !== "commissioner"
-    ) {
+    if (item.label === "Season Setup" && session?.user.role !== "commissioner") {
       return false; // Hide for non-commissioners
     } else if (item.label === "Rescheduler" && session?.user.role !== "team") {
       return false; // Hide if the user is not part of a team
@@ -83,14 +85,21 @@ export const Navbar = () => {
       session?.user.role !== "team"
     ) {
       return false; // Hide if the user is not signed in as a team or player
+    } else if (item.label === "Broadcast" && session?.user.role !== "commissioner") {
+      return false; // Hide if the user is not a commissioner
     }
 
     return true;
   });
 
-  const handleTeamSwitch = (team: { id: string; name: string }) => {
-    setCurrentTeam(team);
-    console.log(`Switched to team: ${team.name}`);
+  const handleTeamSwitch = async (teamId: number) => {
+    if (session) {
+      await updatePlayerActiveTeam({player_id: session.user.id, team_id: teamId})
+      setActiveTeamId(teamId)
+      console.log(`Switched to team: ${session.user.teams[teamId]}`);
+      // Refresh the page
+      window.location.reload();
+    }
   };
 
   const handleBellClick = () => {
@@ -142,38 +151,44 @@ export const Navbar = () => {
         className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
-        <NavbarItem className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-              {currentTeam.name} <ChevronDown size={16} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
-              {mockTeams.map((team) => (
-                <DropdownMenuItem
-                  key={team.id}
-                  className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
-                  onClick={() => handleTeamSwitch(team)}
-                >
-                  {team.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </NavbarItem>
-        <NavbarItem className="flex gap-2">
-          <div ref={bellRef}>
-            {" "}
-            {/* Bell icon wrapper to track position */}
-            <BellIcon
-              className="cursor-pointer"
-              onClick={handleBellClick}
-              unreadCount={unreadCount}
-            />
-          </div>
-        </NavbarItem>
+        {session?.user.role === "player" && (
+          <NavbarItem className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
+                {activeTeamId && session?.user.teams[activeTeamId]} <ChevronDown size={16} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
+                {session && Object.entries(session?.user.teams).map(([id, name]) => (
+                  <DropdownMenuItem
+                    key={id}
+                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
+                    onClick={() => handleTeamSwitch(Number(id))}
+                  >
+                    {name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </NavbarItem>
+        )}
+        {(session?.user.role === "team" || session?.user.role === "player") && (
+          <NavbarItem className="flex gap-2">
+            <div ref={bellRef}>
+              {" "}
+              {/* Bell icon wrapper to track position */}
+              <BellIcon
+                className="cursor-pointer"
+                onClick={handleBellClick}
+                unreadCount={unreadCount}
+              />
+            </div>
+          </NavbarItem>
+        )}
         <NavbarItem className="flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
+
+        {/* Menu toggle */}
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="lg:hidden"
@@ -204,7 +219,7 @@ export const Navbar = () => {
         anchorRef={bellRef}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        team_id={session?.user.team_id ?? 0} // Adjust this value
+        team_id={activeTeamId} // Adjust this value
         setUnreadCount={setUnreadCount}
       />
     </HeroUINavbar>
