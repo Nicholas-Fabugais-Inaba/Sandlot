@@ -33,24 +33,6 @@ export const siteConfig = {
       href: "/season-setup",
     },
   ],
-  navMenuItems: [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "Schedule",
-      href: "/schedule",
-    },
-    {
-      label: "Standings",
-      href: "/standings",
-    },
-    {
-      label: "Account",
-      href: "/account",
-    },
-  ],
   links: {
     github: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot",
     docs: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot?tab=readme-ov-file#sandlot",
