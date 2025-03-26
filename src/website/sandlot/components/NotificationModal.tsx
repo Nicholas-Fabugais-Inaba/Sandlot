@@ -24,7 +24,7 @@ interface NotificationModalProps {
   isOpen: boolean;
   onClose: () => void;
   anchorRef: React.RefObject<HTMLDivElement>; // Reference to the bell icon
-  team_id: number;
+  team_id: number | undefined;
   setUnreadCount: React.Dispatch<React.SetStateAction<number>>; // Function to update the unread count
 }
 

@@ -99,7 +99,7 @@ const authOptions: NextAuthOptions = {
           lastname: typeof token.lastname === "string" ? token.lastname : "",
           email: typeof token.email === "string" ? token.email : "",
           role: typeof token.role === "string" ? token.role : "",
-          gender: typeof token.role === "string" ? token.role : "",
+          gender: typeof token.gender === "string" ? token.gender : "",
           teamName: typeof token.teamName === "string" ? token.teamName : "",
           username: typeof token.username === "string" ? token.username : "",
           division: typeof token.division === "string" ? token.division : "",
@@ -123,8 +123,8 @@ const authOptions: NextAuthOptions = {
     async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         token.id = user.id;
-        token.firstname = user.name;
-        token.lastname = user.name;
+        token.firstname = user.firstname;
+        token.lastname = user.lastname;
         token.email = user.email;
         token.role = user.role;
         token.gender = user.gender;

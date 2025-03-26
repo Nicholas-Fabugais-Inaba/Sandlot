@@ -47,7 +47,9 @@ export const Navbar = () => {
 
         if (userSession) {
           setUserTeams(userSession.user.teams);
-          setTeamId(userSession.user.team_id);
+          if (!teamId) {
+            setTeamId(userSession.user.team_id);
+          }
           setUserRole(userSession.user.role);
           setTeamName(userSession.user.teamName);
         }
@@ -146,7 +148,7 @@ export const Navbar = () => {
           <NavbarItem className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-                {userTeams[teamId]} <ChevronDown size={16} />
+                {teamId && userTeams[teamId]} <ChevronDown size={16} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
                 {Object.entries(userTeams).map(([id, name]) => (

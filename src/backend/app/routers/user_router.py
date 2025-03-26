@@ -28,6 +28,8 @@ async def get_player_account(data: PlayerLoginData):
     player_teams_dict = {team["team_id"]: team["team_name"] for team in player_teams}
     # add a key to the existing player dict to store the dict of teams
     player["teams"] = player_teams_dict
+    # Set the player's teamId to the first team id in the teams dict
+    player["team_id"] = next(iter(player_teams_dict), None)
     return player
 
 @router.post("/get_team", response_model=object)
