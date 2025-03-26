@@ -331,8 +331,6 @@ export default function Home() {
                         <li className="text-center text-gray-500">No announcements</li>
                       ) : (
                         announcements.map((announcement, index) => {
-                          const currentDate = new Date().toLocaleDateString(); // Format the current date
-
                           return (
                             <li
                               key={index}
@@ -341,7 +339,7 @@ export default function Home() {
                               <div className="relative w-full">
                                 {/* Date in the top right corner */}
                                 <div className="absolute top-2 right-2 text-xs text-gray-500">
-                                  {currentDate}
+                                  {announcement.date}
                                 </div>
 
                                 {editingIndex === index ? (
