@@ -7,8 +7,8 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from .create_engine import create_connection
-#from create_engine import create_connection
+#from .create_engine import create_connection
+from create_engine import create_connection
 
 engine = create_connection()
 
@@ -125,8 +125,9 @@ class Waiver(Base):
     __tablename__ = "waiver"
     id: Mapped[int] = mapped_column(primary_key=True)
     player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
+    initials: Mapped[Optional[str]] = mapped_column(String(50))
     signature: Mapped[Optional[str]] = mapped_column(String(50))
-    date: Mapped[Optional[str]] = mapped_column(String(50))
+    year: Mapped[Optional[str]] = mapped_column(String(50))
 
 class ArchivedTeam(Base):
     __tablename__ = "archived_team"
@@ -148,4 +149,4 @@ class ArchivedPlayer(Base):
 def create_tables():
     Base.metadata.create_all(engine)
 
-#create_tables()
+create_tables()
