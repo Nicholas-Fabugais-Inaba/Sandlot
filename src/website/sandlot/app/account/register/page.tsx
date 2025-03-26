@@ -6,6 +6,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
+import Waiver from "@/app/account/register/waiver"
 
 import styles from "./Register.module.css";
 
@@ -88,64 +89,69 @@ export default function Register() {
     if (accountType === "player") {
       return (
         <div>
-          <div className={styles.inputGroup}>
-            <label>First Name:</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={firstname}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </div>
+          <div className={styles.formContainer}>
+            <div className={styles.inputGroup}>
+              <label>First Name:</label>
+              <input
+                required
+                className={styles.input}
+                type="text"
+                value={firstname}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
 
-          <div className={styles.inputGroup}>
-            <label>Last Name:</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={lastname}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </div>
+            <div className={styles.inputGroup}>
+              <label>Last Name:</label>
+              <input
+                required
+                className={styles.input}
+                type="text"
+                value={lastname}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
 
-          <div className={styles.inputGroup}>
-            <label>Email:</label>
-            <input
-              required
-              className={styles.input}
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+            <div className={styles.inputGroup}>
+              <label>Email:</label>
+              <input
+                required
+                className={styles.input}
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-          <div className={styles.inputGroup}>
-            <label>Password:</label>
-            <input
-              required
-              className={styles.input}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+            <div className={styles.inputGroup}>
+              <label>Password:</label>
+              <input
+                required
+                className={styles.input}
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-          <div className={`${styles.inputGroup} ${styles.gender}`}>
-            <label htmlFor="gender">Gender:</label>
-            <select
-              required
-              className={styles.input}
-              id="gender"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-            >
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
+            <div className={`${styles.inputGroup} ${styles.gender}`}>
+              <label htmlFor="gender">Gender:</label>
+              <select
+                required
+                className={styles.input}
+                id="gender"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <option value="">Select gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div className={styles.formContainer}>
+            <Waiver/>
           </div>
         </div>
       );

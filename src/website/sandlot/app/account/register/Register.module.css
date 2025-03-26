@@ -67,3 +67,10 @@
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+.formContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+}
