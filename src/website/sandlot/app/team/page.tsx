@@ -223,8 +223,8 @@ export default function TeamPage() {
                 </TableHeader>
                 <TableBody>
                   {roster ? (
-                    roster.map((player) => (
-                      <TableRow key={player.id}>
+                    roster.map((player, index) => (
+                      <TableRow key={index}>
                         <TableCell className="py-2 column-name">
                           {player.first_name + " " + player.last_name}
                         </TableCell>
