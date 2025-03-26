@@ -28,9 +28,15 @@ export const siteConfig = {
       label: "Rescheduler",
       href: "/manage-reschedule-request",
     },
+  ],
+  manageLeagueOptions: [
     {
       label: "Season Setup",
       href: "/season-setup",
+    },
+    {
+      label: "Player List",
+      href: "/league-management/player-list",
     },
   ],
   links: {

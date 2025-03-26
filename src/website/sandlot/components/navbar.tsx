@@ -76,9 +76,7 @@ export const Navbar = () => {
 
   // Filter nav items based on user role
   const filteredNavItems = siteConfig.navItems.filter((item) => {
-    if (item.label === "Season Setup" && session?.user.role !== "commissioner") {
-      return false; // Hide for non-commissioners
-    } else if (item.label === "Rescheduler" && session?.user.role !== "team") {
+    if (item.label === "Rescheduler" && session?.user.role !== "team") {
       return false; // Hide if the user is not part of a team
     } else if (
       item.label === "Team" &&
@@ -153,23 +151,18 @@ export const Navbar = () => {
                   Manage League
                   <ChevronDown size={16} />
                 </span>
-                <div className="absolute left-0 mt-0 hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md square-lg p-2 z-10 w-32">
+                <div className="absolute left-0 mt-0 hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md rounded-lg p-2 z-10 w-42">
                   <ul className="w-full">
-                    <li className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 square-md cursor-pointer text-center w-full">
-                      <NextLink href="/league-management/player-list" className="block w-full">
-                        Player List
-                      </NextLink>
-                    </li>
-                    <li className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer text-center w-full">
-                      <NextLink href="" className="block w-full">
-                        Placeholder
-                      </NextLink>
-                    </li>
-                    <li className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer text-center w-full">
-                      <NextLink href="" className="block w-full">
-                        Placeholder
-                      </NextLink>
-                    </li>
+                    {siteConfig.manageLeagueOptions.map((option) => (
+                      <li
+                        key={option.href}
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer text-center w-full"
+                      >
+                        <NextLink href={option.href} className="block w-full">
+                          {option.label}
+                        </NextLink>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </NavbarItem>
