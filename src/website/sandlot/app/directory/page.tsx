@@ -67,24 +67,24 @@ export default function TeamsDirectoryPage() {
     // fetches teams info
     (async () => {
       let teams = await getDirectoryTeams();
-      
-      console.log(teams);
-      console.log(teams[0]);
       setTeams(teams);
     })();
 
   }, []);
 
+  // Set loading to false after session is fetched and delay is complete
   useEffect(() => {
-    setIsLoading(false);  // Set loading to false after fetching session
-  }, [teams]);
+    const delayLoading = async () => {  
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setIsLoading(false);
+    };
+  
+    delayLoading();
+  }, [session]);
 
   const set_players_in_team = async (selected_team: Team) => {
-    console.log("Selected team", selected_team);
     setSelectedTeam(selected_team); // Set the selected team
-    console.log("HELLOWORLD", selected_team.team_id)
     let players_selected = await getDirectoryPlayers({team_id: selected_team.team_id});
-    console.log("PLAYERS", players_selected);
     setPlayers(players_selected);
   };
 
@@ -105,9 +105,7 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
-  // IF NOT LOGGED IN WILL INFINITE LOAD
-  // BUT WHEN LOGGED INTO A VALID ACCOUNT (com or team) WILL SAY NOT AUTHORIZED BEFORE SESSION IS GRABBED
- if (isLoading || !session) {
+ if (isLoading) {
     return <Spinner label="Loading..." />;
   }
 
