@@ -1,5 +1,3 @@
-// app/account/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -19,6 +17,10 @@ import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal c
 
 import { title } from "@/components/primitives";
 import { useGlobalState } from "@/context/GlobalStateContext";
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 export default function AccountPage() {
   const [loading, setLoading] = useState(true);
@@ -213,11 +215,11 @@ export default function AccountPage() {
                 </p>
               )}
               <p>
-                <strong>Role:</strong> {userRole}
+                <strong>Role:</strong> {capitalizeFirstLetter(userRole)}
               </p>
               {userRole === "player" && (
                 <p>
-                  <strong>Gender:</strong> {userGender}
+                  <strong>Gender:</strong> {capitalizeFirstLetter(userGender)}
                 </p>
               )}
               {userRole === "player" && (
