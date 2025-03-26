@@ -49,9 +49,12 @@ export const Navbar = () => {
           setUserTeams(userSession.user.teams);
           if (!teamId) {
             setTeamId(userSession.user.team_id);
+            setTeamName(userSession.user.teams[userSession.user.team_id]);
+          } else {
+            setTeamName(userSession.user.teams[teamId]);
           }
           setUserRole(userSession.user.role);
-          setTeamName(userSession.user.teamName);
+          
         }
 
         // Fetch unread notifications immediately

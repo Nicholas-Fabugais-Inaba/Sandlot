@@ -31,6 +31,7 @@ import acceptJR from "../functions/acceptJR";
 import declineJR from "../functions/declineJR";
 
 import { title } from "@/components/primitives";
+import { useGlobalState } from "@/context/GlobalStateContext";
 import AvailableTeams from "./AvailableTeams";
 
 import "./TeamPage.css";
@@ -68,13 +69,11 @@ interface Player {
 export default function TeamPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
-  const [userTeam, setUserTeam] = useState<Team | null>(null);
   const [roster, setRoster] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const router = useRouter();
-  const [userRole, setUserRole] = useState<string>("");
-  const [userTeamID, setUserTeamID] = useState<number | null>(null);
+  const { teamId, teamName } = useGlobalState();
 
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
 
@@ -83,10 +82,12 @@ export default function TeamPage() {
       const session = await getSession();
       setSession(session);
 
-      let teamInfo = await getTeamInfo({ team_id: session?.user.team_id });
+      console.log("From global:", teamId, teamName)
+
+      let teamInfo = await getTeamInfo({ team_id: teamId });
       setRoster(teamInfo);
 
-      let requests = await getJR({ team_id: session?.user.team_id });
+      let requests = await getJR({ team_id: teamId });
       setJoinRequests(requests);
 
       let teams = await getTeamsDirectory();
@@ -100,27 +101,27 @@ export default function TeamPage() {
 
   const handlePromoteToCaptain = async (playerId: number) => {
     setActionLoading(true);
-    // await promoteToCaptain({ team_id: session?.user.team_id, player_id: playerId });
+    // await promoteToCaptain({ team_id: teamId, player_id: playerId });
     setActionLoading(false);
     // Update the team info and roster
-    const updatedTeamInfo = await getTeamInfo({ team_id: session?.user.team_id });
+    const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
     setRoster(updatedTeamInfo);
   };
 
   const handleDemoteToPlayer = async (playerId: number) => {
     setActionLoading(true);
-    // await demoteToPlayer({ team_id: session?.user.team_id, player_id: playerId });
+    // await demoteToPlayer({ team_id: teamId, player_id: playerId });
     setActionLoading(false);
     // Update the team info and roster
-    const updatedTeamInfo = await getTeamInfo({ team_id: session?.user.team_id });
+    const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
     setRoster(updatedTeamInfo);
   };
 
-  const handleRequestJoin = async (team_id: number) => {
+  const handleRequestJoin = async (teamId: number) => {
     if (session) {
       createJR({
         email: session.user.email,
-        team_id: team_id
+        team_id: teamId
       })
     }
   }
@@ -141,15 +142,15 @@ export default function TeamPage() {
       <h1 className={title()}>Team</h1>
 
       {/* Player View: Available Teams */}
-      {session?.user.role === "player" && !session.user.team_id ? (
+      {session?.user.role === "player" && !teamId ? (
         <AvailableTeams />
-      ) : session?.user.role === "player" && session.user.team_id ? (
+      ) : session?.user.role === "player" && teamId ? (
         // Player View After Join Request Accepted
         <div className="flex">
           {/* Left Section: Team Roster */}
           <div className="w-3/5 mr-4">
             <h2 className="text-xl font-bold mb-2">
-              {session?.user.teamName} Roster
+              {teamName} Roster
             </h2>
             <Table
               aria-label="Team Roster"
@@ -179,7 +180,7 @@ export default function TeamPage() {
           {/* Right Section: Team Info (Captain's Info and Leave Team) */}
           <div className="w-2/5">
             <h2 className="text-xl font-bold mb-2">
-              {session?.user.teamName}'s Info
+              {teamName} Info
             </h2>
             <Button
               className="button mb-4"
@@ -206,7 +207,7 @@ export default function TeamPage() {
         <div className="flex">
           <div className="w-3/5 mr-4">
             <h2 className="text-xl font-bold mb-2">
-              {session?.user.teamName || "Your Team"} Roster
+              {teamName || "Your Team"} Roster
             </h2>
             <div className="max-h-80 overflow-y-auto p-2">
               <Table
@@ -280,7 +281,7 @@ export default function TeamPage() {
                         await acceptJR({
                           jr_id: request.id,
                           player_id: request.player_id,
-                          team_id: session?.user.team_id,
+                          team_id: teamId,
                         });
                         setJoinRequests(
                           joinRequests.filter((req) => req.id != request.id),
