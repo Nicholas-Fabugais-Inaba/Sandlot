@@ -3,7 +3,7 @@
 import { title } from "@/components/primitives";
 
 import { useState, useEffect } from "react";
-import getTeamsDirectory from "@/app/functions/getTeamsDirectory";
+import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 // import sendEmail from "../functions/sendEmail";
 import "./EmailBroadcastPage.css";
 
@@ -16,7 +16,7 @@ export default function EmailBroadcastPage() {
 
   useEffect(() => {
     const fetchTeams = async () => {
-      const teamList = await getTeamsDirectory(); // Fetch teams from DB
+      const teamList = await getDirectoryTeams(); // Fetch teams from DB
       setTeams(teamList);
     };
 
