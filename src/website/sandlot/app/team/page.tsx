@@ -215,7 +215,7 @@ export default function TeamPage() {
                 classNames={{ table: "min-w-full" }}
               >
                 <TableHeader>
-                  {["name", "contact", "action"].map((key) => (
+                  {["name", "contact", "phone number","action"].map((key) => (
                     <TableColumn key={key} allowsSorting>
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </TableColumn>
@@ -230,6 +230,9 @@ export default function TeamPage() {
                         </TableCell>
                         <TableCell className="py-2 column-contact">
                           {player.email}
+                        </TableCell>
+                        <TableCell>
+                          {player.phone_number}
                         </TableCell>
                         <TableCell className="w-[220px]">
                           {true ? (
