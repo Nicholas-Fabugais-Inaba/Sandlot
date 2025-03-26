@@ -88,8 +88,8 @@ export default function Register() {
   const renderForm = () => {
     if (accountType === "player") {
       return (
-        <div>
-          <div className={styles.formContainer}>
+        <div className="flex space-x-10">
+          <div className={`${styles.formContainer} w-3/5`}>
             <div className={styles.inputGroup}>
               <label>First Name:</label>
               <input
@@ -150,7 +150,7 @@ export default function Register() {
               </select>
             </div>
           </div>
-          <div className={styles.formContainer}>
+          <div className={`${styles.formContainer} w-2/5 min-w-[700px]`}>
             <Waiver/>
           </div>
         </div>
