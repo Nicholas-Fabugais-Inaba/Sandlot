@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, update
 from ..create_engine import create_connection
-from ..models import Player
+from ..models import Player, Team
 
 
 def insert_player(first_name, last_name, email, password, gender):
@@ -42,8 +42,17 @@ def get_player(login_email):
         result = session.execute(stmt).mappings().first()
         return result
 
-# TODO: change to work with TeamPlayer    
-def update_players_team(player_id, team_id):
+def get_player_active_team(player_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(Player.team_id, Team.team_name).join(Team, Player.team_id == Team.id).where(Player.id == player_id)
+        result = session.execute(stmt).first()
+        if result:
+            team_id, team_name = result
+            return {"team_id": team_id, "team_name": team_name}
+        return None
+
+def update_player_active_team(player_id, team_id):
     engine = create_connection()
     with Session(engine) as session:
         stmt = update(Player).where(Player.id == player_id).values(team_id=team_id)

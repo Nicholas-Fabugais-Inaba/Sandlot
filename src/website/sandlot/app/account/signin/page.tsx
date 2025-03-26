@@ -10,14 +10,12 @@ import { Button } from "@heroui/react";
 import styles from "./SignIn.module.css";
 
 import { title } from "@/components/primitives";
-import { useGlobalState } from "@/context/GlobalStateContext";
 
 export default function SignIn() {
   const [userID, setUserID] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  const { setTeamId, setTeamName } = useGlobalState();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,10 +28,6 @@ export default function SignIn() {
     if (result?.error) {
       setError(result.error);
     } else {
-      // Reset the global state values
-      setTeamId(undefined);
-      setTeamName(undefined);
-
       window.location.href = "/account"; // Full page reload to ensure a complete refresh
     }
   };

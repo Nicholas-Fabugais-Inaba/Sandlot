@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData, UpdatePassword, UpdateEmail, UpdateName
-from ..db.queries.player_queries import insert_player, get_player, update_player_password, update_player_email, update_player_name
+from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData, UpdatePassword, UpdateEmail, UpdateName, UpdateActiveTeam, PlayerID
+from ..db.queries.player_queries import insert_player, get_player, get_player_active_team, update_player_password, update_player_email, update_player_name, update_player_active_team
 from ..db.queries.team_queries import insert_team, get_team
 from ..db.queries.team_players_queries import get_players_teams
 
@@ -37,6 +37,10 @@ async def get_team_account(data: TeamLoginData):
     response = dict(get_team(data.username))
     return response
 
+@router.post("/get_player_active_team", response_model=dict)
+async def get_player_active_team_route(data: PlayerID):
+    response = get_player_active_team(data.player_id)
+    return response
 
 @router.put("/update_player_password", response_model=None)
 async def update_player_password_route(data: UpdatePassword):
@@ -51,4 +55,9 @@ async def update_player_email_route(data: UpdateEmail):
 @router.put("/update_player_name", response_model=None)
 async def update_player_name_route(data: UpdateName):
     response = update_player_name(data.player_id, data.first_name, data.last_name)
+    return response
+
+@router.put("/update_player_active_team", response_model=None)
+async def update_player_active_team_route(data: UpdateActiveTeam):
+    response = update_player_active_team(data.player_id, data.team_id)
     return response
