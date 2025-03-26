@@ -35,7 +35,7 @@ import { useGlobalState } from "@/context/GlobalStateContext";
 import AvailableTeams from "./AvailableTeams";
 
 import "./TeamPage.css";
-import getTeamsDirectory from "../functions/getTeamsDirectory";
+import getDirectoryTeams from "../functions/getDirectoryTeams";
 
 interface JoinRequest {
   id: number;
@@ -90,7 +90,7 @@ export default function TeamPage() {
       let requests = await getJR({ team_id: teamId });
       setJoinRequests(requests);
 
-      let teams = await getTeamsDirectory();
+      let teams = await getDirectoryTeams();
       setTeams(teams);
 
       setLoading(false);
