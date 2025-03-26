@@ -149,25 +149,37 @@ export const Navbar = () => {
             ))}
             {session?.user.role === "commissioner" && (
               <NavbarItem className="relative group">
-                <span className="cursor-default flex items-center gap-2">
-                  Manage League
-                  <ChevronDown size={16} />
-                </span>
-                <div className="absolute left-0 mt-0 hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md rounded-lg p-2 z-10 w-42">
-                  <ul className="w-full">
-                    {siteConfig.manageLeagueOptions.map((option) => (
-                      <li
-                        key={option.href}
-                        className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer text-center w-full"
-                      >
-                        <NextLink href={option.href} className="block w-full">
-                          {option.label}
-                        </NextLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </NavbarItem>
+  <span
+    className={clsx(
+      "cursor-default flex items-center gap-2",
+      siteConfig.manageLeagueOptions.some((option) => pathname === option.href)
+        ? "text-primary font-semibold"
+        : ""
+    )}
+  >
+    Manage League
+    <ChevronDown size={16} />
+  </span>
+  <div className="absolute left-0 mt-0 hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md rounded-lg p-2 z-10 w-42">
+    <ul className="w-full">
+      {siteConfig.manageLeagueOptions.map((option) => (
+        <li
+          key={option.href}
+          className={clsx(
+            "p-2 rounded-md cursor-pointer text-center w-full",
+            pathname === option.href
+              ? "text-primary font-semibold bg-gray-100 dark:bg-gray-700"
+              : "hover:bg-gray-100 dark:hover:bg-gray-700"
+          )}
+        >
+          <NextLink href={option.href} className="block w-full">
+            {option.label}
+          </NextLink>
+        </li>
+      ))}
+    </ul>
+  </div>
+</NavbarItem>
             )}
           </ul>        
         )}
