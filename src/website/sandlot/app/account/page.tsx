@@ -18,10 +18,12 @@ import updateTeamPassword from "../functions/updateTeamPassword";
 import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal component
 
 import { title } from "@/components/primitives";
+import { useGlobalState } from "@/context/GlobalStateContext";
 
 export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
+  const { teamName } = useGlobalState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalInitialValue, setModalInitialValue] = useState("");
@@ -183,7 +185,7 @@ export default function AccountPage() {
   const teamUsername = session.user?.username;
   const userRole = session.user?.role;
   const userGender = session.user?.gender || "Not specified";
-  const userTeam = session.user?.teamName || "Not assigned to a team";
+  const userTeam = teamName || "Not assigned to a team";
 
   return (
     <div>
