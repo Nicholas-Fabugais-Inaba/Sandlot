@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, Division, SeasonState, SettingsID, SeasonPreset, EndSeasonData
+from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, DivisionTeamData, Division, SeasonState, SettingsID, SeasonPreset, EndSeasonData
 from ..db.queries.season_settings_queries import insert_season_settings, get_season_settings, update_season_settings, update_season_state, delete_season_settings, get_season_state, get_all_season_settings
 from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
 from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
@@ -121,6 +121,31 @@ async def update_divisions(data: list[Division]):
     # Insert all updated divisions
     for division in data:
         insert_division_with_id(division.division_id, division.division_name)
+    return True
+
+@router.put("/update_divisions_and_teams", response_model=None)
+async def update_divisions_and_teams_route(data: list[DivisionTeamData]):
+    print("Division data: ", data)
+    # Delete all divisions except team bank
+    delete_all_divisions_except_team_bank()
+
+    # Collect unique divisions
+    unique_divisions = {}
+    for division in data:
+        if division.division not in unique_divisions:
+            unique_divisions[division.division] = division.division_name
+    print("Divisions to insert: ", unique_divisions)
+
+    # Insert all unique divisions
+    for division_id, division_name in unique_divisions.items():
+        if division_id != 0:
+            insert_division_with_id(division_id, division_name)
+
+    # Update team divisions
+    for division in data:
+        if division.team_id != 0:
+            update_division(division.team_id, division.division)
+
     return True
 
 @router.post("/end_season", response_model=None)

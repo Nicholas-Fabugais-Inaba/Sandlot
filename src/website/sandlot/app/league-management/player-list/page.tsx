@@ -105,7 +105,7 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
-  if (isLoading) {
+ if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full min-h-[400px]">
         <Spinner label="Loading Team Directory..." size="lg" />

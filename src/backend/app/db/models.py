@@ -125,8 +125,9 @@ class Waiver(Base):
     __tablename__ = "waiver"
     id: Mapped[int] = mapped_column(primary_key=True)
     player_id: Mapped[Optional[int]] = mapped_column(ForeignKey("player.id"))
+    initials: Mapped[Optional[str]] = mapped_column(String(50))
     signature: Mapped[Optional[str]] = mapped_column(String(50))
-    date: Mapped[Optional[str]] = mapped_column(String(50))
+    year: Mapped[Optional[str]] = mapped_column(String(50))
 
 class ArchivedTeam(Base):
     __tablename__ = "archived_team"

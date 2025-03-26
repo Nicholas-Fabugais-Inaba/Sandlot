@@ -411,7 +411,11 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         field: selectedDates[0].field.toString()
       })
     }
-    handleReturnClick()
+
+    // setTimeout is used to wait for the db to be populated with the rescheduled game before attempting to retrieve the game information on the schedule page
+    setTimeout(() => {
+      handleReturnClick()
+    }, 1000)
   };
 
   const isSelected = (start: Date | null, field: number) => {
