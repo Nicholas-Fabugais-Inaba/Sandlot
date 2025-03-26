@@ -188,3 +188,7 @@ class NewWaiver(BaseModel):
 
 class EndSeasonData(BaseModel):
     archiveTeams: bool
+
+class UpdateActiveTeam(BaseModel):
+    player_id: int
+    team_id: int
