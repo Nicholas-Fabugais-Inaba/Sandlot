@@ -35,6 +35,10 @@ export const siteConfig = {
       href: "/season-setup",
     },
     {
+      label: "Broadcast",
+      href: "/broadcast",
+    },
+    {
       label: "Player List",
       href: "/league-management/player-list",
     },

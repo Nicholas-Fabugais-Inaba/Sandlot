@@ -199,24 +199,24 @@ export default function TeamPage() {
             <h2 className="text-xl font-bold mb-2">
               {teamName} Info
             </h2>
-            <Button
-              className="button mb-4"
-              onPress={() =>
-                alert(
-                  `Captain's Info: ${"Temp captain name"} (${"Temp captain contact"})`,
-                )
-              }
-            >
-              Captain's Info
-            </Button>
-            <Button
-              className="button"
-              onPress={
-                () => handleAction()
-              }
-            >
-              Leave Team
-            </Button>
+            <div className="flex flex-col items-center space-y-4"> {/* Added flex column with spacing */}
+              <Button
+                className="button min-w-[160px]" // Made full width for consistency
+                onPress={() =>
+                  alert(
+                    `Captain's Info: ${"Temp captain name"} (${"Temp captain contact"})`,
+                  )
+                }
+              >
+                Captain's Info
+              </Button>
+              <Button
+                className="button min-w-[160px]" // Made full width for consistency
+                onPress={() => handleAction()}
+              >
+                Leave Team
+              </Button>
+            </div>
           </div>
         </div>
       ) : session?.user.role === "team" ? (

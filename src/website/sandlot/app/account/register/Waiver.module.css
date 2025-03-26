@@ -5,11 +5,10 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
-  width: 100%; /* Ensure it doesn’t stretch */
-  max-width: 650px; /* Match the inputGroup */
+  width: 650px; /* Ensure it doesn't stretch */
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align content to the left */
+  align-items: center; /* Center all flex items */
 }
 
 .inputGroupContainer {
@@ -44,9 +43,13 @@
 
 .waiver h3 {
   margin-bottom: 10px;
+  text-align: center; /* Center the h3 text */
+  width: 100%; /* Ensure full width for centering */
 }
 
 .waiver p {
   font-size: 14px;
   color: #555;
+  text-align: center; /* Center the paragraphs */
+  width: 100%; /* Ensure full width for centering */
 }

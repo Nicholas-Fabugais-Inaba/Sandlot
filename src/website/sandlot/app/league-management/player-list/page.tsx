@@ -106,7 +106,11 @@ export default function TeamsDirectoryPage() {
   };
 
  if (isLoading) {
-    return <Spinner label="Loading..." />;
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Team Directory..." size="lg" />
+      </div>
+    );
   }
 
   if (session?.user.role === "commissioner" || session?.user.role === "team") {
