@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from .types import JoinRequest, TeamID, PlayerEmail, JRAccept, JRDecline
 from ..db.queries.join_request_queries import insert_join_request, get_join_requests, get_join_requests_by_player, decline_join_request, delete_join_request
-from ..db.queries.player_queries import get_player, update_players_team
+from ..db.queries.player_queries import get_player
 from ..db.queries.team_players_queries import insert_team_player
 
 

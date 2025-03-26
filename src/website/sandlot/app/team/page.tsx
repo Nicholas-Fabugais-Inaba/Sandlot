@@ -31,11 +31,12 @@ import acceptJR from "../functions/acceptJR";
 import declineJR from "../functions/declineJR";
 
 import { title } from "@/components/primitives";
-import { useGlobalState } from "@/context/GlobalStateContext";
+// import { useGlobalState } from "@/context/GlobalStateContext";
 import AvailableTeams from "./AvailableTeams";
 
 import "./TeamPage.css";
-import getTeamsDirectory from "../functions/getDirectoryTeams";
+import getDirectoryTeams from "../functions/getDirectoryTeams";
+import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 
 interface JoinRequest {
   id: number;
@@ -68,12 +69,14 @@ interface Player {
 
 export default function TeamPage() {
   const [session, setSession] = useState<Session | null>(null);
-  const [teams, setTeams] = useState<Team[]>([]);
+  // const [teams, setTeams] = useState<Team[]>([]);
   const [roster, setRoster] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const router = useRouter();
-  const { teamId, teamName } = useGlobalState();
+  // const { teamId, teamName } = useGlobalState();
+  const [teamId, setTeamId] = useState<number>(0);
+  const [teamName, setTeamName] = useState<string>("team_name");
 
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
 
@@ -82,7 +85,20 @@ export default function TeamPage() {
       const session = await getSession();
       setSession(session);
 
-      console.log("From global:", teamId, teamName)
+      // console.log("From global:", teamId, teamName)
+      let teamId = 0
+      let teamName = "team_name"
+      if (session && session.user.role === "player") {
+        const teamData = await getPlayerActiveTeam(session?.user.id)
+        teamId = teamData.team_id
+        teamName = teamData.team_name
+
+      } else if (session && session.user.role === "team") {
+        teamId = session.user.id
+        teamName = session.user.teamName
+      }
+      setTeamId(teamId)
+      setTeamName(teamName)
 
       let teamInfo = await getTeamInfo({ team_id: teamId });
       setRoster(teamInfo);
@@ -90,8 +106,9 @@ export default function TeamPage() {
       let requests = await getJR({ team_id: teamId });
       setJoinRequests(requests);
 
-      let teams = await getTeamsDirectory();
-      setTeams(teams);
+      console.log("TeamId:", teamId)
+      // let teams = await getDirectoryTeams();
+      // setTeams(teams);
 
       setLoading(false);
     };
@@ -215,7 +232,7 @@ export default function TeamPage() {
                 classNames={{ table: "min-w-full" }}
               >
                 <TableHeader>
-                  {["name", "contact", "action"].map((key) => (
+                  {["name", "contact", "phone number","action"].map((key) => (
                     <TableColumn key={key} allowsSorting>
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </TableColumn>
@@ -223,18 +240,21 @@ export default function TeamPage() {
                 </TableHeader>
                 <TableBody>
                   {roster ? (
-                    roster.map((player) => (
-                      <TableRow key={player.id}>
+                    roster.map((player, index) => (
+                      <TableRow key={index}>
                         <TableCell className="py-2 column-name">
                           {player.first_name + " " + player.last_name}
                         </TableCell>
                         <TableCell className="py-2 column-contact">
                           {player.email}
                         </TableCell>
+                        <TableCell>
+                          {player.phone_number}
+                        </TableCell>
                         <TableCell className="w-[220px]">
                           {true ? (
                             <Button
-                              className="w-44 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              className="w-25 h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                               disabled={actionLoading}
                               onPress={() => handlePromoteToCaptain(player.id)}
                             >
