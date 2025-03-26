@@ -38,6 +38,7 @@ export const Navbar = () => {
   const [activeTeamId, setActiveTeamId] = useState<number>(0);
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
+  const [manageLeagueDropOpen, setManageLeagueDropOpen] = useState(false);
 
   useEffect(() => {
     const fetchSessionAndNotifications = async () => {
@@ -108,6 +109,11 @@ export const Navbar = () => {
     setIsModalOpen(false); // Close the modal
   };
 
+  const handleManageLeagueOptionClick = (href: string) => {
+    setManageLeagueDropOpen(false); // Hide the dropdown
+    window.location.href = href; // Navigate to the selected page
+  };
+
   return (
     <HeroUINavbar
       isMenuOpen={isMenuOpen}
@@ -141,6 +147,33 @@ export const Navbar = () => {
                 </NextLink>
               </NavbarItem>
             ))}
+            {session?.user.role === "commissioner" && (
+              <NavbarItem className="relative group">
+                <span className="cursor-default flex items-center gap-2">
+                  Manage League
+                  <ChevronDown size={16} />
+                </span>
+                <div className="absolute left-0 mt-0 hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md square-lg p-2 z-10 w-32">
+                  <ul className="w-full">
+                    <li className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 square-md cursor-pointer text-center w-full">
+                      <NextLink href="/league-management/player-list" className="block w-full">
+                        Player List
+                      </NextLink>
+                    </li>
+                    <li className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer text-center w-full">
+                      <NextLink href="" className="block w-full">
+                        Placeholder
+                      </NextLink>
+                    </li>
+                    <li className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md cursor-pointer text-center w-full">
+                      <NextLink href="" className="block w-full">
+                        Placeholder
+                      </NextLink>
+                    </li>
+                  </ul>
+                </div>
+              </NavbarItem>
+            )}
           </ul>        
         )}
       </NavbarContent>
