@@ -29,7 +29,7 @@ import commissionerReschedule from "../functions/commissionerReschedule";
 import { useSchedule } from "./ScheduleContext";
 
 import { title } from "@/components/primitives";
-import { useGlobalState } from "@/context/GlobalStateContext";
+import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 
 const currDate = new Date();
 
@@ -94,8 +94,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const calendarRef = useRef<FullCalendar>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
-  // const [userTeamId, setUserTeamId] = useState<number | null>(null);
-  const { teamId } = useGlobalState();
+  const [teamId, setTeamId] = useState<number>(0);
+  const [teamName, setTeamName] = useState<string>("team_name");
   const [loading, setLoading] = useState(true);
   const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
   const [maxSelectedDates, setMaxSelectedDates] = useState(5); // Maximum number of dates that can be selected when rescheduling games
@@ -118,9 +118,22 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
             if (calendarRef.current) {
               calendarRef.current.getApi().changeView("dayGridMonth");
             }
+            // Set team id
+            let teamId = 0
+            let teamName = ""
+            if (session.user.role === "player") {
+              const teamData = await getPlayerActiveTeam(session?.user.id)
+              teamId = teamData.team_id
+              teamName = teamData.team_name
+            } else if (session.user.role === "team") {
+              teamId = session.user.id
+              teamName = session.user.teamName
+            }
+            setTeamId(teamId)
+            setTeamName(teamName)
   
             // Fetch team schedule
-            const formattedEvents = await getTeamSchedule(session.user?.team_id);
+            const formattedEvents = await getTeamSchedule(teamId);
             setEvents(formattedEvents);
           } else if (
             session.user?.role === "commissioner" ||
