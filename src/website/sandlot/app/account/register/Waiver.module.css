@@ -9,40 +9,37 @@
   max-width: 650px; /* Match the inputGroup */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* Align content to the left */
 }
 
 .inputGroupContainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px; /* Space between input groups */
+  flex-wrap: wrap;
+  gap: 20px; /* Adjust spacing */
+  justify-content: space-between;
   width: 100%;
-  margin-bottom: 15px; /* Optional: add some vertical spacing between containers */
+  max-width: 620px; /* Ensure it aligns well */
 }
 
+/* Input Group */
 .inputGroup {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   width: 100%;
   max-width: 300px;
+  min-width: 290px; /* Ensure proper wrapping on smaller screens */
 }
 
-.inputGroup label {
-  margin-top: 10px; 
-  margin-bottom: 10px; /* Add space below the label */
-  font-size: 0.9rem; /* Optional: slightly reduce label font size if desired */
-}
-  
 /* Input Fields */
 .input {
   padding: 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-bottom: 10px;
 }
 
 .waiver h3 {

@@ -29,6 +29,9 @@ export default function Register() {
   const [preferredOffday, setPreferredOffday] = useState<number>(0); // defaulted to 0 instead of  || "" because it was causing typing problems in the backend
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
+  
+  const [fieldsFilled, setFeildsFilled] = useState<number>(0);
+  const [showWaiver, setShowWaiver] = useState<boolean>(false);
   const router = useRouter();
 
 
@@ -86,75 +89,89 @@ export default function Register() {
   };
 
   const renderForm = () => {
-    if (accountType === "player") {
+    if (accountType === "player" && !showWaiver) {
       return (
-        <div className="flex space-x-10">
-          <div className={`${styles.formContainer} w-3/5`}>
-            <div className={styles.inputGroup}>
-              <label>First Name:</label>
-              <input
-                required
-                className={styles.input}
-                type="text"
-                value={firstname}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label>Last Name:</label>
-              <input
-                required
-                className={styles.input}
-                type="text"
-                value={lastname}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label>Email:</label>
-              <input
-                required
-                className={styles.input}
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label>Password:</label>
-              <input
-                required
-                className={styles.input}
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            <div className={`${styles.inputGroup} ${styles.gender}`}>
-              <label htmlFor="gender">Gender:</label>
-              <select
-                required
-                className={styles.input}
-                id="gender"
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="">Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
+        <div>
+          <div className={styles.inputGroup}>
+            <label>First Name:</label>
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={firstname}
+              onChange={(e) => {
+                setFirstName(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
+            />
           </div>
-          <div className={`${styles.formContainer} w-2/5 min-w-[700px]`}>
-            <Waiver/>
+
+          <div className={styles.inputGroup}>
+            <label>Last Name:</label>
+            <input
+              required
+              className={styles.input}
+              type="text"
+              value={lastname}
+              onChange={(e) => {
+                setLastName(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Email:</label>
+            <input
+              required
+              className={styles.input}
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Password:</label>
+            <input
+              required
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
+            />
+          </div>
+
+          <div className={`${styles.inputGroup} ${styles.gender}`}>
+            <label htmlFor="gender">Gender:</label>
+            <select
+              required
+              className={styles.input}
+              id="gender"
+              value={gender}
+              onChange={(e) => {
+                setGender(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
           </div>
         </div>
       );
+    } else if (accountType === "player" && showWaiver) {
+      return (
+        <Waiver/>
+      )
     } else if (accountType === "team") {
       return (
         <div>
@@ -290,9 +307,15 @@ export default function Register() {
               {renderForm()}
 
               <div className="flex space-x-4 justify-center">
-                <Button className="button" type="submit">
-                  Register
-                </Button>
+                {showWaiver ? (
+                  <Button className="button" type="submit">
+                    Register
+                  </Button>
+                ) : (
+                  <Button className="button" isDisabled={fieldsFilled < 5} onPress={() => setShowWaiver(true)}>
+                    Next
+                  </Button>
+                )}
               </div>
 
               <div className="flex space-x-4 justify-center mt-4">
