@@ -1,3 +1,5 @@
+// app/broadcast/page.tsx
+
 "use client";
 
 import { title } from "@/components/primitives";
@@ -6,6 +8,14 @@ import { useState, useEffect } from "react";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 // import sendEmail from "../functions/sendEmail";
 import "./EmailBroadcastPage.css";
+
+// Define an interface for the team object
+interface Team {
+  team_id: number;
+  name: string;
+  division: string;
+  // Add any other properties the team object might have
+}
 
 export default function EmailBroadcastPage() {
   const [emailTitle, setEmailTitle] = useState("");
@@ -17,10 +27,12 @@ export default function EmailBroadcastPage() {
   useEffect(() => {
     const fetchTeams = async () => {
       const teamList = await getDirectoryTeams(); // Fetch teams from DB
-      setTeams(teamList);
+      // Extract team names (assuming the objects have a 'name' property)
+      const teamNames: string[] = teamList.map((team: Team) => team.name);
+      setTeams(teamNames);
     };
-
-    fetchTeams();
+  
+    fetchTeams(); // Add the missing function call
   }, []);
 
   const handleRecipientToggle = (email: string) => {
