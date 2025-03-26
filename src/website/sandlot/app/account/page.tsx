@@ -1,11 +1,9 @@
-// app/account/page.tsx
-
 "use client";
 
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { getSession, signOut, signIn } from "next-auth/react";
 import { Session } from "next-auth";
-import { Button, Card, CardBody } from "@heroui/react";
+import { Button, Card, CardBody, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 import updatePlayerEmail from "../functions/updatePlayerEmail";
@@ -18,10 +16,16 @@ import updateTeamPassword from "../functions/updateTeamPassword";
 import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal component
 
 import { title } from "@/components/primitives";
+import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
+  const [teamName, setTeamName] = useState<string>("team_name");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalInitialValue, setModalInitialValue] = useState("");
@@ -36,7 +40,12 @@ export default function AccountPage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
-
+      if (session && session.user.role === "player") {
+        const activeTeamData = await getPlayerActiveTeam(session.user.id)
+        setTeamName(activeTeamData.team_name)
+      } else if (session && session.user.role === "team") {
+        setTeamName(session.user.teamName)
+      }
       setSession(session);
       setLoading(false);
     };
@@ -142,7 +151,14 @@ export default function AccountPage() {
     setIsModalOpen(true);
   };
 
-  if (loading) return <div>Loading...</div>;
+  // If loading, show a global spinner
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Account Information..." size="lg" />
+      </div>
+    );
+  }
 
   if (!session) {
     return (
@@ -176,7 +192,7 @@ export default function AccountPage() {
   const teamUsername = session.user?.username;
   const userRole = session.user?.role;
   const userGender = session.user?.gender || "Not specified";
-  const userTeam = session.user?.teamName || "Not assigned to a team";
+  const userTeam = teamName || "Not assigned to a team";
 
   return (
     <div>
@@ -204,11 +220,11 @@ export default function AccountPage() {
                 </p>
               )}
               <p>
-                <strong>Role:</strong> {userRole}
+                <strong>Role:</strong> {capitalizeFirstLetter(userRole)}
               </p>
               {userRole === "player" && (
                 <p>
-                  <strong>Gender:</strong> {userGender}
+                  <strong>Gender:</strong> {capitalizeFirstLetter(userGender)}
                 </p>
               )}
               {userRole === "player" && (

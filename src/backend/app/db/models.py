@@ -46,7 +46,7 @@ class TeamPlayers(Base):
     __tablename__ = "team_players"
     team_id: Mapped[int] = mapped_column(ForeignKey("team.id"), primary_key=True)
     player_id: Mapped[int] = mapped_column(ForeignKey("player.id"), primary_key=True)
-    captain: Mapped[bool] = mapped_column(default=False)
+    captain: Mapped[Optional[bool]] = mapped_column(default=False)
 
 class Game(Base):
     __tablename__ = "game"

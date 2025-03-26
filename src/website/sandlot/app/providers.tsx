@@ -1,9 +1,6 @@
-// app/providers.tsx
-
 "use client";
 
 import type { ThemeProviderProps } from "next-themes";
-
 import * as React from "react";
 import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
@@ -30,7 +27,9 @@ export function Providers({ children, themeProps, session }: ProvidersProps) {
   return (
     <SessionProvider session={session}>
       <HeroUIProvider navigate={router.push}>
-        <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+        <NextThemesProvider {...themeProps}>
+            {children}
+        </NextThemesProvider>
       </HeroUIProvider>
     </SessionProvider>
   );

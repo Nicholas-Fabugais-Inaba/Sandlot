@@ -46,3 +46,7 @@
 .drop-target:hover {
   border-color: #ccc;
 }
+
+.highlight {
+  border: 2px solid grey;
+}

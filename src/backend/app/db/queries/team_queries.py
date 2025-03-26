@@ -40,13 +40,15 @@ def get_all_teams():
         result = session.execute(stmt).mappings().all()
         return result
     
+# Gets all teams that are currently assigned to a valid division
 def get_all_season_teams():
     engine = create_connection()
     with Session(engine) as session:
         stmt = (
-            select(Team.id, Team.team_name, Team.division, Team.offday, Team.preferred_time)
+            select(Team.id, Team.team_name, Division.division_name, Team.offday, Team.preferred_time)
             .select_from(Team)
-            .join(Division, Team.division == Division.id)  # Ensure the division exists in the Division table
+            .join(Division, Team.division == Division.id)
+            .where(Team.division > 0)
         )
         result = session.execute(stmt).mappings().all()
         return result
@@ -70,6 +72,7 @@ def get_team(login_username):
         return result
 
 # TODO: naming of this query was overhauled, make sure to update any imports of get_team_info_by_current_user
+# TODO: change to work with TeamPlayers
 def get_team_players(team_id):
     engine = create_connection()
     with Session(engine) as session:
@@ -166,3 +169,29 @@ def get_teams_season_setup():
         )
         result = session.execute(stmt).mappings().all()
         return result
+
+def deactivate_all_teams():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).values(active=False)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return "all teams deactivated"
+
+def activate_all_teams(): # FOR DEVLOPMENT PURPOSES ONLY TODO REMOVE THIS
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = update(Team).values(active=True)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+        return "all teams activated"

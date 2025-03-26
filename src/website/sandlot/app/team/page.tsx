@@ -15,6 +15,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Spinner,
 } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
@@ -30,6 +31,12 @@ import acceptJR from "../functions/acceptJR";
 import declineJR from "../functions/declineJR";
 
 import { title } from "@/components/primitives";
+// import { useGlobalState } from "@/context/GlobalStateContext";
+import AvailableTeams from "./AvailableTeams";
+
+import "./TeamPage.css";
+import getDirectoryTeams from "../functions/getDirectoryTeams";
+import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 
 interface JoinRequest {
   id: number;
@@ -41,11 +48,11 @@ interface JoinRequest {
   gender: string;
 }
 
-// Define the interface for Team and User data
 interface Team {
   id: number;
-  team_name: string;
-  captain_id: number;
+  name: string;
+  division: string;
+  // captain_id: number;
   // players: { id: string; name: string; email: string }[];
   // joinRequests: { id: number; first_name: string; last_name: string, email: string }[];
   // captain: { id: string; name: string; email: string }; // Add captain info
@@ -62,29 +69,46 @@ interface Player {
 
 export default function TeamPage() {
   const [session, setSession] = useState<Session | null>(null);
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [userTeam, setUserTeam] = useState<Team | null>(null);
+  // const [teams, setTeams] = useState<Team[]>([]);
   const [roster, setRoster] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const router = useRouter();
-  const [userRole, setUserRole] = useState<string>("");
-  const [userTeamID, setUserTeamID] = useState<number | null>(null);
+  // const { teamId, teamName } = useGlobalState();
+  const [teamId, setTeamId] = useState<number>(0);
+  const [teamName, setTeamName] = useState<string>("team_name");
 
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
-  // const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     const initializeStates = async () => {
       const session = await getSession();
-
       setSession(session);
-      let teamInfo = await getTeamInfo({ team_id: session?.user.team_id });
 
+      // console.log("From global:", teamId, teamName)
+      let teamId = 0
+      let teamName = "team_name"
+      if (session && session.user.role === "player") {
+        const teamData = await getPlayerActiveTeam(session?.user.id)
+        teamId = teamData.team_id
+        teamName = teamData.team_name
+
+      } else if (session && session.user.role === "team") {
+        teamId = session.user.id
+        teamName = session.user.teamName
+      }
+      setTeamId(teamId)
+      setTeamName(teamName)
+
+      let teamInfo = await getTeamInfo({ team_id: teamId });
       setRoster(teamInfo);
-      let requests = await getJR({ team_id: session?.user.team_id });
 
+      let requests = await getJR({ team_id: teamId });
       setJoinRequests(requests);
+
+      console.log("TeamId:", teamId)
+      // let teams = await getDirectoryTeams();
+      // setTeams(teams);
 
       setLoading(false);
     };
@@ -92,48 +116,58 @@ export default function TeamPage() {
     initializeStates();
   }, []);
 
+  const handlePromoteToCaptain = async (playerId: number) => {
+    setActionLoading(true);
+    // await promoteToCaptain({ team_id: teamId, player_id: playerId });
+    setActionLoading(false);
+    // Update the team info and roster
+    const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
+    setRoster(updatedTeamInfo);
+  };
+
+  const handleDemoteToPlayer = async (playerId: number) => {
+    setActionLoading(true);
+    // await demoteToPlayer({ team_id: teamId, player_id: playerId });
+    setActionLoading(false);
+    // Update the team info and roster
+    const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
+    setRoster(updatedTeamInfo);
+  };
+
+  const handleRequestJoin = async (teamId: number) => {
+    if (session) {
+      createJR({
+        email: session.user.email,
+        team_id: teamId
+      })
+    }
+  }
+
   const handleAction = async () => {};
+
+  // Loading spinner when data is being fetched
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Team Information..." size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div>
       <h1 className={title()}>Team</h1>
 
       {/* Player View: Available Teams */}
-      {session?.user.role === "player" && !session.user.team_id ? (
-        <div>
-          <h2 className="text-xl font-semibold text-center mb-4 mt-4">
-            Available Teams
-          </h2>
-          {teams.length ? (
-            teams.map((team) => (
-              <div key={team.id} className="p-4 border mb-2 rounded">
-                <p>{team.team_name}</p>
-                <Button
-                  className="button"
-                  disabled={actionLoading}
-                  onPress={
-                    () => handleAction()
-                    // `/api/teams/${team.id}/join`,
-                    // "POST",
-                    // { playerEmail: session.user.email },
-                    // "Join request sent!"
-                  }
-                >
-                  Request to Join
-                </Button>
-              </div>
-            ))
-          ) : (
-            <p>No available teams at the moment.</p>
-          )}
-        </div>
-      ) : session?.user.role === "player" && session.user.team_id ? (
+      {session?.user.role === "player" && !teamId ? (
+        <AvailableTeams />
+      ) : session?.user.role === "player" && teamId ? (
         // Player View After Join Request Accepted
         <div className="flex">
           {/* Left Section: Team Roster */}
           <div className="w-3/5 mr-4">
             <h2 className="text-xl font-bold mb-2">
-              {session?.user.teamName} Roster
+              {teamName} Roster
             </h2>
             <Table
               aria-label="Team Roster"
@@ -144,8 +178,8 @@ export default function TeamPage() {
               </TableHeader>
               <TableBody>
                 {roster.length ? (
-                  roster.map((player) => (
-                    <TableRow key={player.id}>
+                  roster.map((player, index) => (
+                    <TableRow key={index}>
                       <TableCell>
                         {player.first_name + " " + player.last_name}
                       </TableCell>
@@ -163,7 +197,7 @@ export default function TeamPage() {
           {/* Right Section: Team Info (Captain's Info and Leave Team) */}
           <div className="w-2/5">
             <h2 className="text-xl font-bold mb-2">
-              {session?.user.teamName}'s Info
+              {teamName} Info
             </h2>
             <Button
               className="button mb-4"
@@ -179,10 +213,6 @@ export default function TeamPage() {
               className="button"
               onPress={
                 () => handleAction()
-                // `/api/teams/${userTeam.id}/leave`,
-                // "POST",
-                // { playerEmail: session.user.email },
-                // "You have left the team"
               }
             >
               Leave Team
@@ -194,7 +224,7 @@ export default function TeamPage() {
         <div className="flex">
           <div className="w-3/5 mr-4">
             <h2 className="text-xl font-bold mb-2">
-              {session?.user.teamName || "Your Team"} Roster
+              {teamName || "Your Team"} Roster
             </h2>
             <div className="max-h-80 overflow-y-auto p-2">
               <Table
@@ -202,7 +232,7 @@ export default function TeamPage() {
                 classNames={{ table: "min-w-full" }}
               >
                 <TableHeader>
-                  {["name", "contact"].map((key) => (
+                  {["name", "contact", "phone number","action"].map((key) => (
                     <TableColumn key={key} allowsSorting>
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </TableColumn>
@@ -210,13 +240,35 @@ export default function TeamPage() {
                 </TableHeader>
                 <TableBody>
                   {roster ? (
-                    roster.map((player) => (
-                      <TableRow key={player.id}>
+                    roster.map((player, index) => (
+                      <TableRow key={index}>
                         <TableCell className="py-2 column-name">
                           {player.first_name + " " + player.last_name}
                         </TableCell>
                         <TableCell className="py-2 column-contact">
                           {player.email}
+                        </TableCell>
+                        <TableCell>
+                          {player.phone_number}
+                        </TableCell>
+                        <TableCell className="w-[220px]">
+                          {true ? (
+                            <Button
+                              className="w-25 h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              disabled={actionLoading}
+                              onPress={() => handlePromoteToCaptain(player.id)}
+                            >
+                              Promote to Captain
+                            </Button>
+                          ) : (
+                            <Button
+                              className="w-44 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              disabled={actionLoading}
+                              onPress={() => handleDemoteToPlayer(player.id)}
+                            >
+                              Demote to Player
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))
@@ -249,7 +301,7 @@ export default function TeamPage() {
                         await acceptJR({
                           jr_id: request.id,
                           player_id: request.player_id,
-                          team_id: session?.user.team_id,
+                          team_id: teamId,
                         });
                         setJoinRequests(
                           joinRequests.filter((req) => req.id != request.id),
@@ -284,7 +336,6 @@ export default function TeamPage() {
                   </div>
                 ))
               ) : (
-                // TODO: this does not show up properly if there are no requests
                 <p>No pending requests</p>
               )}
             </div>

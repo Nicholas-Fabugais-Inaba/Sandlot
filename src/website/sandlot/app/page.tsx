@@ -59,7 +59,7 @@ export default function Home() {
   const handleAddAnnouncement = async () => {
     if (newAnnouncementTitle.trim() && newAnnouncementBody.trim()) {
       const newAnnouncement = {
-        id: announcements[announcements.length - 1].id + 1, // Increment the ID based on existing IDs to match the assigned ID in the database
+        id: announcements.length > 0 ? announcements[announcements.length - 1].id + 1 : 1, // Increment the ID based on existing IDs to match the assigned ID in the database
         date: new Date().toLocaleDateString(), // Set the current date for new announcements
         title: newAnnouncementTitle,
         body: newAnnouncementBody,
@@ -308,17 +308,13 @@ export default function Home() {
                           placeholder="Enter announcement title..."
                           type="text"
                           value={newAnnouncementTitle}
-                          onChange={(e) =>
-                            setNewAnnouncementTitle(e.target.value)
-                          }
+                          onChange={(e) => setNewAnnouncementTitle(e.target.value)}
                         />
                         <textarea
                           className="border border-gray-300 rounded-md px-3 py-2 w-full h-24"
                           placeholder="Enter announcement body..."
                           value={newAnnouncementBody}
-                          onChange={(e) =>
-                            setNewAnnouncementBody(e.target.value)
-                          }
+                          onChange={(e) => setNewAnnouncementBody(e.target.value)}
                         />
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
@@ -331,83 +327,77 @@ export default function Home() {
 
                     {/* Announcements List */}
                     <ul className="mt-4 space-y-2">
-                      {announcements.map((announcement, index) => {
-                        const currentDate = new Date().toLocaleDateString(); // Format the current date
-
-                        return (
-                          <li
-                            key={index}
-                            className="flex flex-col bg-gray-100 p-3 rounded-lg shadow-sm"
-                          >
-                            <div className="relative w-full">
-                              {/* Date in the top right corner */}
-                              <div className="absolute top-2 right-2 text-xs text-gray-500">
-                                {currentDate}
-                              </div>
-
-                              {editingIndex === index ? (
-                                <>
-                                  <input
-                                    className="border border-gray-300 rounded-md px-2 py-1 w-full"
-                                    type="text"
-                                    value={editTitle}
-                                    onChange={(e) =>
-                                      setEditTitle(e.target.value)
-                                    }
-                                  />
-                                  <textarea
-                                    className="border border-gray-300 rounded-md px-2 py-1 w-full h-24 mt-2"
-                                    value={editBody}
-                                    onChange={(e) =>
-                                      setEditBody(e.target.value)
-                                    }
-                                  />
-                                </>
-                              ) : (
-                                <>
-                                  <h3 className="text-lg font-bold text-gray-800">
-                                    {announcement.title}
-                                  </h3>
-                                  <p className="text-gray-800 break-words whitespace-pre-wrap">
-                                    {announcement.body}
-                                  </p>
-                                </>
-                              )}
-
-                              {/* Buttons for Edit and Delete */}
-                              {session?.user.role === "commissioner" && (
-                                <div className="flex space-x-2 mt-2">
-                                  {editingIndex === index ? (
-                                    <button
-                                      className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
-                                      onClick={() => handleSaveEdit(index)}
-                                    >
-                                      Save
-                                    </button>
-                                  ) : (
-                                    <button
-                                      className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
-                                      onClick={() =>
-                                        handleEditAnnouncement(index)
-                                      }
-                                    >
-                                      Edit
-                                    </button>
-                                  )}
-                                  <button
-                                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
-                                    onClick={() =>
-                                      handleDeleteAnnouncement(index)
-                                    }
-                                  >
-                                    Delete
-                                  </button>
+                      {announcements.length === 0 ? (
+                        <li className="text-center text-gray-500">No announcements</li>
+                      ) : (
+                        announcements.map((announcement, index) => {
+                          return (
+                            <li
+                              key={index}
+                              className="flex flex-col bg-gray-100 p-3 rounded-lg shadow-sm"
+                            >
+                              <div className="relative w-full">
+                                {/* Date in the top right corner */}
+                                <div className="absolute top-2 right-2 text-xs text-gray-500">
+                                  {announcement.date}
                                 </div>
-                              )}
-                            </div>
-                          </li>
-                        );
-                      })}
+
+                                {editingIndex === index ? (
+                                  <>
+                                    <input
+                                      className="border border-gray-300 rounded-md px-2 py-1 w-full"
+                                      type="text"
+                                      value={editTitle}
+                                      onChange={(e) => setEditTitle(e.target.value)}
+                                    />
+                                    <textarea
+                                      className="border border-gray-300 rounded-md px-2 py-1 w-full h-24 mt-2"
+                                      value={editBody}
+                                      onChange={(e) => setEditBody(e.target.value)}
+                                    />
+                                  </>
+                                ) : (
+                                  <>
+                                    <h3 className="text-lg font-bold text-gray-800">
+                                      {announcement.title}
+                                    </h3>
+                                    <p className="text-gray-800 break-words whitespace-pre-wrap">
+                                      {announcement.body}
+                                    </p>
+                                  </>
+                                )}
+
+                                {/* Buttons for Edit and Delete */}
+                                {session?.user.role === "commissioner" && (
+                                  <div className="flex space-x-2 mt-2">
+                                    {editingIndex === index ? (
+                                      <button
+                                        className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                                        onClick={() => handleSaveEdit(index)}
+                                      >
+                                        Save
+                                      </button>
+                                    ) : (
+                                      <button
+                                        className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+                                        onClick={() => handleEditAnnouncement(index)}
+                                      >
+                                        Edit
+                                      </button>
+                                    )}
+                                    <button
+                                      className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                                      onClick={() => handleDeleteAnnouncement(index)}
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            </li>
+                          );
+                        })
+                      )}
                     </ul>
                   </section>
                 </div>
@@ -442,13 +432,14 @@ export default function Home() {
             >
               Key Season Dates
             </button>
-            {session?.user.role === "commissioner" || session?.user.role === "team" && (
+            {(session?.user.role === "commissioner" || session?.user.role === "team") && (
             <button
               className={`directory-item text-left font-semibold inline-block ${activeSection === "team" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => router.push("/directory")}
             >
               Team Directory
-            </button>)}
+            </button>
+            )}
             <div className="relative">
               <button
                 className={`directory-item text-left font-semibold inline-block ${activeSection === "weather" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}

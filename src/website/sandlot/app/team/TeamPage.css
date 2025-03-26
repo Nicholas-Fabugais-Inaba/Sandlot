@@ -1,15 +1,8 @@
-.column-name {
-  width: 50%;
-  min-width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+/* app/team/TeamPage.css */
 
-.column-contact {
-  width: 50%;
-  min-width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.flex-container {
+  display: flex;
+  align-items: center;
+  max-width: 30%;
+  justify-content: space-between;
 }

@@ -1,5 +1,3 @@
-// app/standings/page.tsx
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -10,13 +8,13 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   Spinner,
 } from "@heroui/react";
-import { useAsyncList } from "@react-stately/data";
-import { getSession } from "next-auth/react";
 
 import getStandings from "../functions/getStandings";
+import getSeasonState from "../functions/getSeasonState";
+import OffseasonMessage from "@/app/no-season/OffseasonMessage";
+import PreseasonMessage from "@/app/no-season/PresasonMessage";
 
 import { title } from "@/components/primitives";
 import "./StandingsPage.css";
@@ -30,6 +28,7 @@ export default function StandingsPage() {
     >
   >({});
   const [teams, setTeams] = useState<Team[]>([]);
+  const [seasonState, setSeasonState] = useState<any>();
 
   interface Team {
     name: string;
@@ -42,16 +41,23 @@ export default function StandingsPage() {
   }
 
   useEffect(() => {
-    (async () => {
-      let standings = await getStandings();
+    const fetchStandings = async () => {
 
-      console.log(standings);
-      console.log(standings[0]);
-      // console.log(list)
-      setTeams(standings);
-    })();
+      setSeasonState( await getSeasonState());      
+      try {
+        setIsLoading(true); // Set loading to true before fetching
+        if (seasonState === "season") {
+          const standings = await getStandings();
+          setTeams(standings);
+        }
+        setIsLoading(false); // Set loading to false after fetching
+      } catch (error) {
+        console.error("Error fetching standings:", error);
+        setIsLoading(false); // Ensure loading is set to false even if there's an error
+      }
+    };
 
-    setIsLoading(false); // Set loading to false after fetching session
+    fetchStandings();
   }, []);
 
   // Extract unique divisions
@@ -69,107 +75,120 @@ export default function StandingsPage() {
   ) => {
     setSortDescriptors((prev) => ({
       ...prev,
-      [division]: sortDescriptor, // Directly update the sortDescriptor state
+      [division]: sortDescriptor,
     }));
   };
 
-  return (
-    <div>
-      <div style={{ marginBottom: "20px" }}>
-        <h1 className={title()}>Standings</h1>
+  // If loading, show a global spinner
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Standings..." size="lg" />
       </div>
+    );
+  }
+  
+  if (seasonState === "offseason") {
+    return <OffseasonMessage />;
+  }
+  else if (seasonState === "preseason") {
+    return <PreseasonMessage />;
+  }
+  else {
+    return (
+      <div>
+        <div style={{ marginBottom: "20px" }}>
+          <h1 className={title()}>Standings</h1>
+        </div>
 
-      {/* Render a separate table for each division */}
-      {uniqueDivisions.map((division) => {
-        const sortedTeams = [
-          ...teams.filter((team) => team.division === division),
-        ];
-        const sortDescriptor = sortDescriptors[division];
+        {/* Render a separate table for each division */}
+        {uniqueDivisions.map((division) => {
+          const sortedTeams = [
+            ...teams.filter((team) => team.division === division),
+          ];
+          const sortDescriptor = sortDescriptors[division];
 
-        if (sortDescriptor) {
-          sortedTeams.sort((a, b) => {
-            let first = a[sortDescriptor.column];
-            let second = b[sortDescriptor.column];
+          if (sortDescriptor) {
+            sortedTeams.sort((a, b) => {
+              let first = a[sortDescriptor.column];
+              let second = b[sortDescriptor.column];
 
-            if (typeof first === "number" && typeof second === "number") {
-              return sortDescriptor.direction === "ascending"
-                ? first - second
-                : second - first;
-            }
-
-            if (typeof first === "string" && typeof second === "string") {
-              return sortDescriptor.direction === "ascending"
-                ? first.localeCompare(second)
-                : second.localeCompare(first);
-            }
-
-            return 0;
-          });
-        }
-
-        return (
-          <div key={division} className="mb-6">
-            <h2 className="text-xl font-bold text-left mb-2">{division}</h2>
-            <Table
-              aria-label={`Standings for ${division}`}
-              classNames={{ table: "w-full" }}
-              sortDescriptor={sortDescriptors[division]} // Ensure correct state is used
-              onSortChange={(sort) =>
-                handleSort(
-                  division,
-                  sort as {
-                    column: keyof Team;
-                    direction: "ascending" | "descending";
-                  },
-                )
+              if (typeof first === "number" && typeof second === "number") {
+                return sortDescriptor.direction === "ascending"
+                  ? first - second
+                  : second - first;
               }
-            >
-              <TableHeader>
-                {[
-                  "name",
-                  "wins",
-                  "losses",
-                  "ties",
-                  "forfeits",
-                  "differential",
-                ].map((key) => (
-                  <TableColumn key={key} allowsSorting>
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </TableColumn>
-                ))}
-              </TableHeader>
-              <TableBody
-                isLoading={isLoading}
-                items={sortedTeams}
-                loadingContent={<Spinner label="Loading..." />}
+
+              if (typeof first === "string" && typeof second === "string") {
+                return sortDescriptor.direction === "ascending"
+                  ? first.localeCompare(second)
+                  : second.localeCompare(first);
+              }
+
+              return 0;
+            });
+          }
+
+          return (
+            <div key={division} className="mb-6">
+              <h2 className="text-xl font-bold text-left mb-2">{division}</h2>
+              <Table
+                aria-label={`Standings for ${division}`}
+                classNames={{ table: "w-full" }}
+                sortDescriptor={sortDescriptors[division]}
+                onSortChange={(sort) =>
+                  handleSort(
+                    division,
+                    sort as {
+                      column: keyof Team;
+                      direction: "ascending" | "descending";
+                    },
+                  )
+                }
               >
-                {(item) => (
-                  <TableRow key={item.name} className="py-2">
-                    <TableCell className="py-2 column-name">
-                      {item.name}
-                    </TableCell>
-                    <TableCell className="py-2 column-wins">
-                      {item.wins}
-                    </TableCell>
-                    <TableCell className="py-2 column-losses">
-                      {item.losses}
-                    </TableCell>
-                    <TableCell className="py-2 column-ties">
-                      {item.ties}
-                    </TableCell>
-                    <TableCell className="py-2 column-forfeits">
-                      {item.forfeits}
-                    </TableCell>
-                    <TableCell className="py-2 column-differential">
-                      {item.differential}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        );
-      })}
-    </div>
-  );
+                <TableHeader>
+                  {[
+                    "name",
+                    "wins",
+                    "losses",
+                    "ties",
+                    "forfeits",
+                    "differential",
+                  ].map((key) => (
+                    <TableColumn key={key} allowsSorting>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </TableColumn>
+                  ))}
+                </TableHeader>
+                <TableBody items={sortedTeams}>
+                  {(item) => (
+                    <TableRow key={item.name} className="py-2">
+                      <TableCell className="py-2 column-name">
+                        {item.name}
+                      </TableCell>
+                      <TableCell className="py-2 column-wins">
+                        {item.wins}
+                      </TableCell>
+                      <TableCell className="py-2 column-losses">
+                        {item.losses}
+                      </TableCell>
+                      <TableCell className="py-2 column-ties">
+                        {item.ties}
+                      </TableCell>
+                      <TableCell className="py-2 column-forfeits">
+                        {item.forfeits}
+                      </TableCell>
+                      <TableCell className="py-2 column-differential">
+                        {item.differential}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 }

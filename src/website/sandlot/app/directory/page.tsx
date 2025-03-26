@@ -20,7 +20,10 @@ import { Session } from "next-auth";
 import { title } from "@/components/primitives";
 // import getStandings from "../functions/getStandings";
 import "./TeamDirectoryPage.css";
-import getTeamsDirectory from "@/app/functions/getTeamsDirectory";
+import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
+import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
+
+let notificationTimeout: NodeJS.Timeout | null = null; // Declare a variable to store the timeout
 
 export default function TeamsDirectoryPage() {
   const [session, setSession] = useState<Session | null>(null);
@@ -33,24 +36,57 @@ export default function TeamsDirectoryPage() {
   >({});
   const [teams, setTeams] = useState<Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null); // State for selected team
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [copyNotification, setCopyNotification] = useState<string | null>(null);
 
   interface Team {
-    id: number;
+    team_id: number;
     name: string;
     division: string;
   }
 
-  useEffect(() => {
-    (async () => {
-      let standings = await getTeamsDirectory();
+  interface Player {
+    player_id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+    gender: string;
+  }
 
-      console.log(standings);
-      console.log(standings[0]);
-      setTeams(standings);
+  useEffect(() => {
+
+    // fetches session info
+    const fetchSession = async () => {
+      const session = await getSession();
+      setSession(session);
+    };
+    
+    fetchSession();
+
+    // fetches teams info
+    (async () => {
+      let teams = await getDirectoryTeams();
+      setTeams(teams);
     })();
 
-    setIsLoading(false); // Set loading to false after fetching session
   }, []);
+
+  // Set loading to false after session is fetched and delay is complete
+  useEffect(() => {
+    const delayLoading = async () => {  
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setIsLoading(false);
+    };
+  
+    delayLoading();
+  }, [session]);
+
+  const set_players_in_team = async (selected_team: Team) => {
+    setSelectedTeam(selected_team); // Set the selected team
+    let players_selected = await getDirectoryPlayers({team_id: selected_team.team_id});
+    setPlayers(players_selected);
+  };
 
   const uniqueDivisions = Array.from(
     new Set(teams.map((team) => team.division)),
@@ -69,6 +105,11 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
+ if (isLoading) {
+    return <Spinner label="Loading..." />;
+  }
+
+  if (session?.user.role === "commissioner" || session?.user.role === "team") {
   return (
     <div>
       <div style={{ marginBottom: "20px" }}>
@@ -138,7 +179,11 @@ export default function TeamsDirectoryPage() {
                       <TableRow key={item.name} className="py-2">
                         <TableCell
                           className="py-2 column-name cursor-pointer text-white-600 hover:underline"
-                          onClick={() => setSelectedTeam(item)} // Set selected team on click
+                          onClick={() => {
+                            console.log("Selected team", item);
+                            set_players_in_team(item); // Fetch players for the selected team
+                          }}
+                          title="Click to view team details"
                         >
                           {item.name}
                         </TableCell>
@@ -158,17 +203,65 @@ export default function TeamsDirectoryPage() {
                 <h2 className="text-xl font-bold mb-2">
                   {selectedTeam.name}
                 </h2>
-                <p>
+                <p className="mt-4">
                   <strong>Division:</strong> {selectedTeam.division}
                 </p>
+                <div className="mt-4">
+                  <strong>Players:</strong>
+                  {players.length > 0 ? (
+                    <ul className="mt-2">
+                    {players.map((player) => (
+                      <li key={player.player_id} className="mb-2">
+                        <div>{player.first_name} {player.last_name}</div>
+                        {session?.user.role === "commissioner" && (
+                          <>
+                            <div
+                              className="ml-4 cursor-pointer text-white-600 hover:underline"
+                              onClick={() => {
+                                navigator.clipboard.writeText(player.email);
+                                setCopyNotification("Email copied to clipboard!");
+
+                                // Clear the existing timeout if it exists
+                                if (notificationTimeout) {
+                                  clearTimeout(notificationTimeout);
+                                }
+
+                                // Set a new timeout
+                                notificationTimeout = setTimeout(() => {
+                                  setCopyNotification(null);
+                                  notificationTimeout = null; // Reset the timeout variable
+                                }, 2000); // Clear notification after 2 seconds
+                              }}
+                              title="Click to copy email to clipboard"
+                            >
+                              {player.email}
+                            </div>
+                            <div className="ml-4">{player.phone_number}</div>
+                          </>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  ) : (
+                    <p>No players found for this team.</p>
+                  )}
+                </div>
                 {/* Add more team details here if available */}
               </>
             ) : (
               <p>Select a team to view details</p>
             )}
+
+            {copyNotification && (
+              <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
+                {copyNotification}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
-  );
+  )}
+
+  else { return <h1>Unauthorized</h1> }
 }
