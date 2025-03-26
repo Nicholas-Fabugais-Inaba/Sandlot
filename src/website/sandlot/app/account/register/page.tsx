@@ -30,22 +30,6 @@ export default function Register() {
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   const router = useRouter();
 
-  // NOTICE: keep these comments here they're not necessary anymore but could be helpful in the future
-  // const handleRegistration = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   const response = await fetch('/api/users/register', {
-  //     method: 'POST',
-  //     body: JSON.stringify({ email, password, accountType, teamName, name, gender }),
-  //     headers: { 'Content-Type': 'application/json' },
-  //   });
-
-  //   if (response.ok) {
-  //     router.push(callbackUrl);  // Redirect to the callbackUrl after successful registration
-  //   } else {
-  //     const data = await response.json();
-  //     setError(data.error || 'Registration failed');
-  //   }
-  // };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -53,10 +37,11 @@ export default function Register() {
     try {
       if (accountType === "player") {
         const newUser = {
-          firstname: firstname,
-          lastname: lastname,
+          first_name: firstname,
+          last_name: lastname,
           email: email,
           password: password,
+          gender: gender,
         };
 
         await registerPlayer(newUser);
@@ -74,17 +59,20 @@ export default function Register() {
       }
 
       // Automatically sign in the user after successful registration
-      const result = await signIn("credentials", {
-        redirect: false, // Prevent automatic redirect
-        userID: accountType === "player" ? email : teamUsername,
-        password: password,
-      });
+      // setTimeout is used to wait for the db to be populated with the registration information before attempting retrieve the information for signIn
+      setTimeout(async () => {
+        const result = await signIn("credentials", {
+          redirect: false, // Prevent automatic redirect
+          userID: accountType === "player" ? email : teamUsername,
+          password: password,
+        });
 
-      if (result?.error) {
-        setError(result.error);
-      } else {
-        window.location.href = "/account"; // Full page reload to ensure a complete refresh
-      }
+        if (result?.error) {
+          setError(result.error);
+        } else {
+          window.location.href = "/account"; // Full page reload to ensure a complete refresh
+        }
+      }, 1000)
     } catch (error) {
       if (error instanceof Error) {
         setError(

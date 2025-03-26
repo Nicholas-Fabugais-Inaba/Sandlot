@@ -1,5 +1,3 @@
-// app/account/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -18,10 +16,16 @@ import updateTeamPassword from "../functions/updateTeamPassword";
 import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal component
 
 import { title } from "@/components/primitives";
+import { useGlobalState } from "@/context/GlobalStateContext";
+
+function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 export default function AccountPage() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
+  const { teamName } = useGlobalState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalInitialValue, setModalInitialValue] = useState("");
@@ -183,7 +187,7 @@ export default function AccountPage() {
   const teamUsername = session.user?.username;
   const userRole = session.user?.role;
   const userGender = session.user?.gender || "Not specified";
-  const userTeam = session.user?.teamName || "Not assigned to a team";
+  const userTeam = teamName || "Not assigned to a team";
 
   return (
     <div>
@@ -211,11 +215,11 @@ export default function AccountPage() {
                 </p>
               )}
               <p>
-                <strong>Role:</strong> {userRole}
+                <strong>Role:</strong> {capitalizeFirstLetter(userRole)}
               </p>
               {userRole === "player" && (
                 <p>
-                  <strong>Gender:</strong> {userGender}
+                  <strong>Gender:</strong> {capitalizeFirstLetter(userGender)}
                 </p>
               )}
               {userRole === "player" && (
