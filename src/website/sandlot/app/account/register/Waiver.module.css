@@ -5,8 +5,7 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #f9f9f9;
-  width: 100%; /* Ensure it doesn’t stretch */
-  max-width: 650px; /* Match the inputGroup */
+  width: 650px; /* Ensure it doesn’t stretch */
   display: flex;
   flex-direction: column;
   align-items: flex-start; /* Align content to the left */
