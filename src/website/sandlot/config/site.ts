@@ -28,6 +28,8 @@ export const siteConfig = {
       label: "Rescheduler",
       href: "/manage-reschedule-request",
     },
+  ],
+  manageLeagueOptions: [
     {
       label: "Season Setup",
       href: "/season-setup",
@@ -35,6 +37,10 @@ export const siteConfig = {
     {
       label: "Broadcast",
       href: "/broadcast",
+    },
+    {
+      label: "Player List",
+      href: "/league-management/player-list",
     },
   ],
   links: {
