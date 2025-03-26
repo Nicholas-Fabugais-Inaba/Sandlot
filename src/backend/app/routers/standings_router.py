@@ -18,6 +18,9 @@ async def get_standings_data():
     teams_data = get_all_season_teams()
     teams = {}
 
+    print(games)
+    print(teams_data)
+
     for team in teams_data:            
         teams[team['id']] = {
             "name": team["team_name"], 

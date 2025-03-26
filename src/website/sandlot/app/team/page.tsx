@@ -35,7 +35,7 @@ import { useGlobalState } from "@/context/GlobalStateContext";
 import AvailableTeams from "./AvailableTeams";
 
 import "./TeamPage.css";
-import getTeamsDirectory from "../functions/getTeamsDirectory";
+import getTeamsDirectory from "../functions/getDirectoryTeams";
 
 interface JoinRequest {
   id: number;
