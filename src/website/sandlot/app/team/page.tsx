@@ -237,7 +237,7 @@ export default function TeamPage() {
                         <TableCell className="w-[220px]">
                           {true ? (
                             <Button
-                              className="w-44 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              className="w-25 h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                               disabled={actionLoading}
                               onPress={() => handlePromoteToCaptain(player.id)}
                             >
