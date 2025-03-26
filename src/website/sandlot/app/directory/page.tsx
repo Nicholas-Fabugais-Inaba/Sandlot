@@ -83,11 +83,8 @@ export default function TeamsDirectoryPage() {
   }, [session]);
 
   const set_players_in_team = async (selected_team: Team) => {
-    console.log("Selected team", selected_team);
     setSelectedTeam(selected_team); // Set the selected team
-    console.log("HELLOWORLD", selected_team.team_id)
     let players_selected = await getDirectoryPlayers({team_id: selected_team.team_id});
-    console.log("PLAYERS", players_selected);
     setPlayers(players_selected);
   };
 
@@ -108,8 +105,6 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
-  // IF NOT LOGGED IN WILL INFINITE LOAD
-  // BUT WHEN LOGGED INTO A VALID ACCOUNT (com or team) WILL SAY NOT AUTHORIZED BEFORE SESSION IS GRABBED
  if (isLoading) {
     return <Spinner label="Loading..." />;
   }
