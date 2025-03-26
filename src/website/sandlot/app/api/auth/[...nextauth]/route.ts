@@ -7,6 +7,7 @@ import { JWT } from "next-auth/jwt";
 import getPlayer from "@/app/functions/getPlayer";
 import getTeam from "@/app/functions/getTeam";
 
+
 const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -21,7 +22,7 @@ const authOptions: NextAuthOptions = {
           // Fetch user data from your database
           let user = null;
           // TODO: if statments here are poor, should have better way of checking for email/password or player/team
-          const regex = /[@]/;
+          const regex = /[@]/; // test
 
           if (regex.test(credentials.userID)) {
             const player = await getPlayer({ email: credentials.userID });
