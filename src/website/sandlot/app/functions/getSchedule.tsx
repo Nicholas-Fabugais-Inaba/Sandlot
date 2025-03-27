@@ -107,7 +107,7 @@ export default async function getSchedule(timeslots: any): Promise<Event[]> {
     const eventsWithSpacers = addSpacerEventsUsingFields(formattedEvents, timeslots);
 
     console.log("Formatted Events:",formattedEvents);
-    console.log("Formatted Events:",eventsWithSpacers);
+    console.log("Formatted Events with Spacers:",eventsWithSpacers);
 
     return eventsWithSpacers;
   } catch (error) {
@@ -151,12 +151,14 @@ export async function genSampleSchedule(
 
     console.log(response.data);
     const games = convertSchedData(response.data.schedule, response.data.teams);
-    const events = getFormattedEvents(games, timeslots);
+    const formattedEvents = getFormattedEvents(games, timeslots);
+    const eventsWithSpacers = addSpacerEventsUsingFields(formattedEvents, timeslots);
 
-    console.log(events);
+    console.log("Formatted Events:",formattedEvents);
+    console.log("Formatted Events with Spacers:",eventsWithSpacers);
 
     return {
-      events: events,
+      events: eventsWithSpacers,
       schedule: response.data.schedule,
       score: response.data.score,
     };
