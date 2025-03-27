@@ -108,8 +108,8 @@ def soft_constraint2(game, game_slot, schedule):
 
 def find_least_played_weeks(team1, team2):
     # weeks_played is a dictionary where keys are teams and values are dictionaries of weeks and number of games played
-    team1_weeks = weeks_played[team1]
-    team2_weeks = weeks_played[team2]
+    team1_weeks: dict = weeks_played[team1]
+    team2_weeks: dict = weeks_played[team2]
 
     # Find the weeks with the least number of games played between team1 and team2
     min_play_count = float('inf')
@@ -120,8 +120,11 @@ def find_least_played_weeks(team1, team2):
         if total_games < min_play_count:
             min_play_count = total_games
             least_played_weeks = [week]
-        elif total_games == min_play_count:
-            least_played_weeks.append(week)
+    
+    for week in team1_weeks.keys():
+        total_games = team1_weeks[week] + team2_weeks[week]
+        if total_games == min_play_count:
+            least_played_weeks.append
 
     return least_played_weeks
 
@@ -153,6 +156,8 @@ def backtrack_scheduler_w_skip():
             slot_chosen = False
             # print(schedule)
             # print("Week: ", curr_week)
+            # HERE CHECK IF WEEK ALREADY HAS MAX GAMES PER WEEK PLAYED (currently 2)
+
             week_slots = game_slots[curr_week]
             # Shuffle week_slots to keep games from piling up early in the week
             random.shuffle(week_slots)
