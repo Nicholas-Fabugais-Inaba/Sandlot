@@ -28,27 +28,19 @@ export const siteConfig = {
       label: "Rescheduler",
       href: "/manage-reschedule-request",
     },
+  ],
+  manageLeagueOptions: [
     {
       label: "Season Setup",
       href: "/season-setup",
     },
-  ],
-  navMenuItems: [
     {
-      label: "Home",
-      href: "/",
+      label: "Broadcast",
+      href: "/broadcast",
     },
     {
-      label: "Schedule",
-      href: "/schedule",
-    },
-    {
-      label: "Standings",
-      href: "/standings",
-    },
-    {
-      label: "Account",
-      href: "/account",
+      label: "Player List",
+      href: "/league-management/player-list",
     },
   ],
   links: {

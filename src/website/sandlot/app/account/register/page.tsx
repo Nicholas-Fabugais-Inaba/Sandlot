@@ -6,6 +6,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
+import Waiver from "@/app/account/register/waiver"
 
 import styles from "./Register.module.css";
 
@@ -28,6 +29,9 @@ export default function Register() {
   const [preferredOffday, setPreferredOffday] = useState<number>(0); // defaulted to 0 instead of  || "" because it was causing typing problems in the backend
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
+  
+  const [fieldsFilled, setFeildsFilled] = useState<number>(0);
+  const [showWaiver, setShowWaiver] = useState<boolean>(false);
   const router = useRouter();
 
 
@@ -70,7 +74,7 @@ export default function Register() {
         if (result?.error) {
           setError(result.error);
         } else {
-          window.location.href = "/account"; // Full page reload to ensure a complete refresh
+          window.location.href = "/join-a-team"; // Full page reload to ensure a complete refresh
         }
       }, 1000)
     } catch (error) {
@@ -85,7 +89,7 @@ export default function Register() {
   };
 
   const renderForm = () => {
-    if (accountType === "player") {
+    if (accountType === "player" && !showWaiver) {
       return (
         <div>
           <div className={styles.inputGroup}>
@@ -95,7 +99,10 @@ export default function Register() {
               className={styles.input}
               type="text"
               value={firstname}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => {
+                setFirstName(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
             />
           </div>
 
@@ -106,7 +113,10 @@ export default function Register() {
               className={styles.input}
               type="text"
               value={lastname}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => {
+                setLastName(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
             />
           </div>
 
@@ -117,7 +127,10 @@ export default function Register() {
               className={styles.input}
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
             />
           </div>
 
@@ -128,7 +141,10 @@ export default function Register() {
               className={styles.input}
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
             />
           </div>
 
@@ -139,16 +155,23 @@ export default function Register() {
               className={styles.input}
               id="gender"
               value={gender}
-              onChange={(e) => setGender(e.target.value)}
+              onChange={(e) => {
+                setGender(e.target.value)
+                setFeildsFilled(fieldsFilled + 1)
+              }}
             >
               <option value="">Select gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="other">Prefer not to say</option>
             </select>
           </div>
         </div>
       );
+    } else if (accountType === "player" && showWaiver) {
+      return (
+        <Waiver/>
+      )
     } else if (accountType === "team") {
       return (
         <div>
@@ -284,9 +307,15 @@ export default function Register() {
               {renderForm()}
 
               <div className="flex space-x-4 justify-center">
-                <Button className="button" type="submit">
-                  Register
-                </Button>
+                {showWaiver ? (
+                  <Button className="button" type="submit">
+                    Register
+                  </Button>
+                ) : (
+                  <Button className="button" isDisabled={fieldsFilled < 5} onPress={() => setShowWaiver(true)}>
+                    Next
+                  </Button>
+                )}
               </div>
 
               <div className="flex space-x-4 justify-center mt-4">

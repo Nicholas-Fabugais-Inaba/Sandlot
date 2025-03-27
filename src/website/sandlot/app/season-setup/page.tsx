@@ -42,7 +42,11 @@ export default function SeasonSetupPage() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Season Setup..." size="lg" />
+      </div>
+    );
   }
 
   const scheduleDesc = <p className="mb-4">Generating a schedule isn't available until preseason is launched.</p>
@@ -340,6 +344,7 @@ function ScheduleSettings({ setUnsavedChanges }: ScheduleSettingsProps) {
   // Call setUnsavedChanges(true) whenever there are unsaved changes
   return (
     <div>
+      <h2 className="text-2xl font-semibold mb-4">Schedule Generator</h2>
       <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
     </div>
   );

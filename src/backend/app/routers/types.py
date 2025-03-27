@@ -90,6 +90,11 @@ class DivisionData(BaseModel):
     team_id: int
     division: int
 
+class DivisionTeamData(BaseModel):
+    team_id: int
+    division: int
+    division_name: str
+
 class ScoreData(BaseModel):
     game_id: int
     home_score: int

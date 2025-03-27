@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useDrag, useDrop, DndProvider, DragSourceMonitor, DropTargetMonitor } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import getTeamsSeasonSetup from "../functions/getTeamsSeasonSetup";
-import updateTeamDivisions from "../functions/updateTeamDivisions";
-import updateDivisions from "../functions/updateDivisions";
+// import updateTeamDivisions from "../functions/updateTeamDivisions";
+// import updateDivisions from "../functions/updateDivisions";
+import updateDivisionsAndTeams from "../functions/updateDivisionsAndTeams";
 
 const ItemTypes = {
   TEAM: "team",
@@ -263,9 +264,10 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
   };
 
   const saveDivisions = async () => {
-    alert("Divisions save button pressed.");
-    updateDivisions(divisions);
-    updateTeamDivisions(divisions);
+    // alert("Divisions save button pressed.");
+    // updateDivisions(divisions);
+    // updateTeamDivisions(divisions);
+    updateDivisionsAndTeams(divisions)
     setUnsavedChanges(false);
   };
 
