@@ -3,7 +3,6 @@ import { Dictionary } from "@fullcalendar/core/internal";
 
 import { Event, GenSchedResponse } from "../types";
 
-const currDate = new Date("2025-06-20");
 const seasonStart = new Date("2025-05-05");
 const seasonEnd = new Date("2025-08-20");
 
@@ -32,7 +31,7 @@ interface Field {
   timeslots: Record<string, Timeslot>;
 }
 
-const fields: Record<string, Field> = {
+const predefinedFields: Record<string, Field> = {
   "1": {
     timeslots: {
       "1": {
@@ -95,7 +94,7 @@ const fields: Record<string, Field> = {
   },
 }
 
-export default async function getSchedule(): Promise<Event[]> {
+export default async function getSchedule(timeslots: any): Promise<Event[]> {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_APIHOST}/schedule/get_all_games`,
@@ -104,8 +103,8 @@ export default async function getSchedule(): Promise<Event[]> {
     console.log("Response:", response.data);
 
     // let formattedEvents = getFormattedEvents(response.data);
-    const formattedEvents = getFormattedEvents(response.data);
-    const eventsWithSpacers = addSpacerEventsUsingFields(formattedEvents);
+    const formattedEvents = getFormattedEvents(response.data, timeslots);
+    const eventsWithSpacers = addSpacerEventsUsingFields(formattedEvents, timeslots);
 
     console.log("Formatted Events:",formattedEvents);
     console.log("Formatted Events:",eventsWithSpacers);
@@ -118,7 +117,7 @@ export default async function getSchedule(): Promise<Event[]> {
   }
 }
 
-export async function getTeamSchedule(team_id: number): Promise<Event[]> {
+export async function getTeamSchedule(team_id: number, timeslots: any): Promise<Event[]> {
   try {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_APIHOST}/schedule/get_team_games`,
@@ -128,7 +127,7 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
     console.log("Response:", response.data);
 
     // let formattedEvents = getFormattedEvents(response.data);
-    const formattedEvents = getFormattedEvents(response.data);
+    const formattedEvents = getFormattedEvents(response.data, timeslots);
 
     console.log("Team Formatted Events:", formattedEvents);
 
@@ -141,7 +140,7 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
 }
 
 export async function genSampleSchedule(
-  num_games: number,
+  num_games: number, timeslots: any,
 ): Promise<GenSchedResponse> {
   try {
     // Currently the input is a placeholder
@@ -152,7 +151,7 @@ export async function genSampleSchedule(
 
     console.log(response.data);
     const games = convertSchedData(response.data.schedule, response.data.teams);
-    const events = getFormattedEvents(games);
+    const events = getFormattedEvents(games, timeslots);
 
     console.log(events);
 
@@ -196,8 +195,11 @@ function convertSchedData(schedule: Dictionary, teams: Dictionary): Game[] {
   return games;
 }
 
-function getFormattedEvents(games: any): Event[] {
+function getFormattedEvents(games: any, timeslots: any): Event[] {
   const formattedEvents: Event[] = [];
+  
+  const fields: Record<string, Field> =
+    timeslots.length > 0 ? buildFieldsFromTimeslots(timeslots) : predefinedFields;
 
   for (const game of games) {
     // Split the date string into components
@@ -236,8 +238,11 @@ function getFormattedEvents(games: any): Event[] {
   return formattedEvents
 }
 
-export function addSpacerEventsUsingFields(events: Event[]): Event[] {
+export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Event[] {
   const fieldsToFill = ["1", "2", "3"]; // Fields 1 to 3
+
+  const fields: Record<string, Field> =
+    timeslots.length > 0 ? buildFieldsFromTimeslots(timeslots) : predefinedFields;
 
   // Iterate over each field
   for (const field of fieldsToFill) {
@@ -380,125 +385,162 @@ export function addSpacerEventsUsingFields(events: Event[]): Event[] {
   return events;
 }
 
-export function addEmptyEvents(events: Event[], currDate: Date): Event[] {
-  if (currDate > seasonEnd) {
-    return events;
+function buildFieldsFromTimeslots(timeslots: any): Record<string, Field> {
+  const fields: Record<string, Field> = {};
+  const fieldCounters: Record<string, number> = {}; // Track counters for each field
+
+  for (const timeslot of timeslots) {
+    const fieldId = timeslot.field_id.toString();
+
+    // Parse the start and end times from the string format
+    const [startHour, startMinute] = timeslot.start.split("-").map(Number);
+    const [endHour, endMinute] = timeslot.end.split("-").map(Number);
+
+    // Initialize the field if it doesn't exist
+    if (!fields[fieldId]) {
+      fields[fieldId] = { timeslots: {} };
+      fieldCounters[fieldId] = 1; // Start the counter at 1 for this field
+    }
+
+    // Use the counter for the timeslot key
+    const timeslotKey = fieldCounters[fieldId].toString();
+
+    // Add the timeslot to the field's timeslots
+    fields[fieldId].timeslots[timeslotKey] = {
+      start_hour: startHour,
+      start_minutes: startMinute,
+      end_hour: endHour,
+      end_minutes: endMinute,
+    };
+
+    // Increment the counter for this field
+    fieldCounters[fieldId]++;
   }
 
-  let dateCount: Date;
+  console.log("Fields: ", fields);
 
-  if (currDate > seasonStart) {
-    dateCount = currDate;
-  } else {
-    dateCount = seasonStart;
-  }
-  // for (let eventya of events) {
-  //   if (eventya.start.getUTCDate() === 23) {
-  //     console.log("23th ", eventya);
-  //   }
-  // }
-
-  while (dateCount < seasonEnd) {
-    // Skip weekends
-    if (dateCount.getDay() === 5 || dateCount.getDay() === 6) {
-      dateCount.setDate(dateCount.getDate() + 1);
-      continue;
-    }
-    // console.log(dateCount);
-    let startDate = new Date(dateCount);
-    startDate.setUTCHours(21, 0, 0);
-
-    // console.log("Test start: ", startDate);
-    // console.log("Date: ", startDate.getUTCDate());
-    // console.log("Hours: ", startDate.getUTCHours());
-
-    let eventExists = events.some(
-      (event) => (
-        event.start.getUTCFullYear() === startDate.getUTCFullYear()
-        && event.start.getUTCMonth() === startDate.getUTCMonth()
-        && event.start.getUTCDate() === startDate.getUTCDate()
-        && event.start.getUTCHours() === startDate.getUTCHours()
-      ),
-    );
-
-    console.log("Event exists: ", eventExists);
-
-    if (!eventExists) {
-      let end = new Date(startDate);
-      end.setUTCHours(end.getUTCHours() + 1);
-      end.setUTCMinutes(end.getUTCMinutes() + 30);
-      events.push({
-        start: new Date(startDate),
-        end: end,
-      });
-    }
-
-    startDate.setUTCHours(22, 30, 0);
-
-    eventExists = events.some(
-      (event) => (
-        event.start.getUTCFullYear() === startDate.getUTCFullYear()
-        && event.start.getUTCMonth() === startDate.getUTCMonth()
-        && event.start.getUTCDate() === startDate.getUTCDate()
-        && event.start.getUTCHours() === startDate.getUTCHours()
-      ),
-    );
-
-    if (!eventExists) {
-      let end = new Date(startDate);
-      end.setUTCHours(end.getUTCHours() + 1);
-      end.setUTCMinutes(end.getUTCMinutes() + 30);
-      events.push({
-        start: new Date(startDate),
-        end: end,
-      });
-    }
-
-    startDate.setUTCHours(24, 0, 0);
-
-    eventExists = events.some(
-      (event) => (
-        event.start.getUTCFullYear() === startDate.getUTCFullYear()
-        && event.start.getUTCMonth() === startDate.getUTCMonth()
-        && event.start.getUTCDate() === startDate.getUTCDate()
-        && event.start.getUTCHours() === startDate.getUTCHours()
-      ),
-    );
-
-    if (!eventExists) {
-      let end = new Date(startDate);
-      end.setUTCHours(end.getUTCHours() + 1);
-      end.setUTCMinutes(end.getUTCMinutes() + 30);
-      events.push({
-        start: new Date(startDate),
-        end: end,
-      });
-    }
-
-    startDate.setUTCHours(1, 30, 0);
-
-    eventExists = events.some(
-      (event) => (
-        event.start.getUTCFullYear() === startDate.getUTCFullYear()
-        && event.start.getUTCMonth() === startDate.getUTCMonth()
-        && event.start.getUTCDay() === startDate.getUTCDay()
-        && event.start.getUTCDate() === startDate.getUTCDate()
-        && event.start.getUTCHours() === startDate.getUTCHours()
-      ),
-    );
-
-    if (!eventExists) {
-      let end = new Date(startDate);
-      end.setUTCHours(end.getUTCHours() + 1);
-      end.setUTCMinutes(end.getUTCMinutes() + 30);
-      events.push({
-        start: new Date(startDate),
-        end: end,
-      });
-    }
-
-    dateCount.setDate(dateCount.getDate() + 1);
-  }
-
-  return events;
+  return fields;
 }
+
+// export function addEmptyEvents(events: Event[], currDate: Date): Event[] {
+//   if (currDate > seasonEnd) {
+//     return events;
+//   }
+
+//   let dateCount: Date;
+
+//   if (currDate > seasonStart) {
+//     dateCount = currDate;
+//   } else {
+//     dateCount = seasonStart;
+//   }
+//   // for (let eventya of events) {
+//   //   if (eventya.start.getUTCDate() === 23) {
+//   //     console.log("23th ", eventya);
+//   //   }
+//   // }
+
+//   while (dateCount < seasonEnd) {
+//     // Skip weekends
+//     if (dateCount.getDay() === 5 || dateCount.getDay() === 6) {
+//       dateCount.setDate(dateCount.getDate() + 1);
+//       continue;
+//     }
+//     // console.log(dateCount);
+//     let startDate = new Date(dateCount);
+//     startDate.setUTCHours(21, 0, 0);
+
+//     // console.log("Test start: ", startDate);
+//     // console.log("Date: ", startDate.getUTCDate());
+//     // console.log("Hours: ", startDate.getUTCHours());
+
+//     let eventExists = events.some(
+//       (event) => (
+//         event.start.getUTCFullYear() === startDate.getUTCFullYear()
+//         && event.start.getUTCMonth() === startDate.getUTCMonth()
+//         && event.start.getUTCDate() === startDate.getUTCDate()
+//         && event.start.getUTCHours() === startDate.getUTCHours()
+//       ),
+//     );
+
+//     console.log("Event exists: ", eventExists);
+
+//     if (!eventExists) {
+//       let end = new Date(startDate);
+//       end.setUTCHours(end.getUTCHours() + 1);
+//       end.setUTCMinutes(end.getUTCMinutes() + 30);
+//       events.push({
+//         start: new Date(startDate),
+//         end: end,
+//       });
+//     }
+
+//     startDate.setUTCHours(22, 30, 0);
+
+//     eventExists = events.some(
+//       (event) => (
+//         event.start.getUTCFullYear() === startDate.getUTCFullYear()
+//         && event.start.getUTCMonth() === startDate.getUTCMonth()
+//         && event.start.getUTCDate() === startDate.getUTCDate()
+//         && event.start.getUTCHours() === startDate.getUTCHours()
+//       ),
+//     );
+
+//     if (!eventExists) {
+//       let end = new Date(startDate);
+//       end.setUTCHours(end.getUTCHours() + 1);
+//       end.setUTCMinutes(end.getUTCMinutes() + 30);
+//       events.push({
+//         start: new Date(startDate),
+//         end: end,
+//       });
+//     }
+
+//     startDate.setUTCHours(24, 0, 0);
+
+//     eventExists = events.some(
+//       (event) => (
+//         event.start.getUTCFullYear() === startDate.getUTCFullYear()
+//         && event.start.getUTCMonth() === startDate.getUTCMonth()
+//         && event.start.getUTCDate() === startDate.getUTCDate()
+//         && event.start.getUTCHours() === startDate.getUTCHours()
+//       ),
+//     );
+
+//     if (!eventExists) {
+//       let end = new Date(startDate);
+//       end.setUTCHours(end.getUTCHours() + 1);
+//       end.setUTCMinutes(end.getUTCMinutes() + 30);
+//       events.push({
+//         start: new Date(startDate),
+//         end: end,
+//       });
+//     }
+
+//     startDate.setUTCHours(1, 30, 0);
+
+//     eventExists = events.some(
+//       (event) => (
+//         event.start.getUTCFullYear() === startDate.getUTCFullYear()
+//         && event.start.getUTCMonth() === startDate.getUTCMonth()
+//         && event.start.getUTCDay() === startDate.getUTCDay()
+//         && event.start.getUTCDate() === startDate.getUTCDate()
+//         && event.start.getUTCHours() === startDate.getUTCHours()
+//       ),
+//     );
+
+//     if (!eventExists) {
+//       let end = new Date(startDate);
+//       end.setUTCHours(end.getUTCHours() + 1);
+//       end.setUTCMinutes(end.getUTCMinutes() + 30);
+//       events.push({
+//         start: new Date(startDate),
+//         end: end,
+//       });
+//     }
+
+//     dateCount.setDate(dateCount.getDate() + 1);
+//   }
+
+//   return events;
+// }
