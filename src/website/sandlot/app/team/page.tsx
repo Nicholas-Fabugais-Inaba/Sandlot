@@ -238,6 +238,17 @@ export default function TeamPage() {
                 Leave Team
               </Button>
             </div>
+            <h2 className="text-xl font-bold mt-4 mb-2">
+              Player Actions
+            </h2>
+            <div className="flex flex-col items-center space-y-4">
+              <Button
+                className="button min-w-[160px]"
+                onPress={() => router.push('/join-a-team')} // Join New Team action
+              >
+                Join New Team
+              </Button>
+            </div>
           </div>
         </div>
       ) : session?.user.role === "team" ? (
