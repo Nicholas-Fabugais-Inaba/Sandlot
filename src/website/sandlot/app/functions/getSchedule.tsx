@@ -7,6 +7,9 @@ const currDate = new Date("2025-06-20");
 const seasonStart = new Date("2025-05-05");
 const seasonEnd = new Date("2025-08-20");
 
+const dayStart = 21;
+const dayEnd = 27;
+
 interface Game {
   id: number;
   date: string;
@@ -18,6 +21,80 @@ interface Game {
   away_team_id: number;
 }
 
+interface Timeslot {
+  start_hour: number;
+  start_minutes: number;
+  end_hour: number;
+  end_minutes: number;
+}
+
+interface Field {
+  timeslots: Record<string, Timeslot>;
+}
+
+const fields: Record<string, Field> = {
+  "1": {
+    timeslots: {
+      "1": {
+        start_hour: 22,
+        start_minutes: 0,
+        end_hour: 23,
+        end_minutes: 30,
+      },
+      "2": {
+        start_hour: 23,
+        start_minutes: 30,
+        end_hour: 25,
+        end_minutes: 0,
+      },
+    },
+  },
+  "2": {
+    timeslots: {
+      "1": {
+        start_hour: 22,
+        start_minutes: 0,
+        end_hour: 23,
+        end_minutes: 30,
+      },
+      "2": {
+        start_hour: 23,
+        start_minutes: 30,
+        end_hour: 25,
+        end_minutes: 0,
+      },
+    },
+  },
+  "3": {
+    timeslots: {
+      "1": {
+        start_hour: 21,
+        start_minutes: 0,
+        end_hour: 22,
+        end_minutes: 30,
+      },
+      "2": {
+        start_hour: 22,
+        start_minutes: 30,
+        end_hour: 24,
+        end_minutes: 0,
+      },
+      "3": {
+        start_hour: 24,
+        start_minutes: 0,
+        end_hour: 25,
+        end_minutes: 30,
+      },
+      "4": {
+        start_hour: 25,
+        start_minutes: 30,
+        end_hour: 27,
+        end_minutes: 0,
+      },
+    },
+  },
+}
+
 export default async function getSchedule(): Promise<Event[]> {
   try {
     const response = await axios.get(
@@ -26,11 +103,14 @@ export default async function getSchedule(): Promise<Event[]> {
 
     console.log("Response:", response.data);
 
-    let formattedEvents = getFormattedEvents(response.data);
+    // let formattedEvents = getFormattedEvents(response.data);
+    const formattedEvents = getFormattedEvents(response.data);
+    const eventsWithSpacers = addSpacerEventsUsingFields(formattedEvents);
 
     console.log("Formatted Events:",formattedEvents);
+    console.log("Formatted Events:",eventsWithSpacers);
 
-    return formattedEvents;
+    return eventsWithSpacers;
   } catch (error) {
     console.error("Error fetching schedule:", error);
 
@@ -47,7 +127,8 @@ export async function getTeamSchedule(team_id: number): Promise<Event[]> {
 
     console.log("Response:", response.data);
 
-    let formattedEvents = getFormattedEvents(response.data);
+    // let formattedEvents = getFormattedEvents(response.data);
+    const formattedEvents = getFormattedEvents(response.data);
 
     console.log("Team Formatted Events:", formattedEvents);
 
@@ -116,95 +197,187 @@ function convertSchedData(schedule: Dictionary, teams: Dictionary): Game[] {
 }
 
 function getFormattedEvents(games: any): Event[] {
-  var eventsTemp: { [key: string]: Event } = {};
-
-  for (const game of games) {
-    var dateTime: string = game.date + game.time;
-
-    // If the event doesn't exist, initialize it with start and end dates
-    if (!(dateTime in eventsTemp)) {
-      // Split the date string into components
-      var start = new Date(game.date);
-      var end = new Date(game.date);
-
-      if (game.time === "1") {
-        start.setUTCHours(21, 0, 0);
-        end.setUTCHours(22, 30, 0);
-      } else if (game.time === "2") {
-        start.setUTCHours(22, 30, 0);
-        end.setUTCHours(24, 0, 0);
-      } else if (game.time === "3") {
-        start.setUTCHours(24, 0, 0);
-        end.setUTCHours(25, 30, 0);
-      } else if (game.time === "4") {
-        start.setUTCHours(25, 30, 0);
-        end.setUTCHours(27, 0, 0);
-      }
-      eventsTemp[dateTime] = {
-        start: start,
-        end: end,
-      };
-    }
-
-    // Add the field property to the event
-    if (game.field === "1") {
-      eventsTemp[dateTime] = {
-        ...eventsTemp[dateTime],
-        field1: {
-          id: game.id,
-          home: game.home_team_name,
-          home_id: game.home_team_id,
-          home_score: game.home_team_score,
-          away: game.away_team_name,
-          away_id: game.away_team_id,
-          away_score: game.away_team_score,
-          played: game.played,
-          forfeit: game.forfeit,
-        },
-      };
-    } else if (game.field === "2") {
-      eventsTemp[dateTime] = {
-        ...eventsTemp[dateTime],
-        field2: {
-          id: game.id,
-          home: game.home_team_name,
-          home_id: game.home_team_id,
-          home_score: game.home_team_score,
-          away: game.away_team_name,
-          away_id: game.away_team_id,
-          away_score: game.away_team_score,
-          played: game.played,
-          forfeit: game.forfeit,
-        },
-      };
-    } else if (game.field === "3") {
-      eventsTemp[dateTime] = {
-        ...eventsTemp[dateTime],
-        field3: {
-          id: game.id,
-          home: game.home_team_name,
-          home_id: game.home_team_id,
-          home_score: game.home_team_score,
-          away: game.away_team_name,
-          away_id: game.away_team_id,
-          away_score: game.away_team_score,
-          played: game.played,
-          forfeit: game.forfeit,
-        },
-      };
-    }
-  }
-
-  // Convert the dictionary to an array of events
   const formattedEvents: Event[] = [];
 
-  for (const key in eventsTemp) {
-    if (eventsTemp.hasOwnProperty(key)) {
-      formattedEvents.push(eventsTemp[key]);
+  for (const game of games) {
+    // Split the date string into components
+    var start = new Date(game.date);
+    var end = new Date(game.date);
+
+    // Use the `fields` object to dynamically set the start and end times
+    const timeslot = fields[game.field]?.timeslots[game.time];
+    if (timeslot) {
+      start.setUTCHours(timeslot.start_hour, timeslot.start_minutes, 0);
+      end.setUTCHours(timeslot.end_hour, timeslot.end_minutes, 0);
+    } else {
+      console.warn(`Timeslot not found for field ${game.field} and time ${game.time}`);
+      continue; // Skip this game if the timeslot is not defined
+    }
+
+    var formattedEvent: Event = {
+      start: start,
+      end: end,
+      field: game.field,
+      game_id: game.id,
+      home: game.home_team_name,
+      home_id: game.home_team_id,
+      home_score: game.home_team_score,
+      away: game.away_team_name,
+      away_id: game.away_team_id,
+      away_score: game.away_team_score,
+      played: game.played,
+      forfeit: game.forfeit,
+      spacer: false,
+    }
+
+    formattedEvents.push(formattedEvent)
+  }
+
+  return formattedEvents
+}
+
+export function addSpacerEventsUsingFields(events: Event[]): Event[] {
+  const fieldsToFill = ["1", "2", "3"]; // Fields 1 to 3
+
+  // Iterate over each field
+  for (const field of fieldsToFill) {
+    const fieldTimeslots = fields[field]?.timeslots;
+
+    if (!fieldTimeslots) {
+      console.warn(`No timeslots defined for field ${field}`);
+      continue;
+    }
+
+    // Iterate over each day in the season
+    let currentDate = new Date(seasonStart);
+    while (currentDate <= seasonEnd) {
+      // Skip weekends
+      if (currentDate.getDay() === 5 || currentDate.getDay() === 6) {
+        currentDate.setDate(currentDate.getDate() + 1);
+        continue;
+      }
+
+      // Get the first and last timeslot for the current field
+      const timeslotKeys = Object.keys(fieldTimeslots).sort();
+      const firstTimeslot = fieldTimeslots[timeslotKeys[0]];
+      const lastTimeslot = fieldTimeslots[timeslotKeys[timeslotKeys.length - 1]];
+
+      // Add spacer from 5:00 to the start of the first timeslot
+      const startOfDay = new Date(currentDate);
+      startOfDay.setUTCHours(dayStart, 0, 0);
+
+      const startOfFirstTimeslot = new Date(currentDate);
+      startOfFirstTimeslot.setUTCHours(firstTimeslot.start_hour, firstTimeslot.start_minutes, 0);
+
+      // Only add a spacer if the first timeslot does not start at 5:00
+      if (startOfFirstTimeslot.getTime() > startOfDay.getTime()) {
+        const spacerBeforeExists = events.some(
+          (event) =>
+            event.start.getTime() === startOfDay.getTime() &&
+            event.end.getTime() === startOfFirstTimeslot.getTime() &&
+            event.field === field,
+        );
+
+        if (!spacerBeforeExists) {
+          events.push({
+            start: startOfDay,
+            end: startOfFirstTimeslot,
+            field: field,
+            game_id: undefined,
+            home: undefined,
+            home_id: undefined,
+            home_score: undefined,
+            away: undefined,
+            away_id: undefined,
+            away_score: undefined,
+            played: false,
+            forfeit: undefined,
+            spacer: true,
+          });
+        }
+      }
+
+      // Add spacer from the end of the last timeslot to 11:00
+      const endOfLastTimeslot = new Date(currentDate);
+      endOfLastTimeslot.setUTCHours(lastTimeslot.end_hour, lastTimeslot.end_minutes, 0);
+
+      const endOfDay = new Date(currentDate);
+      endOfDay.setUTCHours(dayEnd, 0, 0);
+
+      const spacerAfterExists = events.some(
+        (event) =>
+          event.start.getTime() === endOfLastTimeslot.getTime() &&
+          event.end.getTime() === endOfDay.getTime() &&
+          event.field === field,
+      );
+
+      if (!spacerAfterExists) {
+        events.push({
+          start: endOfLastTimeslot,
+          end: endOfDay,
+          field: field,
+          game_id: undefined,
+          home: undefined,
+          home_id: undefined,
+          home_score: undefined,
+          away: undefined,
+          away_id: undefined,
+          away_score: undefined,
+          played: false,
+          forfeit: undefined,
+          spacer: true,
+        });
+      }
+
+      // Iterate over each timeslot for the current field
+      for (const timeKey in fieldTimeslots) {
+        if (fieldTimeslots.hasOwnProperty(timeKey)) {
+          const timeslot = fieldTimeslots[timeKey];
+
+          const start = new Date(currentDate);
+          start.setUTCHours(timeslot.start_hour, timeslot.start_minutes, 0);
+
+          const end = new Date(currentDate);
+          end.setUTCHours(timeslot.end_hour, timeslot.end_minutes, 0);
+
+          // Check if an event already exists for this field, date, and timeslot
+          const eventExists = events.some(
+            (event) =>
+              event.start.getUTCFullYear() === start.getUTCFullYear() &&
+              event.start.getUTCMonth() === start.getUTCMonth() &&
+              event.start.getUTCDate() === start.getUTCDate() &&
+              event.start.getUTCHours() === start.getUTCHours() &&
+              event.start.getUTCMinutes() === start.getUTCMinutes() &&
+              event.field === field,
+          );
+
+          // If no event exists, add a spacer event
+          if (!eventExists) {
+            events.push({
+              start: start,
+              end: end,
+              field: field,
+              game_id: undefined,
+              home: "spacer",
+              home_id: undefined,
+              home_score: undefined,
+              away: "spacer",
+              away_id: undefined,
+              away_score: undefined,
+              played: false,
+              forfeit: undefined,
+              spacer: true, // Mark this as a spacer event
+            });
+          }
+        }
+      }
+
+      // Move to the next day
+      currentDate.setDate(currentDate.getDate() + 1);
     }
   }
 
-  return formattedEvents;
+  return events;
 }
 
 export function addEmptyEvents(events: Event[], currDate: Date): Event[] {

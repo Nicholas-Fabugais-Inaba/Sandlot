@@ -245,7 +245,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       setPopupPosition({ x: event.pageX, y: event.pageY });
       setPopupVisible(true);
       setRescheduleGame({
-        game_id: game.id,
+        game_id: game.game_id,
         date: date,
         field: field,
         home_id: game.home_id,
@@ -254,7 +254,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
 
       // Set inital attributes while getScore is loading.
       setGameScore({
-        game_id: game.id,
+        game_id: game.game_id,
         played: true,
         date: new Date,
         home_score: 0,
@@ -264,10 +264,10 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         forfeit: 0,
       });
 
-      await getScore(game.id).then(
+      await getScore(game.game_id).then(
         (res) => {
           setGameScore({
-            game_id: game.id,
+            game_id: game.game_id,
             played: game.played,
             date: date,
             home_score: res.home_team_score,
@@ -329,7 +329,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
     (async () => {
       let formattedEvents = await getSchedule();
 
-      formattedEvents = addEmptyEvents(formattedEvents, currDate);
+      // TODO: fix this
+      // formattedEvents = addEmptyEvents(formattedEvents, currDate);
       console.log("Here", formattedEvents);
       setEvents(formattedEvents);
     })();
@@ -449,19 +450,51 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
     await createRR(RRdata);
   };
 
-  const hasGameThisSlot = (event: any) => {
-    const { field1, field2, field3 } = event.extendedProps;
+  // const hasGameThisSlot = (event: any) => {
+  //   const { field1, field2, field3 } = event.extendedProps;
 
-    const checkTeams = (field: any) => {
-      return (
-        field?.home_id === rescheduleGame?.home_id ||
-        field?.away === rescheduleGame?.home_id ||
-        field?.home_id === rescheduleGame?.away_id ||
-        field?.away_id === rescheduleGame?.away_id
-      );
-    };
+  //   const checkTeams = (field: any) => {
+  //     return (
+  //       field?.home_id === rescheduleGame?.home_id ||
+  //       field?.away === rescheduleGame?.home_id ||
+  //       field?.home_id === rescheduleGame?.away_id ||
+  //       field?.away_id === rescheduleGame?.away_id
+  //     );
+  //   };
 
-    return checkTeams(field1) || checkTeams(field2) || checkTeams(field3);
+  //   return checkTeams(field1) || checkTeams(field2) || checkTeams(field3);
+  // };
+
+  const hasGameThisSlot = (start: Date, end: Date, field: string): boolean => {
+    console.log("Checking for games in this slot...");
+    console.log("Game to reshedule:", events);
+    if (!rescheduleGame || !events) return false;
+  
+    // Check if any event in the schedule overlaps with the given slot
+    return events.some((event) => {
+      // Skip spacer events
+      if (event.spacer) {
+        return false;
+      }
+
+      // const eventStart = new Date(event.start);
+      // const eventEnd = new Date(event.end);
+      // const eventField = event.field;
+  
+      // Check if the event overlaps with the reschedule slot
+      const involvesSameTeams =
+        event.home_id === rescheduleGame.home_id ||
+        event.away_id === rescheduleGame.home_id ||
+        event.home_id === rescheduleGame.away_id ||
+        event.away_id === rescheduleGame.away_id;
+  
+      const overlapsInTime =
+        (start >= event.start && start < event.end) || // Reschedule slot starts within the event
+        (end > event.start && end <= event.end) || // Reschedule slot ends within the event
+        (start <= event.start && end >= event.end); // Reschedule slot fully contains the event
+  
+      return involvesSameTeams && overlapsInTime;
+    });
   };
 
   const closePopup = () => {
@@ -627,436 +660,152 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                     .slice(0, 5)
                 : "";
 
-              const isPastEvent = (field: number) => {
-                if (field === 1) {
-                  return eventInfo.event.extendedProps.field1?.played;
-                } else if (field === 2) {
-                  return eventInfo.event.extendedProps.field2?.played;
-                } else if (field === 3) {
-                  return eventInfo.event.extendedProps.field3?.played;
-                }
+              const isPastEvent = () => {
+                return eventInfo.event.extendedProps.played;
               };
 
-              const containsRescheduleTeams = (field: number) => {
-                if (field === 1) {
-                  return eventInfo.event.extendedProps.field1?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field1?.away_id === rescheduleGame?.away_id
-                } else if (field === 2) {
-                  return eventInfo.event.extendedProps.field2?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field2?.away_id === rescheduleGame?.away_id
-                } else if (field === 3) {
-                  return eventInfo.event.extendedProps.field3?.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.field3?.away_id === rescheduleGame?.away_id
-                }
+              const containsRescheduleTeams = () => {
+                return eventInfo.event.extendedProps.home_id === rescheduleGame?.home_id || eventInfo.event.extendedProps.away_id === rescheduleGame?.away_id
               };
 
               return schedType === 0 ? ( // Full Schedule
-                <div
-                  key={selectedDates.join(",")}
-                  className="event-content-grid"
-                >
-                  {eventInfo.event.extendedProps.field1?.home &&
-                  eventInfo.event.extendedProps.field1?.away ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(1) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-orange-100 text-orange-800"}
-                        ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : ""}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          1,
-                          eventInfo.event.extendedProps.field1,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.away}
-                      </div>
-                      <div className="text-sm">{startTime}</div>
-                      <div className="text-sm">{endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 1"}</div>
+                eventInfo.event.extendedProps.home &&
+                eventInfo.event.extendedProps.away ? (
+                  <div
+                    className={`event-content p-2 rounded-xl ${
+                      isPastEvent()
+                        ? "bg-gray-300 text-gray-600 border-2 border-gray-300"
+                        : eventInfo.event.extendedProps.field === "1"
+                        ? "bg-orange-100 text-orange-800 border-2 border-orange-100"
+                        : eventInfo.event.extendedProps.field === "2"
+                        ? "bg-blue-100 text-blue-800 border-2 border-blue-100"
+                        : eventInfo.event.extendedProps.field === "3"
+                        ? "bg-purple-100 text-purple-800 border-2 border-purple-100"
+                        : "bg-orange-100 text-orange-80 border-2 border-orange-100"
+                    } ${
+                      isSelected(eventInfo.event.start, eventInfo.event.extendedProps.field)
+                        ? "border-2 border-orange-500"
+                        : ""
+                    } ${
+                      eventInfo.event.extendedProps.spacer ? "spacer-event" : ""
+                    }`}
+                    onClick={async (e) =>
+                      handleTeamClick(
+                        e,
+                        eventInfo.event.start,
+                        eventInfo.event.extendedProps.field,
+                        eventInfo.event.extendedProps,
+                      )
+                    }
+                  >
+                    <div className="event-team font-semibold">
+                      {eventInfo.event.extendedProps.home}
                     </div>
-                  ) : (
-                    <div />
-                  )}
-                  {eventInfo.event.extendedProps.field2?.home &&
-                  eventInfo.event.extendedProps.field2?.away ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(2) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-cyan-100 text-blue-800"}
-                        ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : ""}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          2,
-                          eventInfo.event.extendedProps.field2,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.away}
-                      </div>
-                      <div className="text-sm">{startTime}</div>
-                      <div className="text-sm">{endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 2"}</div>
+                    <div className="font-semibold">{"vs"}</div>
+                    <div className="event-team font-semibold">
+                      {eventInfo.event.extendedProps.away}
                     </div>
-                  ) : (
-                    <div />
-                  )}
-                  {eventInfo.event.extendedProps.field3?.home &&
-                  eventInfo.event.extendedProps.field3?.away ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(3) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-purple-100 text-purple-800"}
-                        ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : ""}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          3,
-                          eventInfo.event.extendedProps.field3,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.away}
-                      </div>
-                      <div className="text-sm">{startTime}</div>
-                      <div className="text-sm">{endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 3"}</div>
-                    </div>
-                  ) : (
-                    <div />
-                  )}
-                </div>
+                    <div className="text-sm">{startTime}</div>
+                    <div className="text-sm">{endTime}</div>
+                    {!eventInfo.event.extendedProps.spacer && (
+                      <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                    )}
+                  </div>
+                ) : null
               ) : schedType === 1 ? ( // Team Schedule
-                <>
-                  {eventInfo.event.extendedProps.field1?.home &&
-                  eventInfo.event.extendedProps.field1?.away &&
-                  (teamId ===
-                    eventInfo.event.extendedProps.field1?.home_id ||
-                    teamId ===
-                      eventInfo.event.extendedProps.field1?.away_id) ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(1) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-orange-100 text-orange-800"}
-                          ${isSelected(eventInfo.event.start, 1) ? "border-2 border-orange-500" : ""}`}
+                eventInfo.event.extendedProps.home &&
+                eventInfo.event.extendedProps.away &&
+                (teamId ===
+                  eventInfo.event.extendedProps.home_id ||
+                  teamId ===
+                    eventInfo.event.extendedProps.away_id) ? (
+                  <div
+                    className={`event-content p-2 rounded-xl ${
+                      isPastEvent()
+                        ? "bg-gray-300 text-gray-600 border-2 border-gray-300"
+                        : eventInfo.event.extendedProps.field === "1"
+                        ? "bg-orange-100 text-orange-800 border-2 border-orange-100"
+                        : eventInfo.event.extendedProps.field === "2"
+                        ? "bg-blue-100 text-blue-800 border-2 border-blue-100"
+                        : eventInfo.event.extendedProps.field === "3"
+                        ? "bg-purple-100 text-purple-800 border-2 border-purple-100"
+                        : "bg-orange-100 text-orange-80 border-2 border-orange-100"
+                    } ${
+                      isSelected(eventInfo.event.start, eventInfo.event.extendedProps.field)
+                        ? "border-2 border-orange-500"
+                        : ""
+                    } ${
+                      eventInfo.event.extendedProps.spacer ? "spacer-event" : ""
+                    }`}
                       onClick={async (e) =>
                         handleTeamClick(
                           e,
                           eventInfo.event.start,
-                          1,
-                          eventInfo.event.extendedProps.field1,
+                          eventInfo.event.extendedProps.field,
+                          eventInfo.event.extendedProps,
                         )
                       }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.away}
-                      </div>
-                      <div className="text-sm">
-                        {startTime} - {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 1"}</div>
+                  >
+                    <div className="event-team font-semibold">
+                      {eventInfo.event.extendedProps.home}
                     </div>
-                  ) : null}
-                  {eventInfo.event.extendedProps.field2?.home &&
-                  eventInfo.event.extendedProps.field2?.away &&
-                  (teamId ===
-                    eventInfo.event.extendedProps.field2?.home_id ||
-                    teamId ===
-                      eventInfo.event.extendedProps.field2?.away_id) ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(2) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-cyan-100 text-blue-800"}
-                          ${isSelected(eventInfo.event.start, 2) ? "border-2 border-cyan-500" : ""}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          2,
-                          eventInfo.event.extendedProps.field2,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.away}
-                      </div>
-                      <div className="text-sm">
-                        {startTime} - {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 2"}</div>
+                    <div className="font-semibold">{"vs"}</div>
+                    <div className="event-team font-semibold">
+                      {eventInfo.event.extendedProps.away}
                     </div>
-                  ) : null}
-                  {eventInfo.event.extendedProps.field3?.home &&
-                  eventInfo.event.extendedProps.field3?.away &&
-                  (teamId ===
-                    eventInfo.event.extendedProps.field3?.home_id ||
-                    teamId ===
-                      eventInfo.event.extendedProps.field3?.away_id) ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${isPastEvent(3) ? "bg-gray-300 text-gray-600 border-2 border-gray-300" : "bg-purple-100 text-purple-800"}
-                          ${isSelected(eventInfo.event.start, 3) ? "border-2 border-purple-500" : ""}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          3,
-                          eventInfo.event.extendedProps.field3,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.away}
-                      </div>
-                      <div className="text-sm">
-                        {startTime} - {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 3"}</div>
+                    <div className="text-sm">
+                      {startTime} - {endTime}
                     </div>
-                  ) : null}
-                </>
-              ) : schedType === 2 ? ( // Select game to reschedule
-                <>
-                  {eventInfo.event.extendedProps.field1?.home &&
-                  eventInfo.event.extendedProps.field1?.away &&
-                  (teamId ===
-                    eventInfo.event.extendedProps.field1?.home_id ||
-                    teamId ===
-                      eventInfo.event.extendedProps.field1?.away_id) ? (
-                    <div
-                      className={`event-content p-2 rounded-xl bg-green-100 text-green-800
-                          ${isSelected(eventInfo.event.start, 1) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          1,
-                          eventInfo.event.extendedProps.field1,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.away}
-                      </div>
-                      <div className="text-sm">
-                        {startTime} - {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 1"}</div>
-                    </div>
-                  ) : null}
-                  {eventInfo.event.extendedProps.field2?.home &&
-                  eventInfo.event.extendedProps.field2?.away &&
-                  (teamId ===
-                    eventInfo.event.extendedProps.field2?.home_id ||
-                    teamId ===
-                      eventInfo.event.extendedProps.field2?.away_id) ? (
-                    <div
-                      className={`event-content p-2 rounded-xl bg-green-100 text-green-800
-                          ${isSelected(eventInfo.event.start, 2) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          2,
-                          eventInfo.event.extendedProps.field2,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.away}
-                      </div>
-                      <div className="text-sm">
-                        {startTime} - {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 2"}</div>
-                    </div>
-                  ) : null}
-                  {eventInfo.event.extendedProps.field3?.home &&
-                  eventInfo.event.extendedProps.field3?.away &&
-                  (teamId ===
-                    eventInfo.event.extendedProps.field3?.home_id ||
-                    teamId ===
-                      eventInfo.event.extendedProps.field3?.away_id) ? (
-                    <div
-                      className={`event-content p-2 rounded-xl bg-green-100 text-green-800
-                          ${isSelected(eventInfo.event.start, 3) ? "border-2 border-green-500" : "border-2 border-green-100"}`}
-                      onClick={async (e) =>
-                        handleTeamClick(
-                          e,
-                          eventInfo.event.start,
-                          3,
-                          eventInfo.event.extendedProps.field3,
-                        )
-                      }
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.away}
-                      </div>
-                      <div className="text-sm">
-                        {startTime} - {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 3"}</div>
-                    </div>
-                  ) : null}
-                </>
+                    <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                  </div>
+                ) : null
               ) : schedType === 3 ? ( // Choose alternative game days
-                <div className="event-content-grid">
-                  {eventInfo.event.extendedProps.field1?.home &&
-                  eventInfo.event.extendedProps.field1?.away ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(1) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field1.away}
-                      </div>
-                      <div className="text-sm">{startTime}</div>
-                      <div className="text-sm">{endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 1"}</div>
+                eventInfo.event.extendedProps.home &&
+                eventInfo.event.extendedProps.away && !eventInfo.event.extendedProps.spacer ? (
+                  <div
+                    className={`event-content p-2 rounded-xl ${containsRescheduleTeams() ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800 border-2 border-red-100"}`}
+                  >
+                    <div className="event-team font-semibold">
+                      {eventInfo.event.extendedProps.home}
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start?.getUTCHours() && (eventInfo.event.start.getUTCHours() === 21 || eventInfo.event.start.getUTCHours() === 22) &&
-                    eventInfo.event.start &&
-                    eventInfo.event.start > currNextDate ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${
-                        isSelected(eventInfo.event.start, 1)
-                          ? "bg-green-100 text-green-800"
-                          : "bg-blue-100 text-blue-800"
-                      }`}
-                      onClick={() =>
-                        handleSelectClick(eventInfo.event.start, 1)
-                      }
-                    >
-                      <div className="font-semibold">{"Click to Select"}</div>
-                      <div className="text-sm">
-                        <br />
-                        {startTime}
-                        <br />
-                        {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 1"}</div>
+                    <div className="font-semibold">{"vs"}</div>
+                    <div className="event-team font-semibold">
+                      {eventInfo.event.extendedProps.away}
                     </div>
-                  ) : (
-                    <div />
-                  )}
-                  {eventInfo.event.extendedProps.field2?.home &&
-                  eventInfo.event.extendedProps.field2?.away ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(2) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field2.away}
-                      </div>
-                      <div className="text-sm">{startTime}</div>
-                      <div className="text-sm">{endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 2"}</div>
+                    <div className="text-sm">{startTime}</div>
+                    <div className="text-sm">{endTime}</div>
+                    <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                  </div>
+                ) : eventInfo.event.extendedProps.spacer &&
+                  eventInfo.event.extendedProps.home &&
+                  eventInfo.event.start &&
+                  eventInfo.event.end &&
+                  eventInfo.event.start > currNextDate &&
+                  !hasGameThisSlot(eventInfo.event.start, eventInfo.event.end, eventInfo.event.extendedProps.field) ? (
+                  <div
+                    className={`event-content click-to-select p-2 rounded-xl ${
+                      isSelected(eventInfo.event.start, eventInfo.event.extendedProps.field)
+                        ? "bg-green-100 text-green-800"
+                        : "bg-blue-100 text-blue-800"
+                    }`}
+                    onClick={() =>
+                      handleSelectClick(eventInfo.event.start, eventInfo.event.extendedProps.field)
+                    }
+                  >
+                    <div className="font-semibold">{"Click to Select"}</div>
+                    <div className="text-sm">
+                      <br />
+                      {startTime}
+                      <br />
+                      {endTime}
                     </div>
-                  ) : !hasGameThisSlot(eventInfo.event) && eventInfo.event.start?.getUTCHours() && (eventInfo.event.start.getUTCHours() === 21 || eventInfo.event.start.getUTCHours() === 22) &&
-                    eventInfo.event.start &&
-                    eventInfo.event.start > currNextDate ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${
-                        isSelected(eventInfo.event.start, 2)
-                          ? "bg-green-100 text-green-800"
-                          : "bg-blue-100 text-blue-800"
-                      }`}
-                      onClick={() =>
-                        handleSelectClick(eventInfo.event.start, 2)
-                      }
-                    >
-                      <div className="font-semibold">{"Click to Select"}</div>
-                      <div className="text-sm">
-                        <br />
-                        {startTime}
-                        <br />
-                        {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 2"}</div>
-                    </div>
-                  ) : (
-                    <div />
-                  )}
-                  {eventInfo.event.extendedProps.field3?.home &&
-                  eventInfo.event.extendedProps.field3?.away ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${containsRescheduleTeams(3) ? "bg-yellow-100 text-yellow-800 border-2 border-yellow-100" : "bg-red-100 text-red-800"}`}
-                    >
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.home}
-                      </div>
-                      <div className="font-semibold">{"vs"}</div>
-                      <div className="event-team font-semibold">
-                        {eventInfo.event.extendedProps.field3.away}
-                      </div>
-                      <div className="text-sm">{startTime}</div>
-                      <div className="text-sm">{endTime}</div>
-                      <div className="text-xs text-gray-600">{"Field 3"}</div>
-                    </div>
-                  ) : !hasGameThisSlot(eventInfo.event) &&
-                    eventInfo.event.start &&
-                    eventInfo.event.start > currNextDate ? (
-                    <div
-                      className={`event-content p-2 rounded-xl ${
-                        isSelected(eventInfo.event.start, 3)
-                          ? "bg-green-100 text-green-800"
-                          : "bg-blue-100 text-blue-800"
-                      }`}
-                      onClick={() =>
-                        handleSelectClick(eventInfo.event.start, 3)
-                      }
-                    >
-                      <div className="font-semibold">{"Click to Select"}</div>
-                      <div className="text-sm">
-                        <br />
-                        {startTime}
-                        <br />
-                        {endTime}
-                      </div>
-                      <div className="text-xs text-gray-600">{"Field 3"}</div>
-                    </div>
-                  ) : (
-                    <div />
-                  )}
-                </div>
+                    <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                  </div>
+                ) : null
               ) : null;
             }}
+            eventOrder={"field"}
+            slotEventOverlap={false}
             events={events}
             headerToolbar={{
               left:
