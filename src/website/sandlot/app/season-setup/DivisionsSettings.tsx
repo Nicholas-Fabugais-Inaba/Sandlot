@@ -264,8 +264,8 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
 
   const saveDivisions = async () => {
     alert("Divisions save button pressed.");
-    updateDivisions(divisions);
-    updateTeamDivisions(divisions);
+    await updateDivisions(divisions);
+    await updateTeamDivisions(divisions);
     setUnsavedChanges(false);
   };
 
