@@ -185,34 +185,39 @@ export default function TeamPage() {
       ) : session?.user.role === "player" && teamId ? (
         // Player View After Join Request Accepted
         <div className="flex">
-          {/* Left Section: Team Roster */}
           <div className="w-3/5 mr-4">
             <h2 className="text-xl font-bold mb-2">
-              {teamName} Roster
+              {teamName || "Your Team"} Roster
             </h2>
-            <Table
-              aria-label="Team Roster"
-              classNames={{ table: "min-w-full" }}
-            >
-              <TableHeader>
-                <TableColumn>Name</TableColumn>
-              </TableHeader>
-              <TableBody>
-                {roster.length ? (
-                  roster.map((player, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        {player.first_name + " " + player.last_name}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell>No players yet</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <div className="max-h-80 overflow-y-auto p-2">
+              <Table
+                aria-label="Team Roster"
+                classNames={{ table: "min-w-full" }}>
+                <TableHeader>
+                  {["name", "contact", "phone number"].map((key) => (
+                    <TableColumn key={key} allowsSorting>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </TableColumn>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {roster.map((player, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="py-2 column-name">
+                          {player.first_name + " " + player.last_name}
+                        </TableCell>
+                        <TableCell className="py-2 column-contact">
+                          {player.email}
+                        </TableCell>
+                        <TableCell>
+                          {player.phone_number}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  }
+                </TableBody>
+              </Table>
+            </div>
           </div>
 
           {/* Right Section: Team Info (Captain's Info and Leave Team) */}
