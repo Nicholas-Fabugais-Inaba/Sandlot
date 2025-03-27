@@ -74,7 +74,7 @@ export default function Register() {
         if (result?.error) {
           setError(result.error);
         } else {
-          window.location.href = "/account"; // Full page reload to ensure a complete refresh
+          window.location.href = "/join-a-team"; // Full page reload to ensure a complete refresh
         }
       }, 1000)
     } catch (error) {
@@ -163,7 +163,7 @@ export default function Register() {
               <option value="">Select gender</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="other">Other</option>
+              <option value="other">Prefer not to say</option>
             </select>
           </div>
         </div>

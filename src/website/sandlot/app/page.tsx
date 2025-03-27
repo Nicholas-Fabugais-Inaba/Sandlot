@@ -31,6 +31,7 @@ interface Announcement {
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [isWeatherDropdownOpen, setWeatherDropdownOpen] = useState(false);
+  const [isResourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const router = useRouter();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [newAnnouncementTitle, setNewAnnouncementTitle] = useState("");
@@ -109,6 +110,10 @@ export default function Home() {
 
   const handleWeatherClick = () => {
     setWeatherDropdownOpen(!isWeatherDropdownOpen);
+  };
+
+  const handleResourcesClick = () => {
+    setResourcesDropdownOpen(!isResourcesDropdownOpen);
   };
 
   const handleRainoutsClick = () => {
@@ -413,7 +418,7 @@ export default function Home() {
       <aside className="sidebar p-4">
         <Card className="rounded-2xl shadow-lg p-4 h-full">
           <h2 className="text-xl font-bold mb-4">Directory</h2>
-          <div className="space-y-4">
+          <div className="space-y-4 overflow-auto">
             <button
               className={`directory-item text-left font-semibold inline-block ${activeSection === "home" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
               onClick={() => setActiveSection("home")}
@@ -448,7 +453,7 @@ export default function Home() {
                 Weather Information
               </button>
               {isWeatherDropdownOpen && (
-                <div className="absolute left-0 top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
+                <div className="top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
                     <li>
                       <button
@@ -468,6 +473,40 @@ export default function Home() {
                         Ainsley Wood Station
                       </a>
                     </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className={`relative`}>
+              <button
+                className={`directory-item text-left font-semibold inline-block ${activeSection === "resources" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+                onClick={handleResourcesClick}
+              >
+                Resources
+              </button>
+              {isResourcesDropdownOpen && (
+                <div className="top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
+                  <ul className="list-disc list-inside mb-4 space-y-2">
+                  <li>
+                    <a
+                      className="text-blue-600"
+                      href="/score_sheet.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Score Sheet PDF
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="text-blue-600"
+                      href="/fielding_lineups.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Field Lineup PDF
+                    </a>
+                  </li>
                   </ul>
                 </div>
               )}
