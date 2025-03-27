@@ -28,6 +28,7 @@ let notificationTimeout: NodeJS.Timeout | null = null; // Declare a variable to 
 export default function TeamsDirectoryPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [sortDescriptors, setSortDescriptors] = useState<
     Record<
       string,
@@ -70,6 +71,20 @@ export default function TeamsDirectoryPage() {
       setTeams(teams);
     })();
 
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Set loading to false after session is fetched and delay is complete
@@ -157,6 +172,8 @@ export default function TeamsDirectoryPage() {
                   aria-label={`Standings for ${division}`}
                   classNames={{ table: "w-full" }}
                   sortDescriptor={sortDescriptors[division]}
+                  color="primary"
+                  selectionMode="single"
                   onSortChange={(sort) =>
                     handleSort(
                       division,
@@ -264,6 +281,14 @@ export default function TeamsDirectoryPage() {
           </div>
         </div>
       </div>
+      {showScrollToTop && (
+        <button
+          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 p-3 bg-blue-500 text-white rounded-full shadow-lg z-50"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          ↑
+        </button>
+      )}
     </div>
   )}
 
