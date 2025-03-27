@@ -82,39 +82,60 @@ export default function TeamPage() {
 
   useEffect(() => {
     const initializeStates = async () => {
-      const session = await getSession();
-      setSession(session);
-
-      // console.log("From global:", teamId, teamName)
-      let teamId = 0
-      let teamName = "team_name"
-      if (session && session.user.role === "player") {
-        const teamData = await getPlayerActiveTeam(session?.user.id)
-        teamId = teamData.team_id
-        teamName = teamData.team_name
-
-      } else if (session && session.user.role === "team") {
-        teamId = session.user.id
-        teamName = session.user.teamName
+      try {
+        const session = await getSession();
+        setSession(session);
+  
+        let teamId = 0;
+        let teamName = "team_name";
+  
+        // Check the role and fetch the appropriate data
+        if (session && session.user.role === "player") {
+          try {
+            const teamData = await getPlayerActiveTeam(session?.user.id);
+            teamId = teamData.team_id;
+            teamName = teamData.team_name;
+          } catch (error) {
+            console.error("Error fetching player active team:", error);
+            // If error occurs, set team name to "No team assigned"
+            teamName = "No team assigned";
+          }
+        } else if (session && session.user.role === "team") {
+          teamId = session.user.id;
+          teamName = session.user.teamName;
+        }
+  
+        // Set teamId and teamName
+        setTeamId(teamId);
+        setTeamName(teamName);
+  
+        // Fetch team info
+        try {
+          let teamInfo = await getTeamInfo({ team_id: teamId });
+          setRoster(teamInfo);
+        } catch (error) {
+          console.error("Error fetching team info:", error);
+          setRoster([]); // Gracefully handle the error and set an empty roster
+        }
+  
+        // Fetch join requests
+        try {
+          let requests = await getJR({ team_id: teamId });
+          setJoinRequests(requests);
+        } catch (error) {
+          console.error("Error fetching join requests:", error);
+          setJoinRequests([]); // Gracefully handle the error and set empty join requests
+        }
+  
+        setLoading(false);
+      } catch (error) {
+        console.error("Error during session initialization:", error);
+        setLoading(false); // Ensure loading is stopped in case of any error
       }
-      setTeamId(teamId)
-      setTeamName(teamName)
-
-      let teamInfo = await getTeamInfo({ team_id: teamId });
-      setRoster(teamInfo);
-
-      let requests = await getJR({ team_id: teamId });
-      setJoinRequests(requests);
-
-      console.log("TeamId:", teamId)
-      // let teams = await getDirectoryTeams();
-      // setTeams(teams);
-
-      setLoading(false);
     };
-
+  
     initializeStates();
-  }, []);
+  }, []);  
 
   const handlePromoteToCaptain = async (playerId: number) => {
     setActionLoading(true);
