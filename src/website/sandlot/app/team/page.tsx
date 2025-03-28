@@ -310,15 +310,15 @@ export default function TeamPage() {
                         <TableCell className="w-[220px]">
                           {player.captain ? (
                             <Button
-                              className="w-25 min-w-[160px] h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              className="w-25 min-w-[160px] h-8 text-sm square-full bg-[#eaeaec] text-black dark:bg-[#27272A] dark:text-gray-200 hover:bg-[#f0f0f3] dark:hover:bg-[#3F3F46] transition"
                               disabled={actionLoading}
                               onPress={() => changeCaptainStatus(player.player_id, false)}
                             >
-                              Demote to Player
+                              Move to Player
                             </Button>
                           ) : (
                             <Button
-                              className="w-25 h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              className="w-25 h-8 text-sm square-full bg-[#EaEaEc] text-black dark:bg-[#27272A] dark:text-gray-200 hover:bg-[#F0F0F3] dark:hover:bg-[#3F3F46] transition"
                               disabled={actionLoading}
                               onPress={() => changeCaptainStatus(player.player_id,true)}
                             >

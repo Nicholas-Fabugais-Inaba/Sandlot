@@ -13,8 +13,7 @@ import {
 import { getSession } from "next-auth/react";
 import { Session } from "next-auth";
 
-
-import { ChevronDown, ChevronRight } from "lucide-react"; // Import icons
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { title } from "@/components/primitives";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
@@ -30,11 +29,9 @@ export default function TeamsDirectoryPage() {
     Record<string, { column: keyof Team; direction: "ascending" | "descending" }>
   >({});
   const [teams, setTeams] = useState<Team[]>([]);
-  const [expandedTeams, setExpandedTeams] = useState<string[]>([]); // Change from single string to an array
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [expandedTeams, setExpandedTeams] = useState<string[]>([]); 
+  const [playersByTeam, setPlayersByTeam] = useState<Record<string, Player[]>>({}); 
   const [copyNotification, setCopyNotification] = useState<string | null>(null);
-  const [playersByTeam, setPlayersByTeam] = useState<Record<string, Player[]>>({}); // Map team names to players
-
 
   interface Team {
     team_id: number;
@@ -43,7 +40,8 @@ export default function TeamsDirectoryPage() {
   }
 
   interface Player {
-    player_id: string;
+    player_id: number;
+    captain: boolean;
     first_name: string;
     last_name: string;
     email: string;
@@ -52,16 +50,32 @@ export default function TeamsDirectoryPage() {
   }
 
   useEffect(() => {
-    const fetchSession = async () => {
+    const fetchSessionAndData = async () => {
       const session = await getSession();
       setSession(session);
-    };
-    fetchSession();
 
-    (async () => {
-      let teams = await getDirectoryTeams();
+      const teams = await getDirectoryTeams();
       setTeams(teams);
-    })();
+
+      // Fetch players for all teams
+      const playersData = await Promise.all(
+        teams.map(async (team: Team) => {
+          const players = await getDirectoryPlayers({ team_id: team.team_id });
+          return { teamName: team.name, players };
+        })
+      );
+
+      // Map players to their respective teams
+      const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
+        acc[teamName] = players;
+        return acc;
+      }, {} as Record<string, Player[]>);
+
+      setPlayersByTeam(playersByTeamData);
+      setIsLoading(false); // Set loading to false after all data is fetched
+    };
+
+    fetchSessionAndData();
   }, []);
 
   useEffect(() => {
@@ -72,32 +86,15 @@ export default function TeamsDirectoryPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const delayLoading = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setIsLoading(false);
-    };
-    delayLoading();
-  }, [session]);
-
-  const toggleTeamDropdown = async (team: Team) => {
-    if (expandedTeams.includes(team.name)) {
-      // Collapse the team
-      setExpandedTeams(expandedTeams.filter((name) => name !== team.name));
-    } else {
-      // Expand the team
-      setExpandedTeams([...expandedTeams, team.name]);
-  
-      // Fetch players only if they haven't been loaded yet
-      if (!playersByTeam[team.name]) {
-        const players_selected = await getDirectoryPlayers({ team_id: team.team_id });
-        setPlayersByTeam((prev) => ({
-          ...prev,
-          [team.name]: players_selected, // Add players for the current team
-        }));
-      }
-    }
-  };
+const toggleTeamDropdown = (team: Team) => {
+  if (expandedTeams.includes(team.name)) {
+    // Collapse the team
+    setExpandedTeams(expandedTeams.filter((name) => name !== team.name));
+  } else {
+    // Expand the team
+    setExpandedTeams([...expandedTeams, team.name]);
+  }
+};
 
   const uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
 
@@ -194,29 +191,53 @@ export default function TeamsDirectoryPage() {
                                 <strong>Players:</strong>
                                 {playersByTeam[team.name]?.length > 0 ? (
                                   <ul className="mt-2">
-                                    {playersByTeam[team.name].map((player) => (
-                                      <li key={player.player_id} className="mb-2">
-                                        <div>{player.first_name} {player.last_name}</div>
-                                        {session?.user.role === "commissioner" && (
-                                          <>
-                                            <div
-                                              className="ml-4 cursor-pointer text-blue-600 hover:underline inline-block"
-                                              onClick={() => {
-                                                navigator.clipboard.writeText(player.email);
-                                                setCopyNotification("Email copied to clipboard!");
-                                                if (notificationTimeout) clearTimeout(notificationTimeout);
-                                                notificationTimeout = setTimeout(() => setCopyNotification(null), 2000);
-                                              }}
-                                              title="Click to copy email to clipboard"
+                                  {playersByTeam[team.name].map((player) => (
+                                    <li key={player.player_id} className="mb-2">
+                                      <div className="flex items-center">
+                                        {/* Player Name */}
+                                        <span>
+                                          {player.first_name} {player.last_name}
+                                        </span>
+                                
+                                        {/* Captain Icon */}
+                                        {player.captain && (
+                                          <span className="ml-2" title="Captain">
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="10"
+                                              height="10"
+                                              viewBox="0 0 26 26"
+                                              fill="currentColor"
                                             >
-                                              {player.email}
-                                            </div>
-                                            <div className="ml-4">{player.phone_number}</div>
-                                          </>
+                                              <title>Captain</title>
+                                              <path d="M25.326 10.137a1.001 1.001 0 0 0-.807-.68l-7.34-1.066l-3.283-6.651c-.337-.683-1.456-.683-1.793 0L8.82 8.391L1.48 9.457a1 1 0 0 0-.554 1.705l5.312 5.178l-1.254 7.31a1.001 1.001 0 0 0 1.451 1.054L13 21.252l6.564 3.451a1 1 0 0 0 1.451-1.054l-1.254-7.31l5.312-5.178a.998.998 0 0 0 .253-1.024z" />
+                                            </svg>
+                                          </span>
                                         )}
-                                      </li>
-                                    ))}
-                                  </ul>
+                                      </div>
+                                
+                                      {/* Email and Phone Number */}
+                                      {(session?.user.role === "commissioner" ||
+                                        (session?.user.role === "team" && player.captain)) && (
+                                        <div className="ml-4">
+                                          <div
+                                            className="cursor-pointer text-blue-600 hover:underline inline-block"
+                                            onClick={() => {
+                                              navigator.clipboard.writeText(player.email);
+                                              setCopyNotification("Email copied to clipboard!");
+                                              if (notificationTimeout) clearTimeout(notificationTimeout);
+                                              notificationTimeout = setTimeout(() => setCopyNotification(null), 2000);
+                                            }}
+                                            title="Click to copy email to clipboard"
+                                          >
+                                            {player.email}
+                                          </div>
+                                          <div>{player.phone_number}</div>
+                                        </div>
+                                      )}
+                                    </li>
+                                  ))}
+                                </ul>
                                 ) : (
                                   <p>No players found for this team.</p>
                                 )}
