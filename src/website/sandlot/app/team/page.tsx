@@ -189,8 +189,8 @@ export default function TeamPage() {
             <h2 className="text-xl font-bold mb-2">
               {teamName || "Your Team"} Roster
             </h2>
-            <div className="max-h-80 overflow-y-auto p-2">
-              <Table
+            <div className="max-h-[calc(100vh-180px)] overflow-y-auto p-2"> {/* Added scrollable container */}
+            <Table
                 aria-label="Team Roster"
                 classNames={{ table: "min-w-full" }}>
                 <TableHeader>
@@ -263,7 +263,7 @@ export default function TeamPage() {
             <h2 className="text-xl font-bold mb-2">
               {teamName || "Your Team"} Roster
             </h2>
-            <div className="max-h-80 overflow-y-auto p-2">
+            <div className="max-h-[calc(100vh-180px)] overflow-y-auto p-2">
               <Table
                 aria-label="Team Roster"
                 classNames={{ table: "min-w-full" }}
