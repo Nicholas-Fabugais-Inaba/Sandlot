@@ -90,6 +90,11 @@ class DivisionData(BaseModel):
     team_id: int
     division: int
 
+class DivisionTeamData(BaseModel):
+    team_id: int
+    division: int
+    division_name: str
+
 class ScoreData(BaseModel):
     game_id: int
     home_score: int
@@ -192,3 +197,8 @@ class EndSeasonData(BaseModel):
 class UpdateActiveTeam(BaseModel):
     player_id: int
     team_id: int
+
+class CaptainStatus(BaseModel):
+    team_id: int
+    player_id: int
+    captain: bool

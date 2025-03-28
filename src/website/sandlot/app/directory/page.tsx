@@ -1,5 +1,3 @@
-// app/directory/page.tsx
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -10,33 +8,29 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   Spinner,
 } from "@heroui/react";
-import { useAsyncList } from "@react-stately/data";
 import { getSession } from "next-auth/react";
 import { Session } from "next-auth";
 
+import { ChevronDown, ChevronRight } from "lucide-react";
+
 import { title } from "@/components/primitives";
-// import getStandings from "../functions/getStandings";
-import "./TeamDirectoryPage.css";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
 
-let notificationTimeout: NodeJS.Timeout | null = null; // Declare a variable to store the timeout
+let notificationTimeout: NodeJS.Timeout | null = null;
 
 export default function TeamsDirectoryPage() {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [sortDescriptors, setSortDescriptors] = useState<
-    Record<
-      string,
-      { column: keyof Team; direction: "ascending" | "descending" }
-    >
+    Record<string, { column: keyof Team; direction: "ascending" | "descending" }>
   >({});
   const [teams, setTeams] = useState<Team[]>([]);
-  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null); // State for selected team
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [expandedTeams, setExpandedTeams] = useState<string[]>([]); 
+  const [playersByTeam, setPlayersByTeam] = useState<Record<string, Player[]>>({}); 
   const [copyNotification, setCopyNotification] = useState<string | null>(null);
 
   interface Team {
@@ -46,7 +40,8 @@ export default function TeamsDirectoryPage() {
   }
 
   interface Player {
-    player_id: string;
+    player_id: number;
+    captain: boolean;
     first_name: string;
     last_name: string;
     email: string;
@@ -55,49 +50,57 @@ export default function TeamsDirectoryPage() {
   }
 
   useEffect(() => {
-
-    // fetches session info
-    const fetchSession = async () => {
+    const fetchSessionAndData = async () => {
       const session = await getSession();
       setSession(session);
-    };
-    
-    fetchSession();
 
-    // fetches teams info
-    (async () => {
-      let teams = await getDirectoryTeams();
-      
-      console.log(teams);
-      console.log(teams[0]);
+      const teams = await getDirectoryTeams();
       setTeams(teams);
-    })();
 
+      // Fetch players for all teams
+      const playersData = await Promise.all(
+        teams.map(async (team: Team) => {
+          const players = await getDirectoryPlayers({ team_id: team.team_id });
+          return { teamName: team.name, players };
+        })
+      );
+
+      // Map players to their respective teams
+      const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
+        acc[teamName] = players;
+        return acc;
+      }, {} as Record<string, Player[]>);
+
+      setPlayersByTeam(playersByTeamData);
+      setIsLoading(false); // Set loading to false after all data is fetched
+    };
+
+    fetchSessionAndData();
   }, []);
 
   useEffect(() => {
-    setIsLoading(false);  // Set loading to false after fetching session
-  }, [teams]);
+    const handleScroll = () => {
+      setShowScrollToTop(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const set_players_in_team = async (selected_team: Team) => {
-    console.log("Selected team", selected_team);
-    setSelectedTeam(selected_team); // Set the selected team
-    console.log("HELLOWORLD", selected_team.team_id)
-    let players_selected = await getDirectoryPlayers({team_id: selected_team.team_id});
-    console.log("PLAYERS", players_selected);
-    setPlayers(players_selected);
-  };
+const toggleTeamDropdown = (team: Team) => {
+  if (expandedTeams.includes(team.name)) {
+    // Collapse the team
+    setExpandedTeams(expandedTeams.filter((name) => name !== team.name));
+  } else {
+    // Expand the team
+    setExpandedTeams([...expandedTeams, team.name]);
+  }
+};
 
-  const uniqueDivisions = Array.from(
-    new Set(teams.map((team) => team.division)),
-  );
+  const uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
 
   const handleSort = (
     division: string,
-    sortDescriptor: {
-      column: keyof Team;
-      direction: "ascending" | "descending";
-    },
+    sortDescriptor: { column: keyof Team; direction: "ascending" | "descending" }
   ) => {
     setSortDescriptors((prev) => ({
       ...prev,
@@ -105,26 +108,24 @@ export default function TeamsDirectoryPage() {
     }));
   };
 
-  // IF NOT LOGGED IN WILL INFINITE LOAD
-  // BUT WHEN LOGGED INTO A VALID ACCOUNT (com or team) WILL SAY NOT AUTHORIZED BEFORE SESSION IS GRABBED
- if (isLoading || !session) {
-    return <Spinner label="Loading..." />;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Team Directory..." size="lg" />
+      </div>
+    );
   }
 
   if (session?.user.role === "commissioner" || session?.user.role === "team") {
-  return (
-    <div>
-      <div style={{ marginBottom: "20px" }}>
-        <h1 className={title()}>Team Directory</h1>
-      </div>
+    return (
+      <div>
+        <div style={{ marginBottom: "20px" }}>
+          <h1 className={title()}>Team Directory</h1>
+        </div>
 
-      <div style={{ display: "flex" }}>
-        <div style={{ width: "50%" }}>
-          {/* Render a separate table for each division */}
+        <div style={{ width: "100%" }}>
           {uniqueDivisions.map((division) => {
-            const sortedTeams = [
-              ...teams.filter((team) => team.division === division),
-            ];
+            const sortedTeams = [...teams.filter((team) => team.division === division)];
             const sortDescriptor = sortDescriptors[division];
 
             if (sortDescriptor) {
@@ -133,9 +134,7 @@ export default function TeamsDirectoryPage() {
                 let second = b[sortDescriptor.column];
 
                 if (typeof first === "number" && typeof second === "number") {
-                  return sortDescriptor.direction === "ascending"
-                    ? first - second
-                    : second - first;
+                  return sortDescriptor.direction === "ascending" ? first - second : second - first;
                 }
 
                 if (typeof first === "string" && typeof second === "string") {
@@ -155,115 +154,123 @@ export default function TeamsDirectoryPage() {
                   aria-label={`Standings for ${division}`}
                   classNames={{ table: "w-full" }}
                   sortDescriptor={sortDescriptors[division]}
+                  color="primary"
+                  selectionMode="none"
                   onSortChange={(sort) =>
                     handleSort(
                       division,
-                      sort as {
-                        column: keyof Team;
-                        direction: "ascending" | "descending";
-                      },
+                      sort as { column: keyof Team; direction: "ascending" | "descending" }
                     )
                   }
                 >
                   <TableHeader>
-                    {["name"].map((key) => (
-                      <TableColumn key={key} allowsSorting>
-                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                      </TableColumn>
-                    ))}
+                    <TableColumn key="name" allowsSorting>Name</TableColumn>
                   </TableHeader>
-                  <TableBody
-                    isLoading={isLoading}
-                    items={sortedTeams}
-                    loadingContent={<Spinner label="Loading..." />}
-                  >
-                    {(item) => (
-                      <TableRow key={item.name} className="py-2">
-                        <TableCell
-                          className="py-2 column-name cursor-pointer text-white-600 hover:underline"
-                          onClick={() => {
-                            console.log("Selected team", item);
-                            set_players_in_team(item); // Fetch players for the selected team
-                          }}
-                          title="Click to view team details"
-                        >
-                          {item.name}
-                        </TableCell>
-                      </TableRow>
-                    )}
+                  <TableBody isLoading={isLoading} items={sortedTeams} loadingContent={<Spinner label="Loading..." />}>
+                    {sortedTeams.map((team) => (
+                      <React.Fragment key={team.name}>
+                        <TableRow className="py-2 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700">
+                          <TableCell
+                            className="py-2 column-name cursor-pointer text-black dark:text-white hover:underline flex items-center"
+                            onClick={() => toggleTeamDropdown(team)}
+                            title="Click to view team details"
+                          >
+                            {expandedTeams.includes(team.name) ? (
+                              <ChevronDown className="mr-2 text-gray-400 w-4 h-4" />
+                            ) : (
+                              <ChevronRight className="mr-2 text-gray-400 w-4 h-4" />
+                            )}
+                            {team.name}
+                          </TableCell>
+                        </TableRow>
+
+                        {expandedTeams.includes(team.name) && (
+                          <TableRow>
+                            <TableCell colSpan={1}>
+                              <div className="p-4 bg-gray-100 rounded-md">
+                                <strong>Players:</strong>
+                                {playersByTeam[team.name]?.length > 0 ? (
+                                  <ul className="mt-2">
+                                  {playersByTeam[team.name].map((player) => (
+                                    <li key={player.player_id} className="mb-2">
+                                      <div className="flex items-center">
+                                        {/* Player Name */}
+                                        <span>
+                                          {player.first_name} {player.last_name}
+                                        </span>
+                                
+                                        {/* Captain Icon */}
+                                        {player.captain && (
+                                          <span className="ml-2" title="Captain">
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="10"
+                                              height="10"
+                                              viewBox="0 0 26 26"
+                                              fill="currentColor"
+                                            >
+                                              <title>Captain</title>
+                                              <path d="M25.326 10.137a1.001 1.001 0 0 0-.807-.68l-7.34-1.066l-3.283-6.651c-.337-.683-1.456-.683-1.793 0L8.82 8.391L1.48 9.457a1 1 0 0 0-.554 1.705l5.312 5.178l-1.254 7.31a1.001 1.001 0 0 0 1.451 1.054L13 21.252l6.564 3.451a1 1 0 0 0 1.451-1.054l-1.254-7.31l5.312-5.178a.998.998 0 0 0 .253-1.024z" />
+                                            </svg>
+                                          </span>
+                                        )}
+                                      </div>
+                                
+                                      {/* Email and Phone Number */}
+                                      {(session?.user.role === "commissioner" ||
+                                        (session?.user.role === "team" && player.captain)) && (
+                                        <div className="ml-4">
+                                          <div
+                                            className="cursor-pointer text-blue-600 hover:underline inline-block"
+                                            onClick={() => {
+                                              navigator.clipboard.writeText(player.email);
+                                              setCopyNotification("Email copied to clipboard!");
+                                              if (notificationTimeout) clearTimeout(notificationTimeout);
+                                              notificationTimeout = setTimeout(() => setCopyNotification(null), 2000);
+                                            }}
+                                            title="Click to copy email to clipboard"
+                                          >
+                                            {player.email}
+                                          </div>
+                                          <div>{player.phone_number}</div>
+                                        </div>
+                                      )}
+                                    </li>
+                                  ))}
+                                </ul>
+                                ) : (
+                                  <p>No players found for this team.</p>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
+                    ))}
                   </TableBody>
                 </Table>
               </div>
             );
           })}
         </div>
-        <div className="right-half">
-          {/* Display selected team info */}
-          <div className="right-box">
-            {selectedTeam ? (
-              <>
-                <h2 className="text-xl font-bold mb-2">
-                  {selectedTeam.name}
-                </h2>
-                <p className="mt-4">
-                  <strong>Division:</strong> {selectedTeam.division}
-                </p>
-                <div className="mt-4">
-                  <strong>Players:</strong>
-                  {players.length > 0 ? (
-                    <ul className="mt-2">
-                    {players.map((player) => (
-                      <li key={player.player_id} className="mb-2">
-                        <div>{player.first_name} {player.last_name}</div>
-                        {session?.user.role === "commissioner" && (
-                          <>
-                            <div
-                              className="ml-4 cursor-pointer text-white-600 hover:underline"
-                              onClick={() => {
-                                navigator.clipboard.writeText(player.email);
-                                setCopyNotification("Email copied to clipboard!");
 
-                                // Clear the existing timeout if it exists
-                                if (notificationTimeout) {
-                                  clearTimeout(notificationTimeout);
-                                }
-
-                                // Set a new timeout
-                                notificationTimeout = setTimeout(() => {
-                                  setCopyNotification(null);
-                                  notificationTimeout = null; // Reset the timeout variable
-                                }, 2000); // Clear notification after 2 seconds
-                              }}
-                              title="Click to copy email to clipboard"
-                            >
-                              {player.email}
-                            </div>
-                            <div className="ml-4">{player.phone_number}</div>
-                          </>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                  ) : (
-                    <p>No players found for this team.</p>
-                  )}
-                </div>
-                {/* Add more team details here if available */}
-              </>
-            ) : (
-              <p>Select a team to view details</p>
-            )}
-
-            {copyNotification && (
-              <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
-                {copyNotification}
-              </div>
-            )}
+        {copyNotification && (
+          <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
+            {copyNotification}
           </div>
-        </div>
-      </div>
-    </div>
-  )}
+        )}
 
-  else { return <h1>Unauthorized</h1> }
+        {showScrollToTop && (
+          <button
+            className="fixed bottom-4 left-1/2 transform -translate-x-1/2 p-3 bg-blue-500 text-white rounded-full shadow-lg z-50"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            ↑
+          </button>
+        )}
+      </div>
+    );
+  } else {
+    return <h1>Unauthorized</h1>;
+  }
 }
