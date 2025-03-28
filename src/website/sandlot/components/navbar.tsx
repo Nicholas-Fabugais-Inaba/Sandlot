@@ -195,7 +195,7 @@ export const Navbar = () => {
           <NavbarItem>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="w-20 h-8 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+              className="w-20 h-10 text-sm rounded-lg bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
             >
               Sign Out
             </button>
