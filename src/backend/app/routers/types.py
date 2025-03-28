@@ -202,3 +202,15 @@ class CaptainStatus(BaseModel):
     team_id: int
     player_id: int
     captain: bool
+
+class NewDirectory(BaseModel):
+    name: str
+    content: str
+
+class DirectoryData(BaseModel):
+    directory_id: int
+    name: str
+    content: str
+
+class DirectoryID(BaseModel):
+    directory_id: int
