@@ -16,18 +16,19 @@ import Schedule from "@/app/schedule/schedule";
 import DivisionsSettings from "./DivisionsSettings";
 import Launchpad from "./Launchpad";
 import getSeasonState from "../functions/getSeasonState";
+import getAllTimeslots from "../functions/getAllTimeslots";
 
 // Define interfaces for the new data structures
 interface Timeslot {
-  id: string;
+  id: number;
   startTime: string;
   endTime: string;
 }
 
 interface Field {
-  id: string;
+  id: number;
   name: string;
-  timeslotIds: string[];
+  timeslotIds: number[];
 }
 
 export default function SeasonSetupPage() {
@@ -215,7 +216,7 @@ function GeneralSettings({
   // Add Timeslot Function
   const addTimeslot = () => {
     const newTimeslot: Timeslot = {
-      id: `timeslot-${Date.now()}`,
+      id: timeslots.length + 1, // Generate ID within the range 1 to len(timeslots)
       startTime: '',
       endTime: ''
     };
@@ -224,7 +225,7 @@ function GeneralSettings({
   };
 
   // Update Timeslot Function
-  const updateTimeslot = (id: string, field: 'startTime' | 'endTime', value: string) => {
+  const updateTimeslot = (id: number, field: 'startTime' | 'endTime', value: string) => {
     setTimeslots(prev => 
       prev.map(timeslot => 
         timeslot.id === id 
@@ -232,26 +233,36 @@ function GeneralSettings({
           : timeslot
       )
     );
+    console.log("Updated timeslot", id, field, value);
     setUnsavedChanges(true);
   };
 
   // Remove Timeslot Function
-  const removeTimeslot = (id: string) => {
-    setTimeslots(prev => prev.filter(timeslot => timeslot.id !== id));
-    // Also remove this timeslot from any field's timeslotIds
-    setFields(prev => 
+  const removeTimeslot = (id: number) => {
+    setTimeslots(prev => {
+      const updatedTimeslots = prev.filter(timeslot => timeslot.id !== id);
+      // Reassign IDs to ensure they remain sequential
+      return updatedTimeslots.map((timeslot, index) => ({
+        ...timeslot,
+        id: index + 1
+      }));
+    });
+  
+    // Also update timeslot IDs in fields
+    setFields(prev =>
       prev.map(field => ({
         ...field,
         timeslotIds: field.timeslotIds.filter(tsId => tsId !== id)
       }))
     );
+  
     setUnsavedChanges(true);
   };
 
   // Add Field Function
   const addField = () => {
     const newField: Field = {
-      id: `field-${Date.now()}`,
+      id: fields.length + 1, // Generate ID within the range 1 to len(fields)
       name: `Field ${fields.length + 1}`,
       timeslotIds: []
     };
@@ -260,7 +271,7 @@ function GeneralSettings({
   };
 
   // Update Field Name Function
-  const updateFieldName = (id: string, name: string) => {
+  const updateFieldName = (id: number, name: string) => {
     setFields(prev => 
       prev.map(field => 
         field.id === id 
@@ -272,8 +283,8 @@ function GeneralSettings({
   };
 
   // Toggle Timeslot for Field
-  const toggleTimeslotForField = (fieldId: string, timeslotId: string) => {
-    setFields(prev => 
+  const toggleTimeslotForField = (fieldId: number, timeslotId: number) => {
+    setFields(prev =>
       prev.map(field => {
         if (field.id === fieldId) {
           const updatedTimeslotIds = field.timeslotIds.includes(timeslotId)
@@ -288,8 +299,16 @@ function GeneralSettings({
   };
 
   // Remove Field Function
-  const removeField = (id: string) => {
-    setFields(prev => prev.filter(field => field.id !== id));
+  const removeField = (id: number) => {
+    setFields(prev => {
+      const updatedFields = prev.filter(field => field.id !== id);
+      // Reassign IDs to ensure they remain sequential
+      return updatedFields.map((field, index) => ({
+        ...field,
+        id: index + 1
+      }));
+    });
+
     setUnsavedChanges(true);
   };
 
@@ -319,15 +338,19 @@ function GeneralSettings({
   const handleSave = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const settings = {
-      season_name: seasonName,
+      // season_name: seasonName,
       start_date: startDate,
       end_date: endDate,
       games_per_team: gamesPerTeam,
       game_days: gameDays,
       fields: fields,
-      timeslots: timeslots,
+      timeslots: timeslots.map((timeslot) => ({
+        ...timeslot,
+        startTime: convertTimeToUTC(timeslot.startTime), // Convert to HH-MM
+        endTime: convertTimeToUTC(timeslot.endTime), // Convert to HH-MM
+      })),
     };
-
+  
     console.log(settings);
     updateSeasonSettings(settings);
     setUnsavedChanges(false);
@@ -346,26 +369,82 @@ function GeneralSettings({
   useEffect(() => {
     const loadFormData = async () => {
       const data = await getSeasonSettings();
-
+      const timeslotData = await getAllTimeslots();
+  
+      // Deduplicate timeslots based on start and end times
+      const timeslotMap = new Map<string, Timeslot & { fieldIds: number[] }>();
+  
+      timeslotData.forEach((timeslot: any) => {
+        const key = `${timeslot.start}-${timeslot.end}`; // Use start and end times as the unique key
+        if (!timeslotMap.has(key)) {
+          timeslotMap.set(key, {
+            id: timeslotMap.size + 1, // Generate a unique ID for the deduplicated timeslot
+            startTime: convertUTCToTime(timeslot.start), // Convert UTC format to HH:MM
+            endTime: convertUTCToTime(timeslot.end), // Convert UTC format to HH:MM
+            fieldIds: [timeslot.field_id], // Initialize with the current field_id
+          });
+        } else {
+          // Add the field_id to the existing timeslot's fieldIds
+          timeslotMap.get(key)!.fieldIds.push(timeslot.field_id);
+        }
+      });
+  
+      // Convert the Map to an array of timeslots
+      const timeslots = Array.from(timeslotMap.values()).map(({ fieldIds, ...rest }) => rest);
+  
+      // Group timeslots by field
+      const fields = Array.from(timeslotMap.values()).reduce((acc: Field[], timeslot) => {
+        timeslot.fieldIds.forEach((fieldId) => {
+          const existingField = acc.find((field) => field.id === fieldId);
+          if (existingField) {
+            existingField.timeslotIds.push(timeslot.id);
+          } else {
+            acc.push({
+              id: fieldId,
+              name: timeslotData.find((ts: any) => ts.field_id === fieldId)?.field_name || `Field ${fieldId}`,
+              timeslotIds: [timeslot.id],
+            });
+          }
+        });
+        return acc;
+      }, []);
+  
       setSeasonName(data.season_name || "");
       setStartDate(data.start_date || "");
       setEndDate(data.end_date || "");
       setGamesPerTeam(data.games_per_team || 0);
       setGameDays(data.game_days || []);
-      setFields(data.fields || []);
-      setTimeslots(data.timeslots || []);
+      setFields(fields);
+      setTimeslots(timeslots);
     };
-
+  
     loadFormData();
   }, [
-    setSeasonName, 
-    setStartDate, 
-    setEndDate, 
-    setGamesPerTeam, 
-    setGameDays, 
-    setFields, 
-    setTimeslots
+    setSeasonName,
+    setStartDate,
+    setEndDate,
+    setGamesPerTeam,
+    setGameDays,
+    setFields,
+    setTimeslots,
   ]);
+
+  const convertUTCToTime = (utcTime: string): string => {
+    const [hour, minute] = utcTime.split("-").map(Number);
+  
+    // Subtract 4 hours to adjust for the offset
+    const adjustedHour = (hour - 4 + 24) % 24; // Ensure the hour stays within 0-23
+    const formattedHour = adjustedHour.toString().padStart(2, "0");
+    const formattedMinute = minute.toString().padStart(2, "0");
+  
+    return `${formattedHour}:${formattedMinute}`;
+  };
+
+  const convertTimeToUTC = (time: string): string => {
+    const [hour, minute] = time.split(":").map(Number);
+    const utcHour = hour + 4; // Adjust for UTC conversion (example: +4 hours)
+    return `${utcHour}-${minute}`;
+  };
 
   const seasonDesc = seasonState === "offseason" 
     ? "The season is currently in the offseason. You can prepare for the upcoming season by setting up dates, fields, and timeslots."

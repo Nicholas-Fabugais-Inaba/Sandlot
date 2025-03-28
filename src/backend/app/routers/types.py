@@ -61,10 +61,23 @@ class SeasonPreset(BaseModel):
     end_date: str
     games_per_team: int
 
+class InputFieldData(BaseModel):
+    id: int
+    name: str
+    timeslotIds: list[int]
+
+class InputTimeslotData(BaseModel):
+    id: int
+    startTime: str
+    endTime: str
+
 class SeasonSettings(BaseModel):
     start_date: str
     end_date: str
     games_per_team: int
+    game_days: list[str]
+    fields: list[InputFieldData]
+    timeslots: list[InputTimeslotData]
 
 class SeasonState(BaseModel):
     state: str
