@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, update
 from ..create_engine import create_connection
-from ..models import Waiver, Player
+from ..models import Waiver, Player, WaiverFormat
 
 
 def insert_waiver(player_id, signature, date):
@@ -14,6 +14,23 @@ def insert_waiver(player_id, signature, date):
         )
         try:
             session.add_all([waiver])
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True
+
+def insert_waiver_format(year, index, text):
+    engine = create_connection()
+    with Session(engine) as session:
+        waiver_format = WaiverFormat(
+            year = year,
+            index = index,
+            text = text
+        )
+        try:
+            session.add_all([waiver_format])
         except:
             session.rollback()
             raise

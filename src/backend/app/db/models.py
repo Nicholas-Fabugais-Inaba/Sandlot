@@ -8,7 +8,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from .create_engine import create_connection
-#from create_engine import create_connection
+# from create_engine import create_connection
 
 engine = create_connection()
 
@@ -133,9 +133,9 @@ class WaiverFormat(Base):
     __tablename__ = "waiver_format"
     id: Mapped[int] = mapped_column(primary_key=True)
     year: Mapped[Optional[str]] = mapped_column(String(50))
-    index: Mapped[Optional[int]] = mapped_column()
+    index: Mapped[Optional[int]] = mapped_column() # 0 reserved for title 
     text: Mapped[Optional[str]] = mapped_column(String(2000))
-    
+
 class ArchivedTeam(Base):
     __tablename__ = "archived_team"
     id: Mapped[int] = mapped_column(primary_key=True)
