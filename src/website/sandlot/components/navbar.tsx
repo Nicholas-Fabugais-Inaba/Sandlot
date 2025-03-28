@@ -29,8 +29,6 @@ import getRR from "../app/functions/getRR";
 import getPlayerActiveTeam from "../app/functions/getPlayerActiveTeam";
 import updatePlayerActiveTeam from "../app/functions/updatePlayerActiveTeam";
 
-import "./Navbar.css";
-
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
