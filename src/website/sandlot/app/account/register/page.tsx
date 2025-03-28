@@ -307,7 +307,7 @@ export default function Register() {
               {renderForm()}
 
               <div className="flex space-x-4 justify-center">
-                {showWaiver ? (
+                {showWaiver || accountType == "team" ? (
                   <Button className="button" type="submit">
                     Register
                   </Button>
