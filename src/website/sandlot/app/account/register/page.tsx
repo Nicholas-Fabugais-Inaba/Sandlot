@@ -18,7 +18,9 @@ import registerTeam from "@/app/functions/registerTeam";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [accountType, setAccountType] = useState<"player" | "team" | null>(
     null,
   );
@@ -26,7 +28,12 @@ export default function Register() {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [gender, setGender] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    username?: string;
+    general?: string;
+  }>({});
   const [teamUsername, setTeamUsername] = useState("");
   const [preferredOffday, setPreferredOffday] = useState<number>(0); // defaulted to 0 instead of  || "" because it was causing typing problems in the backend
   const [preferredTime, setPreferredTime] = useState<number>(0);
@@ -34,17 +41,19 @@ export default function Register() {
   
   const [fieldsFilled, setFieldsFilled] = useState<number>(0);
   const [showWaiver, setShowWaiver] = useState<boolean>(false);
-  const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
-  const [isUsernameValid, setIsUsernameValid] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
-    const filledCount = [firstname, lastname, email, password, gender].filter(Boolean).length;
+    const filledCount = [firstname, lastname, email, password, gender, teamUsername, teamName].filter(Boolean).length;
     setFieldsFilled(filledCount);
-  }, [firstname, lastname, email, password, gender]);
+  }, [firstname, lastname, email, password, gender, teamUsername, teamName]);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState); // Toggle the visibility state
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prevState) => !prevState); // Toggle the visibility state
   };
 
   const validateEmail = (email: string) => {
@@ -54,13 +63,49 @@ export default function Register() {
   const validateUsername = (username: string) => {
     return /^.{4,20}$/.test(username); // Any characters, 4-20 chars
   };  
-
+  
+  const validateForm = () => {
+    const newErrors: typeof errors = {};
+  
+    // Common validations
+    if (!validateEmail(email)) {
+      newErrors.email = "Invalid email format";
+    }
+  
+    if (password !== confirmPassword) {
+      newErrors.password = "Passwords do not match";
+    }
+  
+    // Team-specific validations
+    if (accountType === "team") {
+      if (!validateUsername(teamUsername)) {
+        newErrors.username = "Username must be 4-20 characters long";
+      }
+    }
+  
+    // Player-specific validations
+    if (accountType === "player") {
+      // Add any player-specific validations here
+      if (!firstname.trim()) {
+        newErrors.username = "First name is required";
+      }
+      if (!lastname.trim()) {
+        newErrors.username = "Last name is required";
+      }
+      if (!gender) {
+        newErrors.username = "Gender is required";
+      }
+    }
+  
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
 
-    if (accountType === "team" && !validateUsername(teamUsername)) {
-      setIsUsernameValid(false);
-      return; // Stop registration if invalid
+    if (!validateForm()) {
+      return;
     }
 
     try {
@@ -97,19 +142,17 @@ export default function Register() {
         });
 
         if (result?.error) {
-          setError(result.error);
+          setErrors({
+            general: (result.error as any).response?.data?.detail || "Registration failed"
+          });
         } else {
           window.location.href = "/join-a-team"; // Full page reload to ensure a complete refresh
         }
       }, 1000)
     } catch (error) {
-      if (error instanceof Error) {
-        setError(
-          (error as any).response?.data?.detail || "Registration failed",
-        );
-      } else {
-        setError("Registration failed");
-      }
+      setErrors({
+        general: (error as any).response?.data?.detail || "Registration failed"
+      });
     }
   };
 
@@ -117,6 +160,10 @@ export default function Register() {
     if (accountType === "player" && !showWaiver) {
       return (
         <div>
+          <div className={styles.errorContainer}>
+            {errors.email && <p className={styles.errorMessage}>{errors.email}</p>}
+            {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
+          </div>
           <div className={styles.inputGroup}>
             <label>First Name:</label>
             <input
@@ -143,19 +190,22 @@ export default function Register() {
             />
           </div>
 
+          {/* Email Input Section */}
           <div className={styles.inputGroup}>
             <label>Email:</label>
             <input
               required
-              className={`${styles.input} ${!isEmailValid ? styles.invalid : ''}`}
+              className={`${styles.input} ${errors.email ? styles.invalid : ''}`}
               type="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setIsEmailValid(true); // Reset error when typing
+                // Clear the specific error when user starts typing
+                const newErrors = {...errors};
+                delete newErrors.email;
+                setErrors(newErrors);
               }}
             />
-            {!isEmailValid && <p className={styles.error}>Invalid email format</p>}
           </div>
 
           <div className={styles.inputGroup}>
@@ -163,10 +213,16 @@ export default function Register() {
             <div className={styles.passwordInputWrapper}>
               <input
                 required
-                className={styles.input}
-                type={showPassword ? 'text' : 'password'} // Toggle between text and password
+                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  // Clear password error when typing
+                  const newErrors = {...errors};
+                  delete newErrors.password;
+                  setErrors(newErrors);
+                }}
               />
               <button
                 type="button"
@@ -175,6 +231,33 @@ export default function Register() {
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.inputGroup}>
+            <div className={styles.passwordInputWrapper}>
+              <input
+                required
+                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  // Clear password error when typing
+                  const newErrors = {...errors};
+                  delete newErrors.password;
+                  setErrors(newErrors);
+                }}
+                placeholder="Confirm Password"
+              />
+              <button
+                type="button"
+                className={styles.showPasswordButton}
+                onClick={toggleConfirmPasswordVisibility}
+                aria-label="Toggle confirm password visibility"
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
               </button>
             </div>
           </div>
@@ -205,17 +288,23 @@ export default function Register() {
     } else if (accountType === "team") {
       return (
         <div>
+          <div className={styles.errorContainer}>
+            {errors.username && <p className={styles.errorMessage}>{errors.username}</p>}
+            {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
+          </div>
           <div className={styles.inputGroup}>
             <label>Username:</label>
             <div className={styles.inputWithTooltip}>
               <input
                 required
-                className={`${styles.input} ${!isUsernameValid ? styles.invalid : ''}`}
+                className={`${styles.input} ${errors.username ? styles.invalid : ''}`}
                 type="text"
                 value={teamUsername}
                 onChange={(e) => {
                   setTeamUsername(e.target.value);
-                  setIsUsernameValid(true); // Reset error when typing
+                  const newErrors = {...errors};
+                  delete newErrors.username;
+                  setErrors(newErrors);
                 }}
               />
               <span 
@@ -227,7 +316,6 @@ export default function Register() {
                 </span>
               </span>
             </div>
-            {!isUsernameValid && <p className={styles.error}>Invalid username format</p>}
           </div>
 
           <div className={styles.inputGroup}>
@@ -235,10 +323,16 @@ export default function Register() {
             <div className={styles.passwordInputWrapper}>
               <input
                 required
-                className={styles.input}
-                type={showPassword ? 'text' : 'password'} // Toggle between text and password
+                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  // Clear password error when typing
+                  const newErrors = {...errors};
+                  delete newErrors.password;
+                  setErrors(newErrors);
+                }}
               />
               <button
                 type="button"
@@ -247,6 +341,33 @@ export default function Register() {
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.inputGroup}>
+            <div className={styles.passwordInputWrapper}>
+              <input
+                required
+                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  // Clear password error when typing
+                  const newErrors = {...errors};
+                  delete newErrors.password;
+                  setErrors(newErrors);
+                }}
+                placeholder="Confirm Password"
+              />
+              <button
+                type="button"
+                className={styles.showPasswordButton}
+                onClick={toggleConfirmPasswordVisibility}
+                aria-label="Toggle confirm password visibility"
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
               </button>
             </div>
           </div>
@@ -327,7 +448,7 @@ export default function Register() {
       </h1>
       <div className={styles.container}>
         <div className="centered-container">
-          {error && <p className={styles.error}>{error}</p>}
+          {errors.general && <p className={styles.errorMessage}>{errors.general}</p>}
           {accountType === null ? (
             <div className="form">
               <h1 className="text-xl font-semibold text-center mt-8">
@@ -362,7 +483,7 @@ export default function Register() {
 
               <div className="flex space-x-4 justify-center">
                 {showWaiver || accountType == "team" ? (
-                  <Button className="button" type="submit">
+                  <Button className="button" type="submit" isDisabled={fieldsFilled < 3}>
                     Register
                   </Button>
                 ) : (
@@ -370,12 +491,25 @@ export default function Register() {
                     className="button"
                     isDisabled={fieldsFilled < 5}
                     onPress={() => {
+                      // Replace the existing validation with a more comprehensive check
+                      const newErrors: typeof errors = {};
+                      
                       if (!validateEmail(email)) {
-                        setIsEmailValid(false); // Show error only when pressing "Next"
-                      } else {
-                        setIsEmailValid(true);
-                        setShowWaiver(true); // Proceed if email is valid
+                        newErrors.email = "Invalid email format";
                       }
+
+                      if (password !== confirmPassword) {
+                        newErrors.password = "Passwords do not match";
+                      }
+
+                      // If there are any errors, set them and prevent proceeding
+                      if (Object.keys(newErrors).length > 0) {
+                        setErrors(newErrors);
+                        return;
+                      }
+
+                      // If no errors, proceed to waiver
+                      setShowWaiver(true);
                     }}
                   >
                     Next
