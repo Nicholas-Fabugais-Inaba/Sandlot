@@ -5,7 +5,5 @@ export default async function getSeasonState(): Promise<any> {
     `${process.env.NEXT_PUBLIC_APIHOST}/season-setup/get_season_state`,
   );
 
-  console.log(response.data)
-
   return response.data["state"];
 }

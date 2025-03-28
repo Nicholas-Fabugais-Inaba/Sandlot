@@ -10,6 +10,7 @@ from .routers.join_router import router as join_router
 from .routers.directory_router import router as directory_router
 from .routers.archive_router import router as archive_router
 from .routers.waiver_router import router as waiver_router
+from .routers.team_players_router import router as team_players_router
 from dotenv import load_dotenv
 import os
 
@@ -38,6 +39,7 @@ app.include_router(join_router, prefix="/join")
 app.include_router(directory_router, prefix="/directory")
 app.include_router(archive_router, prefix="/archive")
 app.include_router(waiver_router, prefix="/waiver")
+app.include_router(team_players_router, prefix="/team-players")
 
 @app.get("/")
 def read_root():

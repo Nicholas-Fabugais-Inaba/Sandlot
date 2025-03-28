@@ -61,3 +61,23 @@
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+.passwordInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.showPasswordButton {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+}
+
+.showPasswordButton:focus {
+  outline: none;
+}
