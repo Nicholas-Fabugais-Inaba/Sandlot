@@ -20,17 +20,27 @@
 }
 
 /* Error Message Styling */
-.error {
+.errorMessage {
   color: red;
   font-size: 0.9rem;
   visibility: visible;
   width: 100%;
   text-align: center;
   position: absolute;
-  top: 50px; /* Position error below header */
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1; /* Ensure the error stays above the form */
+  z-index: 1;
+  top: 70px;
+}
+
+.errorMessage:not(:last-child) {
+  top: 40px;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Form Styling */
@@ -66,4 +76,75 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.passwordInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.showPasswordButton {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+}
+
+.showPasswordButton:focus {
+  outline: none;
+}
+
+.invalid {
+  border: 1px solid red;
+  background-color: #fdd; /* Optional: light red background to indicate error */
+}
+
+/* Add a container to hold both the input field and the tooltip */
+.inputWithTooltip {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Styling for the tooltip icon */
+.tooltipIcon {
+  position: absolute;
+  right: -25px; /* Position to the right of the input */
+  cursor: pointer;
+  color: #007bff;
+  font-size: 16px;
+}
+
+/* Tooltip text styling */
+.tooltipText {
+  visibility: hidden;
+  position: absolute;
+  left: 50%;
+  bottom: 100%; /* Position above the icon */
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  width: 200px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+}
+
+/* Show the tooltip when hovering over the icon */
+.tooltipIcon:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Optional: Add hover effect for the icon */
+.tooltipIcon:hover {
+  color: #0056b3;
 }
