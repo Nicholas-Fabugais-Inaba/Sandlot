@@ -45,9 +45,9 @@ export default function Register() {
   const router = useRouter();
 
   useEffect(() => {
-    const filledCount = [firstname, lastname, email, password, gender, teamUsername, teamName].filter(Boolean).length;
+    const filledCount = [firstname, lastname, email, confirmEmail, password, confirmPassword, gender, teamUsername, teamName].filter(Boolean).length;
     setFieldsFilled(filledCount);
-  }, [firstname, lastname, email, password, gender, teamUsername, teamName]);
+  }, [firstname, lastname, email, confirmEmail, password, confirmPassword, gender, teamUsername, teamName]);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState); // Toggle the visibility state
@@ -58,8 +58,7 @@ export default function Register() {
   };
 
   const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  };
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/.test(email);  };
 
   const validateUsername = (username: string) => {
     return /^.{4,20}$/.test(username); // Any characters, 4-20 chars
@@ -77,10 +76,6 @@ export default function Register() {
       newErrors.password = "Passwords do not match";
     }
 
-    if (email !== confirmEmail) {
-      newErrors.email = "Emails do not match";
-    }
-  
     // Team-specific validations
     if (accountType === "team") {
       if (!validateUsername(teamUsername)) {
@@ -100,6 +95,10 @@ export default function Register() {
       if (!gender) {
         newErrors.username = "Gender is required";
       }
+      if (email !== confirmEmail) {
+        newErrors.email = "Emails do not match";
+      }
+    
     }
   
     setErrors(newErrors);
@@ -511,7 +510,7 @@ export default function Register() {
                 ) : (
                   <Button
                     className="button"
-                    isDisabled={fieldsFilled < 5}
+                    isDisabled={fieldsFilled < 7}
                     onPress={() => {
                       // Replace the existing validation with a more comprehensive check
                       const newErrors: typeof errors = {};
@@ -523,6 +522,10 @@ export default function Register() {
                       if (password !== confirmPassword) {
                         newErrors.password = "Passwords do not match";
                       }
+
+                      if (email !== confirmEmail) {
+                        newErrors.email = "Emails do not match";
+                      }                  
 
                       // If there are any errors, set them and prevent proceeding
                       if (Object.keys(newErrors).length > 0) {
