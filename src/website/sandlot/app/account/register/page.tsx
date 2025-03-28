@@ -321,7 +321,13 @@ export default function Register() {
               <div className="flex space-x-4 justify-center mt-4">
                 <Button
                   className="button"
-                  onPress={() => setAccountType(null)}
+                  onPress={() => {
+                    if (showWaiver && accountType === "player") {
+                      setShowWaiver(false);
+                    } else {
+                      setAccountType(null);
+                    }
+                  }}
                 >
                   Back
                 </Button>
