@@ -120,7 +120,8 @@ export const Navbar = () => {
       maxWidth="xl"
       position="sticky"
       onMenuOpenChange={setIsMenuOpen}
-    >
+      className="border-b-[1px] border-b-[#F3F4F6] dark:border-b-[#3C3C3C] bg-white dark:bg-[#0d0d0d] shadow-md"
+      >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">

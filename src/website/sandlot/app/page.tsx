@@ -285,7 +285,7 @@ export default function Home() {
                       >
                         Sign In
                       </Button>
-                      <p className="mt-2 mb-2">
+                      <p className="mt-4">
                         <em>Don't have an account?</em>
                       </p>
                       <Button
