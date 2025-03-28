@@ -4,13 +4,14 @@ from ..create_engine import create_connection
 from ..models import Waiver, Player, WaiverFormat
 
 
-def insert_waiver(player_id, signature, date):
+def insert_waiver(player_id, signature, initials, year):
     engine = create_connection()
     with Session(engine) as session:
         waiver = Waiver(
             player_id = player_id,
             signature = signature,
-            date = date
+            initials = initials,
+            year = year
         )
         try:
             session.add_all([waiver])
@@ -46,7 +47,8 @@ def get_player_waivers(player_id):
                 Waiver.id,
                 Waiver.player_id,
                 Waiver.signature,
-                # Waiver.date
+                Waiver.initials,
+                Waiver.year
             )
             .where(Waiver.player_id == player_id)
         )
@@ -63,7 +65,8 @@ def get_all_waivers():
                 Player.first_name,
                 Player.last_name,
                 Waiver.signature,
-                # Waiver.date
+                Waiver.initials,
+                Waiver.year
             )
             .select_from(Waiver)
             .join(Player, Waiver.player_id == Player.id)

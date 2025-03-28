@@ -7,7 +7,7 @@ router = APIRouter(tags=["waiver"])
 
 @router.post("/create_waiver", response_model=None)
 async def create_waiver(data: NewWaiver):
-    insert_waiver(data.player_id, data.signature, data.date)
+    insert_waiver(data.player_id, data.signature, data.initials, data.year)
     return True
 
 @router.get("/get_all_waivers", response_model=list)
