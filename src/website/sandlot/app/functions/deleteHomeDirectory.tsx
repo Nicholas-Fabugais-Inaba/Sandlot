@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default async function deleteDirectory(
+export default async function deleteHomeDirectory(
   directoryID: any,
 ): Promise<void> {
   axios
