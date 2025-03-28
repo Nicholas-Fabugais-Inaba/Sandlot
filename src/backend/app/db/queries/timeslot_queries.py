@@ -36,7 +36,7 @@ def get_all_timeslots():
         )
         result = session.execute(stmt).mappings().all()
         return result
-    
+
 def delete_timeslot(timeslot_id):
     engine = create_connection()
     with Session(engine) as session:

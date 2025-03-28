@@ -5,6 +5,7 @@ from .scheduler import gen_schedule_w_skip, send_schedule_to_db
 from random import shuffle
 from ..db.queries.team_queries import get_all_teams, get_all_season_teams
 from ..db.queries.season_settings_queries import get_season_settings
+from ..db.queries.timeslot_queries import get_all_timeslots
 
 from ..db.mock_data import insert_mock_schedule
 
@@ -245,7 +246,12 @@ def gen_schedule_repeated():
 
     games = gen_games_division(divs, Settings["games_per_team"])
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date)
+    Timeslots = get_all_timeslots()
+    print(Timeslots)
+
+    total_fields, max_timeslots = analyze_timeslots(Timeslots)
+
+    game_slots = gen_game_slots(total_fields, max_timeslots, start_date, end_date)
 
     # Repeats the schedule generation 10 times and returns the best schedule
     best_schedule, best_score, t = gen_schedule_w_skip(games, game_slots, teams)
@@ -257,12 +263,34 @@ def gen_schedule_repeated():
     print(best_schedule, teams)
     return best_schedule, best_score, teams
 
+
 def get_teams():
     teams = {}
     Teams = get_all_teams()
     for i in range(len(Teams)):
         teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
     return teams
+
+
+def analyze_timeslots(timeslots: dict):
+    field_counts = {}  # Dictionary to store the count of timeslots per field
+    max_timeslots = 0  # Variable to track the maximum number of timeslots for any field
+
+    for timeslot_id, timeslot_data in timeslots.items():
+        field_id = timeslot_data["field_id"]
+
+        # Increment the count for the field
+        if field_id not in field_counts:
+            field_counts[field_id] = 0
+        field_counts[field_id] += 1
+
+        # Update the maximum timeslots if this field has more
+        max_timeslots = max(max_timeslots, field_counts[field_id])
+
+    # Count the total number of fields
+    total_fields = len(field_counts)
+
+    return total_fields, max_timeslots
 
 
 # games = gen_games_division(divs, GAMES_PER_TEAM)
