@@ -129,6 +129,13 @@ class Waiver(Base):
     signature: Mapped[Optional[str]] = mapped_column(String(50))
     year: Mapped[Optional[str]] = mapped_column(String(50))
 
+class WaiverFormat(Base):
+    __tablename__ = "waiver_format"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    year: Mapped[Optional[str]] = mapped_column(String(50))
+    index: Mapped[Optional[int]] = mapped_column()
+    text: Mapped[Optional[str]] = mapped_column(String(2000))
+    
 class ArchivedTeam(Base):
     __tablename__ = "archived_team"
     id: Mapped[int] = mapped_column(primary_key=True)
