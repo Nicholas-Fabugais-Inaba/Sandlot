@@ -7,7 +7,6 @@ import { title } from "@/components/primitives";
 import { useState, useEffect } from "react";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 // import sendEmail from "../functions/sendEmail";
-import "./EmailBroadcastPage.css";
 
 // Define an interface for the team object
 interface Team {
@@ -61,7 +60,7 @@ export default function EmailBroadcastPage() {
   };
 
   return (
-    <div className="email-broadcast-container">
+    <div>
       <h1 className={title()}>Email Broadcasting</h1>
       <form className="items-center p-6">
         <div className="mb-4">
