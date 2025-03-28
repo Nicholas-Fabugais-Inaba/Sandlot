@@ -38,6 +38,7 @@ import "./TeamPage.css";
 import getDirectoryTeams from "../functions/getDirectoryTeams";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 import updateCaptainStatus from "../functions/updateCaptainStatus";
+import leaveTeam from "../functions/leaveTeam";
 
 interface JoinRequest {
   id: number;
@@ -149,6 +150,24 @@ export default function TeamPage() {
     setRoster(updatedTeamInfo);
   };
 
+  // TODO: update client session with these changes and test cases
+  const handleLeaveTeam = async (playerId: number) => {
+    if(teamId == session?.user.team_id) {
+      let teams = Object.keys(session?.user.teams)
+      if(teams.length > 1) {
+        teams = teams.filter(team => Number(team) !== teamId)
+        await leaveTeam({team_id: teamId, player_id: playerId, new_active_team_required: true, new_active_team: teams[0]})
+      }
+      else {
+        await leaveTeam({team_id: teamId, player_id: playerId, new_active_team_required: true, new_active_team: null})
+      }
+    }
+    else {
+      await leaveTeam({team_id: teamId, player_id: playerId, new_active_team_required: false, new_active_team: null})
+    }
+    router.push('/join-a-team')
+  }
+
   const handleRequestJoin = async (teamId: number) => {
     if (session) {
       createJR({
@@ -197,8 +216,14 @@ export default function TeamPage() {
                 <TableBody>
                   {roster.map((player, index) => (
                       <TableRow key={index}>
-                        <TableCell className="py-2 column-name">
+                        <TableCell className="py-2 column-name flex items-center gap-3">
                           {player.first_name + " " + player.last_name}
+                          {player.captain ? 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 26 26">
+                              <title>Captain</title>
+                              <path fill="currentColor" d="M25.326 10.137a1.001 1.001 0 0 0-.807-.68l-7.34-1.066l-3.283-6.651c-.337-.683-1.456-.683-1.793 0L8.82 8.391L1.48 9.457a1 1 0 0 0-.554 1.705l5.312 5.178l-1.254 7.31a1.001 1.001 0 0 0 1.451 1.054L13 21.252l6.564 3.451a1 1 0 0 0 1.451-1.054l-1.254-7.31l5.312-5.178a.998.998 0 0 0 .253-1.024z"/>
+                            </svg>
+                          : null}
                         </TableCell>
                         <TableCell className="py-2 column-contact">
                           {player.email}
@@ -230,12 +255,6 @@ export default function TeamPage() {
               >
                 Captain's Info
               </Button>
-              <Button
-                className="button min-w-[160px]" // Made full width for consistency
-                onPress={() => handleAction()}
-              >
-                Leave Team
-              </Button>
             </div>
             <h2 className="text-xl font-bold mt-4 mb-2">
               Player Actions
@@ -246,6 +265,12 @@ export default function TeamPage() {
                 onPress={() => router.push('/join-a-team')} // Join New Team action
               >
                 Join New Team
+              </Button>
+              <Button
+                className="button min-w-[160px]" // Made full width for consistency
+                onPress={() => handleLeaveTeam(session.user.id)}
+              >
+                Leave Team
               </Button>
             </div>
           </div>
@@ -285,7 +310,7 @@ export default function TeamPage() {
                         <TableCell className="w-[220px]">
                           {player.captain ? (
                             <Button
-                              className="w-25 h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              className="w-25 min-w-[160px] h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                               disabled={actionLoading}
                               onPress={() => changeCaptainStatus(player.player_id, false)}
                             >
