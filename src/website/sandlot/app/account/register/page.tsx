@@ -30,7 +30,7 @@ export default function Register() {
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   
-  const [fieldsFilled, setFeildsFilled] = useState<number>(0);
+  const [fieldsFilled, setFieldsFilled] = useState<number>(0);
   const [showWaiver, setShowWaiver] = useState<boolean>(false);
   const router = useRouter();
 
@@ -101,7 +101,7 @@ export default function Register() {
               value={firstname}
               onChange={(e) => {
                 setFirstName(e.target.value)
-                setFeildsFilled(fieldsFilled + 1)
+                setFieldsFilled(fieldsFilled + 1)
               }}
             />
           </div>
@@ -115,7 +115,7 @@ export default function Register() {
               value={lastname}
               onChange={(e) => {
                 setLastName(e.target.value)
-                setFeildsFilled(fieldsFilled + 1)
+                setFieldsFilled(fieldsFilled + 1)
               }}
             />
           </div>
@@ -129,7 +129,7 @@ export default function Register() {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value)
-                setFeildsFilled(fieldsFilled + 1)
+                setFieldsFilled(fieldsFilled + 1)
               }}
             />
           </div>
@@ -143,7 +143,7 @@ export default function Register() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value)
-                setFeildsFilled(fieldsFilled + 1)
+                setFieldsFilled(fieldsFilled + 1)
               }}
             />
           </div>
@@ -157,7 +157,7 @@ export default function Register() {
               value={gender}
               onChange={(e) => {
                 setGender(e.target.value)
-                setFeildsFilled(fieldsFilled + 1)
+                setFieldsFilled(fieldsFilled + 1)
               }}
             >
               <option value="">Select gender</option>
