@@ -197,3 +197,8 @@ class EndSeasonData(BaseModel):
 class UpdateActiveTeam(BaseModel):
     player_id: int
     team_id: int
+
+class CaptainStatus(BaseModel):
+    team_id: int
+    player_id: int
+    captain: bool

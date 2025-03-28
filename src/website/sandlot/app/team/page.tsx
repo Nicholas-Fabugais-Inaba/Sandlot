@@ -37,6 +37,7 @@ import AvailableTeams from "./AvailableTeams";
 import "./TeamPage.css";
 import getDirectoryTeams from "../functions/getDirectoryTeams";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
+import updateCaptainStatus from "../functions/updateCaptainStatus";
 
 interface JoinRequest {
   id: number;
@@ -59,7 +60,8 @@ interface Team {
 }
 
 interface Player {
-  id: number;
+  player_id: number;
+  captain: boolean;
   first_name: string;
   last_name: string;
   email: string;
@@ -137,18 +139,10 @@ export default function TeamPage() {
     initializeStates();
   }, []);  
 
-  const handlePromoteToCaptain = async (playerId: number) => {
+  const changeCaptainStatus = async (playerId: number, promotion: boolean) => {
     setActionLoading(true);
-    // await promoteToCaptain({ team_id: teamId, player_id: playerId });
-    setActionLoading(false);
-    // Update the team info and roster
-    const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
-    setRoster(updatedTeamInfo);
-  };
-
-  const handleDemoteToPlayer = async (playerId: number) => {
-    setActionLoading(true);
-    // await demoteToPlayer({ team_id: teamId, player_id: playerId });
+    console.log(roster)
+    await updateCaptainStatus({ team_id: teamId, player_id: playerId, captain: promotion });
     setActionLoading(false);
     // Update the team info and roster
     const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
@@ -185,34 +179,39 @@ export default function TeamPage() {
       ) : session?.user.role === "player" && teamId ? (
         // Player View After Join Request Accepted
         <div className="flex">
-          {/* Left Section: Team Roster */}
           <div className="w-3/5 mr-4">
             <h2 className="text-xl font-bold mb-2">
-              {teamName} Roster
+              {teamName || "Your Team"} Roster
             </h2>
+            <div className="max-h-[calc(100vh-180px)] overflow-y-auto p-2"> {/* Added scrollable container */}
             <Table
-              aria-label="Team Roster"
-              classNames={{ table: "min-w-full" }}
-            >
-              <TableHeader>
-                <TableColumn>Name</TableColumn>
-              </TableHeader>
-              <TableBody>
-                {roster.length ? (
-                  roster.map((player, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        {player.first_name + " " + player.last_name}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell>No players yet</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                aria-label="Team Roster"
+                classNames={{ table: "min-w-full" }}>
+                <TableHeader>
+                  {["name", "contact", "phone number"].map((key) => (
+                    <TableColumn key={key} allowsSorting>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </TableColumn>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {roster.map((player, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="py-2 column-name">
+                          {player.first_name + " " + player.last_name}
+                        </TableCell>
+                        <TableCell className="py-2 column-contact">
+                          {player.email}
+                        </TableCell>
+                        <TableCell>
+                          {player.phone_number}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  }
+                </TableBody>
+              </Table>
+            </div>
           </div>
 
           {/* Right Section: Team Info (Captain's Info and Leave Team) */}
@@ -258,7 +257,7 @@ export default function TeamPage() {
             <h2 className="text-xl font-bold mb-2">
               {teamName || "Your Team"} Roster
             </h2>
-            <div className="max-h-80 overflow-y-auto p-2">
+            <div className="max-h-[calc(100vh-180px)] overflow-y-auto p-2">
               <Table
                 aria-label="Team Roster"
                 classNames={{ table: "min-w-full" }}
@@ -284,21 +283,21 @@ export default function TeamPage() {
                           {player.phone_number}
                         </TableCell>
                         <TableCell className="w-[220px]">
-                          {true ? (
+                          {player.captain ? (
                             <Button
                               className="w-25 h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                               disabled={actionLoading}
-                              onPress={() => handlePromoteToCaptain(player.id)}
+                              onPress={() => changeCaptainStatus(player.player_id, false)}
                             >
-                              Promote to Captain
+                              Demote to Player
                             </Button>
                           ) : (
                             <Button
-                              className="w-44 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                              className="w-25 h-8 text-sm square-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                               disabled={actionLoading}
-                              onPress={() => handleDemoteToPlayer(player.id)}
+                              onPress={() => changeCaptainStatus(player.player_id,true)}
                             >
-                              Demote to Player
+                              Promote to Captain
                             </Button>
                           )}
                         </TableCell>
@@ -341,7 +340,8 @@ export default function TeamPage() {
                         setRoster([
                           ...roster,
                           {
-                            id: request.player_id,
+                            player_id: request.player_id,
+                            captain: false,
                             first_name: request.first_name,
                             last_name: request.last_name,
                             email: request.email,

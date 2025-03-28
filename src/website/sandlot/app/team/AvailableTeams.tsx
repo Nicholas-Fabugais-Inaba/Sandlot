@@ -94,7 +94,7 @@ const AvailableTeams: React.FC = () => {
           Request to join a team from the list below:
         </h2>
         {teams.length > 0 && userTeamId !== null ? (
-          <div className="max-h-80 overflow-y-auto p-2">
+          <div className="max-h-[calc(100vh-200px)] overflow-y-auto p-2">
             <Table aria-label="Available Teams" classNames={{ table: "min-w-full" }}>
               <TableHeader>
                 {["Team Name", "Division", "Action"].map((key) => (
