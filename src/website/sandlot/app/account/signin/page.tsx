@@ -73,7 +73,7 @@ export default function SignIn() {
               className="button"
               onPress={() => router.push("/account/register")}
             >
-              Create an Account
+              Register
             </Button>
           </div>
           <div className="flex justify-center mt-4">
