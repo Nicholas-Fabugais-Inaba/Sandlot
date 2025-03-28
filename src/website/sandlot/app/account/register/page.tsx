@@ -9,6 +9,7 @@ import { Button } from "@heroui/react";
 import Waiver from "@/app/account/register/waiver"
 
 import styles from "./Register.module.css";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { title } from "@/components/primitives";
 import registerPlayer from "@/app/functions/registerPlayer";
@@ -17,6 +18,7 @@ import registerTeam from "@/app/functions/registerTeam";
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [accountType, setAccountType] = useState<"player" | "team" | null>(
     null,
   );
@@ -40,6 +42,10 @@ export default function Register() {
     const filledCount = [firstname, lastname, email, password, gender].filter(Boolean).length;
     setFieldsFilled(filledCount);
   }, [firstname, lastname, email, password, gender]);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState); // Toggle the visibility state
+  };
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -154,15 +160,23 @@ export default function Register() {
 
           <div className={styles.inputGroup}>
             <label>Password:</label>
-            <input
-              required
-              className={styles.input}
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value)
-              }}
-            />
+            <div className={styles.passwordInputWrapper}>
+              <input
+                required
+                className={styles.input}
+                type={showPassword ? 'text' : 'password'} // Toggle between text and password
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className={styles.showPasswordButton}
+                onClick={togglePasswordVisibility}
+                aria-label="Toggle password visibility"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
+              </button>
+            </div>
           </div>
 
           <div className={`${styles.inputGroup} ${styles.gender}`}>
@@ -218,13 +232,23 @@ export default function Register() {
 
           <div className={styles.inputGroup}>
             <label>Password:</label>
-            <input
-              required
-              className={styles.input}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className={styles.passwordInputWrapper}>
+              <input
+                required
+                className={styles.input}
+                type={showPassword ? 'text' : 'password'} // Toggle between text and password
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className={styles.showPasswordButton}
+                onClick={togglePasswordVisibility}
+                aria-label="Toggle password visibility"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
+              </button>
+            </div>
           </div>
 
           <div className={styles.inputGroup}>
