@@ -284,7 +284,7 @@ export default function Register() {
             </div>
           </div>
 
-          <div className={`${styles.inputGroup} ${styles.gender} ${styles.rowGender}`}>
+          <div className={`${styles.inputGroup} ${styles.gender} ${styles.rowSingle}`}>
             <label htmlFor="gender">Gender</label>
             <select
               required
@@ -308,139 +308,147 @@ export default function Register() {
       )
     } else if (accountType === "team") {
       return (
+        
         <div>
           <div className={styles.errorContainer}>
             {errors.username && <p className={styles.errorMessage}>{errors.username}</p>}
             {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
           </div>
-          <div className={styles.inputGroup}>
-            <label>Username</label>
-            <div className={styles.inputWithTooltip}>
+
+          <div className={styles.row}>
+            <div className={styles.inputGroup}>
+              <label>Team Name</label>
               <input
                 required
-                className={`${styles.input} ${errors.username ? styles.invalid : ''}`}
+                className={styles.input}
                 type="text"
-                value={teamUsername}
-                onChange={(e) => {
-                  setTeamUsername(e.target.value);
-                  const newErrors = {...errors};
-                  delete newErrors.username;
-                  setErrors(newErrors);
-                }}
+                value={teamName}
+                onChange={(e) => setTeamName(e.target.value)}
               />
-              <span 
-                className={styles.tooltipIcon} 
-              >
-                ⓘ
-                <span className={styles.tooltipText}>
-                  Username must be 4-20 characters long.
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label>Username</label>
+              <div className={styles.inputWithTooltip}>
+                <input
+                  required
+                  className={`${styles.input} ${errors.username ? styles.invalid : ''}`}
+                  type="text"
+                  value={teamUsername}
+                  onChange={(e) => {
+                    setTeamUsername(e.target.value);
+                    const newErrors = {...errors};
+                    delete newErrors.username;
+                    setErrors(newErrors);
+                  }}
+                />
+                <span 
+                  className={styles.tooltipIcon} 
+                >
+                  ⓘ
+                  <span className={styles.tooltipText}>
+                    This is the username for the team account. <br></br> Username must be 4-20 characters long.
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
           </div>
 
-          <div className={styles.inputGroup}>
-            <label>Password</label>
-            <div className={styles.passwordInputWrapper}>
-              <input
+          <div className={styles.row}>
+            <div className={styles.inputGroup}>
+              <label>Password</label>
+              <div className={styles.passwordInputWrapper}>
+                <input
+                  required
+                  className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    // Clear password error when typing
+                    const newErrors = {...errors};
+                    delete newErrors.password;
+                    setErrors(newErrors);
+                  }}
+                />
+                <button
+                  type="button"
+                  className={styles.showPasswordButton}
+                  onClick={togglePasswordVisibility}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label>Confirm Password</label>
+              <div className={styles.passwordInputWrapper}>
+                <input
+                  required
+                  className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    // Clear password error when typing
+                    const newErrors = {...errors};
+                    delete newErrors.password;
+                    setErrors(newErrors);
+                  }}
+                />
+                <button
+                  type="button"
+                  className={styles.showPasswordButton}
+                  onClick={toggleConfirmPasswordVisibility}
+                  aria-label="Toggle confirm password visibility"
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.row}>
+            <div className={styles.inputGroup}>
+              <label>Preferred Division</label>
+              <select
                 required
-                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  // Clear password error when typing
-                  const newErrors = {...errors};
-                  delete newErrors.password;
-                  setErrors(newErrors);
-                }}
-              />
-              <button
-                type="button"
-                className={styles.showPasswordButton}
-                onClick={togglePasswordVisibility}
-                aria-label="Toggle password visibility"
+                className={styles.input}
+                id="preferredDivision"
+                value={preferredDivision}
+                onChange={(e) => setPreferredDivision(parseInt(e.target.value))}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
-              </button>
+                <option value="-1">None</option>
+                <option value="0">A</option>
+                <option value="1">B</option>
+                <option value="2">C</option>
+                <option value="3">D</option>
+              </select>
             </div>
-          </div>
 
-          <div className={styles.inputGroup}>
-            <label>Confirm Password</label>
-            <div className={styles.passwordInputWrapper}>
-              <input
+            <div className={styles.inputGroup}>
+              <label>Preferred Offday</label>
+              <select
                 required
-                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={confirmPassword}
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  // Clear password error when typing
-                  const newErrors = {...errors};
-                  delete newErrors.password;
-                  setErrors(newErrors);
-                }}
-              />
-              <button
-                type="button"
-                className={styles.showPasswordButton}
-                onClick={toggleConfirmPasswordVisibility}
-                aria-label="Toggle confirm password visibility"
+                className={styles.input}
+                id="preferredOffday"
+                value={preferredOffday}
+                onChange={(e) => setPreferredOffday(parseInt(e.target.value))}
               >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
-              </button>
+                <option value="-1">None</option>
+                <option value="0">Monday</option>
+                <option value="1">Tuesday</option>
+                <option value="2">Wednesday</option>
+                <option value="3">Thursday</option>
+                <option value="4">Friday</option>
+              </select>
             </div>
           </div>
 
-          <div className={styles.inputGroup}>
-            <label>Team Name</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label>Preferred Division</label>
-            <select
-              required
-              className={styles.input}
-              id="preferredDivision"
-              value={preferredDivision}
-              onChange={(e) => setPreferredDivision(parseInt(e.target.value))}
-            >
-              <option value="-1">None</option>
-              <option value="0">A</option>
-              <option value="1">B</option>
-              <option value="2">C</option>
-              <option value="3">D</option>
-            </select>
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label>Select Preferred Offday</label>
-            <select
-              required
-              className={styles.input}
-              id="preferredOffday"
-              value={preferredOffday}
-              onChange={(e) => setPreferredOffday(parseInt(e.target.value))}
-            >
-              <option value="-1">None</option>
-              <option value="0">Monday</option>
-              <option value="1">Tuesday</option>
-              <option value="2">Wednesday</option>
-              <option value="3">Thursday</option>
-              <option value="4">Friday</option>
-            </select>
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label>Select Preferred Time of Day:</label>
+          <div className={`${styles.inputGroup} ${styles.rowSingle}`}>
+            <label>Preferred Time of Day</label>
             <select
               required
               className={styles.input}
