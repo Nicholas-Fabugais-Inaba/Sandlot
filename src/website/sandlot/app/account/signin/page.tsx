@@ -19,6 +19,7 @@ export default function SignIn() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(""); // Clear any previous error message
     const result = await signIn("credentials", {
       redirect: false, // Prevent automatic redirect
       userID,
