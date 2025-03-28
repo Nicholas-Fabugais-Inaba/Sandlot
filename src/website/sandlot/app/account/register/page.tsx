@@ -33,6 +33,7 @@ export default function Register() {
   const [fieldsFilled, setFieldsFilled] = useState<number>(0);
   const [showWaiver, setShowWaiver] = useState<boolean>(false);
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
+  const [isUsernameValid, setIsUsernameValid] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,8 +45,17 @@ export default function Register() {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
+  const validateUsername = (username: string) => {
+    return /^.{4,20}$/.test(username); // Any characters, 4-20 chars
+  };  
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
+
+    if (accountType === "team" && !validateUsername(teamUsername)) {
+      setIsUsernameValid(false);
+      return; // Stop registration if invalid
+    }
 
     try {
       if (accountType === "player") {
@@ -131,7 +141,7 @@ export default function Register() {
             <label>Email:</label>
             <input
               required
-              className={styles.input}
+              className={`${styles.input} ${!isEmailValid ? styles.invalid : ''}`}
               type="email"
               value={email}
               onChange={(e) => {
@@ -183,13 +193,27 @@ export default function Register() {
         <div>
           <div className={styles.inputGroup}>
             <label>Username:</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={teamUsername}
-              onChange={(e) => setTeamUsername(e.target.value)}
-            />
+            <div className={styles.inputWithTooltip}>
+              <input
+                required
+                className={`${styles.input} ${!isUsernameValid ? styles.invalid : ''}`}
+                type="text"
+                value={teamUsername}
+                onChange={(e) => {
+                  setTeamUsername(e.target.value);
+                  setIsUsernameValid(true); // Reset error when typing
+                }}
+              />
+              <span 
+                className={styles.tooltipIcon} 
+              >
+                ⓘ
+                <span className={styles.tooltipText}>
+                  Username must be 4-20 characters long.
+                </span>
+              </span>
+            </div>
+            {!isUsernameValid && <p className={styles.error}>Invalid username format</p>}
           </div>
 
           <div className={styles.inputGroup}>
