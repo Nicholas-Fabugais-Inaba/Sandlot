@@ -84,7 +84,7 @@ def soft_constraint1(game, game_slot, schedule):
     score = 0
     for team in game:
         if teams[team]["offday"] == weekday:
-            score += 3
+            score += 10
     return score
 
 # Soft Constraint 2: Teams should avoid playing timeslots they don't prefer
@@ -97,12 +97,12 @@ def soft_constraint2(game, game_slot, schedule):
     for team in game:
         if teams[team]["pref_time"] == 1: # Early preference
             if time == 3 or time == 4:
-                score += 1
+                score += 3
         elif teams[team]["pref_time"] == 2: # Balanced preference
             continue
         elif teams[team]["pref_time"] == 3: # Late preference
             if time == 1 or time == 2:
-                score += 1
+                score += 3
     return score
 
 
@@ -132,7 +132,25 @@ def soft_constraint3(game, game_slot, schedule):
 
     print("Failed")
     # If there are other slots but none are adjacent, return a penalty score
-    return 6
+    return 50
+
+
+# Soft Constraint 4: Games should avoid being scheduled on fridays if possible
+def soft_constraint4(game, game_slot, schedule):
+    weekday: int = game_slot[2].weekday()
+    score = 0
+    if weekday == 4: # Friday
+        score = 1
+    return score
+
+
+# Soft Constraint 5: Games should avoid being scheduled at the latest timeslot if possible
+def soft_constraint5(game, game_slot, schedule):
+    time = game_slot[1]
+    score = 0
+    if time == 4: # Latest timeslot
+        score = 1
+    return score
 
 
 def find_least_played_weeks(team1, team2):
@@ -258,6 +276,8 @@ def gen_constraints():
     soft_constraints.append(soft_constraint1)
     soft_constraints.append(soft_constraint2)
     soft_constraints.append(soft_constraint3)
+    soft_constraints.append(soft_constraint4)
+    soft_constraints.append(soft_constraint5)
 
 
 def initialize_weeks_played(teams, num_weeks):
