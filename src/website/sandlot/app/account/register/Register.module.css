@@ -63,6 +63,7 @@
   margin-top: 10px;
   width: 100%;
   max-width: 300px;
+  flex:1
 }
 
 /* Input Group Gender */
@@ -147,4 +148,14 @@
 /* Optional: Add hover effect for the icon */
 .tooltipIcon:hover {
   color: #0056b3;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+}
+
+.rowGender {
+  width: 50%;
+  margin: 1rem auto;
 }

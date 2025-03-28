@@ -17,6 +17,7 @@ import registerTeam from "@/app/functions/registerTeam";
 
 export default function Register() {
   const [email, setEmail] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -74,6 +75,10 @@ export default function Register() {
   
     if (password !== confirmPassword) {
       newErrors.password = "Passwords do not match";
+    }
+
+    if (email !== confirmEmail) {
+      newErrors.email = "Emails do not match";
     }
   
     // Team-specific validations
@@ -164,114 +169,130 @@ export default function Register() {
             {errors.email && <p className={styles.errorMessage}>{errors.email}</p>}
             {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
           </div>
-          <div className={styles.inputGroup}>
-            <label>First Name:</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={firstname}
-              onChange={(e) => {
-                setFirstName(e.target.value)
-              }}
-            />
-          </div>
 
-          <div className={styles.inputGroup}>
-            <label>Last Name:</label>
-            <input
-              required
-              className={styles.input}
-              type="text"
-              value={lastname}
-              onChange={(e) => {
-                setLastName(e.target.value)
-              }}
-            />
-          </div>
-
-          {/* Email Input Section */}
-          <div className={styles.inputGroup}>
-            <label>Email:</label>
-            <input
-              required
-              className={`${styles.input} ${errors.email ? styles.invalid : ''}`}
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                // Clear the specific error when user starts typing
-                const newErrors = {...errors};
-                delete newErrors.email;
-                setErrors(newErrors);
-              }}
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label>Password:</label>
-            <div className={styles.passwordInputWrapper}>
+          {/* First Name & Last Name in One Row */}
+          <div className={styles.row}>
+            <div className={styles.inputGroup}>
+              <label>First Name</label>
               <input
                 required
-                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  // Clear password error when typing
-                  const newErrors = {...errors};
-                  delete newErrors.password;
-                  setErrors(newErrors);
-                }}
+                className={styles.input}
+                type="text"
+                value={firstname}
+                onChange={(e) => setFirstName(e.target.value)}
               />
-              <button
-                type="button"
-                className={styles.showPasswordButton}
-                onClick={togglePasswordVisibility}
-                aria-label="Toggle password visibility"
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
-              </button>
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label>Last Name</label>
+              <input
+                required
+                className={styles.input}
+                type="text"
+                value={lastname}
+                onChange={(e) => setLastName(e.target.value)}
+              />
             </div>
           </div>
 
-          <div className={styles.inputGroup}>
-            <div className={styles.passwordInputWrapper}>
+          {/* Email & Confirm Email in One Row */}
+          <div className={styles.row}>
+            <div className={styles.inputGroup}>
+              <label>Email</label>
               <input
                 required
-                className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
-                type={showConfirmPassword ? 'text' : 'password'}
-                value={confirmPassword}
+                className={`${styles.input} ${errors.email ? styles.invalid : ''}`}
+                type="email"
+                value={email}
                 onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  // Clear password error when typing
-                  const newErrors = {...errors};
-                  delete newErrors.password;
+                  setEmail(e.target.value);
+                  const newErrors = { ...errors };
+                  delete newErrors.email;
                   setErrors(newErrors);
                 }}
-                placeholder="Confirm Password"
               />
-              <button
-                type="button"
-                className={styles.showPasswordButton}
-                onClick={toggleConfirmPasswordVisibility}
-                aria-label="Toggle confirm password visibility"
-              >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
-              </button>
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label>Confirm Email</label>
+              <input
+                required
+                className={`${styles.input} ${errors.email ? styles.invalid : ''}`}
+                type="email"
+                value={confirmEmail}
+                onChange={(e) => {
+                  setConfirmEmail(e.target.value);
+                  const newErrors = { ...errors };
+                  delete newErrors.email;
+                  setErrors(newErrors);
+                }}
+              />
             </div>
           </div>
 
-          <div className={`${styles.inputGroup} ${styles.gender}`}>
-            <label htmlFor="gender">Gender:</label>
+          {/* Password & Confirm Password in One Row */}
+          <div className={styles.row}>
+            <div className={styles.inputGroup}>
+              <label>Password</label>
+              <div className={styles.passwordInputWrapper}>
+                <input
+                  required
+                  className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    const newErrors = { ...errors };
+                    delete newErrors.password;
+                    setErrors(newErrors);
+                  }}
+                />
+                <button
+                  type="button"
+                  className={styles.showPasswordButton}
+                  onClick={togglePasswordVisibility}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label>Confirm Password</label>
+              <div className={styles.passwordInputWrapper}>
+                <input
+                  required
+                  className={`${styles.input} ${errors.password ? styles.invalid : ''}`}
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    const newErrors = { ...errors };
+                    delete newErrors.password;
+                    setErrors(newErrors);
+                  }}
+                />
+                <button
+                  type="button"
+                  className={styles.showPasswordButton}
+                  onClick={toggleConfirmPasswordVisibility}
+                  aria-label="Toggle confirm password visibility"
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className={`${styles.inputGroup} ${styles.gender} ${styles.rowGender}`}>
+            <label htmlFor="gender">Gender</label>
             <select
               required
               className={styles.input}
               id="gender"
               value={gender}
-              onChange={(e) => {
-                setGender(e.target.value)
-              }}
+              onChange={(e) => setGender(e.target.value)}
             >
               <option value="">Select gender</option>
               <option value="male">Male</option>
@@ -280,6 +301,7 @@ export default function Register() {
             </select>
           </div>
         </div>
+
       );
     } else if (accountType === "player" && showWaiver) {
       return (
@@ -293,7 +315,7 @@ export default function Register() {
             {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
           </div>
           <div className={styles.inputGroup}>
-            <label>Username:</label>
+            <label>Username</label>
             <div className={styles.inputWithTooltip}>
               <input
                 required
@@ -319,7 +341,7 @@ export default function Register() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Password:</label>
+            <label>Password</label>
             <div className={styles.passwordInputWrapper}>
               <input
                 required
@@ -346,6 +368,7 @@ export default function Register() {
           </div>
 
           <div className={styles.inputGroup}>
+            <label>Confirm Password</label>
             <div className={styles.passwordInputWrapper}>
               <input
                 required
@@ -359,7 +382,6 @@ export default function Register() {
                   delete newErrors.password;
                   setErrors(newErrors);
                 }}
-                placeholder="Confirm Password"
               />
               <button
                 type="button"
@@ -373,7 +395,7 @@ export default function Register() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Team Name:</label>
+            <label>Team Name</label>
             <input
               required
               className={styles.input}
@@ -384,7 +406,7 @@ export default function Register() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Preferred Division:</label>
+            <label>Preferred Division</label>
             <select
               required
               className={styles.input}
@@ -401,7 +423,7 @@ export default function Register() {
           </div>
 
           <div className={styles.inputGroup}>
-            <label>Select Preferred Offday:</label>
+            <label>Select Preferred Offday</label>
             <select
               required
               className={styles.input}
@@ -452,7 +474,7 @@ export default function Register() {
           {accountType === null ? (
             <div className="form">
               <h1 className="text-xl font-semibold text-center mt-8">
-                Choose an Account Type:
+                Choose an Account Type
               </h1>
               <div className="flex space-x-4 mt-4">
                 <Button
