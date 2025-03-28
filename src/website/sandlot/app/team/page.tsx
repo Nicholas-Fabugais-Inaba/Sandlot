@@ -310,7 +310,7 @@ export default function TeamPage() {
                         <TableCell className="w-[220px]">
                           {player.captain ? (
                             <Button
-                              className="w-25 min-w-[160px] h-8 text-sm square-full bg-[#F4F4F5] text-black dark:bg-[#27272A] dark:text-gray-200 hover:bg-[#E4E4E7] dark:hover:bg-[#3F3F46] transition"
+                              className="w-25 min-w-[160px] h-8 text-sm square-full bg-[#eaeaec] text-black dark:bg-[#27272A] dark:text-gray-200 hover:bg-[#f0f0f3] dark:hover:bg-[#3F3F46] transition"
                               disabled={actionLoading}
                               onPress={() => changeCaptainStatus(player.player_id, false)}
                             >
@@ -318,7 +318,7 @@ export default function TeamPage() {
                             </Button>
                           ) : (
                             <Button
-                              className="w-25 h-8 text-sm square-full bg-[#F4F4F5] text-black dark:bg-[#27272A] dark:text-gray-200 hover:bg-[#E4E4E7] dark:hover:bg-[#3F3F46] transition"
+                              className="w-25 h-8 text-sm square-full bg-[#EaEaEc] text-black dark:bg-[#27272A] dark:text-gray-200 hover:bg-[#F0F0F3] dark:hover:bg-[#3F3F46] transition"
                               disabled={actionLoading}
                               onPress={() => changeCaptainStatus(player.player_id,true)}
                             >
