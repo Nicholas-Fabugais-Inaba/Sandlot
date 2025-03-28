@@ -371,7 +371,7 @@ async def test_get_team_RRs():
     global RRid 
     RRid = response[0]['id']
     RR = [
-        {'id': RRid, 'game_id': 19, 'option1': 'this is a test RR', 'option1_field': '1', 'option2': None, 'option2_field': None, 'option3': None, 'option3_field': None, 'option4': None, 'option4_field': None, 'option5': None, 'option5_field': None, 'requester_id': 1, 'requester_team_name': 'Tigers', 'reciever_id': 2, 'reciever_team_name': 'Cardinals', 'date': '2025-07-02', 'time': '3', 'field': '3'}
+        {'id': RRid, 'game_id': 19, 'option1': 'this is a test RR', 'option1_field': '1', 'option2': None, 'option2_field': None, 'option3': None, 'option3_field': None, 'option4': None, 'option4_field': None, 'option5': None, 'option5_field': None, 'requester_id': 1, 'requester_team_name': 'Tigers', 'receiver_id': 2, 'receiver_team_name': 'Cardinals', 'date': '2025-07-02', 'time': '3', 'field': '3'}
     ]
     assert(response == RR)
 

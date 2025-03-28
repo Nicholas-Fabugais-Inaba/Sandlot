@@ -11,9 +11,9 @@ export default async function getRR(team_id: any): Promise<any> {
 
   for (let i = 0; i < response.data.length; i++) {
     console.log(response.data[i]);
-    // console.log(response.data[i].reciever_id)
+    // console.log(response.data[i].receiver_id)
     // console.log(team_id)
-    if (response.data[i].reciever_id == team_id.team_id) {
+    if (response.data[i].receiver_id == team_id.team_id) {
       let proposedDates = [];
 
       if (response.data[i].option1 != "") {
@@ -70,9 +70,9 @@ export default async function getRR(team_id: any): Promise<any> {
         originalField: response.data[i].field,
         proposedDates: proposedDates,
         proposedFields: proposedFields,
-        reciever_name: response.data[i].reciever_team_name,
+        receiver_name: response.data[i].receiver_team_name,
         requester_name: response.data[i].requester_team_name,
-        reciever_id: response.data[i].reciever_id,
+        receiver_id: response.data[i].receiver_id,
         requester_id: response.data[i].requester_id,
       });
     }

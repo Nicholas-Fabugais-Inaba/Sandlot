@@ -23,9 +23,9 @@ interface RescheduleRequest {
   originalField: string;
   proposedDates: Date[];
   proposedFields: string[];
-  reciever_name: string;
+  receiver_name: string;
   requester_name: string;
-  reciever_id: number;
+  receiver_id: number;
   requester_id: number;
 }
 
@@ -43,7 +43,7 @@ export default function ManageRescheduleRequest() {
     action: string;
     originalDate: Date;
     originalField: string;
-    reciever_name?: string;
+    receiver_name?: string;
     requester_name?: string;
     newDate?: string;
   } | null>(null);
@@ -84,7 +84,7 @@ export default function ManageRescheduleRequest() {
         action: "accept",
         originalDate: request.originalDate,
         originalField: request.originalField,
-        reciever_name: request.reciever_name,
+        receiver_name: request.receiver_name,
         requester_name: request.requester_name,
         newDate: selectedDate,
       });
@@ -103,7 +103,7 @@ export default function ManageRescheduleRequest() {
         action: "deny",
         originalDate: request.originalDate,
         originalField: request.originalField,
-        reciever_name: request.reciever_name,
+        receiver_name: request.receiver_name,
         requester_name: request.requester_name,
       });
       setModalVisible(true);
@@ -126,7 +126,7 @@ export default function ManageRescheduleRequest() {
           acceptRR({
             rr_id: parseInt(request.id, 10),
             old_game_id: request.game_id,
-            home_team_id: request.reciever_id,
+            home_team_id: request.receiver_id,
             away_team_id: request.requester_id,
             date: formattedDate,
             time: timeslot,
@@ -191,7 +191,7 @@ export default function ManageRescheduleRequest() {
                   Game Requested for Rescheduling
                 </h2>
                 <p>
-                  {request.reciever_name} vs. {request.requester_name}
+                  {request.receiver_name} vs. {request.requester_name}
                 </p>
               </div>
               <div className="mb-4">
@@ -267,7 +267,7 @@ export default function ManageRescheduleRequest() {
               request?
             </p>
             <p>
-              Original Game: {modalContent?.reciever_name} vs.{" "}
+              Original Game: {modalContent?.receiver_name} vs.{" "}
               {modalContent?.requester_name}
             </p>
             <p>
