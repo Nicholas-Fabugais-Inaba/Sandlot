@@ -203,3 +203,6 @@ class CaptainStatus(BaseModel):
     team_id: int
     player_id: int
     captain: bool
+
+class Year(BaseModel):
+    year: str
