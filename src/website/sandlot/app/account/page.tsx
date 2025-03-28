@@ -40,18 +40,27 @@ export default function AccountPage() {
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
-      if (session && session.user.role === "player") {
-        const activeTeamData = await getPlayerActiveTeam(session.user.id)
-        setTeamName(activeTeamData.team_name)
-      } else if (session && session.user.role === "team") {
-        setTeamName(session.user.teamName)
+      if (session) {
+        if (session.user.role === "player") {
+          try {
+            const activeTeamData = await getPlayerActiveTeam(session.user.id);
+            setTeamName(activeTeamData.team_name);
+          } catch (error) {
+            // Handle any error from getPlayerActiveTeam gracefully
+            console.error("Error fetching player active team:", error);
+            setTeamName("No team assigned");
+          }
+        } else if (session.user.role === "team") {
+          setTeamName(session.user.teamName);
+        }
+        setSession(session);
       }
-      setSession(session);
-      setLoading(false);
+  
+      setLoading(false); // Set loading to false once session is fetched
     };
-
+  
     fetchSession();
-  }, []);
+  }, []);  
 
   const handleChangeName = () => {
     setModalTitle("Change Name");

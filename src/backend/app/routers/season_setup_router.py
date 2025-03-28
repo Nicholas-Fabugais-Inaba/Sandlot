@@ -28,7 +28,7 @@ async def create_schedule(schedule: dict):
 @router.get("/get_season_state", response_model=dict)
 async def get_season_state_route():
     state = get_season_state()
-    return {"state": state}
+    return state
 
 @router.post("/create_season_preset", response_model=dict)
 async def create_season_preset(settings: SeasonPreset):

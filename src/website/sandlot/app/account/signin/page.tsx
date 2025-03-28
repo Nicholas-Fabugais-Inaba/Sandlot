@@ -8,17 +8,24 @@ import { useRouter } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
 
 import styles from "./SignIn.module.css";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { title } from "@/components/primitives";
 
 export default function SignIn() {
   const [userID, setUserID] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState); // Toggle the visibility state
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(""); // Clear any previous error message
     const result = await signIn("credentials", {
       redirect: false, // Prevent automatic redirect
       userID,
@@ -52,13 +59,23 @@ export default function SignIn() {
             </div>
             <div className={styles.inputGroup}>
               <label>Password:</label>
-              <input
-                required
-                className={styles.input}
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className={styles.passwordInputWrapper}>
+                <input
+                  required
+                  className={styles.input}
+                  type={showPassword ? 'text' : 'password'} // Toggle between text and password
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className={styles.showPasswordButton}
+                  onClick={togglePasswordVisibility}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />} {/* Change icon based on visibility */}
+                </button>
+              </div>
             </div>
             <div className="flex space-x-4 justify-center">
               <Button className="button" type="submit">
@@ -72,7 +89,7 @@ export default function SignIn() {
               className="button"
               onPress={() => router.push("/account/register")}
             >
-              Create an Account
+              Register
             </Button>
           </div>
           <div className="flex justify-center mt-4">

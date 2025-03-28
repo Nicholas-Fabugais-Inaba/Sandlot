@@ -15,7 +15,7 @@ import NextLink from "next/link";
 import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
 import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
@@ -120,7 +120,8 @@ export const Navbar = () => {
       maxWidth="xl"
       position="sticky"
       onMenuOpenChange={setIsMenuOpen}
-    >
+      className="border-b-[1px] border-b-[#F3F4F6] dark:border-b-[#3C3C3C] bg-white dark:bg-[#0d0d0d] shadow-md"
+      >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
@@ -191,6 +192,16 @@ export const Navbar = () => {
         className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
+        {session && (
+          <NavbarItem>
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="w-20 h-10 text-sm rounded-lg bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+            >
+              Sign Out
+            </button>
+          </NavbarItem>
+        )}
         {session?.user.role === "player" && (
           <NavbarItem className="flex gap-2">
             <DropdownMenu>

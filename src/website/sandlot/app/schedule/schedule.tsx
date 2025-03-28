@@ -87,6 +87,10 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
   const [rescheduleGame, setRescheduleGame] = useState<RescheduleGame>();
   const [gameScore, setGameScore] = useState<GameScore>();
+  const [homeTeamForfeit, setHomeTeamForfeit] = useState(false);
+  const [awayTeamForfeit, setAwayTeamForfeit] = useState(false);
+  const [showNoticeCheckbox, setShowNoticeCheckbox] = useState(false);
+  const [noticeChecked, setNoticeChecked] = useState(false);
   const [submitScoreVisible, setSubmitScoreVisible] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
@@ -287,33 +291,63 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const handleSubmitScoreClick = () => {
     setSubmitScoreVisible(true);
     setPopupVisible(false);
+  
+    // Reset forfeit states and notice checkbox
+    setHomeTeamForfeit(false);
+    setAwayTeamForfeit(false);
+    setShowNoticeCheckbox(false);
+    setNoticeChecked(false);
   };
-
+  
+  
   const handleScoreSubmit = async () => {
     if (gameScore) {
-      submitScore({
+      // Determine forfeit status
+      let forfeitStatus = 0;
+      let homeScore = gameScore.home_score;
+      let awayScore = gameScore.away_score;
+  
+      if (homeTeamForfeit) {
+        forfeitStatus = 1;
+        homeScore = noticeChecked ? 1 : 0;
+        awayScore = 9; // 9-1 if notice checked, otherwise 9-0
+      } else if (awayTeamForfeit) {
+        forfeitStatus = 2;
+        homeScore = 9; // 9-1 if notice checked, otherwise 9-0
+        awayScore = noticeChecked ? 1 : 0;
+      }      
+  
+      // Prepare submission data
+      const submissionData = {
         game_id: gameScore.game_id,
-        home_score: gameScore.home_score,
-        away_score: gameScore.away_score,
-        forfeit: gameScore.forfeit,
-      });
-
-      // Fetch event data to reflect the changes
-      if (userRole === "team") {
-        if (teamId && view === "dayGridMonth") {
-          const updatedEvents = await getTeamSchedule(teamId);
-          setEvents(updatedEvents);
+        home_score: homeScore,
+        away_score: awayScore,
+        forfeit: forfeitStatus
+      };
+  
+      try {
+        await submitScore(submissionData);
+  
+        // Fetch event data to reflect the changes
+        let updatedEvents;
+        if (userRole === "team") {
+          if (teamId && view === "dayGridMonth") {
+            updatedEvents = await getTeamSchedule(teamId);
+          } else {
+            updatedEvents = await getSchedule();
+          }
         } else {
-          const updatedEvents = await getSchedule();
-          setEvents(updatedEvents);
+          updatedEvents = await getSchedule();
         }
-      } else {
-        const updatedEvents = await getSchedule();
+  
         setEvents(updatedEvents);
+        setSubmitScoreVisible(false);
+      } catch (error) {
+        console.error("Error submitting score:", error);
+        // Optionally, show an error message to the user
       }
     }
-    setSubmitScoreVisible(false);
-  };
+  };  
 
   const handleScoreCancel = () => {
     setSubmitScoreVisible(false);
@@ -1207,57 +1241,140 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       )}
       {submitScoreVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800">
+          <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-gray-800 w-96">
             <h2 className="text-xl font-semibold mb-4">Submit Score</h2>
+
+            {/* Home Team Section */}
             <div className="mb-4">
-              <label className="block">
-                Home Team: {gameScore?.home_name}
-              </label>
-              <input
-                className="w-full px-4 py-2 border rounded-lg"
-                type="number"
-                value={
-                  gameScore?.home_score !== null ? gameScore?.home_score : ""
-                }
-                onChange={(e) => {
-                  if (gameScore) {
-                    setGameScore({
-                      ...gameScore,
-                      home_score: Number(e.target.value),
-                    });
-                  }
-                }}
+              <div className="flex items-center justify-between">
+                <label className="block">Home Team: {gameScore?.home_name}</label>
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2" 
+                    checked={homeTeamForfeit} 
+                    disabled={awayTeamForfeit} // Disable if the away team has forfeited
+                    onChange={() => { 
+                      if (!homeTeamForfeit) {
+                        setHomeTeamForfeit(true);
+                        setAwayTeamForfeit(false);
+                        setShowNoticeCheckbox(true);
+                        setGameScore(prevScore => prevScore 
+                          ? { ...prevScore, home_score: noticeChecked ? 1 : 0, away_score: 9 } 
+                          : undefined
+                        );
+                      } else {
+                        setHomeTeamForfeit(false);
+                        setShowNoticeCheckbox(false);
+                        setNoticeChecked(false);
+                        setGameScore(prevScore => prevScore 
+                          ? { ...prevScore, home_score: 0, away_score: 0 } 
+                          : undefined
+                        );
+                      }
+                    }} 
+                  />
+                  <span>Forfeit</span>
+                </div>
+              </div>
+              <input 
+                className="w-full px-4 py-2 border rounded-lg" 
+                type="number" 
+                min="0"
+                disabled={homeTeamForfeit || awayTeamForfeit} // Disable when any team forfeits
+                value={gameScore?.home_score !== null ? gameScore?.home_score : ""} 
+                onChange={(e) => { 
+                  if (gameScore) { 
+                    setGameScore({ 
+                      ...gameScore, 
+                      home_score: Number(e.target.value) 
+                    }); 
+                  } 
+                }} 
               />
             </div>
+
+            {/* Away Team Section */}
             <div className="mb-4">
-              <label className="block">
-                Away Team: {gameScore?.away_name}
-              </label>
-              <input
-                className="w-full px-4 py-2 border rounded-lg"
-                type="number"
-                value={
-                  gameScore?.away_score !== null ? gameScore?.away_score : ""
-                }
-                onChange={(e) => {
-                  if (gameScore) {
-                    setGameScore({
-                      ...gameScore,
-                      away_score: Number(e.target.value),
-                    });
-                  }
-                }}
+              <div className="flex items-center justify-between">
+                <label className="block">Away Team: {gameScore?.away_name}</label>
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox" 
+                    className="mr-2" 
+                    checked={awayTeamForfeit} 
+                    disabled={homeTeamForfeit} // Disable if the home team has forfeited
+                    onChange={() => { 
+                      if (!awayTeamForfeit) {
+                        setAwayTeamForfeit(true);
+                        setHomeTeamForfeit(false);
+                        setShowNoticeCheckbox(true);
+                        setGameScore(prevScore => prevScore 
+                          ? { ...prevScore, away_score: noticeChecked ? 1 : 0, home_score: 9 } 
+                          : undefined
+                        );
+                      } else {
+                        setAwayTeamForfeit(false);
+                        setShowNoticeCheckbox(false);
+                        setNoticeChecked(false);
+                        setGameScore(prevScore => prevScore 
+                          ? { ...prevScore, home_score: 0, away_score: 0 } 
+                          : undefined
+                        );
+                      }
+                    }} 
+                  />
+                  <span>Forfeit</span>
+                </div>
+              </div>
+              <input 
+                className="w-full px-4 py-2 border rounded-lg" 
+                type="number" 
+                min="0"
+                disabled={homeTeamForfeit || awayTeamForfeit} // Disable when any team forfeits
+                value={gameScore?.away_score !== null ? gameScore?.away_score : ""} 
+                onChange={(e) => { 
+                  if (gameScore) { 
+                    setGameScore({ 
+                      ...gameScore, 
+                      away_score: Number(e.target.value) 
+                    }); 
+                  } 
+                }} 
               />
             </div>
+
+            {/* Notice Checkbox - Only Appears if Forfeit is Selected */}
+            {showNoticeCheckbox && (
+              <div className="mb-4 flex items-center">
+                <input 
+                  type="checkbox" 
+                  className="mr-2" 
+                  checked={noticeChecked} 
+                  onChange={() => {
+                    setNoticeChecked(!noticeChecked);
+                    setGameScore(prevScore => {
+                      if (!prevScore) return prevScore;
+                      return homeTeamForfeit
+                        ? { ...prevScore, home_score: noticeChecked ? 0 : 1, away_score: 9 }
+                        : { ...prevScore, away_score: noticeChecked ? 0 : 1, home_score: 9 };
+                    });
+                  }} 
+                />
+                <span>Notice</span>
+              </div>
+            )}
+
+            {/* Submit and Cancel Buttons */}
             <div className="flex justify-end space-x-4">
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+              <button 
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg" 
                 onClick={handleScoreSubmit}
               >
                 Submit
               </button>
-              <button
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg"
+              <button 
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg" 
                 onClick={handleScoreCancel}
               >
                 Cancel
