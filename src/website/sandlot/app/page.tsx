@@ -38,6 +38,7 @@ interface DirectoryItem {
   id: number;
   title: string;
   link?: string;
+  body: string; 
   onClick?: () => void;
 }
 
@@ -59,6 +60,7 @@ export default function Home() {
   // const [directoryItems, setDirectoryItems] = useState<DirectoryItem[]>([]);
   // const [editingDirectoryIndex, setEditingDirectoryIndex] = useState<number | null>(null);
   // const [editDirectoryTitle, setEditDirectoryTitle] = useState("");
+  // const [editDirectoryBody, setEditDirectoryBody] = useState("");
   // const [editDirectoryLink, setEditDirectoryLink] = useState("");
 
   // Page title state
@@ -133,6 +135,7 @@ export default function Home() {
   //     setEditingDirectoryIndex(index);
   //     setEditDirectoryTitle(directoryItems[index].title);
   //     setEditDirectoryLink(directoryItems[index].link || "");
+  //     setEditDirectoryBody(directoryItems[index].body || "");
   //     setUnsavedChanges(true);
   //     setUnsavedSection("directory");
   //   }
@@ -144,7 +147,8 @@ export default function Home() {
   //     updatedItems[index] = {
   //       ...updatedItems[index],
   //       title: editDirectoryTitle,
-  //       link: editDirectoryLink
+  //       link: editDirectoryLink,
+  //       body: editDirectoryBody,
   //     };
 
   //     // Call update function
@@ -165,6 +169,7 @@ export default function Home() {
   //         1,
   //       title: "New Directory Item",
   //       link: ""
+  //       body: ""
   //     };
 
   //     // Call create function
@@ -539,6 +544,13 @@ export default function Home() {
                       placeholder="Link (optional)"
                       value={editDirectoryLink}
                       onChange={(e) => setEditDirectoryLink(e.target.value)}
+                    />
+                    <textarea 
+                      className="border rounded px-2 py-1"
+                      placeholder="Body content"
+                      value={editDirectoryBody}
+                      onChange={(e) => setEditDirectoryBody(e.target.value)}
+                      rows={4}
                     />
                     <button 
                       className="bg-green-500 text-white px-2 py-1 rounded"
