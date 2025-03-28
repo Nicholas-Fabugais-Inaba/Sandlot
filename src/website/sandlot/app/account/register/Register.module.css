@@ -77,12 +77,17 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: 100%;
 }
 
 .passwordInputWrapper {
   position: relative;
   display: flex;
   align-items: center;
+}
+
+.passwordInputWrapper .input {
+  padding-right: 40px; /* Space for the show/hide password button */
 }
 
 .showPasswordButton {

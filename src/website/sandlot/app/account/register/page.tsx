@@ -58,7 +58,7 @@ export default function Register() {
   };
 
   const validateEmail = (email: string) => {
-    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/.test(email);  };
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);  };
 
   const validateUsername = (username: string) => {
     return /^.{4,20}$/.test(username); // Any characters, 4-20 chars
