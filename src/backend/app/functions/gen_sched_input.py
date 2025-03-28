@@ -276,7 +276,7 @@ def analyze_timeslots(timeslots: dict):
     field_counts = {}  # Dictionary to store the count of timeslots per field
     max_timeslots = 0  # Variable to track the maximum number of timeslots for any field
 
-    for timeslot_id, timeslot_data in timeslots.items():
+    for timeslot_data in timeslots:
         field_id = timeslot_data["field_id"]
 
         # Increment the count for the field
