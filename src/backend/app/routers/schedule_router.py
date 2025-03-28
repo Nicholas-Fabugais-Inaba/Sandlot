@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from .types import RescheduleRequest, TeamID, RRAccept, SchedParams, ScoreData
 from ..db.queries.game_queries import get_all_games, get_team_games, update_game, delete_all_games, get_score, update_score
 from ..db.queries.reschedule_request_queries import insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, delete_all_reschedule_requests
+from ..db.queries.timeslot_queries import get_all_timeslots
 from ..functions.gen_sched_input import gen_schedule_repeated
 from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams, CommissionerReschedule
 
@@ -64,3 +65,9 @@ async def submit_game_score(data: ScoreData):
 async def commissioner_reschedule_route(data: CommissionerReschedule):
     update_game(data.game_id, data.date, data.time, data.field)
     return True
+
+@router.get("/get_all_timeslots", response_model=list)
+async def get_all_timeslots_route():
+    timeslots = get_all_timeslots()
+    timeslots = [dict(row) for row in timeslots]  # Convert rows to dictionaries
+    return timeslots
