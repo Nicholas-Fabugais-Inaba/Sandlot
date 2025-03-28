@@ -32,8 +32,6 @@ async def get_standings_data():
             "division": team["division_name"]
         }
 
-        print("TEAMS IS: ", teams)
-
     for game in games:
         # checking if game has been played and scored
         if game['played'] == True:
