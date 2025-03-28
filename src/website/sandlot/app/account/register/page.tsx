@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
@@ -32,8 +32,17 @@ export default function Register() {
   
   const [fieldsFilled, setFieldsFilled] = useState<number>(0);
   const [showWaiver, setShowWaiver] = useState<boolean>(false);
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
   const router = useRouter();
 
+  useEffect(() => {
+    const filledCount = [firstname, lastname, email, password, gender].filter(Boolean).length;
+    setFieldsFilled(filledCount);
+  }, [firstname, lastname, email, password, gender]);
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
@@ -101,7 +110,6 @@ export default function Register() {
               value={firstname}
               onChange={(e) => {
                 setFirstName(e.target.value)
-                setFieldsFilled(fieldsFilled + 1)
               }}
             />
           </div>
@@ -115,7 +123,6 @@ export default function Register() {
               value={lastname}
               onChange={(e) => {
                 setLastName(e.target.value)
-                setFieldsFilled(fieldsFilled + 1)
               }}
             />
           </div>
@@ -128,10 +135,11 @@ export default function Register() {
               type="email"
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value)
-                setFieldsFilled(fieldsFilled + 1)
+                setEmail(e.target.value);
+                setIsEmailValid(true); // Reset error when typing
               }}
             />
+            {!isEmailValid && <p className={styles.error}>Invalid email format</p>}
           </div>
 
           <div className={styles.inputGroup}>
@@ -143,7 +151,6 @@ export default function Register() {
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value)
-                setFieldsFilled(fieldsFilled + 1)
               }}
             />
           </div>
@@ -157,7 +164,6 @@ export default function Register() {
               value={gender}
               onChange={(e) => {
                 setGender(e.target.value)
-                setFieldsFilled(fieldsFilled + 1)
               }}
             >
               <option value="">Select gender</option>
@@ -312,7 +318,18 @@ export default function Register() {
                     Register
                   </Button>
                 ) : (
-                  <Button className="button" isDisabled={fieldsFilled < 5} onPress={() => setShowWaiver(true)}>
+                  <Button
+                    className="button"
+                    isDisabled={fieldsFilled < 5}
+                    onPress={() => {
+                      if (!validateEmail(email)) {
+                        setIsEmailValid(false); // Show error only when pressing "Next"
+                      } else {
+                        setIsEmailValid(true);
+                        setShowWaiver(true); // Proceed if email is valid
+                      }
+                    }}
+                  >
                     Next
                   </Button>
                 )}
