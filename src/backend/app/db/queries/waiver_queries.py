@@ -46,7 +46,7 @@ def get_player_waivers(player_id):
                 Waiver.id,
                 Waiver.player_id,
                 Waiver.signature,
-                Waiver.date
+                # Waiver.date
             )
             .where(Waiver.player_id == player_id)
         )
@@ -63,10 +63,24 @@ def get_all_waivers():
                 Player.first_name,
                 Player.last_name,
                 Waiver.signature,
-                Waiver.date
+                # Waiver.date
             )
             .select_from(Waiver)
             .join(Player, Waiver.player_id == Player.id)
         )
         result = session.execute(stmt).mappings().all()
         return result
+    
+def get_waiver_format_by_year(year):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (select(
+            WaiverFormat.year,
+            WaiverFormat.index,
+            WaiverFormat.text
+        )
+        .select_from(WaiverFormat)
+        .where(year == WaiverFormat.year)
+        )
+    result = session.execute(stmt).mappings().all()
+    return result
