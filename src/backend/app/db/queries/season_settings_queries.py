@@ -88,6 +88,6 @@ def get_season_state():
     engine = create_connection()
     with Session(engine) as session:
         stmt = select(SeasonSettings.state).where(SeasonSettings.id == 1)
-        result = session.execute(stmt).scalar_one_or_none()
+        result = session.execute(stmt).mappings().first()
         return result
 

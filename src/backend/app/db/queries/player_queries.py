@@ -50,7 +50,7 @@ def get_player_active_team(player_id):
         if result:
             team_id, team_name = result
             return {"team_id": team_id, "team_name": team_name}
-        return None
+        return {"team_id": 0, "team_name": ""}
 
 def update_player_active_team(player_id, team_id):
     engine = create_connection()
