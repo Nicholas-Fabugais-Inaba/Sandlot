@@ -33,8 +33,8 @@ export default function SeasonSetupPage() {
   useEffect(() => {
     const fetchSeasonState = async () => {
       const state = await getSeasonState();
-      console.log(state)
-      setSeasonState(state.state);
+      console.log("Season State is", state)
+      setSeasonState(state);
       setLoading(false);
     };
 

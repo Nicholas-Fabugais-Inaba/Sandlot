@@ -98,6 +98,7 @@ async def update_team_division(data: DivisionData):
 
 @router.put("/update_team_divisions", response_model=None)
 async def update_team_divisions(data: list[DivisionData]):
+    print(data)
     for division_data in data:
         update_division(division_data.team_id, division_data.division)
     return True
