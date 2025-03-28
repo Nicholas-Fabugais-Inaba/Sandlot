@@ -70,14 +70,16 @@ def delete_and_regenerate_fields_and_timeslots(fields: list[InputFieldData], tim
     timeslot_db_id = 0
     if fields:
         for field in fields:
-            # Insert a timeslot for each field it applies to
-            if isinstance(field.timeslotIds, list):
-                for timeslot_id in field.timeslotIds:
-                    # Search timeslots for the matching field_id
-                    matching_timeslot = next((ts for ts in timeslots if ts.id == timeslot_id), None)
-                    if matching_timeslot:
-                        timeslot_db_id += 1
-                        insert_timeslot(matching_timeslot.startTime, matching_timeslot.endTime, field.id, timeslot_db_id)
+            # Filter and sort timeslots for the current field by ascending startTime
+            field_timeslots = [
+                ts for ts in timeslots if ts.id in field.timeslotIds
+            ]
+            field_timeslots.sort(key=lambda ts: ts.startTime)
+
+            # Insert sorted timeslots for the field
+            for timeslot in field_timeslots:
+                timeslot_db_id += 1
+                insert_timeslot(timeslot.startTime, timeslot.endTime, field.id, timeslot_db_id)
 
 @router.put("/change_season_state", response_model=None)
 async def change_season_state(season_state: SeasonState):
