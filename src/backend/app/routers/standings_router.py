@@ -29,25 +29,9 @@ async def get_standings_data():
             "ties": 0, 
             "forfeits": 0, 
             "differential": 0, 
-            "division": get_division_name_by_division_id(team["division"])["division_name"]
-            # "division": get_division_name_by_team_id(team["id"])["division_name"] # simply an alternate way; not needed
+            "division": team["division_name"]
         }
 
-    # for team in teams_data:            
-    #     teams[team['id']] = {
-    #         "name": team["team_name"], 
-    #         "wins": 0, 
-    #         "losses": 0, 
-    #         "ties": 0, 
-    #         "forfeits": 0, 
-    #         "differential": 0, 
-            
-    #         # "division": get_division_name_by_team_id(team["id"])["division_name"] # simply an alternate way; not needed
-    #     }
-    #     if team["division"] < 0:
-    #         teams[team['id']]['division'] = None
-    #     else:
-    #         teams[team['id']]['division'] = get_division_name_by_division_id(team["division"])["division_name"]
         print("TEAMS IS: ", teams)
 
     for game in games:

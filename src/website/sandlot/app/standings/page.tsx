@@ -42,12 +42,13 @@ export default function StandingsPage() {
 
   useEffect(() => {
     const fetchStandings = async () => {
-
-      setSeasonState( await getSeasonState());      
+      let response = await getSeasonState();
+      setSeasonState(response);
       try {
         setIsLoading(true); // Set loading to true before fetching
-        if (seasonState === "season") {
+        if (response === "season") {
           const standings = await getStandings();
+          console.log("STANDINGS", standings);
           setTeams(standings);
         }
         setIsLoading(false); // Set loading to false after fetching
@@ -57,6 +58,7 @@ export default function StandingsPage() {
       }
     };
 
+    console.log("Entering initial useeffect");
     fetchStandings();
   }, []);
 
