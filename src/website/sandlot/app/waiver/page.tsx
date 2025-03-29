@@ -157,6 +157,13 @@ export default function WaiverManagementPage() {
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
     try {
+      if(waiverFormat) {
+        let waiverCopy = [...waiverFormat]
+        for(let i = 0; i < waiverFormat.length; i++) {
+          waiverCopy[i].text = encodeURI(waiverCopy[i].text)
+        }
+        setWaiverFormat(waiverCopy)
+      }
       await deleteWaiverFormatByYear(new Date().getFullYear())
       setTimeout(async() => {
         await createWaiverFormat(waiverFormat)
