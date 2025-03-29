@@ -23,6 +23,7 @@ import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 import deleteWaiverFormatByYear from "@/app/functions/deleteWaiverFormat";
 import createWaiverFormat from "@/app/functions/createWaiverFormat";
+import updateDivision from "../functions/updateTeamDivision";
 
 // Typescript interfaces for type safety
 interface WaiverSection {
@@ -57,7 +58,7 @@ interface Team {
 }
 
 interface WaiverFormat {
-  id?: string;
+  id: string;
   year: string;
   index: number;
   text: string;
@@ -65,19 +66,19 @@ interface WaiverFormat {
 
 export default function WaiverManagementPage() {
   // State for waiver configuration
-  const [waiverConfig, setWaiverConfig] = useState<WaiverConfig>({
-    isEnabled: false,
-    title: "GSA Softball Player Waiver",
-    description: "Player participation waiver for the summer softball league.",
-    sections: [
-      {
-        id: 'risk-acknowledgement',
-        text: "The risk of injury from the activities involved in this program is significant, including the potential for permanent paralysis and death.",
-        requireInitials: true
-      }
-    ],
-    requiredSignatures: ['Full Name', 'Parent/Guardian (if under 18)']
-  });
+  // const [waiverConfig, setWaiverConfig] = useState<WaiverConfig>({
+  //   isEnabled: false,
+  //   title: "GSA Softball Player Waiver",
+  //   description: "Player participation waiver for the summer softball league.",
+  //   sections: [
+  //     {
+  //       id: 'risk-acknowledgement',
+  //       text: "The risk of injury from the activities involved in this program is significant, including the potential for permanent paralysis and death.",
+  //       requireInitials: true
+  //     }
+  //   ],
+  //   requiredSignatures: ['Full Name', 'Parent/Guardian (if under 18)']
+  // });
 
   // State for signed waivers and teams
   const [signedWaivers, setSignedWaivers] = useState<SignedWaiver[]>([]);
@@ -85,14 +86,14 @@ export default function WaiverManagementPage() {
   const [selectedTeam, setSelectedTeam] = useState("All Teams");
 
   // State for editing sections
-  const [editingSection, setEditingSection] = useState<WaiverSection | null>(null);
+  const [editingSection, setEditingSection] = useState<WaiverFormat | null>(null);
 
   // State for form inputs for signing waiver
   const [playerName, setPlayerName] = useState("");
   const [playerTeam, setPlayerTeam] = useState("");
 
   const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[] | null>(null)
-  const [tempSection, setTempSection] = useState<WaiverSection | null>(null);
+  const [tempSection, setTempSection] = useState<WaiverFormat | null>(null);
 
   // const [selectedYear, setSelectedYear] = useState<string>("")
 
@@ -157,42 +158,51 @@ export default function WaiverManagementPage() {
 
   // Function to add a new waiver section
   const addWaiverSection = () => {
-    const newSection: WaiverSection = {
-      id: `section-${Date.now()}`,
-      text: "New waiver requirement",
-      requireInitials: true
+    if(waiverFormat) {
+      const newSection: WaiverFormat = {
+        id: `section-${Date.now()}`,
+        year: waiverFormat[0].year,
+        index: waiverFormat[0].index,
+        text: "New waiver requirement",
+      };
+      setTempSection(newSection);
+      setEditingSection(newSection);
     };
-    setTempSection(newSection);
-    setEditingSection(newSection);
-  };
+  }
 
   // Function to update a waiver section
-  const updateWaiverSection = (updatedSection: WaiverSection) => {
+  const updateWaiverSection = (updatedSection: WaiverFormat) => {
     if (tempSection?.id === updatedSection.id) {
       // This is a new section being saved
-      setWaiverConfig(prev => ({
-        ...prev,
-        sections: [...prev.sections, updatedSection]
-      }));
+      waiverFormat?.push(updatedSection)
+      setWaiverFormat(waiverFormat);
       setTempSection(null);
     } else {
       // This is an existing section being updated
-      setWaiverConfig(prev => ({
-        ...prev,
-        sections: prev.sections.map(section => 
-          section.id === updatedSection.id ? updatedSection : section
-        )
-      }));
+      if(waiverFormat) {
+        for (let i = 0; i < waiverFormat.length; i++) {
+          if(waiverFormat[i].id == updatedSection.id) {
+            let sections = waiverFormat
+            sections[i] = updatedSection
+            setWaiverFormat(sections)
+          }
+        }
+      }
     }
     setEditingSection(null);
   };
 
   // Function to delete a waiver section
   const deleteWaiverSection = (sectionId: string) => {
-    setWaiverConfig(prev => ({
-      ...prev,
-      sections: prev.sections.filter(section => section.id !== sectionId)
-    }));
+    if(waiverFormat) {
+      for (let i = 0; i < waiverFormat.length; i++) {
+        if(waiverFormat[i].id == sectionId) {
+          let sections = waiverFormat
+          sections.splice(i,1)
+          setWaiverFormat(sections)
+        }
+      }
+    }
   };
 
   // Function to download signed waiver
@@ -221,49 +231,55 @@ export default function WaiverManagementPage() {
         <CardHeader>
           <div className="flex justify-between items-center gap-4">
             <h2 className="text-xl font-semibold">Waiver Configuration</h2>
-            <Button onClick={handleSaveConfiguration}>Save Configuration</Button>
+            <Button onPress={handleSaveConfiguration}>Save Configuration</Button>
           </div>
         </CardHeader>
         <div className="p-4">
-          <div className="justify-between flex items-center space-x-4 mb-4">
+          {/* <div className="justify-between flex items-center space-x-4 mb-4">
             <span>Enable Waiver</span>
             <Switch 
               checked={waiverConfig.isEnabled}
               onChange={(e) => setWaiverConfig(prev => ({...prev, isEnabled: e.target.checked}))}
             />
-          </div>
+          </div> */}
 
           <div className="space-y-4">
             <Input 
               placeholder="Waiver Title"
-              value={waiverConfig.title}
-              onChange={(e) => setWaiverConfig(prev => ({...prev, title: e.target.value}))}
+              value={waiverFormat ? waiverFormat[0].text: "Title"}
+              onChange={(e) => {
+                if(waiverFormat) {
+                  let section = waiverFormat
+                  section[0].text = e.target.value
+                  setWaiverFormat(section)
+                }
+              }}
             />
-            <Textarea 
+            {/* <Textarea 
               placeholder="Waiver Description"
               value={waiverConfig.description}
               onChange={(e) => setWaiverConfig(prev => ({...prev, description: e.target.value}))}
-            />
+            /> */}
           </div>
 
           {/* Waiver Sections Management */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-4">Waiver Sections</h3>
-            {waiverConfig.sections.map((section) => (
+            {waiverFormat?.map((section) => (
               <div key={section.id} className="flex items-center justify-between p-3 border rounded mb-2">
                 <div className="flex-1 mr-4 overflow-hidden">
                   <p className="whitespace-pre-wrap break-words text-black dark:text-white">{section.text}</p>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {/* <span className="text-sm text-gray-500 dark:text-gray-400">
                     {section.requireInitials ? 'Requires Initials' : 'No Initials Required'}
-                  </span>
+                  </span> */}
                 </div>
                 <div className="flex space-x-2">
-                  <Button onClick={() => setEditingSection(section)}>Edit</Button>
-                  <Button onClick={() => deleteWaiverSection(section.id)}>Delete</Button>
+                  <Button onPress={() => setEditingSection(section)}>Edit</Button>
+                  <Button onPress={() => deleteWaiverSection(section.id)}>Delete</Button>
                 </div>
               </div>
             ))}
-            <Button onClick={addWaiverSection} className="mt-4">Add Section</Button>
+            <Button onPress={addWaiverSection} className="mt-4">Add Section</Button>
           </div>
         </div>
       </Card>
@@ -290,7 +306,7 @@ export default function WaiverManagementPage() {
                         <TableCell>{waiver.teamName}</TableCell>
                         <TableCell>{new Date(waiver.signedAt).toLocaleDateString()}</TableCell>
                         <TableCell>
-                        <Button onClick={() => downloadSignedWaiver(waiver)}>
+                        <Button onPress={() => downloadSignedWaiver(waiver)}>
                             Download
                         </Button>
                         </TableCell>
@@ -314,7 +330,7 @@ export default function WaiverManagementPage() {
                 className="w-full whitespace-pre-wrap break-words"
                 rows={4}
               />
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <Switch 
                   checked={editingSection.requireInitials}
                   onChange={(e) => setEditingSection(prev => 
@@ -322,7 +338,7 @@ export default function WaiverManagementPage() {
                   )}
                 />
                 <span>Require Initials</span>
-              </div>
+              </div> */}
               <div className="flex justify-end space-x-2">
               <Button onPress={handleCloseModal}>
                 Cancel
