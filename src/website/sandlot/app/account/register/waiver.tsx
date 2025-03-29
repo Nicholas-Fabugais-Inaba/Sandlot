@@ -25,21 +25,14 @@ export default function Waiver(props: WaiverProps) {
     return (
         <div className={styles.waiver}>
             <h3 className={styles.header}>
-                {/* GSA Softball Player Waiver {props.year ? props.year : new Date().getFullYear()} */}
-                {props.waiverTitle}
+                {decodeURIComponent(props.waiverTitle)}
             </h3>
-
-            {/* <p className={styles.description}>
-                This is the player participation waiver for participating in the GSA
-                softball league for the {props.year ? props.year : new Date().getFullYear()} summer season. 
-                By providing your initials, you acknowledge the following risks and agreements:
-            </p> */}
-
+    
             <div className={styles.inputContainer}>
                 {props.waiverTexts.map((text, index) => (
                     <div key={index} className={styles.inputGroup}>
                         <label className={styles.label}>
-                            {text}
+                            {decodeURIComponent(text)}
                         </label>
                         <input
                             required
@@ -51,7 +44,7 @@ export default function Waiver(props: WaiverProps) {
                         />
                     </div>
                 ))}
-
+    
                 <div className={styles.inputGroup}>
                     <label className={styles.label}>Digital Signature (Full Name):</label>
                     <input
@@ -63,7 +56,7 @@ export default function Waiver(props: WaiverProps) {
                     />
                 </div>
             </div>
-
+    
             <p className={styles.footnote}>
                 By typing your name, you acknowledge that it will be treated as your
                 digital signature per the Electronic Commerce Act, 2000, S.O. 2000, c. 17.
