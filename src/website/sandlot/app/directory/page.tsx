@@ -22,6 +22,7 @@ import MyPDF from "./WaiverPDF";
 import { title } from "@/components/primitives";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
+import getPlayerWaivers from "@/app/functions/getPlayerWaivers";
 
 // import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
@@ -44,9 +45,7 @@ export default function TeamsDirectoryPage() {
   const [waiverTexts, setWaiverTexts] = useState<string[]>([]);
   const [waiverFooter, setWaiverFooter] = useState<string>("");
 
-  const [dataPDF, setDataPDF] = useState<Record<string, string | string[]>>({});
-
-  const [currentYear, setCurrentYear] = useState<string>(String(new Date().getFullYear()));
+  const [currentYear] = useState<string>(String(new Date().getFullYear()));
 
   interface Team {
     team_id: number;
@@ -120,14 +119,16 @@ export default function TeamsDirectoryPage() {
   const downloadPlayerPDF = async (player: Player) => {
     try {
     // Fill the data for the PDF
-    fillDataPDF(player.player_id);
+    const dataPDF = await fillDataPDF(player.player_id);
     const blob = await pdf(<MyPDF data={dataPDF} />).toBlob();
     const url = URL.createObjectURL(blob);
     
     // Create a temporary download link
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${waiverTitle}_${player.first_name}_${player.last_name}_${currentYear}.pdf`; // File name
+    
+    const decodedWaiverTitle = decodeURIComponent(waiverTitle);
+    a.download = `${decodedWaiverTitle}_${player.first_name}_${player.last_name}.pdf`; // File name
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -167,14 +168,20 @@ export default function TeamsDirectoryPage() {
     }
   };
 
-  const fillDataPDF = (playerId: Number) => {
+  const fillDataPDF = async (playerId: number): Promise<Record<string, string | string[]>> => {
+    let dataPlayer = await getPlayerWaivers({ player_id: playerId });
+    console.log("Player Waiver Data", dataPlayer);
     const data = {
       "Waiver Title": waiverTitle,
+      "Waiver Texts": waiverTexts,
       "Waiver Footer": waiverFooter,
-      "Waiver Texts": waiverTexts
-    }
-    setDataPDF(data);
-  }
+      "Player Initials": dataPlayer[0].initials, //hardcoded to 0 for now as only 1 waiver is supported atm
+      "Player Signature": dataPlayer[0].signature,
+    };
+
+    console.log("This is data in fillDataPDF:", data);
+    return data; // Return the data instead of resolving a void promise
+  };
 
   const uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
 
