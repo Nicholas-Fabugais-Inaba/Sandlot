@@ -271,7 +271,10 @@ export default function WaiverManagementPage() {
             {waiverFormat?.map((section) => (
               <div key={section.id} className="flex items-center justify-between p-3 border rounded mb-2">
                 <div className="flex-1 mr-4 overflow-hidden">
-                  <p className="whitespace-pre-wrap break-words text-black dark:text-white">{section.text}</p>
+                  <p className="whitespace-pre-wrap break-words text-black dark:text-white"
+                  dangerouslySetInnerHTML={{
+                    __html: decodeURIComponent(section.text).replace(/\n/g, "<br />"),
+                }}></p>
                   {/* <span className="text-sm text-gray-500 dark:text-gray-400">
                     {section.requireInitials ? 'Requires Initials' : 'No Initials Required'}
                   </span> */}
