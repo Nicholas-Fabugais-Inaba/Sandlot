@@ -29,6 +29,7 @@ import getRR from "../app/functions/getRR";
 import getAllTimeslots from "../app/functions/getAllTimeslots";
 import getPlayerActiveTeam from "../app/functions/getPlayerActiveTeam";
 import updatePlayerActiveTeam from "../app/functions/updatePlayerActiveTeam";
+import getPlayerAccountData from "@/app/functions/getPlayerAccountInfo";
 
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -40,6 +41,7 @@ export const Navbar = () => {
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
   const [manageLeagueDropOpen, setManageLeagueDropOpen] = useState(false);
+  const [userTeams, setUserTeams] = useState<{ [key: number]: string }>({});
 
   useEffect(() => {
     const fetchSessionAndNotifications = async () => {
@@ -47,24 +49,26 @@ export const Navbar = () => {
         const session = await getSession();
         setSession(session)
         console.log("Session:", session);
-        console.log("Teams dict:", session?.user.teams);
 
         if (session && session.user.role === "player") {
           const activeTeamData = await getPlayerActiveTeam(session.user.id);
           setActiveTeamId(activeTeamData.team_id);
+          const accountData = await getPlayerAccountData(session.user.id);
+          setUserTeams(accountData.teams);
+          console.log("Teams dict:", accountData.teams);
 
           if (!activeTeamId || activeTeamId <= 0) {
             updatePlayerActiveTeam({player_id: session.user.id, team_id: session.user.team_id});
           }
         }
 
-        // Fetch unread notifications immediately
-        if (session?.user.team_id) {
-          const timeslotsResponse = await getAllTimeslots();
-          const rrList = await getRR({ team_id: session.user.team_id }, timeslotsResponse);
-          const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
-          setUnreadCount(unreadNotifications.length);
-        }
+        // // Fetch unread notifications immediately
+        // if (session?.user.team_id) {
+        //   const timeslotsResponse = await getAllTimeslots();
+        //   const rrList = await getRR({ team_id: session.user.team_id }, timeslotsResponse);
+        //   const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
+        //   setUnreadCount(unreadNotifications.length);
+        // }
 
         setLoading(false);
       } catch (error) {
@@ -97,7 +101,7 @@ export const Navbar = () => {
     if (session) {
       await updatePlayerActiveTeam({player_id: session.user.id, team_id: teamId})
       setActiveTeamId(teamId)
-      console.log(`Switched to team: ${session.user.teams[teamId]}`);
+      console.log(`Switched to team: ${userTeams[teamId]}`);
       // Refresh the page
       window.location.reload();
     }
@@ -218,10 +222,10 @@ export const Navbar = () => {
           <NavbarItem className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-                {activeTeamId && session?.user.teams[activeTeamId]} <ChevronDown size={16} />
+                {activeTeamId && userTeams[activeTeamId]} <ChevronDown size={16} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
-                {session && Object.entries(session?.user.teams).map(([id, name]) => (
+                {session && Object.entries(userTeams).map(([id, name]) => (
                   <DropdownMenuItem
                     key={id}
                     className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
