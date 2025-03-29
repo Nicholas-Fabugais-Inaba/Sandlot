@@ -92,6 +92,8 @@ export default function WaiverManagementPage() {
   const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[] | null>(null)
   const [tempSection, setTempSection] = useState<WaiverSection | null>(null);
 
+  // const [selectedYear, setSelectedYear] = useState<string>("")
+
   // Fetch teams and existing waiver config on component mount
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -115,29 +117,31 @@ export default function WaiverManagementPage() {
         console.error("Failed to fetch initial data", error);
       }
     };
-    const fetchWaiverFormat = async () => {
-      try{
-        const currentYear = String(new Date().getFullYear());
-        let data = await getWaiverFormatByYear({ year: currentYear })
-        setWaiverFormat(data)
-        if(waiverFormat?.length === 0){ 
-          let newWaiverFormat = [{
-            id: "0",
-            year: currentYear,
-            index: 0,
-            text: ""
-          }]
-          setWaiverFormat(newWaiverFormat)
-        }
-      }
-      catch (error){
-        console.error("Failed to fetch waiver format.", error)
-      }
-    };
+    
 
     fetchInitialData();
     fetchWaiverFormat();
   }, []);
+
+  const fetchWaiverFormat = async () => {
+    try{
+      const currentYear = String(new Date().getFullYear());
+      let data = await getWaiverFormatByYear({ year: currentYear })
+      setWaiverFormat(data)
+      if(waiverFormat?.length === 0){ 
+        let newWaiverFormat = [{
+          id: "0",
+          year: currentYear,
+          index: 0,
+          text: ""
+        }]
+        setWaiverFormat(newWaiverFormat)
+      }
+    }
+    catch (error){
+      console.error("Failed to fetch waiver format.", error)
+    }
+  };
 
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
@@ -220,8 +224,8 @@ export default function WaiverManagementPage() {
           </div>
         </CardHeader>
         <div className="p-4">
-          <div className="flex items-center space-x-4 mb-4">
-            <span>Enable Waiver:</span>
+          <div className="justify-between flex items-center space-x-4 mb-4">
+            <span>Enable Waiver</span>
             <Switch 
               checked={waiverConfig.isEnabled}
               onChange={(e) => setWaiverConfig(prev => ({...prev, isEnabled: e.target.checked}))}

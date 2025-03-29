@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from .types import NewWaiver, PlayerID, Year
-from ..db.queries.waiver_queries import insert_waiver, get_all_waivers, get_player_waivers, get_waiver_format_by_year
+from ..db.queries.waiver_queries import insert_waiver, insert_waiver_format, get_all_waivers, get_player_waivers, get_waiver_format_by_year
 
 
 router = APIRouter(tags=["waiver"])
