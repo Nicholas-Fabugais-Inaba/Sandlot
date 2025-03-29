@@ -9,19 +9,13 @@ import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
 import { getSession, signIn } from "next-auth/react";
 
-import "./HomePage.css";
+import "./HomePage.css"; // Import the new CSS file
 
 // announcement function imports
 import getAnnouncements from "./functions/getAnnouncements";
 import createAnnouncement from "./functions/createAnnouncement";
 import updateAnnouncement from "./functions/updateAnnouncement";
 import deleteAnnouncement from "./functions/deleteAnnouncement";
-
-// New imports for directory management
-// import getDirectoryItems from "./functions/getDirectoryItems";
-// import createDirectoryItem from "./functions/createDirectoryItem";
-// import updateDirectoryItem from "./functions/updateDirectoryItem";
-// import deleteDirectoryItem from "./functions/deleteDirectoryItem";
 
 import { GithubIcon } from "@/components/icons";
 import { title, subtitle } from "@/components/primitives";
@@ -34,163 +28,34 @@ interface Announcement {
   body: string;
 }
 
-interface DirectoryItem {
-  id: number;
-  title: string;
-  link?: string;
-  body: string; 
-  onClick?: () => void;
-}
-
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [isWeatherDropdownOpen, setWeatherDropdownOpen] = useState(false);
   const [isResourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const router = useRouter();
-  
-  // Announcements state
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [newAnnouncementTitle, setNewAnnouncementTitle] = useState("");
   const [newAnnouncementBody, setNewAnnouncementBody] = useState("");
-  const [editingAnnouncementIndex, setEditingAnnouncementIndex] = useState<number | null>(null);
-  const [editAnnouncementTitle, setEditAnnouncementTitle] = useState("");
-  const [editAnnouncementBody, setEditAnnouncementBody] = useState("");
-
-  // Directory state
-  // const [directoryItems, setDirectoryItems] = useState<DirectoryItem[]>([]);
-  // const [editingDirectoryIndex, setEditingDirectoryIndex] = useState<number | null>(null);
-  // const [editDirectoryTitle, setEditDirectoryTitle] = useState("");
-  // const [editDirectoryBody, setEditDirectoryBody] = useState("");
-  // const [editDirectoryLink, setEditDirectoryLink] = useState("");
-
-  // Page title state
-  const [pageTitle, setPageTitle] = useState("Welcome to the McMaster GSA Softball League");
-  const [editingPageTitle, setEditingPageTitle] = useState(false);
-  const [editedPageTitle, setEditedPageTitle] = useState("");
-
-  // Unsaved changes state
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const [unsavedSection, setUnsavedSection] = useState<string | null>(null);
-
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editBody, setEditBody] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [parkingText, setParkingText] = useState("")
 
   useEffect(() => {
-    const fetchInitialData = async () => {
+    const fetchSession = async () => {
       const session = await getSession();
+
       setSession(session);
+      const announcements = await getAnnouncements();
 
-      const fetchedAnnouncements = await getAnnouncements();
-      setAnnouncements(fetchedAnnouncements);
-
-      // Fetch directory items
-      // const fetchedDirectoryItems = await getDirectoryItems();
-      // setDirectoryItems(fetchedDirectoryItems);
+      setAnnouncements(announcements);
 
       setLoading(false);
     };
 
-    fetchInitialData();
+    fetchSession();
   }, []);
-
-  // Unsaved changes handler
-  const handleSetActiveSection = (newSection: string) => {
-    if (unsavedChanges) {
-      const confirmSwitch = window.confirm(
-        "You have unsaved changes. Are you sure you want to switch sections?"
-      );
-      
-      if (confirmSwitch) {
-        setActiveSection(newSection);
-        setUnsavedChanges(false);
-        setUnsavedSection(null);
-      }
-    } else {
-      setActiveSection(newSection);
-    }
-  };
-
-  // Page Title Editing
-  const handleEditPageTitle = () => {
-    if (session?.user.role === "commissioner") {
-      setEditingPageTitle(true);
-      setEditedPageTitle(pageTitle);
-      setUnsavedChanges(true);
-      setUnsavedSection("title");
-    }
-  };
-
-  const handleSavePageTitle = () => {
-    if (editedPageTitle.trim()) {
-      setPageTitle(editedPageTitle);
-      setEditingPageTitle(false);
-      setUnsavedChanges(false);
-      setUnsavedSection(null);
-    }
-  };
-
-  // Directory Item Editing
-  // const handleEditDirectoryItem = (index: number) => {
-  //   if (session?.user.role === "commissioner") {
-  //     setEditingDirectoryIndex(index);
-  //     setEditDirectoryTitle(directoryItems[index].title);
-  //     setEditDirectoryLink(directoryItems[index].link || "");
-  //     setEditDirectoryBody(directoryItems[index].body || "");
-  //     setUnsavedChanges(true);
-  //     setUnsavedSection("directory");
-  //   }
-  // };
-
-  // const handleSaveDirectoryItem = async (index: number) => {
-  //   if (editDirectoryTitle.trim()) {
-  //     const updatedItems = [...directoryItems];
-  //     updatedItems[index] = {
-  //       ...updatedItems[index],
-  //       title: editDirectoryTitle,
-  //       link: editDirectoryLink,
-  //       body: editDirectoryBody,
-  //     };
-
-  //     // Call update function
-  //     await updateDirectoryItem(updatedItems[index]);
-
-  //     setDirectoryItems(updatedItems);
-  //     setEditingDirectoryIndex(null);
-  //     setUnsavedChanges(false);
-  //     setUnsavedSection(null);
-  //   }
-  // };
-
-  // const handleAddDirectoryItem = async () => {
-  //   if (session?.user.role === "commissioner") {
-  //     const newItem = {
-  //       id: directoryItems.length > 0 ? 
-  //         Math.max(...directoryItems.map(item => item.id)) + 1 : 
-  //         1,
-  //       title: "New Directory Item",
-  //       link: ""
-  //       body: ""
-  //     };
-
-  //     // Call create function
-  //     const createdItem = await createDirectoryItem(newItem);
-
-  //     setDirectoryItems([...directoryItems, createdItem]);
-  //   }
-  // };
-
-  // const handleDeleteDirectoryItem = async (index: number) => {
-  //   if (session?.user.role === "commissioner") {
-  //     const itemToDelete = directoryItems[index];
-      
-  //     // Call delete function
-  //     await deleteDirectoryItem(itemToDelete.id);
-
-  //     const updatedItems = directoryItems.filter((_, i) => i !== index);
-  //     setDirectoryItems(updatedItems);
-  //   }
-  // };
 
   const handleAddAnnouncement = async () => {
     if (newAnnouncementTitle.trim() && newAnnouncementBody.trim()) {
@@ -210,26 +75,26 @@ export default function Home() {
   };
 
   const handleEditAnnouncement = (index: number) => {
-    setEditingAnnouncementIndex(index);
-    setEditAnnouncementTitle(announcements[index].title);
-    setEditAnnouncementBody(announcements[index].body);
+    setEditingIndex(index);
+    setEditTitle(announcements[index].title);
+    setEditBody(announcements[index].body);
   };
 
-  const handleSaveAnnouncementEdit = async (index: number) => {
-    if (editAnnouncementTitle.trim() && editAnnouncementBody.trim()) {
+  const handleSaveEdit = async (index: number) => {
+    if (editTitle.trim() && editBody.trim()) {
       const updatedAnnouncements = [...announcements];
 
       // Keep the original date and id and update only title and body
       updatedAnnouncements[index] = {
         id: announcements[index].id,
-        title: editAnnouncementTitle,
-        body: editAnnouncementBody,
+        title: editTitle,
+        body: editBody,
         date: announcements[index].date,
       };
       await updateAnnouncement(updatedAnnouncements[index]);
       setAnnouncements(updatedAnnouncements);
 
-      setEditingAnnouncementIndex(null); // Reset editing index
+      setEditingIndex(null); // Reset editing index
     } else {
       // Optionally, show an error message if the title or body is empty
       alert("Both title and body must be filled out.");
@@ -254,9 +119,6 @@ export default function Home() {
   const handleRainoutsClick = () => {
     setActiveSection("rainouts");
   };
-
-  const handleEditorChange = () => {
-  }
 
   const renderContent = () => {
     switch (activeSection) {
@@ -412,13 +274,6 @@ export default function Home() {
                     <br />
                     <span className={title()}>Softball League</span>
                   </div>
-                  {session?.user.role === "commissioner" && (
-                    <div className="flex flex-col items-center mt-6 ml-20">
-                      <Button className="button" onPress={() => {}}>
-                        Change Title
-                      </Button>
-                    </div>
-                  )}
                   {!loading && session === null && (
                     <div className="flex flex-col items-center mt-6 ml-20">
                       <Button className="button" onPress={() => signIn(undefined, { callbackUrl: "/account" })}>
@@ -539,139 +394,105 @@ export default function Home() {
     <div className="flex">
       <aside className="sidebar p-4">
         <Card className="rounded-2xl shadow-lg p-4 h-full">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Directory</h2>
-            {session?.user.role === "commissioner" && (
-              <button 
-                className="text-green-500 hover:text-green-700"
-                // onClick={handleAddDirectoryItem}
-              >
-                + Add
-              </button>
-            )}
-          </div>
+          <h2 className="text-xl font-bold mb-4">Directory</h2>
           <div className="space-y-4 overflow-auto">
-            {/* {directoryItems.map((item, index) => (
-              <div key={item.id} className="flex items-center justify-between">
-                {editingDirectoryIndex === index ? (
-                  <div className="flex space-x-2 w-full">
-                    <input 
-                      className="flex-grow border rounded px-2 py-1"
-                      value={editDirectoryTitle}
-                      onChange={(e) => setEditDirectoryTitle(e.target.value)}
-                    />
-                    <input 
-                      className="border rounded px-2 py-1"
-                      placeholder="Link (optional)"
-                      value={editDirectoryLink}
-                      onChange={(e) => setEditDirectoryLink(e.target.value)}
-                    />
-                    <textarea 
-                      className="border rounded px-2 py-1"
-                      placeholder="Body content"
-                      value={editDirectoryBody}
-                      onChange={(e) => setEditDirectoryBody(e.target.value)}
-                      rows={4}
-                    />
-                    <button 
-                      className="bg-green-500 text-white px-2 py-1 rounded"
-                      onClick={() => handleSaveDirectoryItem(index)}
+            <button
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "home" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+              onClick={() => setActiveSection("home")}
+            >
+              Announcements
+            </button>
+            <button
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "parking" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+              onClick={() => setActiveSection("parking")}
+            >
+              Parking Information
+            </button>
+            <button
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "dates" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+              onClick={() => setActiveSection("dates")}
+            >
+              Key Season Dates
+            </button>
+            {(session?.user.role === "commissioner" || session?.user.role === "team") && (
+            <button
+              className={`directory-item text-left font-semibold inline-block ${activeSection === "team" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+              onClick={() => router.push("/directory")}
+            >
+              Team Directory
+            </button>
+            )}
+            <div className="relative">
+              <button
+                className={`directory-item text-left font-semibold inline-block ${activeSection === "weather" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+                onClick={handleWeatherClick}
+              >
+                Weather Information
+              </button>
+              {isWeatherDropdownOpen && (
+                <div className="top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
+                  <ul className="list-disc list-inside mb-4 space-y-2">
+                    <li>
+                      <button
+                        className="text-left text-blue-600"
+                        onClick={handleRainoutsClick}
+                      >
+                        Rainouts
+                      </button>
+                    </li>
+                    <li>
+                      <a
+                        className="text-blue-600"
+                        href="https://tempestwx.com/station/48603/"
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        Ainsley Wood Station
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className={`relative`}>
+              <button
+                className={`directory-item text-left font-semibold inline-block ${activeSection === "resources" ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
+                onClick={handleResourcesClick}
+              >
+                Resources
+              </button>
+              {isResourcesDropdownOpen && (
+                <div className="top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
+                  <ul className="list-disc list-inside mb-4 space-y-2">
+                  <li>
+                    <a
+                      className="text-blue-600"
+                      href="/score_sheet.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      Save
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center w-full justify-between">
-                    <button
-                      className={`directory-item text-left font-semibold inline-block ${activeSection === item.title.toLowerCase().replace(/\s+/g, '') ? "text-primary font-semibold border-b-2 border-primary" : ""}`}
-                      onClick={() => handleSetActiveSection(item.title.toLowerCase().replace(/\s+/g, ''))}
+                      Score Sheet PDF
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="text-blue-600"
+                      href="/fielding_lineups.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
                     >
-                      {item.title}
-                    </button>
-                    {session?.user.role === "commissioner" && (
-                      <div className="flex space-x-2">
-                        <button 
-                          className="text-yellow-500 hover:text-yellow-700"
-                          onClick={() => handleEditDirectoryItem(index)}
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => handleDeleteDirectoryItem(index)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))} */}
+                      Field Lineup PDF
+                    </a>
+                  </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </Card>
       </aside>
-      <main className="flex-grow flex flex-col overflow-hidden">
-        {/* Sticky Title Header - Added word-break and white-space properties */}
-        <div className="sticky top-0 bg-white z-10 p-4 border-b">
-          <div className="w-full mx-auto">
-            {editingPageTitle ? (
-              <div className="flex flex-col space-y-2">
-                <textarea 
-                  className="text-2xl border rounded px-2 py-1 w-full resize-y min-h-[50px] max-h-[200px]"
-                  value={editedPageTitle}
-                  onChange={(e) => setEditedPageTitle(e.target.value)}
-                  rows={3}
-                />
-                <div className="flex space-x-2">
-                  <button 
-                    className="bg-green-500 text-white px-2 py-1 rounded"
-                    onClick={handleSavePageTitle}
-                  >
-                    Save
-                  </button>
-                  <button 
-                    className="bg-gray-300 text-gray-700 px-2 py-1 rounded"
-                    onClick={() => {
-                      setEditingPageTitle(false);
-                      setUnsavedChanges(false);
-                      setUnsavedSection(null);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="inline-block relative w-full">
-                <span 
-                  className={`${title()} break-words whitespace-normal`}
-                >
-                  {pageTitle}
-                  {session?.user.role === "commissioner" && (
-                    <button 
-                      className="ml-2 text-blue-500 hover:text-blue-700"
-                      onClick={handleEditPageTitle}
-                    >
-                      Edit
-                    </button>
-                  )}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Scrollable Content Area */}
-        <section className="flex-grow overflow-auto p-6">
-          <div className="w-full mx-auto">
-            <div className="flex flex-row gap-6">
-              <div className="flex-grow">
-                {renderContent()}
-              </div>
-            </div>
-          </div>
-        </section>
+      <main className="flex-grow p-8 h-full overflow-auto">
+        {renderContent()}
       </main>
     </div>
   );  
