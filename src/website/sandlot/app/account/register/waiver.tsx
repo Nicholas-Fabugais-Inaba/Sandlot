@@ -6,6 +6,7 @@ interface WaiverProps {
     year?: string;
     waiverTitle: string
     waiverTexts: string[]
+    waiverFooter: string
     waiverInitials: string
     setWaiverInitials: any
     waiverSignature: string
@@ -24,16 +25,22 @@ export default function Waiver(props: WaiverProps) {
 
     return (
         <div className={styles.waiver}>
-            <h3 className={styles.header}>
-                {decodeURIComponent(props.waiverTitle)}
-            </h3>
+            <h3
+                className={styles.header}
+                dangerouslySetInnerHTML={{
+                    __html: decodeURIComponent(props.waiverTitle).replace(/\n/g, "<br />"),
+                }}
+            ></h3>
     
             <div className={styles.inputContainer}>
                 {props.waiverTexts.map((text, index) => (
                     <div key={index} className={styles.inputGroup}>
-                        <label className={styles.label}>
-                            {decodeURIComponent(text)}
-                        </label>
+                        <label
+                            className={styles.label}
+                            dangerouslySetInnerHTML={{
+                                __html: decodeURIComponent(text).replace(/\n/g, "<br />"),
+                            }}
+                        ></label>
                         <input
                             required
                             type="text"
@@ -57,10 +64,13 @@ export default function Waiver(props: WaiverProps) {
                 </div>
             </div>
     
-            <p className={styles.footnote}>
-                By typing your name, you acknowledge that it will be treated as your
-                digital signature per the Electronic Commerce Act, 2000, S.O. 2000, c. 17.
-            </p>
+            <p
+                className={styles.footnote}
+                dangerouslySetInnerHTML={{
+                    __html: decodeURIComponent(props.waiverFooter).replace(/\n/g, "<br />"),
+                }}
+            ></p>
         </div>
     );
+    
 }

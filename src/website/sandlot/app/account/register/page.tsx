@@ -20,6 +20,7 @@ import registerTeam from "@/app/functions/registerTeam";
 import createWaiver from "@/app/functions/createWaiver";
 import getPlayer from "@/app/functions/getPlayer";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
+import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -59,8 +60,10 @@ export default function Register() {
 // ])
   const [waiverTitle, setWaiverTitle] = useState("")
   const [waiverTexts, setWaiverTexts] = useState<string[]>([])
+  const [waiverFooter, setWaiverFooter] = useState("")
   const [waiverInitials, setWaiverInitials] = useState("");
   const [waiverSignature, setWaiverSignature] = useState("");
+  const [waiverState, setWaiverState] = useState(true);
 
   interface WaiverFormat {
     id: number;
@@ -76,24 +79,39 @@ export default function Register() {
 
   useEffect(() => {
     const fetchWaiverFormat = async () => {
-      try {
-        const currentYear = String(new Date().getFullYear());
-        const data = await getWaiverFormatByYear({ year: currentYear });
-        const waiverFormat: WaiverFormat[] = data as WaiverFormat[];
-        // Sort the waiver format by index to ensure the order is correct
-        waiverFormat.sort((a, b) => a.index - b.index);
-        // Set the first item's text as the waiver title
-        setWaiverTitle(waiverFormat[0].text);
-        // Extract the remaining texts (excluding the first item)
-        const formattedTexts = waiverFormat.slice(1).map(item => item.text);
-        setWaiverTexts(formattedTexts);
-      } catch (error) {
-        console.error("Error fetching waiver format:", error);
-      }
+        try {
+            const currentYear = String(new Date().getFullYear());
+            const data = await getWaiverFormatByYear({ year: currentYear });
+            const waiverFormat: WaiverFormat[] = data as WaiverFormat[];
+            // Sort the waiver format by index to ensure the order is correct
+            waiverFormat.sort((a, b) => a.index - b.index);
+            // Set the first item's text as the waiver title
+            setWaiverTitle(waiverFormat[0].text);
+            // Extract the remaining texts (excluding the first and last items)
+            const formattedTexts = waiverFormat.slice(1, -1).map(item => item.text);
+            setWaiverTexts(formattedTexts);
+            // Set the last item's text as the waiver footer
+            setWaiverFooter(waiverFormat[waiverFormat.length - 1].text);
+        } catch (error) {
+            console.error("Error fetching waiver format:", error);
+        }
     };
 
-    fetchWaiverFormat();
-  }, []);
+    const fetchWaiverEnabled = async () => {
+        try {
+            const data = await getWaiverEnabled();
+            setWaiverState(data);
+        }
+        catch (error) {
+            console.error("Error fetching waiver state:", error);
+        }
+    };      
+    
+    fetchWaiverEnabled();
+    if (waiverState) {
+      fetchWaiverFormat();
+    }
+}, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState); // Toggle the visibility state
@@ -344,6 +362,7 @@ export default function Register() {
         <Waiver 
           waiverTitle={waiverTitle}
           waiverTexts={waiverTexts} 
+          waiverFooter={waiverFooter}
           waiverInitials={waiverInitials} 
           setWaiverInitials={setWaiverInitials} 
           waiverSignature={waiverSignature} 

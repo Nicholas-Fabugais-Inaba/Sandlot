@@ -135,7 +135,7 @@ class WaiverFormat(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     year: Mapped[Optional[str]] = mapped_column(String(50))
     index: Mapped[Optional[int]] = mapped_column() # 0 reserved for title 
-    text: Mapped[Optional[str]] = mapped_column(String(2000))
+    text: Mapped[Optional[str]] = mapped_column(String)
 
 class ArchivedTeam(Base):
     __tablename__ = "archived_team"

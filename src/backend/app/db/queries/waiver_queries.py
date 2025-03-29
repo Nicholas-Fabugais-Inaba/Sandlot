@@ -79,6 +79,7 @@ def get_waiver_format_by_year(year):
     with Session(engine) as session:
         stmt = (
             select(
+                WaiverFormat.id,
                 WaiverFormat.year,
                 WaiverFormat.index,
                 WaiverFormat.text
