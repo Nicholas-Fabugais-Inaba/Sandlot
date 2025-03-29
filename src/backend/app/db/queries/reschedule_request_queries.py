@@ -40,7 +40,7 @@ def get_reschedule_requests(team_id):
     engine = create_connection()
     with Session(engine) as session:
         requester_alias = aliased(Team, name="requesting_team")
-        receiver_alias = aliased(Team, name="recieving_team")
+        receiver_alias = aliased(Team, name="receiving_team")
 
         stmt = (
             select(

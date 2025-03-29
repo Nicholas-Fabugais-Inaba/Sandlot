@@ -25,7 +25,7 @@ interface RescheduleRequest {
   proposedDates: Date[];
   proposedFields: string[];
   proposedTimeslots: string[];
-  reciever_name: string;
+  receiver_name: string;
   requester_name: string;
   receiver_id: number;
   requester_id: number;
@@ -223,7 +223,7 @@ export default function ManageRescheduleRequest() {
           <div>No reschedule requests found.</div>
         ) : (
           rescheduleRequests
-            .filter((request) => request.reciever_id === userTeamId) // Filter for incoming requests
+            .filter((request) => request.receiver_id === userTeamId) // Filter for incoming requests
             .map((request) => (
               <Card
                 key={request.id}
@@ -234,7 +234,7 @@ export default function ManageRescheduleRequest() {
                     Game Requested for Rescheduling
                   </h2>
                   <p>
-                    {request.reciever_name} vs. {request.requester_name}
+                    {request.receiver_name} vs. {request.requester_name}
                   </p>
                 </div>
                 <div className="mb-4">
@@ -314,7 +314,7 @@ export default function ManageRescheduleRequest() {
               request?
             </p>
             <p>
-              Original Game: {modalContent?.reciever_name} vs.{" "}
+              Original Game: {modalContent?.receiver_name} vs.{" "}
               {modalContent?.requester_name}
             </p>
             <p>
