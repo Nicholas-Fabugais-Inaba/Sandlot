@@ -56,7 +56,7 @@ interface Team {
 
 interface WaiverFormat {
   id?: string;
-  year: number;
+  year: string;
   index: number;
   text: string;
 }
@@ -114,29 +114,33 @@ export default function WaiverManagementPage() {
         console.error("Failed to fetch initial data", error);
       }
     };
+    const fetchWaiverFormat = async () => {
+      try{
+        console.log("ENTERING FETCH WAIVER FORMAT")
+        const currentYear = String(new Date().getFullYear());
+        console.log("CURRENT YEAR", currentYear)
+        setWaiverFormat( await getWaiverFormatByYear({ year: currentYear}) )
+        console.log("WAIVER FORMAT", waiverFormat)
+        if(waiverFormat?.length === 0){ 
+          let newWaiverFormat = [{
+            id: "0",
+            year: currentYear,
+            index: 0,
+            text: ""
+          }]
+          setWaiverFormat(newWaiverFormat)
+        }
+      }
+      catch (error){
+        console.error("Failed to fetch waiver format.", error)
+      }
+    };
 
     fetchInitialData();
     fetchWaiverFormat();
   }, []);
 
-  const fetchWaiverFormat = async () => {
-    try{
-      const currentYear = new Date().getFullYear();
-      setWaiverFormat( await getWaiverFormatByYear({ year: currentYear}) )
-      if(waiverFormat?.length === 0){ 
-        let newWaiverFormat = [{
-          id: "0",
-          year: currentYear,
-          index: 0,
-          text: ""
-        }]
-        setWaiverFormat(newWaiverFormat)
-      }
-    }
-    catch (error){
-      console.error("Failed to fetch waiver format.", error)
-    }
-  };
+
 
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
