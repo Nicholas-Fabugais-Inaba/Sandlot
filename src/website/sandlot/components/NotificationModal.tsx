@@ -50,7 +50,8 @@ export const NotificationModal: FC<NotificationModalProps> = ({
         try {
           const session = await getSession();
           const timeslotsResponse = await getAllTimeslots();
-          const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse);
+          const [rrList, pendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, false);
+          console.log("Reschedule Requests: ", rrList);
 
           const currentTime = new Date();
           setFetchTime(currentTime);
