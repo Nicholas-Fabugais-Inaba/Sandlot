@@ -55,10 +55,15 @@ export const Navbar = () => {
           setActiveTeamId(activeTeamData.team_id);
           const accountData = await getPlayerAccountData(session.user.id);
           setUserTeams(accountData.teams);
-          console.log("Teams dict:", accountData.teams);
-
-          if (!activeTeamId || activeTeamId <= 0) {
-            updatePlayerActiveTeam({player_id: session.user.id, team_id: session.user.team_id});
+          // console.log("Active team ID:", activeTeamData.team_id);
+          // console.log("Teams dict:", accountData.teams);
+          // console.log("Session teams dict:", session.user.teams);
+          if (Object.keys(accountData.teams).length === 0) {
+            console.log("No teams found for the user.");
+          } else if (!activeTeamData.team_id || activeTeamData.team_id <= 0) {
+            const firstTeamId = Object.keys(accountData.teams).length > 0 ? Number(Object.keys(accountData.teams)[0]) : 0;
+            updatePlayerActiveTeam({player_id: session.user.id, team_id: firstTeamId});
+            setActiveTeamId(firstTeamId);
           }
         }
 
