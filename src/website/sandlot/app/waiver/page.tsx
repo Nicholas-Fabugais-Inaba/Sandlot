@@ -126,24 +126,33 @@ export default function WaiverManagementPage() {
   }, []);
 
   const fetchWaiverFormat = async () => {
-    try{
-      const currentYear = String(new Date().getFullYear());
-      let data = await getWaiverFormatByYear({ year: currentYear })
-      setWaiverFormat(data)
-      if(waiverFormat?.length === 0){ 
-        let newWaiverFormat = [{
-          id: "0",
-          year: currentYear,
-          index: 0,
-          text: ""
-        }]
-        setWaiverFormat(newWaiverFormat)
-      }
+    try {
+        const currentYear = String(new Date().getFullYear());
+        let data = await getWaiverFormatByYear({ year: currentYear });
+
+        // Process each section's text with decodeURIComponent and replace newlines
+        const processedData = data.map((section: WaiverFormat) => ({
+            ...section,
+            text: decodeURIComponent(section.text)
+        }));
+
+        setWaiverFormat(processedData);
+
+        if (processedData.length === 0) {
+            let newWaiverFormat = [
+                {
+                    id: "0",
+                    year: currentYear,
+                    index: 0,
+                    text: "",
+                },
+            ];
+            setWaiverFormat(newWaiverFormat);
+        }
+    } catch (error) {
+        console.error("Failed to fetch waiver format.", error);
     }
-    catch (error){
-      console.error("Failed to fetch waiver format.", error)
-    }
-  };
+};
 
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
@@ -276,11 +285,9 @@ export default function WaiverManagementPage() {
               <div key={section.id} className="flex items-start justify-between p-3 border rounded mb-2">
                 <div className="flex-1 mr-4 overflow-hidden">
                   <p
-                    className="whitespace-pre-wrap break-words text-black dark:text-white"
-                    dangerouslySetInnerHTML={{
-                      __html: decodeURIComponent(section.text).replace(/\n/g, "<br />"),
-                    }}
-                  ></p>
+                    className="whitespace-pre-wrap break-words text-black dark:text-white">
+                      {section.text}
+                    </p>
                 </div>
                 <div className="flex space-x-2">
                   <Button onPress={() => setEditingSection(section)}>Edit</Button>
