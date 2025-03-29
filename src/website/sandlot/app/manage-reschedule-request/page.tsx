@@ -16,6 +16,7 @@ import "./ManageRescheduleRequest.css";
 import getRR from "../functions/getRR";
 import acceptRR from "../functions/acceptRR";
 import getAllTimeslots from "../functions/getAllTimeslots";
+import getAllOccupiedGameslots from "../functions/getAllOccupiedGameslots";
 
 interface RescheduleRequest {
   id: string;
@@ -104,21 +105,50 @@ export default function ManageRescheduleRequest() {
     fetchData();
   }, []);
 
-  const handleAccept = (id: string) => {
+  function isConflict(newDate: string, occupiedGameslots: Record<string, boolean>): boolean {
+    // Split the newDate into components
+    const [dateTime, time, field] = newDate.split(" ");
+    
+    // Extract only the date portion (before the "T" in ISO format)
+    const date = dateTime.split("T")[0];
+  
+    // Reconstruct the normalized key
+    const normalizedKey = `${date} ${time} ${field}`;
+  
+    // Check if the normalized key exists in the occupiedGameslots
+    return !!occupiedGameslots[normalizedKey];
+  }
+
+  const handleAccept = async (id: string) => {
     const selectedDate = selectedDates[id];
     const request = rescheduleRequests.find((req) => req.id === id);
 
     if (selectedDate && request) {
-      setModalContent({
-        id,
-        action: "accept",
-        originalDate: request.originalDate,
-        originalField: request.originalField,
-        receiver_name: request.receiver_name,
-        requester_name: request.requester_name,
-        newDate: selectedDate,
-      });
-      setModalVisible(true);
+      try {
+        // Fetch occupied gameslots
+        const occupiedGameslots = await getAllOccupiedGameslots();
+
+        // Check for conflicts
+        if (isConflict(selectedDate, occupiedGameslots)) {
+          alert("The selected date and time conflict with another game. Please choose a different time.");
+          return;
+        }
+
+        // No conflict, proceed to set modal content
+        setModalContent({
+          id,
+          action: "accept",
+          originalDate: request.originalDate,
+          originalField: request.originalField,
+          receiver_name: request.receiver_name,
+          requester_name: request.requester_name,
+          newDate: selectedDate,
+        });
+        setModalVisible(true);
+      } catch (error) {
+        console.error("Error checking for conflicts:", error);
+        alert("An error occurred while checking for conflicts. Please try again.");
+      }
     } else {
       alert("Please select a date.");
     }
