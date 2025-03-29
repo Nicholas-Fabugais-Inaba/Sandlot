@@ -279,7 +279,7 @@ export default function AccountPage() {
               )}
               {userRole === "team" && (
                 <p>
-                  <strong>Display Name:</strong> {accountInfo.teamName}
+                  <strong>Team Name:</strong> {accountInfo.teamName}
                 </p>
               )}
               {userRole === "team" && (

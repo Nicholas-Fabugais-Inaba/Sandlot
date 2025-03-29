@@ -503,7 +503,7 @@ function GeneralSettings({
         </div>
 
         {/* Game Days */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-gray-700">Game Days</label>
           <div className="grid grid-cols-4 gap-2">
             {[
@@ -521,7 +521,7 @@ function GeneralSettings({
               </label>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Timeslots Section */}
         <div className="mb-4">
