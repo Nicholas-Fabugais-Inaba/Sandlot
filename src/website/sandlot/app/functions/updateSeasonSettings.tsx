@@ -1,10 +1,28 @@
 import axios from "axios";
 
-export default async function updateSeasonSettings(SeasonSettings: {
-  start_date: String;
-  end_date: String;
-  games_per_team: Number;
-}): Promise<void> {
+interface Field {
+  id: number;
+  name: string;
+  timeslotIds: number[];
+}
+
+interface Timeslot {
+  id: number;
+  startTime: string;
+  endTime: string;
+}
+
+interface SeasonSettings {
+  start_date: string;
+  end_date: string;
+  games_per_team: number;
+  game_days: string[];
+  fields: Field[];
+  timeslots: Timeslot[];
+}
+
+export default async function updateSeasonSettings(SeasonSettings: SeasonSettings): Promise<void> {
+  console.log("updating season settings...", SeasonSettings);
   axios
     .put(
       `${process.env.NEXT_PUBLIC_APIHOST}/season-setup/update_season_settings`,

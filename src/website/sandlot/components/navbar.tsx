@@ -26,6 +26,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { ChevronDown } from "lucide-react";
 
 import getRR from "../app/functions/getRR";
+import getAllTimeslots from "../app/functions/getAllTimeslots";
 import getPlayerActiveTeam from "../app/functions/getPlayerActiveTeam";
 import updatePlayerActiveTeam from "../app/functions/updatePlayerActiveTeam";
 
@@ -59,7 +60,8 @@ export const Navbar = () => {
 
         // Fetch unread notifications immediately
         if (session?.user.team_id) {
-          const rrList = await getRR({ team_id: session.user.team_id });
+          const timeslotsResponse = await getAllTimeslots();
+          const rrList = await getRR({ team_id: session.user.team_id }, timeslotsResponse);
           const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
           setUnreadCount(unreadNotifications.length);
         }
@@ -123,7 +125,7 @@ export const Navbar = () => {
       className="border-b-[1px] border-b-[#F3F4F6] dark:border-b-[#3C3C3C] bg-white dark:bg-[#0d0d0d] shadow-md"
       >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
+        <NavbarBrand as="li" className="gap-3 max-w-fit mr-14">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
             <p className="font-bold text-inherit">Sandlot</p>
