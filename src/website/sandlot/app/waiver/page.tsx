@@ -90,6 +90,7 @@ export default function WaiverManagementPage() {
   const [playerTeam, setPlayerTeam] = useState("");
 
   const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[] | null>(null)
+  const [tempSection, setTempSection] = useState<WaiverSection | null>(null);
 
   // Fetch teams and existing waiver config on component mount
   useEffect(() => {
@@ -160,21 +161,28 @@ export default function WaiverManagementPage() {
       text: "New waiver requirement",
       requireInitials: true
     };
-    setWaiverConfig(prev => ({
-      ...prev,
-      sections: [...prev.sections, newSection]
-    }));
+    setTempSection(newSection);
     setEditingSection(newSection);
   };
 
   // Function to update a waiver section
   const updateWaiverSection = (updatedSection: WaiverSection) => {
-    setWaiverConfig(prev => ({
-      ...prev,
-      sections: prev.sections.map(section => 
-        section.id === updatedSection.id ? updatedSection : section
-      )
-    }));
+    if (tempSection?.id === updatedSection.id) {
+      // This is a new section being saved
+      setWaiverConfig(prev => ({
+        ...prev,
+        sections: [...prev.sections, updatedSection]
+      }));
+      setTempSection(null);
+    } else {
+      // This is an existing section being updated
+      setWaiverConfig(prev => ({
+        ...prev,
+        sections: prev.sections.map(section => 
+          section.id === updatedSection.id ? updatedSection : section
+        )
+      }));
+    }
     setEditingSection(null);
   };
 
@@ -186,45 +194,6 @@ export default function WaiverManagementPage() {
     }));
   };
 
-  // Function to sign waiver
-  const handleSignWaiver = async () => {
-    // Validate inputs
-    if (!playerName || !playerTeam) {
-      alert("Please fill in all fields");
-      return;
-    }
-
-    try {
-      // Prepare waiver signing data
-      const waiverData: Omit<SignedWaiver, 'id' | 'signedAt'> = {
-        playerId: Math.floor(Math.random() * 10000), // Generate mock player ID
-        playerName,
-        teamName: playerTeam,
-        sections: {
-          'risk-acknowledgement': playerName.slice(0, 2) // Mock initials
-        },
-        signatures: {
-          'Full Name': playerName
-        }
-      };
-
-      // Call backend function to sign waiver
-    //   const signedWaiver = await signWaiver(waiverData);
-      
-      // Update local state
-    //   setSignedWaivers(prev => [...prev, signedWaiver]);
-      
-      // Reset form
-      setPlayerName("");
-      setPlayerTeam("");
-      
-      alert("Waiver signed successfully!");
-    } catch (error) {
-      console.error("Failed to sign waiver", error);
-      alert("Failed to sign waiver");
-    }
-  };
-
   // Function to download signed waiver
   const downloadSignedWaiver = (waiver: SignedWaiver) => {
     const waiverJson = JSON.stringify(waiver, null, 2);
@@ -234,6 +203,12 @@ export default function WaiverManagementPage() {
     link.href = url;
     link.download = `waiver_${waiver.playerId}_${new Date().toISOString()}.json`;
     link.click();
+  };
+
+  // Update the modal close handler
+  const handleCloseModal = () => {
+    setEditingSection(null);
+    setTempSection(null);
   };
 
   return (
@@ -348,12 +323,12 @@ export default function WaiverManagementPage() {
                 <span>Require Initials</span>
               </div>
               <div className="flex justify-end space-x-2">
-                <Button onClick={() => setEditingSection(null)}>
-                  Cancel
-                </Button>
-                <Button onClick={() => editingSection && updateWaiverSection(editingSection)}>
-                  Save
-                </Button>
+              <Button onPress={handleCloseModal}>
+                Cancel
+              </Button>
+              <Button onPress={() => editingSection && updateWaiverSection(editingSection)}>
+                Save
+              </Button>
               </div>
             </div>
           </div>
