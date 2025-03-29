@@ -6,9 +6,8 @@
   align-items: center;
   justify-content: flex-start; /* Ensure elements start from top */
   height: 100vh;
-  padding: 20px;
   position: relative; /* Needed for absolute positioning inside */
-  gap: 10px; /* Optional: Adjust spacing between elements */
+  gap: 10px; 
 }
 
 /* Title Styling */

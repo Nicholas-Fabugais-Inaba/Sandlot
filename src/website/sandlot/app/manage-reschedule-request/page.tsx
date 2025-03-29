@@ -15,6 +15,7 @@ import "./ManageRescheduleRequest.css";
 
 import getRR from "../functions/getRR";
 import acceptRR from "../functions/acceptRR";
+import getAllTimeslots from "../functions/getAllTimeslots";
 
 interface RescheduleRequest {
   id: string;
@@ -23,10 +24,19 @@ interface RescheduleRequest {
   originalField: string;
   proposedDates: Date[];
   proposedFields: string[];
-  receiver_name: string;
+  proposedTimeslots: string[];
+  reciever_name: string;
   requester_name: string;
   receiver_id: number;
   requester_id: number;
+}
+
+interface Timeslot {
+  id: number;
+  start: string;
+  end: string;
+  field_id: number;
+  field_name: string;
 }
 
 export default function ManageRescheduleRequest() {
@@ -34,6 +44,7 @@ export default function ManageRescheduleRequest() {
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [rescheduleRequests, setRescheduleRequests] = useState<RescheduleRequest[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<RescheduleRequest[]>([]);
   const [selectedDates, setSelectedDates] = useState<{
     [key: string]: string | null;
   }>({});
@@ -47,6 +58,7 @@ export default function ManageRescheduleRequest() {
     requester_name?: string;
     newDate?: string;
   } | null>(null);
+  const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
   const router = useRouter();
 
   // Combined fetch for session and reschedule requests
@@ -55,14 +67,21 @@ export default function ManageRescheduleRequest() {
       try {
         setLoading(true);
         const session = await getSession();
+        const timeslotsResponse = await getAllTimeslots();
+        if (timeslotsResponse) {
+          setTimeslots(timeslotsResponse);
+        }
 
         if (session) {
           setUserRole(session.user?.role || null);
           setUserTeamId(session.user?.team_id || null);
 
           // Fetch reschedule requests immediately after session
-          const formattedRequests = await getRR({ team_id: session?.user.team_id });
+          const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse);
           setRescheduleRequests(formattedRequests);
+          setPendingRequests(formattedPendingRequests);
+          console.log("Reschedule Requests:", formattedRequests);
+          console.log("Pending Requests:", formattedPendingRequests);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -119,8 +138,19 @@ export default function ManageRescheduleRequest() {
         );
 
         if (request) {
+          // Get the selected date and field for the new game
           let splitNewDate = parseNewDate(modalContent.newDate);
-          let timeslot = deriveTimeslot(splitNewDate[0]);
+          // Choose necessary timeslots based on solstice dates
+          // let timeslot = "0";
+          // if (dynamicSolstice) {
+          //   if (splitNewDate[0] >= solsticeStart && splitNewDate[0] <= solsticeEnd) {
+          //     timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], solsticeTimeslots);
+          //   } else {
+          //     timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], nonSolsticeTimeslots);
+          //   }
+          // }
+          // // Get the timeslot for the new game
+          // timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], timeslots);
           let formattedDate: string = splitNewDate[0].toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
           acceptRR({
@@ -129,8 +159,8 @@ export default function ManageRescheduleRequest() {
             home_team_id: request.receiver_id,
             away_team_id: request.requester_id,
             date: formattedDate,
-            time: timeslot,
-            field: splitNewDate[1],
+            time: splitNewDate[1],
+            field: splitNewDate[2],
           });
           alert(
             `Reschedule request ${modalContent.id} accepted for ${modalContent.newDate.toLocaleString()}`,
@@ -146,107 +176,124 @@ export default function ManageRescheduleRequest() {
     }
   };
 
-  function parseNewDate(newDate: string): [Date, string] {
+  function parseNewDate(newDate: string): [Date, string, string] {
     let splitNewDate = newDate.split(" ");
 
-    return [new Date(splitNewDate[0]), splitNewDate[1]];
+    return [new Date(splitNewDate[0]), splitNewDate[1], splitNewDate[2]];
   }
 
-  function deriveTimeslot(date: Date): string {
-    if (date.getHours() === 17) {
-      return "1";
-    } else if (date.getHours() === 18) {
-      return "2";
-    } else if (date.getHours() === 20) {
-      return "3";
-    } else if (date.getHours() === 21) {
-      return "4";
-    }
+  // function deriveTimeslot(date: Date, field: string, timeslots: Timeslot[]): string {
+  //   // Extract the hour from the input date
+  //   const hour = date.getUTCHours();
+  
+  //   // Filter timeslots for the given field and sort them by start time
+  //   const fieldTimeslots = timeslots
+  //     .filter((ts) => ts.field_id.toString() === field)
+  //     .sort((a, b) => {
+  //       const [startHourA, startMinuteA] = a.start.split("-").map(Number);
+  //       const [startHourB, startMinuteB] = b.start.split("-").map(Number);
+  //       return startHourA - startHourB || startMinuteA - startMinuteB; // Sort by hour, then by minute
+  //     });
+  
+  //   // Find the matching timeslot where the start time matches the hour
+  //   const matchingTimeslotIndex = fieldTimeslots.findIndex((ts) => {
+  //     const [startHour] = ts.start.split("-").map(Number); // Extract the hour from the timeslot start (HH-MM)
+  //     return startHour === hour;
+  //   });
+  
+  //   // Return the sequential ID (1-based index) if a match is found, otherwise return "0"
+  //   return matchingTimeslotIndex !== -1 ? (matchingTimeslotIndex + 1).toString() : "0";
+  // }
 
-    return "0";
-  }
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full min-h-[400px]">
-        <Spinner label="Loading Reschedule Requests..." size="lg" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex justify-center items-center h-full min-h-[400px]">
+  //       <Spinner label="Loading Reschedule Requests..." size="lg" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
       <h1 className={title()}>Manage Reschedule Requests</h1>
       <div className="text-left p-6">
+        {/* Reschedule Requests Section */}
+        <h2 className="text-2xl font-semibold mb-4">Incoming Reschedule Requests</h2>
         {rescheduleRequests.length === 0 ? (
           <div>No reschedule requests found.</div>
         ) : (
-          rescheduleRequests.map((request) => (
-            <Card
-              key={request.id}
-              className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6"
-            >
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold">
-                  Game Requested for Rescheduling
-                </h2>
-                <p>
-                  {request.receiver_name} vs. {request.requester_name}
-                </p>
-              </div>
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold">Original Game Date</h2>
-                <p>
-                  {request.originalDate.toLocaleString() +
-                    " on Field " +
-                    request.originalField}
-                </p>
-              </div>
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold">Proposed Dates</h2>
-                <select
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                  value={selectedDates[request.id] || ""}
-                  onChange={(e) =>
-                    setSelectedDates({
-                      ...selectedDates,
-                      [request.id]: e.target.value,
-                    })
-                  }
-                >
-                  <option disabled value="">
-                    Select a date
-                  </option>
-                  {request.proposedDates.map((date, i) => (
-                    <option
-                      key={date.toISOString() + request.proposedFields[i]}
-                      value={
-                        date.toISOString() + " " + request.proposedFields[i]
-                      }
-                    >
-                      {date.toLocaleString() +
-                        " on Field " +
-                        request.proposedFields[i]}
+          rescheduleRequests
+            .filter((request) => request.reciever_id === userTeamId) // Filter for incoming requests
+            .map((request) => (
+              <Card
+                key={request.id}
+                className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6"
+              >
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">
+                    Game Requested for Rescheduling
+                  </h2>
+                  <p>
+                    {request.reciever_name} vs. {request.requester_name}
+                  </p>
+                </div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">Original Game Date</h2>
+                  <p>
+                    {request.originalDate.toLocaleString() +
+                      " on Field " +
+                      request.originalField}
+                  </p>
+                </div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">Proposed Dates</h2>
+                  <select
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    value={selectedDates[request.id] || ""}
+                    onChange={(e) =>
+                      setSelectedDates({
+                        ...selectedDates,
+                        [request.id]: e.target.value,
+                      })
+                    }
+                  >
+                    <option disabled value="">
+                      Select a date
                     </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex space-x-4">
-                <button
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg"
-                  onClick={() => handleAccept(request.id)}
-                >
-                  Accept
-                </button>
-                <button
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                  onClick={() => handleDeny(request.id)}
-                >
-                  Deny
-                </button>
-              </div>
-            </Card>
-          ))
+                    {request.proposedDates.map((date, i) => (
+                      <option
+                        key={date.toISOString() + request.proposedFields[i]}
+                        value={
+                          date.toISOString() +
+                          " " +
+                          request.proposedTimeslots[i] +
+                          " " +
+                          request.proposedFields[i]
+                        }
+                      >
+                        {date.toLocaleString() +
+                          " on Field " +
+                          request.proposedFields[i]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                    onClick={() => handleAccept(request.id)}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                    onClick={() => handleDeny(request.id)}
+                  >
+                    Deny
+                  </button>
+                </div>
+              </Card>
+            ))
         )}
         <div className="mt-6">
           <p className="italic">Need to reschedule your team's game?</p>
@@ -267,7 +314,7 @@ export default function ManageRescheduleRequest() {
               request?
             </p>
             <p>
-              Original Game: {modalContent?.receiver_name} vs.{" "}
+              Original Game: {modalContent?.reciever_name} vs.{" "}
               {modalContent?.requester_name}
             </p>
             <p>

@@ -1,18 +1,18 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from ..create_engine import create_connection
-from ..models import Field
+from ..models import Directory
 
 
-def insert_field(field_name, field_id=None):
+def insert_directory(name, content):
     engine = create_connection()
     with Session(engine) as session:
-        field = Field(
-            id=field_id,  # Pass the field_id if provided
-            field_name=field_name
+        directory = Directory(
+            name=name,
+            content=content
         )
         try:
-            session.add_all([field])
+            session.add_all([directory])
         except:
             session.rollback()
             raise
@@ -20,32 +20,21 @@ def insert_field(field_name, field_id=None):
             session.commit()
     return True
 
-def get_all_fields():
+def get_all_directories():
     engine = create_connection()
     with Session(engine) as session:
         stmt = select(
-            Field.id,
-            Field.field_name
+            Directory.id,
+            Directory.name,
+            Directory.content
         )
         result = session.execute(stmt).mappings().all()
         return result
     
-def delete_field(field_id):
+def update_directory(directory_id, new_name, new_content):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = delete(Field).where(Field.id == field_id)
-        try:
-            session.execute(stmt)
-        except:
-            session.rollback()
-            raise
-        else:
-            session.commit()
-
-def delete_all_fields():
-    engine = create_connection()
-    with Session(engine) as session:
-        stmt = delete(Field)
+        stmt = update(Directory).where(Directory.id == directory_id).values(name=new_name, content=new_content)
         try:
             session.execute(stmt)
         except:
@@ -54,3 +43,15 @@ def delete_all_fields():
         else:
             session.commit()
     return True
+
+def delete_directory(directory_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Directory).where(Directory.id == directory_id)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
