@@ -295,6 +295,49 @@ export default function ManageRescheduleRequest() {
               </Card>
             ))
         )}
+        {/* Pending Requests Section */}
+        <h2 className="text-2xl font-semibold mt-8 mb-4">Pending Reschedule Requests</h2>
+        {pendingRequests.filter((request) => request.requester_id === userTeamId).length === 0 ? (
+          <div>No pending reschedule requests found.</div>
+        ) : (
+          pendingRequests
+            .filter((request) => request.requester_id === userTeamId) // Filter for pending requests
+            .map((request) => (
+              <Card
+                key={request.id}
+                className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6"
+              >
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">
+                    Pending Reschedule Request
+                  </h2>
+                  <p>
+                    {request.receiver_name} vs. {request.requester_name}
+                  </p>
+                </div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">Original Game Date</h2>
+                  <p>
+                    {request.originalDate.toLocaleString() +
+                      " on Field " +
+                      request.originalField}
+                  </p>
+                </div>
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold">Proposed Dates</h2>
+                  <ul className="list-disc pl-6">
+                    {request.proposedDates.map((date, i) => (
+                      <li key={date.toISOString() + request.proposedFields[i]}>
+                        {date.toLocaleString() +
+                          " on Field " +
+                          request.proposedFields[i]}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Card>
+            ))
+        )}
         <div className="mt-6">
           <p className="italic">Need to reschedule your team's game?</p>
           <button
