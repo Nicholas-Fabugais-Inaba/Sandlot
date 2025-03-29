@@ -645,7 +645,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               </div>
               <div className="legend-item">
                 <div className="legend-color legend-rescheduled-teams" />
-                <span>Game with Rescheduled Team</span>
+                <span>Game Containing Rescheduled Team</span>
               </div>
             </div>
           ) : null}
