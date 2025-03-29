@@ -206,3 +206,8 @@ class CaptainStatus(BaseModel):
 
 class Year(BaseModel):
     year: str
+
+class WaiverFormat(BaseModel):
+    year: str
+    index: int
+    text: str

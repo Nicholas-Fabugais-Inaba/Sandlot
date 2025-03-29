@@ -88,3 +88,18 @@ def get_waiver_format_by_year(year):
         )
         result = session.execute(stmt).mappings().all()
         return result
+    
+def delete_waiver_formats_by_year(year):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = (
+            delete(WaiverFormat)
+            .where(WaiverFormat.year == year)
+        )
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()

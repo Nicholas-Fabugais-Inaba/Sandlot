@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from .types import NewWaiver, PlayerID, Year
-from ..db.queries.waiver_queries import insert_waiver, insert_waiver_format, get_all_waivers, get_player_waivers, get_waiver_format_by_year
+from .types import NewWaiver, PlayerID, Year, WaiverFormat
+from ..db.queries.waiver_queries import insert_waiver, insert_waiver_format, get_all_waivers, get_player_waivers, get_waiver_format_by_year, delete_waiver_formats_by_year
 
 
 router = APIRouter(tags=["waiver"])
@@ -23,7 +23,17 @@ async def get_all_player_waivers(data: PlayerID):
     return waivers
 
 @router.post("/get_waiver_format_by_year", response_model=list)
-async def get_waiver_format_by_year_router(data: Year):
+async def get_all_waiver_format_by_year(data: Year):
     waiver_formats = get_waiver_format_by_year(data.year)
     waiver_formats = [dict(row) for row in waiver_formats]
     return waiver_formats
+
+@router.post("/delete_waiver_format_by_year", response_model=None)
+async def remove_waiver_formats_by_year(data: Year):
+    delete_waiver_formats_by_year(data.year)
+    return True
+
+@router.post("/insert_waiver_format", response_model=None)
+async def create_waiver_format_(data: WaiverFormat):
+    insert_waiver_format(data.year, data.index, data.text)
+    return True
