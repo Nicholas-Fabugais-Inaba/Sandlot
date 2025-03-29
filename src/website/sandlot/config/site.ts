@@ -39,6 +39,10 @@ export const siteConfig = {
       href: "/broadcast",
     },
     {
+      label: "Waiver",
+      href: "/waiver",
+    },
+    {
       label: "Archive",
       href: "/archive",
     },

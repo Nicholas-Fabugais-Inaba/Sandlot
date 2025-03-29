@@ -18,6 +18,8 @@ import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal c
 import { title } from "@/components/primitives";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 
+import "../Global.css";
+
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -171,7 +173,7 @@ export default function AccountPage() {
 
   if (!session) {
     return (
-      <div>
+      <div className="pageHeader">
         <h1 className={title()}>Account</h1>
         <div className="centered-container mt-32">
           <h1 className="text-xl font-semibold text-center">
@@ -205,13 +207,14 @@ export default function AccountPage() {
 
   return (
     <div>
-      {/* Account Header with Welcome Message */}
-      <h1 className={title()}>Account</h1>
-      <div className="text-center mb-8">
-        <p className="text-lg mt-2">Welcome {displayName}!</p>
-        <p>Manage your account details here</p>
+      <div className="pageHeader">
+        {/* Account Header with Welcome Message */}
+        <h1 className={title()}>Account</h1>
+        <div className="text-center mb-8">
+          <p className="text-lg mt-2">Welcome {displayName}!</p>
+          <p>Manage your account details here</p>
+        </div>
       </div>
-
       {/* Main Content Layout */}
       <div className="flex justify-between">
         {/* Left side: Account Card */}
@@ -246,8 +249,8 @@ export default function AccountPage() {
         </div>
 
         {/* Right side: Buttons */}
-        <div className="w-2/5">
-          <h2 className="text-xl font-semibold mb-4">Modify Team Info</h2>
+        <div className="w-1/2">
+          <h2 className="text-xl font-semibold mb-4">Modify Account Info</h2>
           {userRole === "player" && (
             <Button className="button mb-4 w-full" onPress={handleChangeName}>
               Change Name

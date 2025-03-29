@@ -187,7 +187,7 @@ const toggleTeamDropdown = (team: Team) => {
                         {expandedTeams.includes(team.name) && (
                           <TableRow>
                             <TableCell colSpan={1}>
-                              <div className="p-4 bg-gray-100 rounded-md">
+                              <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-md">
                                 <strong>Players:</strong>
                                 {playersByTeam[team.name]?.length > 0 ? (
                                   <ul className="mt-2">
