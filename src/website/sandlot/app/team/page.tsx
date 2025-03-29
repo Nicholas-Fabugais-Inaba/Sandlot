@@ -40,6 +40,7 @@ import getDirectoryTeams from "../functions/getDirectoryTeams";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 import updateCaptainStatus from "../functions/updateCaptainStatus";
 import leaveTeam from "../functions/leaveTeam";
+import getTeamAccountData from "../functions/getTeamAccountData";
 
 interface JoinRequest {
   id: number;
@@ -105,8 +106,9 @@ export default function TeamPage() {
             teamName = "No team assigned";
           }
         } else if (session && session.user.role === "team") {
+          const accountData = await getTeamAccountData(session.user.id);
           teamId = session.user.id;
-          teamName = session.user.teamName;
+          teamName = accountData.teamName;
         }
   
         // Set teamId and teamName

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData, UpdatePassword, UpdateEmail, UpdateName, UpdateActiveTeam, PlayerID
-from ..db.queries.player_queries import insert_player, get_player, get_player_active_team, update_player_password, update_player_email, update_player_name, update_player_active_team
-from ..db.queries.team_queries import insert_team, get_team
+from .types import NewPlayer, NewTeam, PlayerLoginData, TeamLoginData, UpdatePassword, UpdateEmail, UpdateName, UpdateActiveTeam, PlayerID, TeamID
+from ..db.queries.player_queries import insert_player, get_player, get_player_active_team, update_player_password, update_player_email, update_player_name, update_player_active_team, get_player_account_data
+from ..db.queries.team_queries import insert_team, get_team, get_team_account_data
 from ..db.queries.team_players_queries import get_players_teams
 
 
@@ -32,9 +32,25 @@ async def get_player_account(data: PlayerLoginData):
     player["team_id"] = next(iter(player_teams_dict), None)
     return player
 
+@router.post("/get_player_account_data", response_model=object)
+async def get_player_account_data_route(data: PlayerID):
+    player_data = dict(get_player_account_data(data.player_id))
+    # get list of teams player has joined
+    player_teams = get_players_teams(data.player_id)
+    # convert list of dicts to a single dict with ids as keys and names as values
+    player_teams_dict = {team["team_id"]: team["team_name"] for team in player_teams}
+    # add a key to the existing player dict to store the dict of teams
+    player_data["teams"] = player_teams_dict
+    return player_data
+
 @router.post("/get_team", response_model=object)
 async def get_team_account(data: TeamLoginData):
     response = dict(get_team(data.username))
+    return response
+
+@router.post("/get_team_account_data", response_model=object)
+async def get_team_account_data_route(data: TeamID):
+    response = dict(get_team_account_data(data.team_id))
     return response
 
 @router.post("/get_player_active_team", response_model=dict)

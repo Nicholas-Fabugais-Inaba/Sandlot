@@ -71,6 +71,22 @@ def get_team(login_username):
         result = session.execute(stmt).mappings().first()
         return result
 
+def get_team_account_data(team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            Team.id,
+            Team.team_name,
+            Team.username,
+            Team.division,
+            Team.offday,
+            Team.preferred_division,
+            Team.preferred_time,
+            Team.active
+        ).where(Team.id == team_id)
+        result = session.execute(stmt).mappings().first()
+        return result
+
 # TODO: naming of this query was overhauled, make sure to update any imports of get_team_info_by_current_user
 # TODO: change to work with TeamPlayers
 def get_team_players(team_id):
