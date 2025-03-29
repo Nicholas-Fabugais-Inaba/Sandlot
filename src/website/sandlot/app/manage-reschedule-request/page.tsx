@@ -16,6 +16,7 @@ import "./ManageRescheduleRequest.css";
 import getRR from "../functions/getRR";
 import acceptRR from "../functions/acceptRR";
 import getAllTimeslots from "../functions/getAllTimeslots";
+import getSolsticeSettings from "../functions/getSolsticeSettings";
 
 interface RescheduleRequest {
   id: string;
@@ -58,8 +59,7 @@ export default function ManageRescheduleRequest() {
     requester_name?: string;
     newDate?: string;
   } | null>(null);
-  const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
-  const dynamicSolstice = true;
+  // const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
   const solsticeTimeslots = [
     { id: 1, start: "21-0", end: "22-30", field_id: 1, field_name: "Field 1" },
     { id: 2, start: "22-30", end: "24-0", field_id: 1, field_name: "Field 1" },
@@ -78,17 +78,18 @@ export default function ManageRescheduleRequest() {
       try {
         setLoading(true);
         const session = await getSession();
-        const timeslotsResponse = dynamicSolstice ? solsticeTimeslots : await getAllTimeslots();
-        if (timeslotsResponse) {
-          setTimeslots(timeslotsResponse);
-        }
+        const solsticeSettings = await getSolsticeSettings();
+        const timeslotsResponse = solsticeSettings.active ? solsticeTimeslots : await getAllTimeslots();
+        // if (timeslotsResponse) {
+        //   setTimeslots(timeslotsResponse);
+        // }
 
         if (session) {
           setUserRole(session.user?.role || null);
           setUserTeamId(session.user?.team_id || null);
 
           // Fetch reschedule requests immediately after session
-          const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, dynamicSolstice);
+          const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, solsticeSettings);
           setRescheduleRequests(formattedRequests);
           setPendingRequests(formattedPendingRequests);
           console.log("Reschedule Requests:", formattedRequests);
