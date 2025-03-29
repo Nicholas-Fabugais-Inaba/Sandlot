@@ -11,7 +11,7 @@ async def create_waiver(data: NewWaiver):
     return True
 
 @router.get("/get_all_waivers", response_model=list)
-async def get_all_waivers():
+async def get_all_waivers_router():
     waivers = get_all_waivers()
     waivers = [dict(row) for row in waivers]
     return waivers
@@ -23,7 +23,7 @@ async def get_all_player_waivers(data: PlayerID):
     return waivers
 
 @router.post("/get_waiver_format_by_year", response_model=list)
-async def get_waiver_format_by_year(data: Year):
+async def get_waiver_format_by_year_router(data: Year):
     waiver_formats = get_waiver_format_by_year(data.year)
     waiver_formats = [dict(row) for row in waiver_formats]
     return waiver_formats

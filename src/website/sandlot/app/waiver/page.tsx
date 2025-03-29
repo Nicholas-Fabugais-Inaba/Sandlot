@@ -117,11 +117,9 @@ export default function WaiverManagementPage() {
     };
     const fetchWaiverFormat = async () => {
       try{
-        console.log("ENTERING FETCH WAIVER FORMAT")
         const currentYear = String(new Date().getFullYear());
-        console.log("CURRENT YEAR", currentYear)
-        setWaiverFormat( await getWaiverFormatByYear({ year: currentYear}) )
-        console.log("WAIVER FORMAT", waiverFormat)
+        let data = await getWaiverFormatByYear({ year: currentYear })
+        setWaiverFormat(data)
         if(waiverFormat?.length === 0){ 
           let newWaiverFormat = [{
             id: "0",
@@ -140,8 +138,6 @@ export default function WaiverManagementPage() {
     fetchInitialData();
     fetchWaiverFormat();
   }, []);
-
-
 
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
