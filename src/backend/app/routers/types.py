@@ -211,3 +211,6 @@ class WaiverFormat(BaseModel):
     year: str
     index: int
     text: str
+
+class WaiverFormatList(BaseModel):
+    data: list[WaiverFormat]
