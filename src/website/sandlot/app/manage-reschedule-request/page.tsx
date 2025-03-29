@@ -226,9 +226,10 @@ export default function ManageRescheduleRequest() {
 
   return (
     <div>
-      <h1 className={title()}>Manage Reschedule Requests</h1>
-      <div className="text-left p-6">
-        {/* Reschedule Requests Section */}
+      <h1 className={`${title()}`}>Manage Reschedule Requests</h1>
+      <div className="flex flex-wrap justify-between mt-8">
+      {/* Incoming Reschedule Requests Section */}
+      <div className="w-full lg:w-[48%]">
         <h2 className="text-2xl font-semibold mb-4">Incoming Reschedule Requests</h2>
         {rescheduleRequests.length === 0 ? (
           <div>No reschedule requests found.</div>
@@ -238,7 +239,7 @@ export default function ManageRescheduleRequest() {
             .map((request) => (
               <Card
                 key={request.id}
-                className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6"
+                className="w-full rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6 text-left"
               >
                 <div className="mb-4">
                   <h2 className="text-xl font-semibold">
@@ -306,8 +307,20 @@ export default function ManageRescheduleRequest() {
               </Card>
             ))
         )}
-        {/* Pending Requests Section */}
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Pending Reschedule Requests</h2>
+        <div className="mt-6">
+          <p className="italic">Need to reschedule your team's game?</p>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-2"
+            onClick={() => router.push("/schedule")}
+          >
+            Reschedule Game
+          </button>
+        </div>
+      </div>
+
+      {/* Pending Reschedule Requests Section */}
+      <div className="w-full lg:w-[48%]">
+        <h2 className="text-2xl font-semibold mb-4">Pending Reschedule Requests</h2>
         {pendingRequests.filter((request) => request.requester_id === userTeamId).length === 0 ? (
           <div>No pending reschedule requests found.</div>
         ) : (
@@ -316,7 +329,7 @@ export default function ManageRescheduleRequest() {
             .map((request) => (
               <Card
                 key={request.id}
-                className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6"
+                className="w-full rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800 mb-6 text-left"
               >
                 <div className="mb-4">
                   <h2 className="text-xl font-semibold">
@@ -349,15 +362,6 @@ export default function ManageRescheduleRequest() {
               </Card>
             ))
         )}
-        <div className="mt-6">
-          <p className="italic">Need to reschedule your team's game?</p>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-2"
-            onClick={() => router.push("/schedule")}
-          >
-            Reschedule Game
-          </button>
-        </div>
       </div>
 
       <CustomModal
@@ -390,6 +394,7 @@ export default function ManageRescheduleRequest() {
         onClose={() => setModalVisible(false)}
         onConfirm={confirmAction}
       />
+    </div>
     </div>
   );
 }
