@@ -66,6 +66,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
           <input
             autoComplete={isPassword ? "new-password" : "off"}
             className="w-full px-4 py-2 border rounded-lg mb-4"
+            placeholder="New Password"
             type={isPassword ? "password" : "text"}
             value={value}
             onChange={(e) => setValue(e.target.value)}
@@ -75,7 +76,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
           <input
             autoComplete="new-password"
             className="w-full px-4 py-2 border rounded-lg mb-4"
-            placeholder="Confirm Password"
+            placeholder="Confirm New Password"
             type="password"
             value={confirmValue}
             onChange={(e) => setConfirmValue(e.target.value)}
