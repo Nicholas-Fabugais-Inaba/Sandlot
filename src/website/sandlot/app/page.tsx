@@ -41,6 +41,7 @@ export default function Home() {
   const [editBody, setEditBody] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [parkingText, setParkingText] = useState("")
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -119,6 +120,9 @@ export default function Home() {
   const handleRainoutsClick = () => {
     setActiveSection("rainouts");
   };
+
+  const handleEditorChange = () => {
+  }
 
   const renderContent = () => {
     switch (activeSection) {
@@ -274,6 +278,13 @@ export default function Home() {
                     <br />
                     <span className={title()}>Softball League</span>
                   </div>
+                  {session?.user.role === "commissioner" && (
+                    <div className="flex flex-col items-center mt-6 ml-20">
+                      <Button className="button" onPress={() => {}}>
+                        Change Title
+                      </Button>
+                    </div>
+                  )}
                   {!loading && session === null && (
                     <div className="flex flex-col items-center mt-6 ml-20">
                       <Button className="button" onPress={() => signIn(undefined, { callbackUrl: "/account" })}>

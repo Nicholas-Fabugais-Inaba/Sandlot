@@ -7,8 +7,8 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from .create_engine import create_connection
-#from create_engine import create_connection
+#from .create_engine import create_connection
+from create_engine import create_connection
 
 engine = create_connection()
 
@@ -144,9 +144,16 @@ class ArchivedPlayer(Base):
     first_name: Mapped[Optional[str]] = mapped_column(String(30))
     last_name: Mapped[Optional[str]] = mapped_column(String(30))
 
+class Solstice(Base):
+    __tablename__ = "solstice"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    active: Mapped[Optional[bool]] = mapped_column(default=True)
+    start: Mapped[Optional[str]] = mapped_column(String(50))
+    end: Mapped[Optional[str]] = mapped_column(String(50))
+
 
 # function which creates defined models as tables in DB
 def create_tables():
     Base.metadata.create_all(engine)
 
-#create_tables()
+create_tables()
