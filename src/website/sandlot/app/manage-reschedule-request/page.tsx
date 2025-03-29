@@ -380,7 +380,7 @@ export default function ManageRescheduleRequest() {
                 New Date:{" "}
                 {parseNewDate(modalContent.newDate)[0].toLocaleString() +
                   " on Field " +
-                  parseNewDate(modalContent.newDate)[1]}
+                  parseNewDate(modalContent.newDate)[2]}
               </p>
             )}
           </>
