@@ -96,6 +96,7 @@ class SeasonSettings(Base):
     end_date: Mapped[Optional[str]] = mapped_column(String(50))
     games_per_team: Mapped[Optional[int]] = mapped_column()
     state: Mapped[String] = mapped_column(String(50), default="pre-season")
+    waiver_enabled: Mapped[Optional[bool]] = mapped_column(default=True)
 
 class Field(Base):
     __tablename__ = "field"
