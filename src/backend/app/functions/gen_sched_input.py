@@ -5,6 +5,7 @@ from .scheduler import gen_schedule_w_skip, send_schedule_to_db
 from random import shuffle
 from ..db.queries.team_queries import get_all_teams, get_all_season_teams
 from ..db.queries.season_settings_queries import get_season_settings
+from ..db.queries.timeslot_queries import get_all_timeslots
 
 from ..db.mock_data import insert_mock_schedule
 
@@ -112,30 +113,28 @@ def gen_games_round_robin(teams, games_per_team: int):
     return games
 
 
-def gen_game_slots(fields: int, timeslots: int, start_date: date, end_date: date):
+def gen_game_slots(max_timeslots_per_field: list, start_date: date, end_date: date):
     game_slots = []
     weekdays = get_weekdays(start_date, end_date)
-    print(weekdays)
     
     # Split weekdays into weeks
     weeks = []
     current_week = []
     for day in weekdays:
-        if day.weekday() == 0 and current_week: # Monday and current_week is not empty
+        if day.weekday() == 0 and current_week:  # Monday and current_week is not empty
             weeks.append(current_week)
             current_week = []
         current_week.append(day)
     if current_week:
         weeks.append(current_week)
 
+    # Generate game slots based on max timeslots per field
     for week in weeks:
         week_slots = []
-        for field in range(1, fields + 1):
+        for field_index, timeslots in enumerate(max_timeslots_per_field, start=1):
             for timeslot in range(1, timeslots + 1):
-                if (field == 1 and (timeslot == 3 or timeslot == 4)) or (field == 2 and (timeslot == 3 or timeslot == 4)):
-                    continue
                 for day in week:
-                    week_slots.append((field, timeslot, day))
+                    week_slots.append((field_index, timeslot, day))
         game_slots.append(week_slots)
 
     return game_slots
@@ -245,11 +244,16 @@ def gen_schedule_repeated():
 
     games = gen_games_division(divs, Settings["games_per_team"])
 
-    game_slots = gen_game_slots(FIELDS, TIMESLOTS, start_date, end_date)
+    Timeslots = get_all_timeslots()
+    print(Timeslots)
+
+    max_timeslots_per_field = analyze_timeslots(Timeslots)
+
+    game_slots = gen_game_slots(max_timeslots_per_field, start_date, end_date)
 
     # Repeats the schedule generation 10 times and returns the best schedule
     best_schedule, best_score, t = gen_schedule_w_skip(games, game_slots, teams)
-    for i in range(10):
+    for i in range(0):
         schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
         if score < best_score:
             best_schedule = schedule
@@ -257,12 +261,30 @@ def gen_schedule_repeated():
     print(best_schedule, teams)
     return best_schedule, best_score, teams
 
+
 def get_teams():
     teams = {}
     Teams = get_all_teams()
     for i in range(len(Teams)):
         teams[i] = {"id": Teams[i]["id"], "name": Teams[i]["team_name"], "offday": Teams[i]["offday"]}
     return teams
+
+
+def analyze_timeslots(timeslots: dict):
+    field_counts = {}  # Dictionary to store the count of timeslots per field
+
+    for timeslot_data in timeslots:
+        field_id = timeslot_data["field_id"]
+
+        # Increment the count for the field
+        if field_id not in field_counts:
+            field_counts[field_id] = 0
+        field_counts[field_id] += 1
+
+    # Create a list of max timeslots for each field
+    max_timeslots_per_field = [field_counts[field_id] for field_id in sorted(field_counts.keys())]
+
+    return max_timeslots_per_field
 
 
 # games = gen_games_division(divs, GAMES_PER_TEAM)

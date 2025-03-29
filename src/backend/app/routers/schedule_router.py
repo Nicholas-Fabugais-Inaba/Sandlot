@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from .types import RescheduleRequest, TeamID, RRAccept, SchedParams, ScoreData
+from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams, ScoreData, CommissionerReschedule
 from ..db.queries.game_queries import get_all_games, get_team_games, update_game, delete_all_games, get_score, update_score
 from ..db.queries.reschedule_request_queries import insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, delete_all_reschedule_requests
+from ..db.queries.timeslot_queries import get_all_timeslots
 from ..functions.gen_sched_input import gen_schedule_repeated
-from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams, CommissionerReschedule
 
 router = APIRouter(tags=["schedule"])
 
@@ -21,7 +21,7 @@ async def team_games(data: TeamID):
 
 @router.post("/create_reschedule_request", response_model=None)
 async def create_RR(request: RescheduleRequest):
-    response = insert_reschedule_request(request.requester_id, request.receiver_id, request.game_id, request.option1, request.option2, request.option3, request.option4, request.option5, request.option1_field, request.option2_field, request.option3_field, request.option4_field, request.option5_field)
+    response = insert_reschedule_request(request.requester_id, request.receiver_id, request.game_id, request.option1, request.option2, request.option3, request.option4, request.option5, request.option1_field, request.option2_field, request.option3_field, request.option4_field, request.option5_field, request.option1_timeslot, request.option2_timeslot, request.option3_timeslot, request.option4_timeslot, request.option5_timeslot)
     return response
 
 @router.post("/get_reschedule_requests", response_model=list)
@@ -64,3 +64,9 @@ async def submit_game_score(data: ScoreData):
 async def commissioner_reschedule_route(data: CommissionerReschedule):
     update_game(data.game_id, data.date, data.time, data.field)
     return True
+
+@router.get("/get_all_timeslots", response_model=list)
+async def get_all_timeslots_route():
+    timeslots = get_all_timeslots()
+    timeslots = [dict(row) for row in timeslots]  # Convert rows to dictionaries
+    return timeslots

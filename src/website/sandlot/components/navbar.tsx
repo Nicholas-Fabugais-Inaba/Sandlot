@@ -15,7 +15,7 @@ import NextLink from "next/link";
 import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
 import { Session } from "next-auth";
-import { getSession, signOut } from "next-auth/react";
+import { getSession, signOut, signIn } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
@@ -26,6 +26,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { ChevronDown } from "lucide-react";
 
 import getRR from "../app/functions/getRR";
+import getAllTimeslots from "../app/functions/getAllTimeslots";
 import getPlayerActiveTeam from "../app/functions/getPlayerActiveTeam";
 import updatePlayerActiveTeam from "../app/functions/updatePlayerActiveTeam";
 
@@ -59,7 +60,8 @@ export const Navbar = () => {
 
         // Fetch unread notifications immediately
         if (session?.user.team_id) {
-          const rrList = await getRR({ team_id: session.user.team_id });
+          const timeslotsResponse = await getAllTimeslots();
+          const rrList = await getRR({ team_id: session.user.team_id }, timeslotsResponse);
           const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
           setUnreadCount(unreadNotifications.length);
         }
@@ -192,6 +194,16 @@ export const Navbar = () => {
         className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
+        {!session && (
+          <NavbarItem>
+            <button
+              onClick={() => signIn(undefined, { callbackUrl: "/account" })}
+              className="w-20 h-10 text-sm rounded-lg bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+            >
+              Sign In
+            </button>
+          </NavbarItem>
+        )}
         {session && (
           <NavbarItem>
             <button
@@ -247,7 +259,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarMenu>
-        {siteConfig.navItems.map((item, index) => (
+        {filteredNavItems.map((item, index) => (
           <NavbarMenuItem key={`${item.label}-${index}`}>
             <Link
               href={item.href}

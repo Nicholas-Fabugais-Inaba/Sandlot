@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { IconSvgProps, BellIconProps } from "@/types";
+import Image from 'next/image';
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
@@ -8,7 +9,13 @@ export const Logo: React.FC<IconSvgProps> = ({
   height,
   ...props
 }) => (
-  <img src="./favicon.ico" width={60} height={60}></img>
+  <Image
+    alt="Sandlot Logo"
+    height={60}
+    priority
+    src="/favicon.ico"
+    width={60}
+  />
 );
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({

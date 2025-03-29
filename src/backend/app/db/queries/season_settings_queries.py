@@ -90,4 +90,10 @@ def get_season_state():
         stmt = select(SeasonSettings.state).where(SeasonSettings.id == 1)
         result = session.execute(stmt).mappings().first()
         return result
-
+    
+def get_waiver_enabled():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(SeasonSettings.waiver_enabled)
+        result = session.execute(stmt).mappings().first()
+        return result
