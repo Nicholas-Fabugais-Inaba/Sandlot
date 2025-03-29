@@ -123,6 +123,15 @@ export default function WaiverManagementPage() {
     try{
       const currentYear = new Date().getFullYear();
       setWaiverFormat( await getWaiverFormatByYear(currentYear) )
+      if(waiverFormat?.length === 0){ 
+        let newWaiverFormat = [{
+          id: "0",
+          year: currentYear,
+          index: 0,
+          text: ""
+        }]
+        setWaiverFormat(newWaiverFormat)
+      }
     }
     catch (error){
       console.error("Failed to fetch waiver format.", error)
