@@ -21,6 +21,8 @@ import {
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 // import { saveWaiverConfig, getWaiverConfig, signWaiver, getSignedWaivers } from "@/app/functions/waiverFunctions";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
+import deleteWaiverFormatByYear from "@/app/functions/deleteWaiverFormat";
+import createWaiverFormat from "@/app/functions/createWaiverFormat";
 
 // Typescript interfaces for type safety
 interface WaiverSection {
