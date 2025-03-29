@@ -87,7 +87,13 @@ def delete_season_settings(settings_id):
 def get_season_state():
     engine = create_connection()
     with Session(engine) as session:
-        stmt = select(SeasonSettings.state).where(SeasonSettings.id == 1)
+        stmt = select(SeasonSettings.state).limit(1)  # Limit to 1 row
         result = session.execute(stmt).mappings().first()
         return result
-
+    
+def get_waiver_enabled():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(SeasonSettings.waiver_enabled)
+        result = session.execute(stmt).mappings().first()
+        return result

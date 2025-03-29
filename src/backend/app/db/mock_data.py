@@ -4,6 +4,7 @@ from ..db.queries.mock_queries import insert_mock_player
 from ..db.queries.division_queries import insert_division_with_id
 from ..db.queries.season_settings_queries import insert_season_settings
 from ..db.queries.team_players_queries import insert_team_player
+from ..db.queries.waiver_queries import insert_waiver_format
 
 
 class MockTeam(BaseModel):
@@ -335,6 +336,26 @@ mock_divisions = [
     MockDivision(division_id=4, division_name="D"),
 ]
 
+class MockWaiverFormat(BaseModel):
+    id: int
+    year: int
+    index: int
+    text: str
+
+mock_waiver_formats = [
+    MockWaiverFormat(id=1, year=2025, index=0, text="GSA Softball Player Waiver 2024"),
+    MockWaiverFormat(id=2, year=2025, index=1, text="This is the player participation waiver for participating in the GSA softball league for the 2024 summer season. In lieu of a written signature, your written information and name is treated as legally binding consent. Please read the following regarding electronic signatures.\n\nAccording to the Electronic Commerce Act, 200, S.O. 2000 , c. 17 (\"the Act\"):\n\nSection 1(1) of the Act defines an electronic signature as: “electronic information that a person creates or adopts in order to sign a document and that is in, attached to or associated with the document;”. The Act also provides that any legal requirement of signing may be satisfied by an electronic signature provided that both parties implicitly or explicitly consent. Therefore, typing your name at the end of this form is treated as an \"electronic signature\" according to the act.\n\nThe execution of this Agreement by electronic means shall be deemed to constitute effective execution of this Agreement as to the parties hereto. Such electronic signatures may be used by the parties in lieu of the original signature page[s] of this Agreement for any and all purposes. Additionally, any signatures of the parties to this Agreement that are transmitted to the other party by facsimile shall be deemed original signatures for all purposes.\n\nPlease direct comments or concerns to Jake Nease at j.a.nease@outlook.com.\n\nThe risk of injury from the activities involved in this program is significant, including the potential for permanent paralysis and death, and while particular rules, equipment, and personal discipline may reduce this risk, the risk of serious injury does exist."),
+    MockWaiverFormat(id=3, year=2025, index=2, text="The risk of injury from the activities involved in this program is significant, including the potential for permanent paralysis and death, and while particular rules, equipment, and personal discipline may reduce this risk, the risk of serious injury does exist."),
+    MockWaiverFormat(id=4, year=2025, index=3, text="I KNOWINGLY AND FREELY ASSUME ALL SUCH RISKS, both known and unknown, EVEN IF ARISING FROM THE NEGLIGENCE OF THE RELEASES or others, and assume full responsibility for my participation."),
+    MockWaiverFormat(id=5, year=2025, index=4, text="I willingly agree to comply with the stated and customary terms and conditions for participation. If however, I observe any unusual significant hazard during my presence or participation, I will remove myself from participation and bring such to the attention of the nearest official immediately."),
+    MockWaiverFormat(id=6, year=2025, index=5, text="I, for myself and on behalf of my heirs, assigns, personal representatives and next of kin, HEREBY RELEASE AND HOLD HARMLESS the Graduate Students Association of McMaster University their officers, officials, agents, and or employees, other participants, sponsoring agencies, sponsors, advertisers, and if applicable, owners and lessors or premises used to conduct the even (\"RELEASES\"), WITH RESPECT TO ANY AND ALL INJURY, DISABILITY, DEATH, or loss or damage to person or property, WHETHER ARISING FROM THE  NEGLIGENCE OF THE RELEASEES OR OTHERWISE, to the fullest extent permitted by law."),
+    MockWaiverFormat(id=7, year=2025, index=6, text="I HAVE READ THIS RELEASE OF LIABILITY AND ASSUMPTION OF RISK AGREEMENT, FULLY UNDERSTAND ITS TERMS, UNDERSTAND THAT I HAVE GIVEN UP SUBSTANTIAL RIGHTS BY SIGNING IT, AND SIGN IT FREELY AND VOLUNTARILY WITHOUT ANY INDUCEMENT.")
+]
+
+def insert_mock_waiver_formats():
+    for waiver in mock_waiver_formats:
+        insert_waiver_format(waiver.year, waiver.index, waiver.text)
+
 def insert_mock_divisions():
     for division in mock_divisions:
         insert_division_with_id(division.division_id, division.division_name)
@@ -363,4 +384,5 @@ def insert_mock_schedule():
     insert_mock_season_settings()
     insert_mock_teams()
     insert_mock_players()
+    insert_mock_waiver_formats()
     

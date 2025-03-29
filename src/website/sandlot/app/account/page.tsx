@@ -18,8 +18,23 @@ import ChangeInfoModal from "./ChangeInfoModal"; // Import the ChangeInfoModal c
 import { title } from "@/components/primitives";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 
+import "../Global.css";
+import getPlayerAccountData from "../functions/getPlayerAccountInfo";
+import getTeamAccountData from "../functions/getTeamAccountData";
+
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+interface AccountInfo {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
+  teamName?: string;
+  teams?: string[];
+  username?: string;
+  active?: boolean;
 }
 
 export default function AccountPage() {
@@ -34,24 +49,33 @@ export default function AccountPage() {
   >(() => {});
   const [isPasswordModal, setIsPasswordModal] = useState(false);
   const [isNameChange, setIsNameChange] = useState(false);
+  const [accountInfo, setAccountInfo] = useState<AccountInfo>({});
 
   const router = useRouter();
 
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
+      // If role is player, use getPlayer(), if role is team, use getTeam(), if role is commissioner do nothing
+      
+
       if (session) {
         if (session.user.role === "player") {
           try {
+            const accountInfoResponse = await getPlayerAccountData(session.user.id);
+            setAccountInfo(accountInfoResponse);
+            console.log("Account Info:", accountInfoResponse);
             const activeTeamData = await getPlayerActiveTeam(session.user.id);
             setTeamName(activeTeamData.team_name);
           } catch (error) {
-            // Handle any error from getPlayerActiveTeam gracefully
             console.error("Error fetching player active team:", error);
             setTeamName("No team assigned");
           }
         } else if (session.user.role === "team") {
-          setTeamName(session.user.teamName);
+          const accountInfoResponse = await getTeamAccountData(session.user.id);
+          setAccountInfo(accountInfoResponse);
+          console.log("Account Info:", accountInfoResponse);
+          setTeamName(accountInfoResponse.teamName || "No team name");
         }
         setSession(session);
       }
@@ -65,7 +89,7 @@ export default function AccountPage() {
   const handleChangeName = () => {
     setModalTitle("Change Name");
     setModalInitialValue(
-      `${session?.user?.firstname || ""} ${session?.user?.lastname || ""}`,
+      `${accountInfo.firstName || ""} ${accountInfo.lastName || ""}`,
     );
     setModalSubmitHandler(() => (firstName: string, lastName?: string) => {
       // Implement the logic to change the name
@@ -76,7 +100,14 @@ export default function AccountPage() {
           first_name: firstName,
           last_name: lastName ? lastName : "",
         });
+  
+        // Update the session and accountInfo state
         session.user.firstname = firstName;
+        setAccountInfo((prev) => ({
+          ...prev,
+          firstName: firstName,
+          lastName: lastName || "",
+        }));
       }
       setIsModalOpen(false);
     });
@@ -87,11 +118,14 @@ export default function AccountPage() {
 
   const handleChangeTeamName = () => {
     setModalTitle("Change Team Name");
-    setModalInitialValue(session?.user?.teamName || "");
+    setModalInitialValue(accountInfo.teamName || ""); // Use accountInfo for the initial value
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
-        updateTeamName({ team_id: session.user.id, new_team_name: value });
-        session.user.teamName = value;
+        updateTeamName({ team_id: session.user.id, new_team_name: value }); // Use session for the team ID
+        setAccountInfo((prev) => ({
+          ...prev,
+          teamName: value, // Update accountInfo with the new team name
+        }));
       }
       setIsModalOpen(false);
     });
@@ -99,14 +133,17 @@ export default function AccountPage() {
     setIsNameChange(false);
     setIsModalOpen(true);
   };
-
+  
   const handleChangeTeamUsername = () => {
     setModalTitle("Change Team Username");
-    setModalInitialValue(session?.user?.username || "");
+    setModalInitialValue(accountInfo.username || ""); // Use accountInfo for the initial value
     setModalSubmitHandler(() => (value: string) => {
       if (session) {
-        updateTeamUsername({ team_id: session.user.id, new_username: value });
-        session.user.username = value;
+        updateTeamUsername({ team_id: session.user.id, new_username: value }); // Use session for the team ID
+        setAccountInfo((prev) => ({
+          ...prev,
+          username: value, // Update accountInfo with the new username
+        }));
       }
       setIsModalOpen(false);
     });
@@ -114,17 +151,20 @@ export default function AccountPage() {
     setIsNameChange(false);
     setIsModalOpen(true);
   };
-
+  
   const handleChangeEmail = () => {
     setModalTitle("Change Email");
-    setModalInitialValue(session?.user?.email || "");
+    setModalInitialValue(accountInfo.email || ""); // Use accountInfo for the initial value
     setModalSubmitHandler(() => (value: string) => {
       if (
         session?.user.role === "player" ||
         session?.user.role === "commissioner"
       ) {
-        updatePlayerEmail({ player_id: session.user.id, new_email: value });
-        session.user.email = value;
+        updatePlayerEmail({ player_id: session.user.id, new_email: value }); // Use session for the player ID
+        setAccountInfo((prev) => ({
+          ...prev,
+          email: value, // Update accountInfo with the new email
+        }));
       }
       setIsModalOpen(false);
     });
@@ -171,7 +211,7 @@ export default function AccountPage() {
 
   if (!session) {
     return (
-      <div>
+      <div className="pageHeader">
         <h1 className={title()}>Account</h1>
         <div className="centered-container mt-32">
           <h1 className="text-xl font-semibold text-center">
@@ -196,22 +236,30 @@ export default function AccountPage() {
     );
   }
 
-  const displayName =
-    session.user?.firstname || session.user?.teamName || "User";
-  const teamUsername = session.user?.username;
+  // const displayName =
+  //   accountInfo.firstName || accountInfo.lastName || "User";
+  // const teamUsername = accountInfo.username;
   const userRole = session.user?.role;
-  const userGender = session.user?.gender || "Not specified";
-  const userTeam = teamName || "Not assigned to a team";
 
   return (
     <div>
-      {/* Account Header with Welcome Message */}
-      <h1 className={title()}>Account</h1>
-      <div className="text-center mb-8">
-        <p className="text-lg mt-2">Welcome {displayName}!</p>
-        <p>Manage your account details here</p>
+      <div className="pageHeader">
+        {/* Account Header with Welcome Message */}
+        <h1 className={title()}>Account</h1>
+        <div className="text-center mb-8">
+          {userRole === "player" && (
+            <p className="text-lg mt-2">Welcome {accountInfo.firstName}!</p>
+          )}
+          {userRole === "team" && (
+            <p className="text-lg mt-2">Welcome {accountInfo.teamName} captain!</p>
+          )}
+          {userRole === "commissioner" && (
+            <p className="text-lg mt-2">Welcome Commissioner!</p>
+          )}
+          {/* <p className="text-lg mt-2">Welcome {displayName}!</p> */}
+          <p>Manage your account details here</p>
+        </div>
       </div>
-
       {/* Main Content Layout */}
       <div className="flex justify-between">
         {/* Left side: Account Card */}
@@ -219,13 +267,24 @@ export default function AccountPage() {
           <h2 className="text-xl font-semibold mb-4">Account Info</h2>
           <Card className="max-w-full">
             <CardBody>
-              <p>
+              {/* <p>
                 <strong>Display Name:</strong> {displayName}{" "}
                 {session.user?.lastname}
-              </p>
+              </p> */}
+              {userRole === "player" && (
+                <p>
+                  <strong>Name:</strong> {accountInfo.firstName}{" "}
+                  {accountInfo.lastName}
+                </p>
+              )}
               {userRole === "team" && (
                 <p>
-                  <strong>Username:</strong> {teamUsername}
+                  <strong>Display Name:</strong> {accountInfo.teamName}
+                </p>
+              )}
+              {userRole === "team" && (
+                <p>
+                  <strong>Username:</strong> {accountInfo.username}
                 </p>
               )}
               <p>
@@ -233,12 +292,19 @@ export default function AccountPage() {
               </p>
               {userRole === "player" && (
                 <p>
-                  <strong>Gender:</strong> {capitalizeFirstLetter(userGender)}
+                  <strong>Gender:</strong> {capitalizeFirstLetter(capitalizeFirstLetter(accountInfo.gender || "Not specified"))}
                 </p>
               )}
               {userRole === "player" && (
                 <p>
-                  <strong>Team:</strong> {userTeam}
+                  <strong>
+                    {accountInfo.teams && Object.keys(accountInfo.teams).length > 1
+                      ? "Teams:"
+                      : "Team:"}
+                  </strong>{" "}
+                  {accountInfo.teams && Object.keys(accountInfo.teams).length > 0
+                    ? Object.values(accountInfo.teams).join(", ")
+                    : teamName || "Not assigned to a team"}
                 </p>
               )}
             </CardBody>
@@ -246,8 +312,8 @@ export default function AccountPage() {
         </div>
 
         {/* Right side: Buttons */}
-        <div className="w-2/5">
-          <h2 className="text-xl font-semibold mb-4">Modify Team Info</h2>
+        <div className="w-1/2">
+          <h2 className="text-xl font-semibold mb-4">Modify Account Info</h2>
           {userRole === "player" && (
             <Button className="button mb-4 w-full" onPress={handleChangeName}>
               Change Name

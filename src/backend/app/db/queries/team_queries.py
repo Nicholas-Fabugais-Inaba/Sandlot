@@ -45,7 +45,7 @@ def get_all_season_teams():
     engine = create_connection()
     with Session(engine) as session:
         stmt = (
-            select(Team.id, Team.team_name, Division.division_name, Team.offday, Team.preferred_time)
+            select(Team.id, Team.team_name, Team.division, Division.division_name, Team.offday, Team.preferred_time)
             .select_from(Team)
             .join(Division, Team.division == Division.id)
             .where(Team.division > 0)
@@ -68,6 +68,22 @@ def get_team(login_username):
             Team.preferred_time,
             Team.active
         ).where(Team.username == login_username)
+        result = session.execute(stmt).mappings().first()
+        return result
+
+def get_team_account_data(team_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            Team.id,
+            Team.team_name,
+            Team.username,
+            Team.division,
+            Team.offday,
+            Team.preferred_division,
+            Team.preferred_time,
+            Team.active
+        ).where(Team.id == team_id)
         result = session.execute(stmt).mappings().first()
         return result
 

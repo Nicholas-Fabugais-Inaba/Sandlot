@@ -263,9 +263,8 @@ export default function Home() {
       default:
         return (
           <section className="w-full px-6 py-8 md:py-10">
-            {/* Scrollable container */}
             <div className="w-full mx-auto">
-              <div className="flex flex-row gap-6 min-w-[900px]">
+              <div className="flex flex-row gap-6 flex-wrap">
                 {/* Welcome Section */}
                 <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1 min-w-0">
                   <div className="inline-block max-w-xl">
@@ -277,21 +276,13 @@ export default function Home() {
                   </div>
                   {!loading && session === null && (
                     <div className="flex flex-col items-center mt-6 ml-20">
-                      <Button
-                        className="button"
-                        onPress={() =>
-                          signIn(undefined, { callbackUrl: "/account" })
-                        }
-                      >
+                      <Button className="button" onPress={() => signIn(undefined, { callbackUrl: "/account" })}>
                         Sign In
                       </Button>
                       <p className="mt-4">
                         <em>Don't have an account?</em>
                       </p>
-                      <Button
-                        className="button"
-                        onPress={() => router.push("/account/register")}
-                      >
+                      <Button className="button" onPress={() => router.push("/account/register")}>
                         Register
                       </Button>
                     </div>
@@ -299,11 +290,8 @@ export default function Home() {
                 </div>
 
                 {/* Announcements Section */}
-                <div
-                  className="max-h-96 overflow-y-auto border border-gray-300 rounded-lg p-4"
-                  id="announcements"
-                >
-                  <section className="flex-1 w-[500px]">
+                <div className="border border-gray-300 rounded-lg p-4 flex-1 w-full">
+                  <section>
                     <h2 className="text-xl font-bold">Announcements</h2>
 
                     {session?.user.role === "commissioner" && (
@@ -335,73 +323,62 @@ export default function Home() {
                       {announcements.length === 0 ? (
                         <li className="text-center text-gray-500">No announcements</li>
                       ) : (
-                        announcements.map((announcement, index) => {
-                          return (
-                            <li
-                              key={index}
-                              className="flex flex-col bg-gray-100 p-3 rounded-lg shadow-sm"
-                            >
-                              <div className="relative w-full">
-                                {/* Date in the top right corner */}
-                                <div className="absolute top-2 right-2 text-xs text-gray-500">
-                                  {announcement.date}
-                                </div>
-
-                                {editingIndex === index ? (
-                                  <>
-                                    <input
-                                      className="border border-gray-300 rounded-md px-2 py-1 w-full"
-                                      type="text"
-                                      value={editTitle}
-                                      onChange={(e) => setEditTitle(e.target.value)}
-                                    />
-                                    <textarea
-                                      className="border border-gray-300 rounded-md px-2 py-1 w-full h-24 mt-2"
-                                      value={editBody}
-                                      onChange={(e) => setEditBody(e.target.value)}
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <h3 className="text-lg font-bold text-gray-800">
-                                      {announcement.title}
-                                    </h3>
-                                    <p className="text-gray-800 break-words whitespace-pre-wrap">
-                                      {announcement.body}
-                                    </p>
-                                  </>
-                                )}
-
-                                {/* Buttons for Edit and Delete */}
-                                {session?.user.role === "commissioner" && (
-                                  <div className="flex space-x-2 mt-2">
-                                    {editingIndex === index ? (
-                                      <button
-                                        className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
-                                        onClick={() => handleSaveEdit(index)}
-                                      >
-                                        Save
-                                      </button>
-                                    ) : (
-                                      <button
-                                        className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
-                                        onClick={() => handleEditAnnouncement(index)}
-                                      >
-                                        Edit
-                                      </button>
-                                    )}
-                                    <button
-                                      className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
-                                      onClick={() => handleDeleteAnnouncement(index)}
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                )}
+                        announcements.map((announcement, index) => (
+                          <li key={index} className="flex flex-col bg-gray-100 p-3 rounded-lg shadow-sm">
+                            <div className="relative w-full">
+                              <div className="absolute top-2 right-2 text-xs text-gray-500">
+                                {announcement.date}
                               </div>
-                            </li>
-                          );
-                        })
+
+                              {editingIndex === index ? (
+                                <>
+                                  <input
+                                    className="border border-gray-300 rounded-md px-2 py-1 w-full"
+                                    type="text"
+                                    value={editTitle}
+                                    onChange={(e) => setEditTitle(e.target.value)}
+                                  />
+                                  <textarea
+                                    className="border border-gray-300 rounded-md px-2 py-1 w-full h-24 mt-2"
+                                    value={editBody}
+                                    onChange={(e) => setEditBody(e.target.value)}
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <h3 className="text-lg font-bold text-gray-800">{announcement.title}</h3>
+                                  <p className="text-gray-800 break-words whitespace-pre-wrap">{announcement.body}</p>
+                                </>
+                              )}
+
+                              {session?.user.role === "commissioner" && (
+                                <div className="flex space-x-2 mt-2">
+                                  {editingIndex === index ? (
+                                    <button
+                                      className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
+                                      onClick={() => handleSaveEdit(index)}
+                                    >
+                                      Save
+                                    </button>
+                                  ) : (
+                                    <button
+                                      className="bg-yellow-500 text-white px-2 py-1 rounded-md hover:bg-yellow-600"
+                                      onClick={() => handleEditAnnouncement(index)}
+                                    >
+                                      Edit
+                                    </button>
+                                  )}
+                                  <button
+                                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                                    onClick={() => handleDeleteAnnouncement(index)}
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </li>
+                        ))
                       )}
                     </ul>
                   </section>

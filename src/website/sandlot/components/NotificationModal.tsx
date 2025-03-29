@@ -1,7 +1,8 @@
 // components/NotificationModal.tsx
 
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useCallback } from "react";
 import getRR from "../app/functions/getRR"; // Adjust the import path
+import getAllTimeslots from "../app/functions/getAllTimeslots";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
@@ -43,51 +44,47 @@ export const NotificationModal: FC<NotificationModalProps> = ({
 
   const [fetchTime, setFetchTime] = useState<Date | null>(null);
 
-  // Compute position immediately when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const fetchNotifications = async () => {
+        try {
+          const session = await getSession();
+          const timeslotsResponse = await getAllTimeslots();
+          const [rrList, pendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, false);
+
+          const currentTime = new Date();
+          setFetchTime(currentTime);
+
+          // Ensure each notification has a unique ID
+          const formattedNotifications = rrList
+            .filter((rr: RescheduleRequest) => !rr.isRead)
+            .map((rr: RescheduleRequest, index: number) => {
+              const date = rr.originalDate ? new Date(rr.originalDate) : new Date();
+              return {
+                id: rr.id || index, // Fallback ID if rr.id is undefined
+                message: `Reschedule request from ${rr.requester_name} for ${date.toLocaleString()}`,
+                isRead: false,
+                timestamp: currentTime.toISOString(),
+              };
+            });
+
+          setNotifications(formattedNotifications);
+          setUnreadCount(formattedNotifications.length);
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching reschedule requests:", error);
+          setLoading(false);
+        }
+      };
+
+      fetchNotifications();
+    }
+  }, [isOpen, team_id, setUnreadCount]);
+
+  // Move position update logic to a separate useEffect
   useEffect(() => {
     if (!isOpen || !anchorRef.current) return;
 
-    const rect = anchorRef.current.getBoundingClientRect();
-    setBellPosition({
-      top: rect.bottom,  // Directly position under the bell
-      left: rect.left - 300,  // Center horizontally
-      width: rect.width
-    });
-  }, [isOpen, anchorRef]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const fetchNotifications = async () => {
-      try {
-        const session = await getSession();
-        const rrList: RescheduleRequest[] = await getRR({ team_id: session?.user.team_id });
-
-        const currentTime = new Date();
-        setFetchTime(currentTime); 
-
-        const formattedNotifications = rrList
-          .filter((rr: RescheduleRequest) => !rr.isRead)
-          .map((rr: RescheduleRequest) => ({
-            id: rr.id,
-            message: `Reschedule request from ${rr.requester_name} for ${rr.originalDate.toLocaleString()}`,
-            isRead: false,
-            timestamp: currentTime.toISOString(), 
-          }));
-
-        setNotifications(formattedNotifications);
-        setUnreadCount(formattedNotifications.length);
-
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching reschedule requests:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchNotifications();
-
-    // Resize listener to update position
     const updateBellPosition = () => {
       if (anchorRef.current) {
         const rect = anchorRef.current.getBoundingClientRect();
@@ -99,13 +96,13 @@ export const NotificationModal: FC<NotificationModalProps> = ({
       }
     };
 
+    updateBellPosition();
     window.addEventListener("resize", updateBellPosition);
+    
     return () => {
       window.removeEventListener("resize", updateBellPosition);
     };
-  }, [isOpen, team_id, anchorRef]);
-
-  if (!isOpen) return null;
+  }, [isOpen, anchorRef]);
 
   const timeAgo = (timestamp: string) => {
     const now = new Date();
@@ -135,15 +132,15 @@ export const NotificationModal: FC<NotificationModalProps> = ({
     return date.toLocaleString("en-US", options);
   };
 
-  const markAllRead = () => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.map((notification) => ({
-        ...notification,
-        isRead: true,
-      }))
-    );
-    setUnreadCount(0); // Reset unread count when all are marked as read
-  };
+  const markAllRead = useCallback(() => {
+    setNotifications(prev => prev.map(notification => ({
+      ...notification,
+      isRead: true,
+    })));
+    setUnreadCount(0);
+  }, [setUnreadCount]);
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -178,12 +175,12 @@ export const NotificationModal: FC<NotificationModalProps> = ({
               {notifications.map((notification) => (
                 <li
                   key={notification.id}
-                  className={`relative p-4 border rounded-lg ${
+                  className={`relative p-4 border rounded-lg h-24 ${
                     notification.isRead ? "bg-gray-100 dark:bg-gray-700" : "bg-blue-100 dark:bg-blue-500"
                   }`} // Change background based on isRead
                 >
                   <p>{notification.message}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-300">{timeAgo(notification.timestamp)}</p>
+                  {/* <p className="text-xs text-gray-500 dark:text-gray-300">{timeAgo(notification.timestamp)}</p> */}
                   <Button
                     className="absolute bottom-4 right-4 bg-blue-500 text-white rounded-full w-16 h-8 text-xs 
                     hover:bg-blue-600 dark:bg-blue-400 dark:hover:bg-blue-300 dark:text-black"              

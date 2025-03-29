@@ -15,7 +15,7 @@ import NextLink from "next/link";
 import clsx from "clsx";
 import React, { useEffect, useState, useRef } from "react";
 import { Session } from "next-auth";
-import { getSession, signOut } from "next-auth/react";
+import { getSession, signOut, signIn } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
@@ -26,8 +26,10 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { ChevronDown } from "lucide-react";
 
 import getRR from "../app/functions/getRR";
+import getAllTimeslots from "../app/functions/getAllTimeslots";
 import getPlayerActiveTeam from "../app/functions/getPlayerActiveTeam";
 import updatePlayerActiveTeam from "../app/functions/updatePlayerActiveTeam";
+import getPlayerAccountData from "@/app/functions/getPlayerAccountInfo";
 
 export const Navbar = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -39,6 +41,7 @@ export const Navbar = () => {
   const bellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get current URL path
   const [manageLeagueDropOpen, setManageLeagueDropOpen] = useState(false);
+  const [userTeams, setUserTeams] = useState<{ [key: number]: string }>({});
 
   useEffect(() => {
     const fetchSessionAndNotifications = async () => {
@@ -46,23 +49,31 @@ export const Navbar = () => {
         const session = await getSession();
         setSession(session)
         console.log("Session:", session);
-        console.log("Teams dict:", session?.user.teams);
 
         if (session && session.user.role === "player") {
           const activeTeamData = await getPlayerActiveTeam(session.user.id);
           setActiveTeamId(activeTeamData.team_id);
-
-          if (!activeTeamId || activeTeamId <= 0) {
-            updatePlayerActiveTeam({player_id: session.user.id, team_id: session.user.team_id});
+          const accountData = await getPlayerAccountData(session.user.id);
+          setUserTeams(accountData.teams);
+          // console.log("Active team ID:", activeTeamData.team_id);
+          // console.log("Teams dict:", accountData.teams);
+          // console.log("Session teams dict:", session.user.teams);
+          if (Object.keys(accountData.teams).length === 0) {
+            console.log("No teams found for the user.");
+          } else if (!activeTeamData.team_id || activeTeamData.team_id <= 0) {
+            const firstTeamId = Object.keys(accountData.teams).length > 0 ? Number(Object.keys(accountData.teams)[0]) : 0;
+            updatePlayerActiveTeam({player_id: session.user.id, team_id: firstTeamId});
+            setActiveTeamId(firstTeamId);
           }
         }
 
-        // Fetch unread notifications immediately
-        if (session?.user.team_id) {
-          const rrList = await getRR({ team_id: session.user.team_id });
-          const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
-          setUnreadCount(unreadNotifications.length);
-        }
+        // // Fetch unread notifications immediately
+        // if (session?.user.team_id) {
+        //   const timeslotsResponse = await getAllTimeslots();
+        //   const rrList = await getRR({ team_id: session.user.team_id }, timeslotsResponse);
+        //   const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
+        //   setUnreadCount(unreadNotifications.length);
+        // }
 
         setLoading(false);
       } catch (error) {
@@ -95,7 +106,7 @@ export const Navbar = () => {
     if (session) {
       await updatePlayerActiveTeam({player_id: session.user.id, team_id: teamId})
       setActiveTeamId(teamId)
-      console.log(`Switched to team: ${session.user.teams[teamId]}`);
+      console.log(`Switched to team: ${userTeams[teamId]}`);
       // Refresh the page
       window.location.reload();
     }
@@ -122,19 +133,19 @@ export const Navbar = () => {
       onMenuOpenChange={setIsMenuOpen}
       className="border-b-[1px] border-b-[#F3F4F6] dark:border-b-[#3C3C3C] bg-white dark:bg-[#0d0d0d] shadow-md"
       >
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
+      <NavbarContent className="basis-1/6 sm:basis-auto" justify="start">
+        <NavbarBrand as="li" className="gap-3 max-w-fit mr-3 min-w-[120px]">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-inherit">Sandlot</p>
+            <p className="font-bold text-inherit whitespace-nowrap">Sandlot</p>
           </NextLink>
         </NavbarBrand>
 
         {/* Prevent rendering navbar items until session is loaded */}
         {!loading && (
-          <ul className="hidden lg:flex gap-4 justify-start ml-2">
+          <ul className="hidden lg:flex gap-4 items-center">
             {filteredNavItems.map((item) => (
-              <NavbarItem key={item.href}>
+              <NavbarItem key={item.href} className="min-w-fit">
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
@@ -192,6 +203,16 @@ export const Navbar = () => {
         className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
+        {!session && (
+          <NavbarItem>
+            <button
+              onClick={() => signIn(undefined, { callbackUrl: "/account" })}
+              className="w-20 h-10 text-sm rounded-lg bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+            >
+              Sign In
+            </button>
+          </NavbarItem>
+        )}
         {session && (
           <NavbarItem>
             <button
@@ -206,10 +227,10 @@ export const Navbar = () => {
           <NavbarItem className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
-                {activeTeamId && session?.user.teams[activeTeamId]} <ChevronDown size={16} />
+                {activeTeamId && userTeams[activeTeamId]} <ChevronDown size={16} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
-                {session && Object.entries(session?.user.teams).map(([id, name]) => (
+                {session && Object.entries(userTeams).map(([id, name]) => (
                   <DropdownMenuItem
                     key={id}
                     className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
@@ -247,7 +268,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarMenu>
-        {siteConfig.navItems.map((item, index) => (
+        {filteredNavItems.map((item, index) => (
           <NavbarMenuItem key={`${item.label}-${index}`}>
             <Link
               href={item.href}

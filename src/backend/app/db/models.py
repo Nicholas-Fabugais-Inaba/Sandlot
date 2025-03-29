@@ -8,7 +8,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from .create_engine import create_connection
-#from create_engine import create_connection
+# from create_engine import create_connection
 
 engine = create_connection()
 
@@ -71,14 +71,19 @@ class RescheduleRequest(Base):
     game_id: Mapped[Optional[int]] = mapped_column(ForeignKey("game.id"))
     option1: Mapped[Optional[str]] = mapped_column(String(50))
     option1_field: Mapped[Optional[str]] = mapped_column(String(50))
+    option1_timeslot: Mapped[Optional[str]] = mapped_column(String(50))
     option2: Mapped[Optional[str]] = mapped_column(String(50))
     option2_field: Mapped[Optional[str]] = mapped_column(String(50))
+    option2_timeslot: Mapped[Optional[str]] = mapped_column(String(50))
     option3: Mapped[Optional[str]] = mapped_column(String(50))
     option3_field: Mapped[Optional[str]] = mapped_column(String(50))
+    option3_timeslot: Mapped[Optional[str]] = mapped_column(String(50))
     option4: Mapped[Optional[str]] = mapped_column(String(50))
     option4_field: Mapped[Optional[str]] = mapped_column(String(50))
+    option4_timeslot: Mapped[Optional[str]] = mapped_column(String(50))
     option5: Mapped[Optional[str]] = mapped_column(String(50))
     option5_field: Mapped[Optional[str]] = mapped_column(String(50))
+    option5_timeslot: Mapped[Optional[str]] = mapped_column(String(50))
     accepted: Mapped[Optional[bool]] = mapped_column()
 
 class JoinRequest(Base):
@@ -96,6 +101,7 @@ class SeasonSettings(Base):
     end_date: Mapped[Optional[str]] = mapped_column(String(50))
     games_per_team: Mapped[Optional[int]] = mapped_column()
     state: Mapped[String] = mapped_column(String(50), default="pre-season")
+    waiver_enabled: Mapped[Optional[bool]] = mapped_column(default=True)
 
 class Field(Base):
     __tablename__ = "field"
@@ -129,6 +135,13 @@ class Waiver(Base):
     signature: Mapped[Optional[str]] = mapped_column(String(50))
     year: Mapped[Optional[str]] = mapped_column(String(50))
 
+class WaiverFormat(Base):
+    __tablename__ = "waiver_format"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    year: Mapped[Optional[str]] = mapped_column(String(50))
+    index: Mapped[Optional[int]] = mapped_column() # 0 reserved for title 
+    text: Mapped[Optional[str]] = mapped_column(String)
+
 class ArchivedTeam(Base):
     __tablename__ = "archived_team"
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -144,9 +157,22 @@ class ArchivedPlayer(Base):
     first_name: Mapped[Optional[str]] = mapped_column(String(30))
     last_name: Mapped[Optional[str]] = mapped_column(String(30))
 
+class Directory(Base):
+    __tablename__ = "directory"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(String(50))
+    content: Mapped[Optional[str]] = mapped_column(String(5000))
+    
+class Solstice(Base):
+    __tablename__ = "solstice"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    active: Mapped[Optional[bool]] = mapped_column(default=True)
+    start: Mapped[Optional[str]] = mapped_column(String(50))
+    end: Mapped[Optional[str]] = mapped_column(String(50))
+
 
 # function which creates defined models as tables in DB
 def create_tables():
     Base.metadata.create_all(engine)
 
-#create_tables()
+create_tables()

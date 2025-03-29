@@ -1,40 +1,63 @@
+// export type Event = {
+//   start: Date;
+//   end: Date;
+//   field1?: {
+//     id: number;
+//     home: string;
+//     home_id: number;
+//     home_score: number;
+//     away: string;
+//     away_id: number;
+//     away_score: number;
+//     played: boolean;
+//     forfeit: number;
+//   };
+//   field2?: {
+//     id: number;
+//     home: string;
+//     home_id: number;
+//     home_score: number;
+//     away: string;
+//     away_id: number;
+//     away_score: number;
+//     played: boolean;
+//     forfeit: number;
+//   };
+//   field3?: {
+//     id: number;
+//     home: string;
+//     home_id: number;
+//     home_score: number;
+//     away: string;
+//     away_id: number;
+//     away_score: number;
+//     played: boolean;
+//     forfeit: number;
+//   };
+// };
+
 export type Event = {
   start: Date;
   end: Date;
-  field1?: {
-    id: number;
-    home: string;
-    home_id: number;
-    home_score: number;
-    away: string;
-    away_id: number;
-    away_score: number;
-    played: boolean;
-    forfeit: number;
-  };
-  field2?: {
-    id: number;
-    home: string;
-    home_id: number;
-    home_score: number;
-    away: string;
-    away_id: number;
-    away_score: number;
-    played: boolean;
-    forfeit: number;
-  };
-  field3?: {
-    id: number;
-    home: string;
-    home_id: number;
-    home_score: number;
-    away: string;
-    away_id: number;
-    away_score: number;
-    played: boolean;
-    forfeit: number;
-  };
-};
+  field?: string;
+  timeslot?: string;
+  game_id?: number;
+  home?: string;
+  home_id?: number;
+  home_score?: number;
+  away?: string;
+  away_id?: number;
+  away_score?: number;
+  played?: boolean;
+  forfeit?: number;
+  spacer?: boolean;
+}
+
+// export type GenSchedResponse = {
+//   events: Event[];
+//   schedule: any;
+//   score: number;
+// };
 
 export type GenSchedResponse = {
   events: Event[];
