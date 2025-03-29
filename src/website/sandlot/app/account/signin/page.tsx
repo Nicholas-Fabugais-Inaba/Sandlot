@@ -11,6 +11,7 @@ import styles from "./SignIn.module.css";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { title } from "@/components/primitives";
+import "../../Global.css";
 
 export default function SignIn() {
   const [userID, setUserID] = useState("");
@@ -42,7 +43,9 @@ export default function SignIn() {
 
   return (
     <div>
-      <h1 className={title()}>Sign In</h1>
+      <div className="pageHeader">
+        <h1 className={title()}>Sign In</h1>
+      </div>
       <div className={styles.container}>
         <div className="centered-container">
           {error && <p className={styles.error}>{error}</p>}
@@ -84,7 +87,9 @@ export default function SignIn() {
             </div>
           </form>
           <div className={styles.newUserContainer}>
-            <p className={styles.newUserText}>New User?</p>
+            <p className="mt-4">
+              <em>Don't have an account?</em>
+            </p>
             <Button
               className="button"
               onPress={() => router.push("/account/register")}
