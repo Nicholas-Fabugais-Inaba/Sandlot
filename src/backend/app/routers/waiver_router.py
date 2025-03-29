@@ -34,6 +34,7 @@ async def remove_waiver_formats_by_year(data: Year):
     return True
 
 @router.post("/insert_waiver_format", response_model=None)
-async def create_waiver_format_(data: WaiverFormat):
-    insert_waiver_format(data.year, data.index, data.text)
+async def create_waiver_format_(data: list):
+    for item in data:
+        insert_waiver_format(item["year"], item["index"], item["text"])
     return True
