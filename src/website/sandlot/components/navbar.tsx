@@ -243,11 +243,10 @@ export const Navbar = () => {
             </DropdownMenu>
           </NavbarItem>
         )}
-        {(session?.user.role === "team" || session?.user.role === "player") && (
+        {/* {(session?.user.role === "team" || session?.user.role === "player") && (
           <NavbarItem className="flex gap-2">
             <div ref={bellRef}>
               {" "}
-              {/* Bell icon wrapper to track position */}
               <BellIcon
                 className="cursor-pointer"
                 onClick={handleBellClick}
@@ -255,7 +254,7 @@ export const Navbar = () => {
               />
             </div>
           </NavbarItem>
-        )}
+        )} */}
         <NavbarItem className="flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
