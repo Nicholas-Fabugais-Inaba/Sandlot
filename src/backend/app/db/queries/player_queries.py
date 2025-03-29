@@ -42,6 +42,20 @@ def get_player(login_email):
         result = session.execute(stmt).mappings().first()
         return result
 
+def get_player_account_data(player_id):
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            Player.id,
+            Player.first_name,
+            Player.last_name,
+            Player.email,
+            Player.gender,
+            Player.active
+        ).where(Player.id == player_id)
+        result = session.execute(stmt).mappings().first()
+        return result
+
 def get_player_active_team(player_id):
     engine = create_connection()
     with Session(engine) as session:
