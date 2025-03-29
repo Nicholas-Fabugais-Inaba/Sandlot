@@ -4,6 +4,7 @@ import styles from "./Waiver.module.css";
 interface WaiverProps {
     player_id?: number;
     year?: string;
+    waiverTitle: string
     waiverTexts: string[]
     waiverInitials: string
     setWaiverInitials: any
@@ -24,14 +25,15 @@ export default function Waiver(props: WaiverProps) {
     return (
         <div className={styles.waiver}>
             <h3 className={styles.header}>
-                GSA Softball Player Waiver {props.year ? props.year : new Date().getFullYear()}
+                {/* GSA Softball Player Waiver {props.year ? props.year : new Date().getFullYear()} */}
+                {props.waiverTitle}
             </h3>
 
-            <p className={styles.description}>
+            {/* <p className={styles.description}>
                 This is the player participation waiver for participating in the GSA
                 softball league for the {props.year ? props.year : new Date().getFullYear()} summer season. 
                 By providing your initials, you acknowledge the following risks and agreements:
-            </p>
+            </p> */}
 
             <div className={styles.inputContainer}>
                 {props.waiverTexts.map((text, index) => (
