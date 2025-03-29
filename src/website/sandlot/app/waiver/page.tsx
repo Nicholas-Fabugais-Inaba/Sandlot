@@ -251,7 +251,7 @@ export default function WaiverManagementPage() {
           <div className="space-y-4">
             <Input 
               placeholder="Waiver Title"
-              value={waiverFormat ? waiverFormat[0].text: "Title"}
+              value={waiverFormat ? decodeURI(waiverFormat[0].text): "Title"}
               onChange={(e) => {
                 if(waiverFormat) {
                   let section = [...waiverFormat]
