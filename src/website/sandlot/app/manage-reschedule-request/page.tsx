@@ -15,6 +15,7 @@ import "./ManageRescheduleRequest.css";
 
 import getRR from "../functions/getRR";
 import acceptRR from "../functions/acceptRR";
+import getAllTimeslots from "../functions/getAllTimeslots";
 
 interface RescheduleRequest {
   id: string;
@@ -27,6 +28,13 @@ interface RescheduleRequest {
   requester_name: string;
   reciever_id: number;
   requester_id: number;
+}
+
+interface Timeslot {
+  id: number;
+  start: string;
+  end: string;
+  field_id: number;
 }
 
 export default function ManageRescheduleRequest() {
@@ -47,6 +55,7 @@ export default function ManageRescheduleRequest() {
     requester_name?: string;
     newDate?: string;
   } | null>(null);
+  const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
   const router = useRouter();
 
   // Combined fetch for session and reschedule requests
@@ -55,6 +64,10 @@ export default function ManageRescheduleRequest() {
       try {
         setLoading(true);
         const session = await getSession();
+        const timeslots = await getAllTimeslots();
+        if (timeslots) {
+          setTimeslots(timeslots);
+        }
 
         if (session) {
           setUserRole(session.user?.role || null);
@@ -120,7 +133,7 @@ export default function ManageRescheduleRequest() {
 
         if (request) {
           let splitNewDate = parseNewDate(modalContent.newDate);
-          let timeslot = deriveTimeslot(splitNewDate[0]);
+          let timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], timeslots);
           let formattedDate: string = splitNewDate[0].toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
           acceptRR({
@@ -152,18 +165,27 @@ export default function ManageRescheduleRequest() {
     return [new Date(splitNewDate[0]), splitNewDate[1]];
   }
 
-  function deriveTimeslot(date: Date): string {
-    if (date.getHours() === 17) {
-      return "1";
-    } else if (date.getHours() === 18) {
-      return "2";
-    } else if (date.getHours() === 20) {
-      return "3";
-    } else if (date.getHours() === 21) {
-      return "4";
-    }
-
-    return "0";
+  function deriveTimeslot(date: Date, field: string, timeslots: Timeslot[]): string {
+    // Extract the hour from the input date
+    const hour = date.getUTCHours();
+  
+    // Filter timeslots for the given field and sort them by start time
+    const fieldTimeslots = timeslots
+      .filter((ts) => ts.field_id.toString() === field)
+      .sort((a, b) => {
+        const [startHourA, startMinuteA] = a.start.split(":").map(Number);
+        const [startHourB, startMinuteB] = b.start.split(":").map(Number);
+        return startHourA - startHourB || startMinuteA - startMinuteB; // Sort by hour, then by minute
+      });
+  
+    // Find the matching timeslot where the start time matches the hour
+    const matchingTimeslotIndex = fieldTimeslots.findIndex((ts) => {
+      const [startHour] = ts.start.split("-").map(Number); // Extract the hour from the timeslot start (HH-MM)
+      return startHour === hour;
+    });
+  
+    // Return the sequential ID (1-based index) if a match is found, otherwise return "0"
+    return matchingTimeslotIndex !== -1 ? (matchingTimeslotIndex + 1).toString() : "0";
   }
 
   if (loading) {
