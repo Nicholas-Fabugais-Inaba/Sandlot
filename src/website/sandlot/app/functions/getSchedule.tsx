@@ -501,32 +501,46 @@ function buildFieldsFromTimeslots(timeslots: any): Record<string, Field> {
   const fields: Record<string, Field> = {};
   const fieldCounters: Record<string, number> = {}; // Track counters for each field
 
+  // Group timeslots by field_id
+  const groupedTimeslots: Record<string, any[]> = {};
   for (const timeslot of timeslots) {
     const fieldId = timeslot.field_id.toString();
-
-    // Parse the start and end times from the string format
-    const [startHour, startMinute] = timeslot.start.split("-").map(Number);
-    const [endHour, endMinute] = timeslot.end.split("-").map(Number);
-
-    // Initialize the field if it doesn't exist
-    if (!fields[fieldId]) {
-      fields[fieldId] = { timeslots: {} };
-      fieldCounters[fieldId] = 1; // Start the counter at 1 for this field
+    if (!groupedTimeslots[fieldId]) {
+      groupedTimeslots[fieldId] = [];
     }
+    groupedTimeslots[fieldId].push(timeslot);
+  }
 
-    // Use the counter for the timeslot key
-    const timeslotKey = fieldCounters[fieldId].toString();
+  // Process each field's timeslots
+  for (const fieldId in groupedTimeslots) {
+    if (groupedTimeslots.hasOwnProperty(fieldId)) {
+      // Sort timeslots by start time (hour and minute)
+      groupedTimeslots[fieldId].sort((a, b) => {
+        const [aStartHour, aStartMinute] = a.start.split("-").map(Number);
+        const [bStartHour, bStartMinute] = b.start.split("-").map(Number);
+        return aStartHour - bStartHour || aStartMinute - bStartMinute;
+      });
 
-    // Add the timeslot to the field's timeslots
-    fields[fieldId].timeslots[timeslotKey] = {
-      start_hour: startHour,
-      start_minutes: startMinute,
-      end_hour: endHour,
-      end_minutes: endMinute,
-    };
+      // Initialize the field and counter
+      fields[fieldId] = { timeslots: {} };
+      fieldCounters[fieldId] = 1;
 
-    // Increment the counter for this field
-    fieldCounters[fieldId]++;
+      // Assign sorted timeslots to the field
+      for (const timeslot of groupedTimeslots[fieldId]) {
+        const [startHour, startMinute] = timeslot.start.split("-").map(Number);
+        const [endHour, endMinute] = timeslot.end.split("-").map(Number);
+
+        const timeslotKey = fieldCounters[fieldId].toString();
+        fields[fieldId].timeslots[timeslotKey] = {
+          start_hour: startHour,
+          start_minutes: startMinute,
+          end_hour: endHour,
+          end_minutes: endMinute,
+        };
+
+        fieldCounters[fieldId]++;
+      }
+    }
   }
 
   console.log("Fields: ", fields);

@@ -8,7 +8,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from .create_engine import create_connection
-#from create_engine import create_connection
+# from create_engine import create_connection
 
 engine = create_connection()
 
@@ -101,6 +101,7 @@ class SeasonSettings(Base):
     end_date: Mapped[Optional[str]] = mapped_column(String(50))
     games_per_team: Mapped[Optional[int]] = mapped_column()
     state: Mapped[String] = mapped_column(String(50), default="pre-season")
+    waiver_enabled: Mapped[Optional[bool]] = mapped_column(default=True)
 
 class Field(Base):
     __tablename__ = "field"
@@ -134,6 +135,13 @@ class Waiver(Base):
     signature: Mapped[Optional[str]] = mapped_column(String(50))
     year: Mapped[Optional[str]] = mapped_column(String(50))
 
+class WaiverFormat(Base):
+    __tablename__ = "waiver_format"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    year: Mapped[Optional[str]] = mapped_column(String(50))
+    index: Mapped[Optional[int]] = mapped_column() # 0 reserved for title 
+    text: Mapped[Optional[str]] = mapped_column(String)
+
 class ArchivedTeam(Base):
     __tablename__ = "archived_team"
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -149,6 +157,11 @@ class ArchivedPlayer(Base):
     first_name: Mapped[Optional[str]] = mapped_column(String(30))
     last_name: Mapped[Optional[str]] = mapped_column(String(30))
 
+class Directory(Base):
+    __tablename__ = "directory"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(String(50))
+    content: Mapped[Optional[str]] = mapped_column(String(5000))
 
 # function which creates defined models as tables in DB
 def create_tables():

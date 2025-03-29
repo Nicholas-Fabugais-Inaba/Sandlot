@@ -28,6 +28,7 @@ html.dark .waiver{
     font-weight: 600;
     margin-bottom: 1rem;
     color: #111827;
+    white-space: pre-wrap;
 }
 
 html.dark .header {
@@ -62,6 +63,7 @@ html.dark .description {
 .label {
     font-size: 0.875rem;
     color: #374151;
+    white-space: pre-wrap;
 }
 
 html.dark .label {
@@ -100,6 +102,7 @@ html.dark .input:focus {
     font-size: 0.75rem;
     color: #6b7280;
     margin-top: 1rem;
+    white-space: pre-wrap;
 }
 
 html.dark .footnote {
