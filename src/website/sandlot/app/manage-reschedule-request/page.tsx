@@ -25,9 +25,9 @@ interface RescheduleRequest {
   proposedDates: Date[];
   proposedFields: string[];
   proposedTimeslots: string[];
-  reciever_name: string;
+  receiver_name: string;
   requester_name: string;
-  reciever_id: number;
+  receiver_id: number;
   requester_id: number;
 }
 
@@ -54,7 +54,7 @@ export default function ManageRescheduleRequest() {
     action: string;
     originalDate: Date;
     originalField: string;
-    reciever_name?: string;
+    receiver_name?: string;
     requester_name?: string;
     newDate?: string;
   } | null>(null);
@@ -103,7 +103,7 @@ export default function ManageRescheduleRequest() {
         action: "accept",
         originalDate: request.originalDate,
         originalField: request.originalField,
-        reciever_name: request.reciever_name,
+        receiver_name: request.receiver_name,
         requester_name: request.requester_name,
         newDate: selectedDate,
       });
@@ -122,7 +122,7 @@ export default function ManageRescheduleRequest() {
         action: "deny",
         originalDate: request.originalDate,
         originalField: request.originalField,
-        reciever_name: request.reciever_name,
+        receiver_name: request.receiver_name,
         requester_name: request.requester_name,
       });
       setModalVisible(true);
@@ -156,7 +156,7 @@ export default function ManageRescheduleRequest() {
           acceptRR({
             rr_id: parseInt(request.id, 10),
             old_game_id: request.game_id,
-            home_team_id: request.reciever_id,
+            home_team_id: request.receiver_id,
             away_team_id: request.requester_id,
             date: formattedDate,
             time: splitNewDate[1],
@@ -225,7 +225,7 @@ export default function ManageRescheduleRequest() {
           <div>No reschedule requests found.</div>
         ) : (
           rescheduleRequests
-            .filter((request) => request.reciever_id === userTeamId) // Filter for incoming requests
+            .filter((request) => request.receiver_id === userTeamId) // Filter for incoming requests
             .map((request) => (
               <Card
                 key={request.id}
@@ -236,7 +236,7 @@ export default function ManageRescheduleRequest() {
                     Game Requested for Rescheduling
                   </h2>
                   <p>
-                    {request.reciever_name} vs. {request.requester_name}
+                    {request.receiver_name} vs. {request.requester_name}
                   </p>
                 </div>
                 <div className="mb-4">
@@ -297,7 +297,6 @@ export default function ManageRescheduleRequest() {
               </Card>
             ))
         )}
-
         {/* Pending Requests Section */}
         <h2 className="text-2xl font-semibold mt-8 mb-4">Pending Reschedule Requests</h2>
         {pendingRequests.filter((request) => request.requester_id === userTeamId).length === 0 ? (
@@ -315,7 +314,7 @@ export default function ManageRescheduleRequest() {
                     Pending Reschedule Request
                   </h2>
                   <p>
-                    {request.reciever_name} vs. {request.requester_name}
+                    {request.receiver_name} vs. {request.requester_name}
                   </p>
                 </div>
                 <div className="mb-4">
@@ -341,7 +340,47 @@ export default function ManageRescheduleRequest() {
               </Card>
             ))
         )}
+        <div className="mt-6">
+          <p className="italic">Need to reschedule your team's game?</p>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg mt-2"
+            onClick={() => router.push("/schedule")}
+          >
+            Reschedule Game
+          </button>
+        </div>
       </div>
+
+      <CustomModal
+        body={
+          <>
+            <p>
+              Are you sure you want to {modalContent?.action} the reschedule
+              request?
+            </p>
+            <p>
+              Original Game: {modalContent?.receiver_name} vs.{" "}
+              {modalContent?.requester_name}
+            </p>
+            <p>
+              Original Date: {modalContent?.originalDate.toLocaleString()} on
+              Field {modalContent?.originalField}
+            </p>
+            {modalContent?.action === "accept" && modalContent?.newDate && (
+              <p>
+                New Date:{" "}
+                {parseNewDate(modalContent.newDate)[0].toLocaleString() +
+                  " on Field " +
+                  parseNewDate(modalContent.newDate)[1]}
+              </p>
+            )}
+          </>
+        }
+        isVisible={modalVisible}
+        title={`Confirm ${modalContent?.action === "accept" ? "Acceptance" : "Denial"}`}
+        onClose={() => setModalVisible(false)}
+        onConfirm={confirmAction}
+      />
     </div>
   );
 }
