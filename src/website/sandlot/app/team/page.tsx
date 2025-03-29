@@ -168,6 +168,7 @@ export default function TeamPage() {
     else {
       await leaveTeam({team_id: teamId, player_id: playerId, new_active_team_required: false, new_active_team: null})
     }
+    window.location.reload();
     router.push('/join-a-team')
   }
 
