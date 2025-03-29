@@ -43,12 +43,18 @@ export default function SignIn() {
 
   return (
     <div>
-      <div className="pageHeader">
+      <div className="mt-[20px]">
         <h1 className={title()}>Sign In</h1>
       </div>
       <div className={styles.container}>
         <div className="centered-container">
-          {error && <p className={styles.error}>{error}</p>}
+          <div className="">
+            {error && (
+              <p className={styles.error}>
+                {error}
+              </p>
+            )}
+          </div>
           <form className="form" onSubmit={handleSignIn}>
             <div className={styles.inputGroup}>
               <label>Email or Team Username:</label>

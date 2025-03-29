@@ -583,7 +583,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       {viewer ? (
         null
       ) : (
-        <h1 className={title()}>Schedule</h1>
+        <div className="pageHeader">
+          <h1 className={title()}>Schedule</h1>
+        </div>
       )}
       {schedType === 3 ? (
         <p className="text-2xl text-center mt-2">

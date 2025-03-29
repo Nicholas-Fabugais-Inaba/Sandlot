@@ -215,7 +215,9 @@ export default function ManageRescheduleRequest() {
 
   return (
     <div>
-      <h1 className={title()}>Manage Reschedule Requests</h1>
+      <div className="pageHeader">
+        <h1 className={title()}>Manage Reschedule Requests</h1>
+      </div>
       <div className="text-left p-6">
         {/* Reschedule Requests Section */}
         <h2 className="text-2xl font-semibold mb-4">Incoming Reschedule Requests</h2>

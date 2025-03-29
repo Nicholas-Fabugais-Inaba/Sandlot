@@ -245,7 +245,9 @@ export default function WaiverManagementPage() {
 
   return (
     <div>
-      <h1 className={title()}>Waiver Management</h1>
+      <div className="pageHeader">
+        <h1 className={title()}>Waiver Management</h1>
+      </div>
 
       {/* Waiver Configuration Section */}
       <Card className="mt-6 mb-6">

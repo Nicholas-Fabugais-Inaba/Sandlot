@@ -592,7 +592,7 @@ export default function Home() {
       </aside>
       <main className="flex-grow flex flex-col overflow-hidden">
         {/* Sticky Title Header - Added word-break and white-space properties */}
-        <div className="sticky top-0 bg-white z-10 p-4 border-b">
+        <div className="sticky bg-white dark:bg-black z-10 p-4 border-b dark:border-gray-700">
           <div className="w-full mx-auto">
             {editingPageTitle ? (
               <div className="flex flex-col space-y-2">

@@ -50,7 +50,9 @@ export default function EmailBroadcastPage() {
 
   return (
     <div>
-      <h1 className={title()}>Email Broadcasting</h1>
+      <div className="pageHeader">
+        <h1 className={title()}>Email Broadcasting</h1>
+      </div>
       <form className="items-center p-6 space-y-6">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Select Recipients</h3>
