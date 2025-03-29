@@ -174,8 +174,8 @@ async def preseason_to_season_route():
     update_season_state("season")
     return True
 
-@router.get("/get_waiver_enabled", response_model=bool)
+@router.get("/get_waiver_enabled", response_model=dict)
 async def get_waiver_state():
-    response = {}
-    response["state"] = get_waiver_enabled()
+    response = dict(get_waiver_enabled())
+    print(response)
     return response
