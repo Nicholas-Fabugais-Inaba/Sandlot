@@ -31,6 +31,11 @@ class RescheduleRequest(BaseModel):
     option3: Optional[str]
     option4: Optional[str]
     option5: Optional[str]
+    option1_timeslot: str
+    option2_timeslot: Optional[str]
+    option3_timeslot: Optional[str]
+    option4_timeslot: Optional[str]
+    option5_timeslot: Optional[str]
     option1_field: str
     option2_field: Optional[str]
     option3_field: Optional[str]
@@ -61,10 +66,23 @@ class SeasonPreset(BaseModel):
     end_date: str
     games_per_team: int
 
+class InputFieldData(BaseModel):
+    id: int
+    name: str
+    timeslotIds: list[int]
+
+class InputTimeslotData(BaseModel):
+    id: int
+    startTime: str
+    endTime: str
+
 class SeasonSettings(BaseModel):
     start_date: str
     end_date: str
     games_per_team: int
+    game_days: list[str]
+    fields: list[InputFieldData]
+    timeslots: list[InputTimeslotData]
 
 class SeasonState(BaseModel):
     state: str
