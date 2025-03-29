@@ -14,10 +14,18 @@ import { getSession } from "next-auth/react";
 import { Session } from "next-auth";
 
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { FaFileDownload } from 'react-icons/fa';
+
+import { pdf } from "@react-pdf/renderer";
+import MyPDF from "./WaiverPDF";
 
 import { title } from "@/components/primitives";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
+import getPlayerWaivers from "@/app/functions/getPlayerWaivers";
+
+// import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
+import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 
 let notificationTimeout: NodeJS.Timeout | null = null;
 
@@ -32,6 +40,12 @@ export default function TeamsDirectoryPage() {
   const [expandedTeams, setExpandedTeams] = useState<string[]>([]); 
   const [playersByTeam, setPlayersByTeam] = useState<Record<string, Player[]>>({}); 
   const [copyNotification, setCopyNotification] = useState<string | null>(null);
+  const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[]>([]);
+  const [waiverTitle, setWaiverTitle] = useState<string>("");
+  const [waiverTexts, setWaiverTexts] = useState<string[]>([]);
+  const [waiverFooter, setWaiverFooter] = useState<string>("");
+
+  const [currentYear] = useState<string>(String(new Date().getFullYear()));
 
   interface Team {
     team_id: number;
@@ -47,6 +61,13 @@ export default function TeamsDirectoryPage() {
     email: string;
     phone_number: string;
     gender: string;
+  }
+
+  interface WaiverFormat {
+    id?: string;
+    year: string;
+    index: number;
+    text: string;
   }
 
   useEffect(() => {
@@ -76,6 +97,7 @@ export default function TeamsDirectoryPage() {
     };
 
     fetchSessionAndData();
+    fetchWaiverFormat(); 
   }, []);
 
   useEffect(() => {
@@ -86,15 +108,80 @@ export default function TeamsDirectoryPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-const toggleTeamDropdown = (team: Team) => {
-  if (expandedTeams.includes(team.name)) {
-    // Collapse the team
-    setExpandedTeams(expandedTeams.filter((name) => name !== team.name));
-  } else {
-    // Expand the team
-    setExpandedTeams([...expandedTeams, team.name]);
-  }
-};
+  // Opens PDF in a new tab
+  // const openInNewTab = async () => {
+  //   const blob = await pdf(<MyPDF data={dataPDF} />).toBlob();
+  //   const url = URL.createObjectURL(blob);
+  //   window.open(url, "_blank");
+  // };
+
+  // Downloads the PDF manually
+  const downloadPlayerPDF = async (player: Player) => {
+    try {
+    // Fill the data for the PDF
+    const dataPDF = await fillDataPDF(player.player_id);
+    const blob = await pdf(<MyPDF data={dataPDF} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary download link
+    const a = document.createElement("a");
+    a.href = url;
+    
+    const decodedWaiverTitle = decodeURIComponent(waiverTitle);
+    a.download = `${decodedWaiverTitle}_${player.first_name}_${player.last_name}.pdf`; // File name
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    }
+    catch (error) {
+      console.error("Error downloading PDF:", error);
+    }
+  };
+
+  const fetchWaiverFormat = async () => {
+    try {
+        let data = await getWaiverFormatByYear({ year: currentYear });
+
+        const waiverFormat: WaiverFormat[] = data as WaiverFormat[];
+        // Sort the waiver format by index to ensure the order is correct
+        waiverFormat.sort((a, b) => a.index - b.index);
+
+        setWaiverTitle(decodeURIComponent(waiverFormat[0].text));
+        // Extract the remaining texts (excluding the first and last items)
+        const formattedTexts = waiverFormat.slice(1, -1).map(item => decodeURIComponent(item.text));
+        setWaiverTexts(formattedTexts);
+        // Set the last item's text as the waiver footer
+        setWaiverFooter(decodeURIComponent(waiverFormat[waiverFormat.length - 1].text));
+
+    } catch (error) {
+        console.error("Failed to fetch waiver format.", error);
+    }
+  };
+
+  const toggleTeamDropdown = (team: Team) => {
+    if (expandedTeams.includes(team.name)) {
+      // Collapse the team
+      setExpandedTeams(expandedTeams.filter((name) => name !== team.name));
+    } else {
+      // Expand the team
+      setExpandedTeams([...expandedTeams, team.name]);
+    }
+  };
+
+  const fillDataPDF = async (playerId: number): Promise<Record<string, string | string[]>> => {
+    let dataPlayer = await getPlayerWaivers({ player_id: playerId });
+    console.log("Player Waiver Data", dataPlayer);
+    const data = {
+      "Waiver Title": waiverTitle,
+      "Waiver Texts": waiverTexts,
+      "Waiver Footer": waiverFooter,
+      "Player Initials": dataPlayer[0].initials, //hardcoded to 0 for now as only 1 waiver is supported atm
+      "Player Signature": dataPlayer[0].signature,
+    };
+
+    console.log("This is data in fillDataPDF:", data);
+    return data; // Return the data instead of resolving a void promise
+  };
 
   const uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
 
@@ -233,6 +320,14 @@ const toggleTeamDropdown = (team: Team) => {
                                             {player.email}
                                           </div>
                                           <div>{player.phone_number}</div>
+                                          {(session?.user.role === "commissioner") && (
+                                            <div className="text-xs text-black mt-1 flex items-center">
+                                              Download waiver: 
+                                              <button onClick={() => downloadPlayerPDF(player)}>
+                                                <FaFileDownload className="ml-1"/>
+                                              </button>
+                                            </div>
+                                          )}
                                         </div>
                                       )}
                                     </li>
