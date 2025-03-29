@@ -20,6 +20,7 @@ import registerTeam from "@/app/functions/registerTeam";
 import createWaiver from "@/app/functions/createWaiver";
 import getPlayer from "@/app/functions/getPlayer";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
+import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -62,6 +63,7 @@ export default function Register() {
   const [waiverFooter, setWaiverFooter] = useState("")
   const [waiverInitials, setWaiverInitials] = useState("");
   const [waiverSignature, setWaiverSignature] = useState("");
+  const [waiverState, setWaiverState] = useState(true);
 
   interface WaiverFormat {
     id: number;
@@ -95,7 +97,20 @@ export default function Register() {
         }
     };
 
-    fetchWaiverFormat();
+    const fetchWaiverEnabled = async () => {
+        try {
+            const data = await getWaiverEnabled();
+            setWaiverState(data);
+        }
+        catch (error) {
+            console.error("Error fetching waiver state:", error);
+        }
+    };      
+    
+    fetchWaiverEnabled();
+    if (waiverState) {
+      fetchWaiverFormat();
+    }
 }, []);
 
   const togglePasswordVisibility = () => {
