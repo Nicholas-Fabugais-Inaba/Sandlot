@@ -329,7 +329,7 @@ export default function WaiverManagementPage() {
       {/* Edit Section Modal */}
       {editingSection && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-96">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-[900px]">
             <h2 className="text-xl font-semibold mb-4">Edit Waiver Section</h2>
             <div className="space-y-4">
               <Textarea 
