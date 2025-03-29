@@ -181,7 +181,7 @@ export default function WaiverManagementPage() {
       const newSection: WaiverFormat = {
         id: `section-${Date.now()}`,
         year: waiverFormat[0].year,
-        index: waiverFormat[waiverFormat.length].index + 1,
+        index: waiverFormat[waiverFormat.length - 1].index + 1,
         text: "New waiver requirement",
       };
       setTempSection(newSection);
