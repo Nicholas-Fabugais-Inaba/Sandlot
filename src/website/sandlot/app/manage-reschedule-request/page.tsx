@@ -173,8 +173,8 @@ export default function ManageRescheduleRequest() {
     const fieldTimeslots = timeslots
       .filter((ts) => ts.field_id.toString() === field)
       .sort((a, b) => {
-        const [startHourA, startMinuteA] = a.start.split(":").map(Number);
-        const [startHourB, startMinuteB] = b.start.split(":").map(Number);
+        const [startHourA, startMinuteA] = a.start.split("-").map(Number);
+        const [startHourB, startMinuteB] = b.start.split("-").map(Number);
         return startHourA - startHourB || startMinuteA - startMinuteB; // Sort by hour, then by minute
       });
   
