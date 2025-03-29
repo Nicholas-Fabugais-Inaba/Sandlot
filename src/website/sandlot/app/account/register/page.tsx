@@ -552,13 +552,15 @@ export default function Register() {
 
   return (
     <div>
-      <h1 className={title()}>
-        {accountType === "player"
-          ? "Register Player"
-          : accountType === "team"
-            ? "Register Team"
-            : "Register"}
-      </h1>
+      <div className="mt-[20px]">
+        <h1 className={title()}>
+          {accountType === "player"
+            ? "Register Player"
+            : accountType === "team"
+              ? "Register Team"
+              : "Register"}
+        </h1>
+      </div>
       <div className={styles.container}>
         <div className="centered-container">
           {errors.general && <p className={styles.errorMessage}>{errors.general}</p>}

@@ -23,7 +23,10 @@ import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 import deleteWaiverFormatByYear from "@/app/functions/deleteWaiverFormat";
 import createWaiverFormat from "@/app/functions/createWaiverFormat";
+import getWaiverEnabled from "../functions/getWaiverEnabled";
 import updateDivision from "../functions/updateTeamDivision";
+import { BlobOptions } from "buffer";
+
 
 // Typescript interfaces for type safety
 interface WaiverSection {
@@ -66,19 +69,7 @@ interface WaiverFormat {
 
 export default function WaiverManagementPage() {
   // State for waiver configuration
-  // const [waiverConfig, setWaiverConfig] = useState<WaiverConfig>({
-  //   isEnabled: false,
-  //   title: "GSA Softball Player Waiver",
-  //   description: "Player participation waiver for the summer softball league.",
-  //   sections: [
-  //     {
-  //       id: 'risk-acknowledgement',
-  //       text: "The risk of injury from the activities involved in this program is significant, including the potential for permanent paralysis and death.",
-  //       requireInitials: true
-  //     }
-  //   ],
-  //   requiredSignatures: ['Full Name', 'Parent/Guardian (if under 18)']
-  // });
+  const [waiverConfig, setWaiverConfig] = useState<boolean>(false)
 
   // State for signed waivers and teams
   const [signedWaivers, setSignedWaivers] = useState<SignedWaiver[]>([]);
@@ -107,10 +98,8 @@ export default function WaiverManagementPage() {
         setTeams(teamNames);
 
         // Fetch existing waiver configuration
-        // const existingConfig = await getWaiverConfig();
-        // if (existingConfig) {
-        //   setWaiverConfig(existingConfig);
-        // }
+        const enabled = await getWaiverEnabled();
+        setWaiverConfig(enabled.waiver_enabled);
 
         // Fetch signed waivers
         // const existingWaivers = await getSignedWaivers();
@@ -166,6 +155,7 @@ export default function WaiverManagementPage() {
         await deleteWaiverFormatByYear({ year: String(new Date().getFullYear()) })
         setTimeout(async() => {
           await createWaiverFormat({data: waiverCopy})
+          alert("Waiver configuration saved successfully!");
         }, 1000)
       }
     } catch (error) {
@@ -245,7 +235,9 @@ export default function WaiverManagementPage() {
 
   return (
     <div>
-      <h1 className={title()}>Waiver Management</h1>
+      <div className="pageHeader">
+        <h1 className={title()}>Waiver Management</h1>
+      </div>
 
       {/* Waiver Configuration Section */}
       <Card className="mt-6 mb-6">
@@ -256,13 +248,13 @@ export default function WaiverManagementPage() {
           </div>
         </CardHeader>
         <div className="p-4">
-          {/* <div className="justify-between flex items-center space-x-4 mb-4">
+          <div className="justify-between flex items-center space-x-4 mb-4">
             <span>Enable Waiver</span>
             <Switch 
-              checked={waiverConfig.isEnabled}
-              onChange={(e) => setWaiverConfig(prev => ({...prev, isEnabled: e.target.checked}))}
+              checked={waiverConfig}
+              onChange={(e) => setWaiverConfig(e.target.checked)}
             />
-          </div> */}
+          </div>
 
           <div className="space-y-4">
             <Input 

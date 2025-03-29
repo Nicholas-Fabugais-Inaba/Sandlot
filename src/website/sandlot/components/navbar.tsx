@@ -124,19 +124,19 @@ export const Navbar = () => {
       onMenuOpenChange={setIsMenuOpen}
       className="border-b-[1px] border-b-[#F3F4F6] dark:border-b-[#3C3C3C] bg-white dark:bg-[#0d0d0d] shadow-md"
       >
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit mr-14">
+      <NavbarContent className="basis-1/6 sm:basis-auto" justify="start">
+        <NavbarBrand as="li" className="gap-3 max-w-fit mr-3 min-w-[120px]">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-inherit">Sandlot</p>
+            <p className="font-bold text-inherit whitespace-nowrap">Sandlot</p>
           </NextLink>
         </NavbarBrand>
 
         {/* Prevent rendering navbar items until session is loaded */}
         {!loading && (
-          <ul className="hidden lg:flex gap-4 justify-start ml-2">
+          <ul className="hidden lg:flex gap-4 items-center">
             {filteredNavItems.map((item) => (
-              <NavbarItem key={item.href}>
+              <NavbarItem key={item.href} className="min-w-fit">
                 <NextLink
                   className={clsx(
                     linkStyles({ color: "foreground" }),
