@@ -2,8 +2,8 @@ import axios from "axios";
 
 export default async function getWaiverEnabled(): Promise<any> {
   const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_APIHOST}/season-setup/get_season_state`,
+    `${process.env.NEXT_PUBLIC_APIHOST}/season-setup/get_waiver_enabled`,
   );
 
-  return response.data["state"];
+  return response.data;
 }
