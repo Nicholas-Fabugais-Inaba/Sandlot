@@ -162,9 +162,17 @@ class Directory(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[Optional[str]] = mapped_column(String(50))
     content: Mapped[Optional[str]] = mapped_column(String(5000))
+    
+class Solstice(Base):
+    __tablename__ = "solstice"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    active: Mapped[Optional[bool]] = mapped_column(default=True)
+    start: Mapped[Optional[str]] = mapped_column(String(50))
+    end: Mapped[Optional[str]] = mapped_column(String(50))
+
 
 # function which creates defined models as tables in DB
 def create_tables():
     Base.metadata.create_all(engine)
 
-#create_tables()
+create_tables()

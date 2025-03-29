@@ -34,18 +34,18 @@ export const siteConfig = {
       label: "Season Setup",
       href: "/season-setup",
     },
-    {
-      label: "Broadcast",
-      href: "/broadcast",
-    },
+    // {
+    //   label: "Broadcast",
+    //   href: "/broadcast",
+    // },
     {
       label: "Waiver",
       href: "/waiver",
     },
-    {
-      label: "Archive",
-      href: "/archive",
-    },
+    // {
+    //   label: "Archive",
+    //   href: "/archive",
+    // },
   ],
   links: {
     github: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot",
