@@ -208,7 +208,7 @@ export default function WaiverManagementPage() {
       {/* Waiver Configuration Section */}
       <Card className="mt-6 mb-6">
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-4">
             <h2 className="text-xl font-semibold">Waiver Configuration</h2>
             <Button onClick={handleSaveConfiguration}>Save Configuration</Button>
           </div>
@@ -240,9 +240,9 @@ export default function WaiverManagementPage() {
             <h3 className="text-lg font-semibold mb-4">Waiver Sections</h3>
             {waiverConfig.sections.map((section) => (
               <div key={section.id} className="flex items-center justify-between p-3 border rounded mb-2">
-                <div>
-                  <p>{section.text}</p>
-                  <span className="text-sm text-gray-500">
+                <div className="flex-1 mr-4 overflow-hidden">
+                  <p className="whitespace-pre-wrap break-words text-black dark:text-white">{section.text}</p>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
                     {section.requireInitials ? 'Requires Initials' : 'No Initials Required'}
                   </span>
                 </div>
@@ -293,13 +293,15 @@ export default function WaiverManagementPage() {
       {/* Edit Section Modal */}
       {editingSection && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-96">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-96">
             <h2 className="text-xl font-semibold mb-4">Edit Waiver Section</h2>
             <div className="space-y-4">
               <Textarea 
                 value={editingSection.text}
                 onChange={(e) => setEditingSection(prev => prev ? {...prev, text: e.target.value} : null)}
                 placeholder="Section Text"
+                className="w-full whitespace-pre-wrap break-words"
+                rows={4}
               />
               <div className="flex items-center space-x-2">
                 <Switch 
