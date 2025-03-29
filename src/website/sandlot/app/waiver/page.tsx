@@ -163,9 +163,9 @@ export default function WaiverManagementPage() {
           waiverCopy[i].text = encodeURI(waiverCopy[i].text)
           delete waiverCopy[0].id
         }
-        await deleteWaiverFormatByYear(new Date().getFullYear())
+        await deleteWaiverFormatByYear({ year: String(new Date().getFullYear()) })
         setTimeout(async() => {
-          await createWaiverFormat(waiverCopy)
+          await createWaiverFormat({data: waiverCopy})
         }, 1000)
       }
     } catch (error) {
