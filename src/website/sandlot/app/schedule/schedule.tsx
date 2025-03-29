@@ -42,6 +42,7 @@ currNextDate.setDate(currDate.getDate() + 1);
 
 interface SelectedDate {
   date: Date;
+  timeslot: number;
   field: number;
 }
 
@@ -216,7 +217,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSelectClick = (start: Date | null, field: number) => {
+  const handleSelectClick = (start: Date | null, timeslot: number, field: number) => {
     if (start) {
       const isDuplicate = selectedDates.some(
         (selectedDate) =>
@@ -235,7 +236,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   
         setSelectedDates(newSelectedDates);
       } else {
-        let newSelectedDates = [...selectedDates, { date: start, field }];
+        let newSelectedDates = [...selectedDates, { date: start, timeslot, field }];
   
         if (newSelectedDates.length > maxSelectedDates) {
           newSelectedDates = newSelectedDates.slice(1); // Remove the first selected date
@@ -456,7 +457,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       commissionerReschedule({
         game_id: rescheduleGame?.game_id,
         date: formattedDate,
-        time: deriveTimeslot(selectedDates[0].date),
+        time: selectedDates[0].timeslot.toString(),
         field: selectedDates[0].field.toString()
       })
     }
@@ -491,6 +492,11 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       option3: selectedDates[2]?.date.toISOString() || "",
       option4: selectedDates[3]?.date.toISOString() || "",
       option5: selectedDates[4]?.date.toISOString() || "",
+      option1_timeslot: selectedDates[0]?.timeslot.toString() || "",
+      option2_timeslot: selectedDates[1]?.timeslot.toString() || "",
+      option3_timeslot: selectedDates[2]?.timeslot.toString() || "",
+      option4_timeslot: selectedDates[3]?.timeslot.toString() || "",
+      option5_timeslot: selectedDates[4]?.timeslot.toString() || "",
       option1_field: selectedDates[0]?.field.toString() || "",
       option2_field: selectedDates[1]?.field.toString() || "",
       option3_field: selectedDates[2]?.field.toString() || "",
@@ -844,7 +850,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                         : "bg-blue-100 text-blue-800"
                     }`}
                     onClick={() =>
-                      handleSelectClick(eventInfo.event.start, eventInfo.event.extendedProps.field)
+                      handleSelectClick(eventInfo.event.start, eventInfo.event.extendedProps.timeslot, eventInfo.event.extendedProps.field)
                     }
                   >
                     <div className="font-semibold">{"Click to Select"}</div>

@@ -35,6 +35,7 @@ interface Timeslot {
   start: string;
   end: string;
   field_id: number;
+  field_name: string;
 }
 
 export default function ManageRescheduleRequest() {
@@ -56,6 +57,125 @@ export default function ManageRescheduleRequest() {
     newDate?: string;
   } | null>(null);
   const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
+  const dynamicSolstice = true;
+  const solsticeStart = new Date("2023-06-21T00:00:00Z"); // Example start date
+  const solsticeEnd = new Date("2023-09-23T00:00:00Z"); // Example end date
+  const solsticeTimeslots: Timeslot[] = [
+    {
+      "id": 1,
+      "start": "22-0",
+      "end": "23-30",
+      "field_id": 1,
+      "field_name": "Field 1"
+    },
+    {
+      "id": 2,
+      "start": "23-30",
+      "end": "25-0",
+      "field_id": 1,
+      "field_name": "Field 1"
+    },
+    {
+      "id": 3,
+      "start": "22-0",
+      "end": "23-30",
+      "field_id": 2,
+      "field_name": "Field 2"
+    },
+    {
+      "id": 4,
+      "start": "23-30",
+      "end": "25-0",
+      "field_id": 2,
+      "field_name": "Field 2"
+    },
+    {
+      "id": 5,
+      "start": "21-0",
+      "end": "22-30",
+      "field_id": 3,
+      "field_name": "Field 3"
+    },
+    {
+      "id": 6,
+      "start": "22-30",
+      "end": "24-0",
+      "field_id": 3,
+      "field_name": "Field 3"
+    },
+    {
+      "id": 7,
+      "start": "24-0",
+      "end": "25-30",
+      "field_id": 3,
+      "field_name": "Field 3"
+    },
+    {
+      "id": 8,
+      "start": "25-30",
+      "end": "27-0",
+      "field_id": 3,
+      "field_name": "Field 3"
+    }
+  ];
+  const nonSolsticeTimeslots: Timeslot[] = [
+    {
+      "id": 1,
+      "start": "21-0",
+      "end": "22-30",
+      "field_id": 1,
+      "field_name": "Field 1"
+    },
+    {
+      "id": 2,
+      "start": "22-30",
+      "end": "24-0",
+      "field_id": 1,
+      "field_name": "Field 1"
+    },
+    {
+      "id": 3,
+      "start": "21-0",
+      "end": "22-30",
+      "field_id": 2,
+      "field_name": "Field 2"
+    },
+    {
+      "id": 4,
+      "start": "22-30",
+      "end": "24-0",
+      "field_id": 2,
+      "field_name": "Field 2"
+    },
+    {
+      "id": 5,
+      "start": "21-0",
+      "end": "22-30",
+      "field_id": 3,
+      "field_name": "Field 3"
+    },
+    {
+      "id": 6,
+      "start": "22-30",
+      "end": "24-0",
+      "field_id": 3,
+      "field_name": "Field 3"
+    },
+    {
+      "id": 7,
+      "start": "24-0",
+      "end": "25-30",
+      "field_id": 3,
+      "field_name": "Field 3"
+    },
+    {
+      "id": 8,
+      "start": "25-30",
+      "end": "27-0",
+      "field_id": 3,
+      "field_name": "Field 3"
+    }
+  ];
   const router = useRouter();
 
   // Combined fetch for session and reschedule requests
@@ -64,9 +184,13 @@ export default function ManageRescheduleRequest() {
       try {
         setLoading(true);
         const session = await getSession();
-        const timeslots = await getAllTimeslots();
-        if (timeslots) {
-          setTimeslots(timeslots);
+        if (!dynamicSolstice) {
+          const timeslots = await getAllTimeslots();
+          if (timeslots) {
+            setTimeslots(timeslots);
+          }
+        } else {
+          setTimeslots(nonSolsticeTimeslots);
         }
 
         if (session) {
@@ -132,8 +256,19 @@ export default function ManageRescheduleRequest() {
         );
 
         if (request) {
+          // Get the selected date and field for the new game
           let splitNewDate = parseNewDate(modalContent.newDate);
-          let timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], timeslots);
+          // Choose necessary timeslots based on solstice dates
+          let timeslot = "0";
+          if (dynamicSolstice) {
+            if (splitNewDate[0] >= solsticeStart && splitNewDate[0] <= solsticeEnd) {
+              timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], solsticeTimeslots);
+            } else {
+              timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], nonSolsticeTimeslots);
+            }
+          }
+          // Get the timeslot for the new game
+          timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], timeslots);
           let formattedDate: string = splitNewDate[0].toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
           acceptRR({
