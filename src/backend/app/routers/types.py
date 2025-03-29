@@ -222,6 +222,12 @@ class CaptainStatus(BaseModel):
     player_id: int
     captain: bool
 
+class LeaveTeamData(BaseModel):
+    team_id: int
+    player_id: int
+    new_active_team_required: bool
+    new_active_team: Optional[int]
+
 class NewDirectory(BaseModel):
     name: str
     content: str
