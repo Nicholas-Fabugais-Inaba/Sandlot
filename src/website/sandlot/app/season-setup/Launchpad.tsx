@@ -85,12 +85,12 @@ export default function Launchpad({ seasonState }: LaunchProps) {
           >
             End Season
           </Button>
-          <Button
+          {/* <Button
             className="bg-yellow-500 text-white px-6 py-3 rounded-lg"
             onPress={() => handleLaunchClick("returnPreseason")}
           >
             Return to Preseason
-          </Button>
+          </Button> */}
         </div>
       )}
       {seasonState !== "season" && (
