@@ -32,6 +32,7 @@ interface AccountInfo {
   lastName?: string;
   gender?: string;
   teamName?: string;
+  teams?: string[];
   username?: string;
   active?: boolean;
 }
@@ -272,7 +273,7 @@ export default function AccountPage() {
               </p> */}
               {userRole === "player" && (
                 <p>
-                  <strong>Display Name:</strong> {accountInfo.firstName}{" "}
+                  <strong>Name:</strong> {accountInfo.firstName}{" "}
                   {accountInfo.lastName}
                 </p>
               )}
@@ -296,7 +297,14 @@ export default function AccountPage() {
               )}
               {userRole === "player" && (
                 <p>
-                  <strong>Team:</strong> {teamName || "Not assigned to a team"}
+                  <strong>
+                    {accountInfo.teams && Object.keys(accountInfo.teams).length > 1
+                      ? "Teams:"
+                      : "Team:"}
+                  </strong>{" "}
+                  {accountInfo.teams && Object.keys(accountInfo.teams).length > 0
+                    ? Object.values(accountInfo.teams).join(", ")
+                    : teamName || "Not assigned to a team"}
                 </p>
               )}
             </CardBody>

@@ -10,6 +10,7 @@ export default async function getPlayerAccountData(player_id: number): Promise<a
     firstName: response.data.first_name,
     lastName: response.data.last_name,
     gender: response.data.gender,
+    teams: response.data.teams,
     active: response.data.active,
   };
 
