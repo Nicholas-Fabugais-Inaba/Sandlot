@@ -148,8 +148,10 @@ export default function WaiverManagementPage() {
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
     try {
-    //   const savedConfig = await saveWaiverConfig(waiverConfig);
-      alert("Waiver configuration saved successfully!");
+      await deleteWaiverFormatByYear(new Date().getFullYear())
+      setTimeout(async() => {
+        await createWaiverFormat(waiverFormat)
+      }, 1000)
     } catch (error) {
       console.error("Failed to save configuration", error);
       alert("Failed to save waiver configuration");
