@@ -104,6 +104,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const [schedType, setSchedType] = useState(0); // 0 = Full Schedule, 1 = Team Schedule, 2 = Choose game to reschedule, 3 = Choose alternative game days
   const [maxSelectedDates, setMaxSelectedDates] = useState(5); // Maximum number of dates that can be selected when rescheduling games
   const [timeslots, setTimeslots] = useState([]);
+  const [fields, setFields] = useState<Record<number, string>>({});
 
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
@@ -115,6 +116,15 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         if (timeslots) {
           setTimeslots(timeslots);
         }
+
+        // Create a dictionary of field_id to field_name
+        const fieldsDict = timeslots.reduce((acc: Record<number, string>, ts: any) => {
+          if (!acc[ts.field_id]) {
+            acc[ts.field_id] = ts.field_name;
+          }
+          return acc;
+        }, {});
+        setFields(fieldsDict);
 
         if (session) {
           setUserRole(session.user?.role || null);
@@ -593,22 +603,27 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         <Card className="w-full max-w-9xl rounded-2xl shadow-lg p-6 bg-white dark:bg-gray-800">
           {schedType === 0 || schedType === 1 ? (
             <div className="legend flex justify-center items-center">
+              {/* Static "Game Played" legend item */}
               <div className="legend-item">
                 <div className="legend-color legend-game-played" />
                 <span>Game Played</span>
               </div>
-              <div className="legend-item">
-                <div className="legend-color legend-field1" />
-                <span>Field 1</span>
-              </div>
-              <div className="legend-item">
-                <div className="legend-color legend-field2" />
-                <span>Field 2</span>
-              </div>
-              <div className="legend-item">
-                <div className="legend-color legend-field3" />
-                <span>Field 3</span>
-              </div>
+            
+              {/* Dynamically render field legend items based on the fields dictionary */}
+              {Object.entries(fields).map(([fieldId, fieldName], index) => (
+                <div key={fieldId} className="legend-item">
+                  <div
+                    className={`legend-color ${
+                      index === 0
+                        ? "legend-field1"
+                        : index === 1
+                        ? "legend-field2"
+                        : "legend-field3"
+                    }`}
+                  />
+                  <span>{fieldName}</span>
+                </div>
+              ))}
             </div>
           ) : schedType === 2 || schedType === 3 ? (
             <div className="legend flex justify-center items-center">
@@ -697,6 +712,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                     })
                     .slice(0, 5)
                 : "";
+              
+              const fieldName = fields[eventInfo.event.extendedProps.field as number];
 
               const isPastEvent = () => {
                 return eventInfo.event.extendedProps.played;
@@ -746,7 +763,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                     <div className="text-sm">{startTime}</div>
                     <div className="text-sm">{endTime}</div>
                     {!eventInfo.event.extendedProps.spacer && (
-                      <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                      <div className="text-xs text-gray-600">{fieldName}</div>
                     )}
                   </div>
                 ) : null
@@ -794,7 +811,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                     <div className="text-sm">
                       {startTime} - {endTime}
                     </div>
-                    <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                    <div className="text-xs text-gray-600">{fieldName}</div>
                   </div>
                 ) : null
               ) : schedType === 3 ? ( // Choose alternative game days
@@ -812,7 +829,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                     </div>
                     <div className="text-sm">{startTime}</div>
                     <div className="text-sm">{endTime}</div>
-                    <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                    <div className="text-xs text-gray-600">{fieldName}</div>
                   </div>
                 ) : eventInfo.event.extendedProps.spacer &&
                   eventInfo.event.extendedProps.home &&
@@ -837,7 +854,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                       <br />
                       {endTime}
                     </div>
-                    <div className="text-xs text-gray-600">{`Field ${eventInfo.event.extendedProps.field}`}</div>
+                    <div className="text-xs text-gray-600">{fieldName}</div>
                   </div>
                 ) : null
               ) : null;
