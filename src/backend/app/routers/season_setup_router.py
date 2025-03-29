@@ -1,8 +1,9 @@
 from fastapi import APIRouter
-from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, DivisionTeamData, Division, SeasonState, SettingsID, SeasonPreset, EndSeasonData
+from typing import Optional
+from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, DivisionTeamData, Division, SeasonState, SettingsID, SeasonPreset, EndSeasonData, InputFieldData, InputTimeslotData
 from ..db.queries.season_settings_queries import insert_season_settings, get_season_settings, update_season_settings, update_season_state, delete_season_settings, get_season_state, get_all_season_settings, get_waiver_enabled
-from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
-from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
+from ..db.queries.field_queries import insert_field, get_all_fields, delete_field, delete_all_fields
+from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot, delete_all_timeslots
 from ..db.queries.team_queries import update_division, get_all_teams, get_teams_season_setup, deactivate_all_teams, activate_all_teams
 from ..db.queries.game_queries import insert_game, delete_all_games
 from ..db.queries.division_queries import insert_division_with_id, delete_all_divisions_except_team_bank, get_divisions_season_setup
@@ -48,8 +49,37 @@ async def get_all_SS():
 
 @router.put("/update_season_settings", response_model=None)
 async def update_SS(settings: SeasonSettings):
+    # Update season settings in the database
     update_season_settings(settings.start_date, settings.end_date, settings.games_per_team)
+    # Update field and timeslot tables in the database
+    delete_and_regenerate_fields_and_timeslots(settings.fields, settings.timeslots)
     return True
+
+def delete_and_regenerate_fields_and_timeslots(fields: list[InputFieldData], timeslots: list[InputTimeslotData]):
+    # Delete all existing fields and timeslots
+    print("Regenerating fields and timeslots")
+    delete_all_timeslots()
+    delete_all_fields()
+
+    # Regenerate fields
+    if fields:
+        for field in fields:
+            insert_field(field.name, field.id)
+
+    # Regenerate timeslots
+    timeslot_db_id = 0
+    if fields:
+        for field in fields:
+            # Filter and sort timeslots for the current field by ascending startTime
+            field_timeslots = [
+                ts for ts in timeslots if ts.id in field.timeslotIds
+            ]
+            field_timeslots.sort(key=lambda ts: ts.startTime)
+
+            # Insert sorted timeslots for the field
+            for timeslot in field_timeslots:
+                timeslot_db_id += 1
+                insert_timeslot(timeslot.startTime, timeslot.endTime, field.id, timeslot_db_id)
 
 @router.put("/change_season_state", response_model=None)
 async def change_season_state(season_state: SeasonState):

@@ -4,11 +4,12 @@ from ..create_engine import create_connection
 from ..models import Field
 
 
-def insert_field(field_name):
+def insert_field(field_name, field_id=None):
     engine = create_connection()
     with Session(engine) as session:
         field = Field(
-            field_name = field_name
+            id=field_id,  # Pass the field_id if provided
+            field_name=field_name
         )
         try:
             session.add_all([field])
@@ -40,3 +41,16 @@ def delete_field(field_id):
             raise
         else:
             session.commit()
+
+def delete_all_fields():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = delete(Field)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+    return True

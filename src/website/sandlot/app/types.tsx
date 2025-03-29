@@ -40,6 +40,7 @@ export type Event = {
   start: Date;
   end: Date;
   field?: string;
+  timeslot?: string;
   game_id?: number;
   home?: string;
   home_id?: number;

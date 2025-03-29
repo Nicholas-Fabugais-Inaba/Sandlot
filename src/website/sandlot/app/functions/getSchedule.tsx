@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Dictionary } from "@fullcalendar/core/internal";
+import { Dictionary, findElements } from "@fullcalendar/core/internal";
 
 import { Event, GenSchedResponse } from "../types";
 
@@ -31,19 +31,86 @@ interface Field {
   timeslots: Record<string, Timeslot>;
 }
 
-const predefinedFields: Record<string, Field> = {
+const dynamicSolstice: boolean = true;
+const solsticeStart: Date = new Date("2025-06-21T00:00:00");
+const solsticeEnd: Date = new Date("2025-09-23T00:00:00");
+
+// const solsticeTimeslots: Record<string, Field> = {
+//   "1": {
+//     timeslots: {
+//       "1": {
+//         start_hour: 22,
+//         start_minutes: 0,
+//         end_hour: 23,
+//         end_minutes: 30,
+//       },
+//       "2": {
+//         start_hour: 23,
+//         start_minutes: 30,
+//         end_hour: 25,
+//         end_minutes: 0,
+//       },
+//     },
+//   },
+//   "2": {
+//     timeslots: {
+//       "1": {
+//         start_hour: 22,
+//         start_minutes: 0,
+//         end_hour: 23,
+//         end_minutes: 30,
+//       },
+//       "2": {
+//         start_hour: 23,
+//         start_minutes: 30,
+//         end_hour: 25,
+//         end_minutes: 0,
+//       },
+//     },
+//   },
+//   "3": {
+//     timeslots: {
+//       "1": {
+//         start_hour: 21,
+//         start_minutes: 0,
+//         end_hour: 22,
+//         end_minutes: 30,
+//       },
+//       "2": {
+//         start_hour: 22,
+//         start_minutes: 30,
+//         end_hour: 24,
+//         end_minutes: 0,
+//       },
+//       "3": {
+//         start_hour: 24,
+//         start_minutes: 0,
+//         end_hour: 25,
+//         end_minutes: 30,
+//       },
+//       "4": {
+//         start_hour: 25,
+//         start_minutes: 30,
+//         end_hour: 27,
+//         end_minutes: 0,
+//       },
+//     },
+//   },
+// }
+
+const nonSolsticeTimeslots: Record<string, Field> = {
   "1": {
     timeslots: {
       "1": {
-        start_hour: 22,
+        start_hour: 21,
         start_minutes: 0,
-        end_hour: 23,
+        end_hour: 22,
         end_minutes: 30,
       },
       "2": {
-        start_hour: 23,
+        start_hour: 22,
         start_minutes: 30,
-        end_hour: 25,
+        end_hour: 24,
         end_minutes: 0,
       },
     },
@@ -51,15 +118,15 @@ const predefinedFields: Record<string, Field> = {
   "2": {
     timeslots: {
       "1": {
-        start_hour: 22,
+        start_hour: 21,
         start_minutes: 0,
-        end_hour: 23,
+        end_hour: 22,
         end_minutes: 30,
       },
       "2": {
-        start_hour: 23,
+        start_hour: 22,
         start_minutes: 30,
-        end_hour: 25,
+        end_hour: 24,
         end_minutes: 0,
       },
     },
@@ -200,8 +267,12 @@ function convertSchedData(schedule: Dictionary, teams: Dictionary): Game[] {
 function getFormattedEvents(games: any, timeslots: any): Event[] {
   const formattedEvents: Event[] = [];
   
-  const fields: Record<string, Field> =
-    timeslots.length > 0 ? buildFieldsFromTimeslots(timeslots) : predefinedFields;
+  // Determine the fields based on dynamicSolstice or timeslots
+  const fields: Record<string, Field> = dynamicSolstice
+    ? nonSolsticeTimeslots
+    : timeslots.length > 0
+    ? buildFieldsFromTimeslots(timeslots)
+    : nonSolsticeTimeslots;
 
   for (const game of games) {
     // Split the date string into components
@@ -218,10 +289,20 @@ function getFormattedEvents(games: any, timeslots: any): Event[] {
       continue; // Skip this game if the timeslot is not defined
     }
 
+    // If using dynamicSolstice, and the start time is within the solstice date range,
+    // if on field 1 or 2, the start and end hours are pushed forward by 1.
+    if (dynamicSolstice && start >= solsticeStart && start <= solsticeEnd) {
+      if (game.field === "1" || game.field === "2") {
+        start.setUTCHours(start.getUTCHours() + 1);
+        end.setUTCHours(end.getUTCHours() + 1);
+      }
+    }
+
     var formattedEvent: Event = {
       start: start,
       end: end,
       field: game.field,
+      timeslot: game.time,
       game_id: game.id,
       home: game.home_team_name,
       home_id: game.home_team_id,
@@ -243,8 +324,12 @@ function getFormattedEvents(games: any, timeslots: any): Event[] {
 export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Event[] {
   const fieldsToFill = ["1", "2", "3"]; // Fields 1 to 3
 
-  const fields: Record<string, Field> =
-    timeslots.length > 0 ? buildFieldsFromTimeslots(timeslots) : predefinedFields;
+  // Determine the fields based on dynamicSolstice or timeslots
+  const fields: Record<string, Field> = dynamicSolstice
+    ? nonSolsticeTimeslots
+    : timeslots.length > 0
+    ? buildFieldsFromTimeslots(timeslots)
+    : nonSolsticeTimeslots;
 
   // Iterate over each field
   for (const field of fieldsToFill) {
@@ -276,6 +361,13 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Eve
       const startOfFirstTimeslot = new Date(currentDate);
       startOfFirstTimeslot.setUTCHours(firstTimeslot.start_hour, firstTimeslot.start_minutes, 0);
 
+      // Adjust for solstice if applicable
+      if (dynamicSolstice && currentDate >= solsticeStart && currentDate <= solsticeEnd) {
+        if (field === "1" || field === "2") {
+          startOfFirstTimeslot.setUTCHours(startOfFirstTimeslot.getUTCHours() + 1);
+        }
+      }
+
       // Only add a spacer if the first timeslot does not start at 5:00
       if (startOfFirstTimeslot.getTime() > startOfDay.getTime()) {
         const spacerBeforeExists = events.some(
@@ -290,6 +382,7 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Eve
             start: startOfDay,
             end: startOfFirstTimeslot,
             field: field,
+            timeslot: undefined,
             game_id: undefined,
             home: undefined,
             home_id: undefined,
@@ -311,6 +404,13 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Eve
       const endOfDay = new Date(currentDate);
       endOfDay.setUTCHours(dayEnd, 0, 0);
 
+      // Adjust for solstice if applicable
+      if (dynamicSolstice && currentDate >= solsticeStart && currentDate <= solsticeEnd) {
+        if (field === "1" || field === "2") {
+          endOfLastTimeslot.setUTCHours(endOfLastTimeslot.getUTCHours() + 1);
+        }
+      }
+
       const spacerAfterExists = events.some(
         (event) =>
           event.start.getTime() === endOfLastTimeslot.getTime() &&
@@ -323,6 +423,7 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Eve
           start: endOfLastTimeslot,
           end: endOfDay,
           field: field,
+          timeslot: undefined,
           game_id: undefined,
           home: undefined,
           home_id: undefined,
@@ -347,6 +448,14 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Eve
           const end = new Date(currentDate);
           end.setUTCHours(timeslot.end_hour, timeslot.end_minutes, 0);
 
+          // Adjust for solstice if applicable
+          if (dynamicSolstice && currentDate >= solsticeStart && currentDate <= solsticeEnd) {
+            if (field === "1" || field === "2") {
+              start.setUTCHours(start.getUTCHours() + 1);
+              end.setUTCHours(end.getUTCHours() + 1);
+            }
+          }
+
           // Check if an event already exists for this field, date, and timeslot
           const eventExists = events.some(
             (event) =>
@@ -364,6 +473,7 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any): Eve
               start: start,
               end: end,
               field: field,
+              timeslot: timeKey,
               game_id: undefined,
               home: "spacer",
               home_id: undefined,

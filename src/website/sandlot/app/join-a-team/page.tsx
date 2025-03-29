@@ -10,7 +10,7 @@ import "./JoinATeam.css";
 export default function SchedulePage() {
   return (
     <div>
-      <div className="center-container">
+      <div className="pageHeader">
         <h1 className={title()}>Join A Team</h1>
       </div>
       <AvailableTeams />
