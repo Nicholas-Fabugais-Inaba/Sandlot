@@ -223,7 +223,7 @@ export const Navbar = () => {
             </button>
           </NavbarItem>
         )}
-        {session?.user.role === "player" && (
+        {session?.user.role === "player" && Object.keys(userTeams).length >= 1 && (
           <NavbarItem className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
