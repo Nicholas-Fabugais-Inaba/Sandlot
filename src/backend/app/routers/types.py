@@ -189,7 +189,8 @@ class ArchivedTeamID(BaseModel):
 class NewWaiver(BaseModel):
     player_id: int
     signature: str
-    date: str
+    initials: str
+    year: str
 
 class EndSeasonData(BaseModel):
     archiveTeams: bool
@@ -214,3 +215,14 @@ class DirectoryData(BaseModel):
 
 class DirectoryID(BaseModel):
     directory_id: int
+
+class Year(BaseModel):
+    year: str
+
+class WaiverFormat(BaseModel):
+    year: str
+    index: int
+    text: str
+
+class WaiverFormatList(BaseModel):
+    data: list[WaiverFormat]

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
@@ -14,6 +14,13 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { title } from "@/components/primitives";
 import registerPlayer from "@/app/functions/registerPlayer";
 import registerTeam from "@/app/functions/registerTeam";
+
+
+// waiver imports 
+import createWaiver from "@/app/functions/createWaiver";
+import getPlayer from "@/app/functions/getPlayer";
+import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
+import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -44,10 +51,68 @@ export default function Register() {
   const [showWaiver, setShowWaiver] = useState<boolean>(false);
   const router = useRouter();
 
+  // waiver sub-component state
+//   const [waiverTexts, setWaiverTexts] = useState<string[]>([
+//     "The risk of injury from the activities involved in this program is significant, including the potential for permanent paralysis and death, and while particular rules, equipment, and personal discipline may reduce this risk, the risk of serious injury does exist.",
+//     "I KNOWINGLY AND FREELY ASSUME ALL SUCH RISKS, both known and unknown, EVEN IF ARISING FROM THE NEGLIGENCE OF THE RELEASES or others, and assume full responsibility for my participation.",
+//     "I willingly agree to comply with the stated and customary terms and conditions for participants. If, however, I observe any unusual significant hazard during my presence or participation, I will remove myself from  participation and bring such to the attention of the nearest official immediately.",
+//     "I, for myself and on behalf of my heirs, assigns, personal representatives and next of kin, HEREBY RELEASE AND HOLD HARMLESS the Graduate Students Association of McMaster University their officers, officials, agents, and or employees, other participants, sponsoring agencies, sponsors, advertisers, and if applicable, owners and lessors or premises used to conduct the even (\"RELEASES\"), WITH RESPECT TO ANY AND ALL INJURY, DISABILITY, DEATH, or loss or damage to person or property, WHETHER ARISING FROM THE  NEGLIGENCE OF THE RELEASEES OR OTHERWISE, to the fullest extent permitted by law.",
+//     "I HAVE READ THIS RELEASE OF LIABILITY AND ASSUMPTION OF RISK AGREEMENT, FULLY UNDERSTAND ITS TERMS, UNDERSTAND THAT I HAVE GIVEN UP SUBSTANTIAL RIGHTS BY SIGNING IT, AND SIGN IT FREELY AND VOLUNTARILY WITHOUT ANY INDUCEMENT."
+// ])
+  const [waiverTitle, setWaiverTitle] = useState("")
+  const [waiverTexts, setWaiverTexts] = useState<string[]>([])
+  const [waiverFooter, setWaiverFooter] = useState("")
+  const [waiverInitials, setWaiverInitials] = useState("");
+  const [waiverSignature, setWaiverSignature] = useState("");
+  const [waiverState, setWaiverState] = useState(true);
+
+  interface WaiverFormat {
+    id: number;
+    year: number
+    index: number;
+    text: string;
+  }
+
   useEffect(() => {
     const filledCount = [firstname, lastname, email, confirmEmail, password, confirmPassword, gender, teamUsername, teamName].filter(Boolean).length;
     setFieldsFilled(filledCount);
   }, [firstname, lastname, email, confirmEmail, password, confirmPassword, gender, teamUsername, teamName]);
+
+  useEffect(() => {
+    const fetchWaiverFormat = async () => {
+        try {
+            const currentYear = String(new Date().getFullYear());
+            const data = await getWaiverFormatByYear({ year: currentYear });
+            const waiverFormat: WaiverFormat[] = data as WaiverFormat[];
+            // Sort the waiver format by index to ensure the order is correct
+            waiverFormat.sort((a, b) => a.index - b.index);
+            // Set the first item's text as the waiver title
+            setWaiverTitle(waiverFormat[0].text);
+            // Extract the remaining texts (excluding the first and last items)
+            const formattedTexts = waiverFormat.slice(1, -1).map(item => item.text);
+            setWaiverTexts(formattedTexts);
+            // Set the last item's text as the waiver footer
+            setWaiverFooter(waiverFormat[waiverFormat.length - 1].text);
+        } catch (error) {
+            console.error("Error fetching waiver format:", error);
+        }
+    };
+
+    const fetchWaiverEnabled = async () => {
+        try {
+            const data = await getWaiverEnabled();
+            setWaiverState(data);
+        }
+        catch (error) {
+            console.error("Error fetching waiver state:", error);
+        }
+    };      
+    
+    fetchWaiverEnabled();
+    if (waiverState) {
+      fetchWaiverFormat();
+    }
+}, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState); // Toggle the visibility state
@@ -123,6 +188,17 @@ export default function Register() {
         };
 
         await registerPlayer(newUser);
+        setTimeout(async () => {
+          const player = await getPlayer({ email: email })
+
+          const completedWaiver = {
+            player_id: player.id,
+            signature: waiverSignature,
+            initials: waiverInitials,
+            year: String(new Date().getFullYear())
+          }
+          await createWaiver(completedWaiver)
+        }, )
       } else {
         const newTeam = {
           team_name: teamName,
@@ -304,7 +380,15 @@ export default function Register() {
       );
     } else if (accountType === "player" && showWaiver) {
       return (
-        <Waiver/>
+        <Waiver 
+          waiverTitle={waiverTitle}
+          waiverTexts={waiverTexts} 
+          waiverFooter={waiverFooter}
+          waiverInitials={waiverInitials} 
+          setWaiverInitials={setWaiverInitials} 
+          waiverSignature={waiverSignature} 
+          setWaiverSignature={setWaiverSignature}
+        />
       )
     } else if (accountType === "team") {
       return (

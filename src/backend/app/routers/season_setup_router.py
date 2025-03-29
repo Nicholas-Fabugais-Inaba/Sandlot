@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from .types import SeasonSettings, FieldName, FieldID, TimeslotData, TimeslotID, DivisionData, DivisionTeamData, Division, SeasonState, SettingsID, SeasonPreset, EndSeasonData
-from ..db.queries.season_settings_queries import insert_season_settings, get_season_settings, update_season_settings, update_season_state, delete_season_settings, get_season_state, get_all_season_settings
+from ..db.queries.season_settings_queries import insert_season_settings, get_season_settings, update_season_settings, update_season_state, delete_season_settings, get_season_state, get_all_season_settings, get_waiver_enabled
 from ..db.queries.field_queries import insert_field, get_all_fields, delete_field
 from ..db.queries.timeslot_queries import insert_timeslot, get_all_timeslots, delete_timeslot
 from ..db.queries.team_queries import update_division, get_all_teams, get_teams_season_setup, deactivate_all_teams, activate_all_teams
@@ -173,3 +173,9 @@ async def preseason_to_season_route():
     # Switch season state in database to season
     update_season_state("season")
     return True
+
+@router.get("/get_waiver_enabled", response_model=bool)
+async def get_waiver_state():
+    response = {}
+    response["state"] = get_waiver_enabled()
+    return response

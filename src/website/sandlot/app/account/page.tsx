@@ -249,8 +249,8 @@ export default function AccountPage() {
         </div>
 
         {/* Right side: Buttons */}
-        <div className="w-2/5">
-          <h2 className="text-xl font-semibold mb-4">Modify Team Info</h2>
+        <div className="w-1/2">
+          <h2 className="text-xl font-semibold mb-4">Modify Account Info</h2>
           {userRole === "player" && (
             <Button className="button mb-4 w-full" onPress={handleChangeName}>
               Change Name
