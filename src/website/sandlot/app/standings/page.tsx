@@ -18,6 +18,7 @@ import PreseasonMessage from "@/app/no-season/PresasonMessage";
 
 import { title } from "@/components/primitives";
 import "./StandingsPage.css";
+import "../Global.css";
 
 export default function StandingsPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -99,7 +100,7 @@ export default function StandingsPage() {
   else {
     return (
       <div>
-        <div style={{ marginBottom: "20px" }}>
+        <div className="pageHeader">
           <h1 className={title()}>Standings</h1>
         </div>
 

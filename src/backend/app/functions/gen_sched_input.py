@@ -253,7 +253,7 @@ def gen_schedule_repeated():
 
     # Repeats the schedule generation 10 times and returns the best schedule
     best_schedule, best_score, t = gen_schedule_w_skip(games, game_slots, teams)
-    for i in range(10):
+    for i in range(0):
         schedule, score, t = gen_schedule_w_skip(games, game_slots, teams)
         if score < best_score:
             best_schedule = schedule

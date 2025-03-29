@@ -152,6 +152,11 @@ class ArchivedPlayer(Base):
     first_name: Mapped[Optional[str]] = mapped_column(String(30))
     last_name: Mapped[Optional[str]] = mapped_column(String(30))
 
+class Directory(Base):
+    __tablename__ = "directory"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[Optional[str]] = mapped_column(String(50))
+    content: Mapped[Optional[str]] = mapped_column(String(5000))
 
 # function which creates defined models as tables in DB
 def create_tables():
