@@ -77,13 +77,14 @@ def get_all_waivers():
 def get_waiver_format_by_year(year):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = (select(
-            WaiverFormat.year,
-            WaiverFormat.index,
-            WaiverFormat.text
-        )
-        .select_from(WaiverFormat)
-        .where(year == WaiverFormat.year)
+        stmt = (
+            select(
+                WaiverFormat.year,
+                WaiverFormat.index,
+                WaiverFormat.text
+            )
+            .select_from(WaiverFormat)
+            .where(year == WaiverFormat.year)
         )
     result = session.execute(stmt).mappings().all()
     return result
