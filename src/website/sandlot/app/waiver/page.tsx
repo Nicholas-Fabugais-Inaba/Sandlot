@@ -58,7 +58,7 @@ interface Team {
 }
 
 interface WaiverFormat {
-  id: string;
+  id?: string;
   year: string;
   index: number;
   text: string;
@@ -161,6 +161,7 @@ export default function WaiverManagementPage() {
         let waiverCopy = [...waiverFormat]
         for(let i = 0; i < waiverFormat.length; i++) {
           waiverCopy[i].text = encodeURI(waiverCopy[i].text)
+          delete waiverCopy[0].id
         }
         setWaiverFormat(waiverCopy)
       }
@@ -298,7 +299,7 @@ export default function WaiverManagementPage() {
                 </div>
                 <div className="flex space-x-2">
                   <Button onPress={() => setEditingSection(section)}>Edit</Button>
-                  <Button onPress={() => deleteWaiverSection(section.id)}>Delete</Button>
+                  <Button onPress={() => deleteWaiverSection(section.id ? section.id: "1")}>Delete</Button>
                 </div>
               </div>
             ))}
