@@ -155,6 +155,7 @@ export default function WaiverManagementPage() {
         await deleteWaiverFormatByYear({ year: String(new Date().getFullYear()) })
         setTimeout(async() => {
           await createWaiverFormat({data: waiverCopy})
+          alert("Waiver configuration saved successfully!");
         }, 1000)
       }
     } catch (error) {
