@@ -86,5 +86,5 @@ def get_waiver_format_by_year(year):
             .select_from(WaiverFormat)
             .where(year == WaiverFormat.year)
         )
-    result = session.execute(stmt).mappings().all()
-    return result
+        result = session.execute(stmt).mappings().all()
+        return result
