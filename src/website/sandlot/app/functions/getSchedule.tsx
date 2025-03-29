@@ -35,68 +35,68 @@ const dynamicSolstice: boolean = true;
 const solsticeStart: Date = new Date("2025-06-21T00:00:00");
 const solsticeEnd: Date = new Date("2025-09-23T00:00:00");
 
-const solsticeTimeslots: Record<string, Field> = {
-  "1": {
-    timeslots: {
-      "1": {
-        start_hour: 22,
-        start_minutes: 0,
-        end_hour: 23,
-        end_minutes: 30,
-      },
-      "2": {
-        start_hour: 23,
-        start_minutes: 30,
-        end_hour: 25,
-        end_minutes: 0,
-      },
-    },
-  },
-  "2": {
-    timeslots: {
-      "1": {
-        start_hour: 22,
-        start_minutes: 0,
-        end_hour: 23,
-        end_minutes: 30,
-      },
-      "2": {
-        start_hour: 23,
-        start_minutes: 30,
-        end_hour: 25,
-        end_minutes: 0,
-      },
-    },
-  },
-  "3": {
-    timeslots: {
-      "1": {
-        start_hour: 21,
-        start_minutes: 0,
-        end_hour: 22,
-        end_minutes: 30,
-      },
-      "2": {
-        start_hour: 22,
-        start_minutes: 30,
-        end_hour: 24,
-        end_minutes: 0,
-      },
-      "3": {
-        start_hour: 24,
-        start_minutes: 0,
-        end_hour: 25,
-        end_minutes: 30,
-      },
-      "4": {
-        start_hour: 25,
-        start_minutes: 30,
-        end_hour: 27,
-        end_minutes: 0,
-      },
-    },
-  },
-}
+// const solsticeTimeslots: Record<string, Field> = {
+//   "1": {
+//     timeslots: {
+//       "1": {
+//         start_hour: 22,
+//         start_minutes: 0,
+//         end_hour: 23,
+//         end_minutes: 30,
+//       },
+//       "2": {
+//         start_hour: 23,
+//         start_minutes: 30,
+//         end_hour: 25,
+//         end_minutes: 0,
+//       },
+//     },
+//   },
+//   "2": {
+//     timeslots: {
+//       "1": {
+//         start_hour: 22,
+//         start_minutes: 0,
+//         end_hour: 23,
+//         end_minutes: 30,
+//       },
+//       "2": {
+//         start_hour: 23,
+//         start_minutes: 30,
+//         end_hour: 25,
+//         end_minutes: 0,
+//       },
+//     },
+//   },
+//   "3": {
+//     timeslots: {
+//       "1": {
+//         start_hour: 21,
+//         start_minutes: 0,
+//         end_hour: 22,
+//         end_minutes: 30,
+//       },
+//       "2": {
+//         start_hour: 22,
+//         start_minutes: 30,
+//         end_hour: 24,
+//         end_minutes: 0,
+//       },
+//       "3": {
+//         start_hour: 24,
+//         start_minutes: 0,
+//         end_hour: 25,
+//         end_minutes: 30,
+//       },
+//       "4": {
+//         start_hour: 25,
+//         start_minutes: 30,
+//         end_hour: 27,
+//         end_minutes: 0,
+//       },
+//     },
+//   },
+// }
 
 const nonSolsticeTimeslots: Record<string, Field> = {
   "1": {
