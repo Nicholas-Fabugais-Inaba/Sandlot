@@ -24,6 +24,7 @@ interface RescheduleRequest {
   originalField: string;
   proposedDates: Date[];
   proposedFields: string[];
+  proposedTimeslots: string[];
   reciever_name: string;
   requester_name: string;
   reciever_id: number;
@@ -56,126 +57,6 @@ export default function ManageRescheduleRequest() {
     requester_name?: string;
     newDate?: string;
   } | null>(null);
-  const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
-  const dynamicSolstice = true;
-  const solsticeStart = new Date("2023-06-21T00:00:00Z"); // Example start date
-  const solsticeEnd = new Date("2023-09-23T00:00:00Z"); // Example end date
-  const solsticeTimeslots: Timeslot[] = [
-    {
-      "id": 1,
-      "start": "22-0",
-      "end": "23-30",
-      "field_id": 1,
-      "field_name": "Field 1"
-    },
-    {
-      "id": 2,
-      "start": "23-30",
-      "end": "25-0",
-      "field_id": 1,
-      "field_name": "Field 1"
-    },
-    {
-      "id": 3,
-      "start": "22-0",
-      "end": "23-30",
-      "field_id": 2,
-      "field_name": "Field 2"
-    },
-    {
-      "id": 4,
-      "start": "23-30",
-      "end": "25-0",
-      "field_id": 2,
-      "field_name": "Field 2"
-    },
-    {
-      "id": 5,
-      "start": "21-0",
-      "end": "22-30",
-      "field_id": 3,
-      "field_name": "Field 3"
-    },
-    {
-      "id": 6,
-      "start": "22-30",
-      "end": "24-0",
-      "field_id": 3,
-      "field_name": "Field 3"
-    },
-    {
-      "id": 7,
-      "start": "24-0",
-      "end": "25-30",
-      "field_id": 3,
-      "field_name": "Field 3"
-    },
-    {
-      "id": 8,
-      "start": "25-30",
-      "end": "27-0",
-      "field_id": 3,
-      "field_name": "Field 3"
-    }
-  ];
-  const nonSolsticeTimeslots: Timeslot[] = [
-    {
-      "id": 1,
-      "start": "21-0",
-      "end": "22-30",
-      "field_id": 1,
-      "field_name": "Field 1"
-    },
-    {
-      "id": 2,
-      "start": "22-30",
-      "end": "24-0",
-      "field_id": 1,
-      "field_name": "Field 1"
-    },
-    {
-      "id": 3,
-      "start": "21-0",
-      "end": "22-30",
-      "field_id": 2,
-      "field_name": "Field 2"
-    },
-    {
-      "id": 4,
-      "start": "22-30",
-      "end": "24-0",
-      "field_id": 2,
-      "field_name": "Field 2"
-    },
-    {
-      "id": 5,
-      "start": "21-0",
-      "end": "22-30",
-      "field_id": 3,
-      "field_name": "Field 3"
-    },
-    {
-      "id": 6,
-      "start": "22-30",
-      "end": "24-0",
-      "field_id": 3,
-      "field_name": "Field 3"
-    },
-    {
-      "id": 7,
-      "start": "24-0",
-      "end": "25-30",
-      "field_id": 3,
-      "field_name": "Field 3"
-    },
-    {
-      "id": 8,
-      "start": "25-30",
-      "end": "27-0",
-      "field_id": 3,
-      "field_name": "Field 3"
-    }
-  ];
   const router = useRouter();
 
   // Combined fetch for session and reschedule requests
@@ -184,14 +65,6 @@ export default function ManageRescheduleRequest() {
       try {
         setLoading(true);
         const session = await getSession();
-        if (!dynamicSolstice) {
-          const timeslots = await getAllTimeslots();
-          if (timeslots) {
-            setTimeslots(timeslots);
-          }
-        } else {
-          setTimeslots(nonSolsticeTimeslots);
-        }
 
         if (session) {
           setUserRole(session.user?.role || null);
@@ -259,16 +132,16 @@ export default function ManageRescheduleRequest() {
           // Get the selected date and field for the new game
           let splitNewDate = parseNewDate(modalContent.newDate);
           // Choose necessary timeslots based on solstice dates
-          let timeslot = "0";
-          if (dynamicSolstice) {
-            if (splitNewDate[0] >= solsticeStart && splitNewDate[0] <= solsticeEnd) {
-              timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], solsticeTimeslots);
-            } else {
-              timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], nonSolsticeTimeslots);
-            }
-          }
-          // Get the timeslot for the new game
-          timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], timeslots);
+          // let timeslot = "0";
+          // if (dynamicSolstice) {
+          //   if (splitNewDate[0] >= solsticeStart && splitNewDate[0] <= solsticeEnd) {
+          //     timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], solsticeTimeslots);
+          //   } else {
+          //     timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], nonSolsticeTimeslots);
+          //   }
+          // }
+          // // Get the timeslot for the new game
+          // timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], timeslots);
           let formattedDate: string = splitNewDate[0].toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
           acceptRR({
@@ -277,8 +150,8 @@ export default function ManageRescheduleRequest() {
             home_team_id: request.reciever_id,
             away_team_id: request.requester_id,
             date: formattedDate,
-            time: timeslot,
-            field: splitNewDate[1],
+            time: splitNewDate[1],
+            field: splitNewDate[2],
           });
           alert(
             `Reschedule request ${modalContent.id} accepted for ${modalContent.newDate.toLocaleString()}`,
@@ -294,42 +167,42 @@ export default function ManageRescheduleRequest() {
     }
   };
 
-  function parseNewDate(newDate: string): [Date, string] {
+  function parseNewDate(newDate: string): [Date, string, string] {
     let splitNewDate = newDate.split(" ");
 
-    return [new Date(splitNewDate[0]), splitNewDate[1]];
+    return [new Date(splitNewDate[0]), splitNewDate[1], splitNewDate[2]];
   }
 
-  function deriveTimeslot(date: Date, field: string, timeslots: Timeslot[]): string {
-    // Extract the hour from the input date
-    const hour = date.getUTCHours();
+  // function deriveTimeslot(date: Date, field: string, timeslots: Timeslot[]): string {
+  //   // Extract the hour from the input date
+  //   const hour = date.getUTCHours();
   
-    // Filter timeslots for the given field and sort them by start time
-    const fieldTimeslots = timeslots
-      .filter((ts) => ts.field_id.toString() === field)
-      .sort((a, b) => {
-        const [startHourA, startMinuteA] = a.start.split("-").map(Number);
-        const [startHourB, startMinuteB] = b.start.split("-").map(Number);
-        return startHourA - startHourB || startMinuteA - startMinuteB; // Sort by hour, then by minute
-      });
+  //   // Filter timeslots for the given field and sort them by start time
+  //   const fieldTimeslots = timeslots
+  //     .filter((ts) => ts.field_id.toString() === field)
+  //     .sort((a, b) => {
+  //       const [startHourA, startMinuteA] = a.start.split("-").map(Number);
+  //       const [startHourB, startMinuteB] = b.start.split("-").map(Number);
+  //       return startHourA - startHourB || startMinuteA - startMinuteB; // Sort by hour, then by minute
+  //     });
   
-    // Find the matching timeslot where the start time matches the hour
-    const matchingTimeslotIndex = fieldTimeslots.findIndex((ts) => {
-      const [startHour] = ts.start.split("-").map(Number); // Extract the hour from the timeslot start (HH-MM)
-      return startHour === hour;
-    });
+  //   // Find the matching timeslot where the start time matches the hour
+  //   const matchingTimeslotIndex = fieldTimeslots.findIndex((ts) => {
+  //     const [startHour] = ts.start.split("-").map(Number); // Extract the hour from the timeslot start (HH-MM)
+  //     return startHour === hour;
+  //   });
   
-    // Return the sequential ID (1-based index) if a match is found, otherwise return "0"
-    return matchingTimeslotIndex !== -1 ? (matchingTimeslotIndex + 1).toString() : "0";
-  }
+  //   // Return the sequential ID (1-based index) if a match is found, otherwise return "0"
+  //   return matchingTimeslotIndex !== -1 ? (matchingTimeslotIndex + 1).toString() : "0";
+  // }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full min-h-[400px]">
-        <Spinner label="Loading Reschedule Requests..." size="lg" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex justify-center items-center h-full min-h-[400px]">
+  //       <Spinner label="Loading Reschedule Requests..." size="lg" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
@@ -378,7 +251,7 @@ export default function ManageRescheduleRequest() {
                     <option
                       key={date.toISOString() + request.proposedFields[i]}
                       value={
-                        date.toISOString() + " " + request.proposedFields[i]
+                        date.toISOString() + " " + request.proposedTimeslots[i] + " " + request.proposedFields[i]
                       }
                     >
                       {date.toLocaleString() +
@@ -436,7 +309,7 @@ export default function ManageRescheduleRequest() {
                 New Date:{" "}
                 {parseNewDate(modalContent.newDate)[0].toLocaleString() +
                   " on Field " +
-                  parseNewDate(modalContent.newDate)[1]}
+                  parseNewDate(modalContent.newDate)[2]}
               </p>
             )}
           </>

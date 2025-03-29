@@ -50,6 +50,24 @@ export default async function getRR(team_id: any): Promise<any> {
         proposedFields.push(response.data[i].option5_field);
       }
 
+      let proposedTimeslots = [];
+
+      if (response.data[i].option1_timeslot != "") {
+        proposedTimeslots.push(response.data[i].option1_timeslot);
+      }
+      if (response.data[i].option2_timeslot != "") {
+        proposedTimeslots.push(response.data[i].option2_timeslot);
+      }
+      if (response.data[i].option3_timeslot != "") {
+        proposedTimeslots.push(response.data[i].option3_timeslot);
+      }
+      if (response.data[i].option4_timeslot != "") {
+        proposedTimeslots.push(response.data[i].option4_timeslot);
+      }
+      if (response.data[i].option5_timeslot != "") {
+        proposedTimeslots.push(response.data[i].option5_timeslot);
+      }
+
       // Sets game time according to the time from database
       let datetime = new Date(response.data[i].date);
 
@@ -70,6 +88,7 @@ export default async function getRR(team_id: any): Promise<any> {
         originalField: response.data[i].field,
         proposedDates: proposedDates,
         proposedFields: proposedFields,
+        proposedTimeslots: proposedTimeslots,
         reciever_name: response.data[i].reciever_team_name,
         requester_name: response.data[i].requester_team_name,
         reciever_id: response.data[i].reciever_id,
