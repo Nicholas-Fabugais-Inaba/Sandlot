@@ -430,7 +430,7 @@ export default function Home() {
                 Weather Information
               </button>
               {isWeatherDropdownOpen && (
-                <div className="top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
+                <div className="top-full mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
                     <li>
                       <button
@@ -462,7 +462,7 @@ export default function Home() {
                 Resources
               </button>
               {isResourcesDropdownOpen && (
-                <div className="top-full mt-2 p-2 bg-white dark:bg-gray-800 shadow rounded-md z-10">
+                <div className="top-full mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-md z-10">
                   <ul className="list-disc list-inside mb-4 space-y-2">
                   <li>
                     <a
