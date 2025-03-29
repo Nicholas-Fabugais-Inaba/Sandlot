@@ -3,6 +3,7 @@ from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams, Sco
 from ..db.queries.game_queries import get_all_games, get_team_games, update_game, delete_all_games, get_score, update_score
 from ..db.queries.reschedule_request_queries import insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, delete_all_reschedule_requests
 from ..db.queries.timeslot_queries import get_all_timeslots
+from ..db.queries.season_settings_queries import get_solstice_settings
 from ..functions.gen_sched_input import gen_schedule_repeated
 
 router = APIRouter(tags=["schedule"])
@@ -68,5 +69,10 @@ async def commissioner_reschedule_route(data: CommissionerReschedule):
 @router.get("/get_all_timeslots", response_model=list)
 async def get_all_timeslots_route():
     timeslots = get_all_timeslots()
-    timeslots = [dict(row) for row in timeslots]  # Convert rows to dictionaries
+    timeslots = [dict(row) for row in timeslots]
     return timeslots
+
+@router.get("/get_solstice_settings", response_model=object)
+async def get_solstice_settings_route():
+    solstice_settings = dict(get_solstice_settings())
+    return solstice_settings

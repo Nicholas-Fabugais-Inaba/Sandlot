@@ -1,13 +1,19 @@
 import axios from "axios";
 
-export default async function getRR(team_id: any, timeslots: any, dynamicSolstice: boolean): Promise<any> {
+interface SolsticeSettings {
+  active: boolean;
+  start: string;
+  end: string;
+}
+
+export default async function getRR(team_id: any, timeslots: any, solsticeSettings: SolsticeSettings): Promise<any> {
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_APIHOST}/schedule/get_reschedule_requests`,
     team_id,
   );
 
-  const solsticeStart = new Date("2025-06-21T00:00:00");
-  const solsticeEnd = new Date("2025-09-23T00:00:00");
+  const solsticeStart = new Date(solsticeSettings.start);
+  const solsticeEnd = new Date(solsticeSettings.end);
 
   let formmattedRequests = [];
   let pendingRequests = [];
@@ -78,7 +84,6 @@ export default async function getRR(team_id: any, timeslots: any, dynamicSolstic
         timeslots,
         response.data[i].field,
         response.data[i].time,
-        dynamicSolstice,
       );
 
       if (selectedTimeslot) {
@@ -86,7 +91,7 @@ export default async function getRR(team_id: any, timeslots: any, dynamicSolstic
 
         // Adjust for solstice period based on the response date
         if (
-          dynamicSolstice &&
+          solsticeSettings.active &&
           (response.data[i].field === "1" || response.data[i].field === "2") &&
           datetime >= solsticeStart &&
           datetime <= solsticeEnd
@@ -178,7 +183,6 @@ export default async function getRR(team_id: any, timeslots: any, dynamicSolstic
         timeslots,
         response.data[i].field,
         response.data[i].time,
-        dynamicSolstice,
       );
 
       if (selectedTimeslot) {
@@ -186,7 +190,7 @@ export default async function getRR(team_id: any, timeslots: any, dynamicSolstic
 
         // Adjust for solstice period based on the response date
         if (
-          dynamicSolstice &&
+          solsticeSettings.active &&
           (response.data[i].field === "1" || response.data[i].field === "2") &&
           datetime >= solsticeStart &&
           datetime <= solsticeEnd
@@ -221,7 +225,7 @@ export default async function getRR(team_id: any, timeslots: any, dynamicSolstic
   return [formmattedRequests, pendingRequests];
 }
 
-function getSelectedTimeslot(timeslots: any[], field: string, time: string, dynamicSolstice: boolean): any | null {
+function getSelectedTimeslot(timeslots: any[], field: string, time: string): any | null {
   // Filter timeslots by field_id
   const matchingTimeslots = timeslots
     .filter((ts: any) => ts.field_id.toString() === field)

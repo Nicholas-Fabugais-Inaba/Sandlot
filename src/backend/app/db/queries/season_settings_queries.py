@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, update, delete
 from ..create_engine import create_connection
-from ..models import SeasonSettings
+from ..models import SeasonSettings, Solstice
 
 
 def insert_season_settings(name, start_date, end_date, games_per_team):
@@ -95,5 +95,16 @@ def get_waiver_enabled():
     engine = create_connection()
     with Session(engine) as session:
         stmt = select(SeasonSettings.waiver_enabled)
+        result = session.execute(stmt).mappings().first()
+        return result
+
+def get_solstice_settings():
+    engine = create_connection()
+    with Session(engine) as session:
+        stmt = select(
+            Solstice.active,
+            Solstice.start,
+            Solstice.end
+        )
         result = session.execute(stmt).mappings().first()
         return result
