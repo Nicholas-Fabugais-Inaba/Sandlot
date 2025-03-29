@@ -1,10 +1,13 @@
 import axios from "axios";
 
-export default async function getRR(team_id: any, timeslots: any): Promise<any> {
+export default async function getRR(team_id: any, timeslots: any, dynamicSolstice: boolean): Promise<any> {
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_APIHOST}/schedule/get_reschedule_requests`,
     team_id,
   );
+
+  const solsticeStart = new Date("2025-06-21T00:00:00");
+  const solsticeEnd = new Date("2025-09-23T00:00:00");
 
   let formmattedRequests = [];
   let pendingRequests = [];
@@ -75,11 +78,23 @@ export default async function getRR(team_id: any, timeslots: any): Promise<any> 
         timeslots,
         response.data[i].field,
         response.data[i].time,
+        dynamicSolstice,
       );
 
       if (selectedTimeslot) {
         const [startHour, startMinute] = selectedTimeslot.start.split("-").map(Number);
-        datetime.setUTCHours(startHour, startMinute, 0);
+
+        // Adjust for solstice period based on the response date
+        if (
+          dynamicSolstice &&
+          (response.data[i].field === "1" || response.data[i].field === "2") &&
+          datetime >= solsticeStart &&
+          datetime <= solsticeEnd
+        ) {
+          datetime.setUTCHours(startHour + 1, startMinute, 0); // Push start hour forward by 1
+        } else {
+          datetime.setUTCHours(startHour, startMinute, 0); // Use the original start time
+        }
       } else {
         console.warn(
           `No matching timeslot found for field ${response.data[i].field} and time ID: ${response.data[i].time}`,
@@ -155,6 +170,7 @@ export default async function getRR(team_id: any, timeslots: any): Promise<any> 
         proposedTimeslots.push(response.data[i].option5_timeslot);
       }
 
+      console.log("Date: ", response.data[i].date);
       let datetime = new Date(response.data[i].date);
 
       // Use the helper function to get the selected timeslot
@@ -162,16 +178,29 @@ export default async function getRR(team_id: any, timeslots: any): Promise<any> 
         timeslots,
         response.data[i].field,
         response.data[i].time,
+        dynamicSolstice,
       );
 
       if (selectedTimeslot) {
         const [startHour, startMinute] = selectedTimeslot.start.split("-").map(Number);
-        datetime.setUTCHours(startHour, startMinute, 0);
+
+        // Adjust for solstice period based on the response date
+        if (
+          dynamicSolstice &&
+          (response.data[i].field === "1" || response.data[i].field === "2") &&
+          datetime >= solsticeStart &&
+          datetime <= solsticeEnd
+        ) {
+          datetime.setUTCHours(startHour + 1, startMinute, 0); // Push start hour forward by 1
+        } else {
+          datetime.setUTCHours(startHour, startMinute, 0); // Use the original start time
+        }
       } else {
         console.warn(
           `No matching timeslot found for field ${response.data[i].field} and time ID: ${response.data[i].time}`,
         );
       }
+      console.log("Datetime: ", datetime);
 
       pendingRequests.push({
         id: response.data[i].id,
@@ -192,7 +221,7 @@ export default async function getRR(team_id: any, timeslots: any): Promise<any> 
   return [formmattedRequests, pendingRequests];
 }
 
-function getSelectedTimeslot(timeslots: any[], field: string, time: string): any | null {
+function getSelectedTimeslot(timeslots: any[], field: string, time: string, dynamicSolstice: boolean): any | null {
   // Filter timeslots by field_id
   const matchingTimeslots = timeslots
     .filter((ts: any) => ts.field_id.toString() === field)

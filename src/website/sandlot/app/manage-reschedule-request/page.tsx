@@ -59,6 +59,17 @@ export default function ManageRescheduleRequest() {
     newDate?: string;
   } | null>(null);
   const [timeslots, setTimeslots] = useState<Timeslot[]>([]);
+  const dynamicSolstice = true;
+  const solsticeTimeslots = [
+    { id: 1, start: "21-0", end: "22-30", field_id: 1, field_name: "Field 1" },
+    { id: 2, start: "22-30", end: "24-0", field_id: 1, field_name: "Field 1" },
+    { id: 3, start: "21-0", end: "22-30", field_id: 2, field_name: "Field 2" },
+    { id: 4, start: "22-30", end: "24-0", field_id: 2, field_name: "Field 2" },
+    { id: 5, start: "21-0", end: "22-30", field_id: 3, field_name: "Field 3" },
+    { id: 6, start: "22-30", end: "24-0", field_id: 3, field_name: "Field 3" },
+    { id: 7, start: "24-0", end: "25-30", field_id: 3, field_name: "Field 3" },
+    { id: 8, start: "25-30", end: "27-0", field_id: 3, field_name: "Field 3" },
+  ];
   const router = useRouter();
 
   // Combined fetch for session and reschedule requests
@@ -67,7 +78,7 @@ export default function ManageRescheduleRequest() {
       try {
         setLoading(true);
         const session = await getSession();
-        const timeslotsResponse = await getAllTimeslots();
+        const timeslotsResponse = dynamicSolstice ? solsticeTimeslots : await getAllTimeslots();
         if (timeslotsResponse) {
           setTimeslots(timeslotsResponse);
         }
@@ -77,7 +88,7 @@ export default function ManageRescheduleRequest() {
           setUserTeamId(session.user?.team_id || null);
 
           // Fetch reschedule requests immediately after session
-          const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse);
+          const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, dynamicSolstice);
           setRescheduleRequests(formattedRequests);
           setPendingRequests(formattedPendingRequests);
           console.log("Reschedule Requests:", formattedRequests);
