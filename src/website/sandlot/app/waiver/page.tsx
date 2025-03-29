@@ -20,6 +20,7 @@ import {
 // Import necessary backend functions (to be implemented)
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 // import { saveWaiverConfig, getWaiverConfig, signWaiver, getSignedWaivers } from "@/app/functions/waiverFunctions";
+import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 
 // Typescript interfaces for type safety
 interface WaiverSection {
@@ -53,6 +54,13 @@ interface Team {
   division: string;
 }
 
+interface WaiverFormat {
+  id?: string;
+  year: number;
+  index: number;
+  text: string;
+}
+
 export default function WaiverManagementPage() {
   // State for waiver configuration
   const [waiverConfig, setWaiverConfig] = useState<WaiverConfig>({
@@ -81,6 +89,8 @@ export default function WaiverManagementPage() {
   const [playerName, setPlayerName] = useState("");
   const [playerTeam, setPlayerTeam] = useState("");
 
+  const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[] | null>(null)
+
   // Fetch teams and existing waiver config on component mount
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -99,13 +109,25 @@ export default function WaiverManagementPage() {
         // Fetch signed waivers
         // const existingWaivers = await getSignedWaivers();
         // setSignedWaivers(existingWaivers);
+
       } catch (error) {
         console.error("Failed to fetch initial data", error);
       }
     };
 
     fetchInitialData();
+    fetchWaiverFormat();
   }, []);
+
+  const fetchWaiverFormat = async () => {
+    try{
+      const currentYear = new Date().getFullYear();
+      setWaiverFormat( await getWaiverFormatByYear(currentYear) )
+    }
+    catch (error){
+      console.error("Failed to fetch waiver format.", error)
+    }
+  };
 
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
