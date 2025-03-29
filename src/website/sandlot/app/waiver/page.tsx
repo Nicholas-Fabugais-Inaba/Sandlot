@@ -163,12 +163,11 @@ export default function WaiverManagementPage() {
           waiverCopy[i].text = encodeURI(waiverCopy[i].text)
           delete waiverCopy[0].id
         }
-        setWaiverFormat(waiverCopy)
+        await deleteWaiverFormatByYear(new Date().getFullYear())
+        setTimeout(async() => {
+          await createWaiverFormat(waiverCopy)
+        }, 1000)
       }
-      await deleteWaiverFormatByYear(new Date().getFullYear())
-      setTimeout(async() => {
-        await createWaiverFormat(waiverFormat)
-      }, 1000)
     } catch (error) {
       console.error("Failed to save configuration", error);
       alert("Failed to save waiver configuration");
