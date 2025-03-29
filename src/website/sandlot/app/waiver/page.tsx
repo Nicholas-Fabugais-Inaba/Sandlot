@@ -276,21 +276,26 @@ export default function WaiverManagementPage() {
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-4">Waiver Sections</h3>
             {waiverFormat
-            ?.filter((section) => section.index !== 0)
-            .map((section) => (
-              <div key={section.id} className="flex items-start justify-between p-3 border rounded mb-2">
-                <div className="flex-1 mr-4 overflow-hidden">
-                  <p
-                    className="whitespace-pre-wrap break-words text-black dark:text-white">
-                      {section.text}
-                    </p>
+              ?.filter((section) => section.index !== 0)
+              .map((section, index, array) => (
+                <div key={section.id}>
+                  {/* Conditionally render "Footer" above the last section */}
+                  {index === array.length - 1 && (
+                    <p className="text-sm font-semibold mb-2 text-left">Footer</p>
+                  )}
+                  <div className="flex items-start justify-between p-3 border rounded mb-2">
+                    <div className="flex-1 mr-4 overflow-hidden">
+                      <p className="whitespace-pre-wrap break-words text-black dark:text-white">
+                        {section.text}
+                      </p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button onPress={() => setEditingSection(section)}>Edit</Button>
+                      <Button onPress={() => deleteWaiverSection(section.id ? section.id : "1")}>Delete</Button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex space-x-2">
-                  <Button onPress={() => setEditingSection(section)}>Edit</Button>
-                  <Button onPress={() => deleteWaiverSection(section.id ? section.id: "1")}>Delete</Button>
-                </div>
-              </div>
-            ))}
+              ))}
             <Button onPress={addWaiverSection} className="mt-4">Add Section</Button>
           </div>
         </div>

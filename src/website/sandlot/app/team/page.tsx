@@ -34,6 +34,7 @@ import { title } from "@/components/primitives";
 // import { useGlobalState } from "@/context/GlobalStateContext";
 import AvailableTeams from "./AvailableTeams";
 
+import "../Global.css";
 import "./TeamPage.css";
 import getDirectoryTeams from "../functions/getDirectoryTeams";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
@@ -170,8 +171,10 @@ export default function TeamPage() {
   }
 
   return (
-    <div>
-      <h1 className={title()}>Team</h1>
+    <div className="pageHeader">
+      <h1 className={title()}>
+        Team
+      </h1>
 
       {/* Player View: Available Teams */}
       {session?.user.role === "player" && !teamId ? (
