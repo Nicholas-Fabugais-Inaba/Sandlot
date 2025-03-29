@@ -246,10 +246,10 @@ export default function TeamPage() {
 
           {/* Right Section: Team Info (Captain's Info and Leave Team) */}
           <div className="w-2/5">
-            <h2 className="text-xl font-bold mb-2">
+            {/* <h2 className="text-xl font-bold mb-2">
               {teamName} Info
             </h2>
-            <div className="flex flex-col items-center space-y-4"> {/* Added flex column with spacing */}
+            <div className="flex flex-col items-center space-y-4">
               <Button
                 className="button min-w-[160px]" // Made full width for consistency
                 onPress={() =>
@@ -260,7 +260,7 @@ export default function TeamPage() {
               >
                 Captain's Info
               </Button>
-            </div>
+            </div> */}
             <h2 className="text-xl font-bold mt-4 mb-2">
               Player Actions
             </h2>
