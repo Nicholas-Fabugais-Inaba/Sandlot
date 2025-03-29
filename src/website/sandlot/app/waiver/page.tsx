@@ -174,15 +174,18 @@ export default function WaiverManagementPage() {
   const updateWaiverSection = (updatedSection: WaiverFormat) => {
     if (tempSection?.id === updatedSection.id) {
       // This is a new section being saved
-      waiverFormat?.push(updatedSection)
-      setWaiverFormat(waiverFormat);
-      setTempSection(null);
+      if(waiverFormat) {
+        let waiverCopy = [...waiverFormat]
+        waiverCopy?.push(updatedSection)
+        setWaiverFormat(waiverCopy);
+        setTempSection(null);
+      }
     } else {
       // This is an existing section being updated
       if(waiverFormat) {
         for (let i = 0; i < waiverFormat.length; i++) {
           if(waiverFormat[i].id == updatedSection.id) {
-            let sections = waiverFormat
+            let sections = [...waiverFormat]
             sections[i] = updatedSection
             setWaiverFormat(sections)
           }
@@ -197,7 +200,7 @@ export default function WaiverManagementPage() {
     if(waiverFormat) {
       for (let i = 0; i < waiverFormat.length; i++) {
         if(waiverFormat[i].id == sectionId) {
-          let sections = waiverFormat
+          let sections = [...waiverFormat]
           sections.splice(i,1)
           setWaiverFormat(sections)
         }
@@ -249,7 +252,7 @@ export default function WaiverManagementPage() {
               value={waiverFormat ? waiverFormat[0].text: "Title"}
               onChange={(e) => {
                 if(waiverFormat) {
-                  let section = waiverFormat
+                  let section = [...waiverFormat]
                   section[0].text = e.target.value
                   setWaiverFormat(section)
                 }
