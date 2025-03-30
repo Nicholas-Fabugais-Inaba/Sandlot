@@ -771,10 +771,13 @@ function ScheduleSettings({ setUnsavedChanges, seasonState }: ScheduleSettingsPr
   return (
     <div className="pb-80">
       <h2 className="text-3xl font-semibold mb-4">Schedule Generator</h2>
-      {seasonState === "preseason" ? (
+      {seasonState === "offseason" ? (
         <>
           <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
           <p className="mt-4 text-gray-700 text-lg">
+            <strong>ALL TEAMS must have accounts and put into divisions in Division Settings before the schedule should be generated.</strong>
+            <br /><br />
+
             Press the <strong>Generate New Schedule</strong> button to generate a schedule you can view in this screen before saving.
             You may regenerate as many times as you like until you find an acceptable schedule.
             <br /><br />
@@ -788,6 +791,9 @@ function ScheduleSettings({ setUnsavedChanges, seasonState }: ScheduleSettingsPr
             <br /><br />
 
             <strong>A schedule must be generated and saved before the season can be launched.</strong>
+            <br /><br />
+
+            Team accounts and players cannot see schedule until season is launched.
           </p>
         </>
       ) : (
