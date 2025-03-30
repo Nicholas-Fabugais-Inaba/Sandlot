@@ -258,7 +258,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
           selectedDate.date.getTime() === start.getTime() &&
           selectedDate.field === field,
       );
-  
+
       if (isDuplicate) {
         const newSelectedDates = selectedDates.filter(
           (selectedDate) =>
@@ -267,7 +267,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               selectedDate.field === field
             ),
         );
-  
+
         setSelectedDates(newSelectedDates);
       } else {
         let newSelectedDates = [...selectedDates, { date: start, timeslot, field }];
@@ -275,7 +275,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         if (newSelectedDates.length > maxSelectedDates) {
           newSelectedDates = newSelectedDates.slice(1); // Remove the first selected date
         }
-  
+
         setSelectedDates(newSelectedDates);
       }
     }
@@ -487,7 +487,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       rescheduleGame,
     );
     if (rescheduleGame && selectedDates[0]) {
-      const formattedDate: string = selectedDates[0].date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      const adjustedDate = subtractHours(selectedDates[0].date, 8); // Adjust date by subtracting 4 hours
+      const formattedDate: string = adjustedDate.toISOString().split('T')[0];
       commissionerReschedule({
         game_id: rescheduleGame?.game_id,
         date: formattedDate,
@@ -511,6 +512,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         )
       : false;
   };
+
+  function subtractHours(date: Date, hours: number): Date {
+    const adjustedDate = new Date(date);
+    adjustedDate.setUTCHours(adjustedDate.getUTCHours() - hours);
+    return adjustedDate;
+  }
 
   const handleSendRequest = async () => {
     handleReturnClick();
@@ -810,7 +817,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                       <div className="text-xs text-gray-600">{fieldName}</div>
                     )}
                   </div>
-                ) : null
+                ) : <div className={`event-content p-2 rounded-xl spacer-event`}></div>
               ) : schedType === 1 ? ( // Team Schedule
                 eventInfo.event.extendedProps.home &&
                 eventInfo.event.extendedProps.away &&

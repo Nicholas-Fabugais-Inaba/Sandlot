@@ -40,13 +40,19 @@ def get_season_settings():
             SeasonSettings.start_date, 
             SeasonSettings.end_date, 
             SeasonSettings.games_per_team
-        )
-        result = session.execute(stmt).mappings().first()
+        ).limit(1)  # Limit to 1 row
+        result = session.execute(stmt).mappings().first()  # Fetch the first result
         return result
 
 def update_season_settings(start_date, end_date, games_per_team):
     with Session(engine) as session:
-        stmt = update(SeasonSettings).where(SeasonSettings.id == 1).values(start_date=start_date, end_date=end_date, games_per_team=games_per_team)
+        # Dynamically fetch the ID of the first row
+        subquery = select(SeasonSettings.id).limit(1)
+        stmt = (
+            update(SeasonSettings)
+            .where(SeasonSettings.id == subquery.scalar_subquery())  # Use the subquery to get the ID
+            .values(start_date=start_date, end_date=end_date, games_per_team=games_per_team)
+        )
         try:
             session.execute(stmt)
         except:
@@ -90,6 +96,17 @@ def get_waiver_enabled():
         stmt = select(SeasonSettings.waiver_enabled)
         result = session.execute(stmt).mappings().first()
         return result
+
+def update_waiver_enabled(waiver_enabled):
+    with Session(engine) as session:
+        stmt = update(SeasonSettings).where(SeasonSettings.id == select(SeasonSettings.id).limit(1)).values(waiver_enabled=waiver_enabled)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
 
 def get_solstice_settings():
     with Session(engine) as session:

@@ -296,13 +296,22 @@ function GeneralSettings({
       alert("You can only create up to 3 fields.");
       return;
     }
-
+  
     const newField: Field = {
-      id: fields.length + 1, // Generate ID within the range 1 to len(fields)
+      id: fields.length + 1, // Assign ID based on the current number of fields
       name: `Field ${fields.length + 1}`,
-      timeslotIds: []
+      timeslotIds: [],
     };
-    setFields(prev => [...prev, newField]);
+  
+    setFields((prev) => {
+      const updatedFields = [...prev, newField];
+      // Reassign IDs to ensure they remain sequential
+      return updatedFields.map((field, index) => ({
+        ...field,
+        id: index + 1, // Reassign IDs starting from 1
+      }));
+    });
+  
     setUnsavedChanges(true);
   };
 
@@ -541,7 +550,10 @@ function GeneralSettings({
   };
 
   const convertTimeToUTC = (time: string): string => {
-    const [hour, minute] = time.split(":").map(Number);
+    let [hour, minute] = time.split(":").map(Number);
+    if (hour < 4) {
+      hour += 24; // Adjust for UTC conversion (example: +4 hours)
+    }
     const utcHour = hour + 4; // Adjust for UTC conversion (example: +4 hours)
     return `${utcHour}-${minute}`;
   };
@@ -624,103 +636,107 @@ function GeneralSettings({
         </div> */}
 
         {/* Timeslots Section */}
-<div className="mb-4">
-  <div className="flex justify-between items-center mb-2">
-    <label className="block text-gray-700">
-      Timeslots
-    </label>
-    <button 
-      type="button" 
-      className="bg-blue-500 text-white px-3 py-1 rounded"
-      onClick={addTimeslot}
-    >
-      Add Timeslot
-    </button>
-  </div>
-  {timeslots.map((timeslot) => (
-    <div key={timeslot.id} className="flex items-center space-x-2 mb-2">
-      <input
-        type="time"
-        value={timeslot.startTime}
-        onChange={(e) => updateTimeslot(timeslot.id, "startTime", e.target.value)}
-        className="border rounded px-2 py-1"
-      />
-      <input
-        type="time"
-        value={timeslot.endTime}
-        onChange={(e) => updateTimeslot(timeslot.id, "endTime", e.target.value)}
-        className="border rounded px-2 py-1"
-      />
-      <button
-        type="button"
-        className="bg-red-500 text-white px-3 py-1 rounded"
-        onClick={() => removeTimeslot(timeslot.id)}
-      >
-        Remove
-      </button>
-    </div>
-  ))}
-</div>
+        <div className="mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <label className="block text-gray-700">Timeslots</label>
+          <button
+            type="button"
+            className="bg-blue-500 text-white px-3 py-1 rounded"
+            onClick={addTimeslot}
+          >
+            Add Timeslot
+          </button>
+        </div>
+        {timeslots.length === 0 ? (
+          <p className="text-gray-500 italic">No Timeslots</p>
+        ) : (
+          timeslots.map((timeslot) => (
+            <div key={timeslot.id} className="flex items-center space-x-2 mb-2">
+              <input
+                type="time"
+                value={timeslot.startTime}
+                onChange={(e) => updateTimeslot(timeslot.id, "startTime", e.target.value)}
+                className="border rounded px-2 py-1"
+              />
+              <input
+                type="time"
+                value={timeslot.endTime}
+                onChange={(e) => updateTimeslot(timeslot.id, "endTime", e.target.value)}
+                className="border rounded px-2 py-1"
+              />
+              <button
+                type="button"
+                className="bg-red-500 text-white px-3 py-1 rounded"
+                onClick={() => removeTimeslot(timeslot.id)}
+              >
+                Remove
+              </button>
+            </div>
+          ))
+        )}
+      </div>
 
         {/* Fields Section */}
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <label className="block text-gray-700">
-              Fields
-            </label>
-            <button 
-              type="button" 
+            <label className="block text-gray-700">Fields</label>
+            <button
+              type="button"
               className="bg-blue-500 text-white px-3 py-1 rounded"
               onClick={addField}
             >
               Add Field
             </button>
           </div>
-          {fields.map((field) => (
-            <div key={field.id} className="mb-3 p-3 border rounded">
-              <div className="flex justify-between items-center mb-2">
-                <input 
-                  type="text" 
-                  value={field.name} 
-                  onChange={(e) => updateFieldName(field.id, e.target.value)}
-                  className="border rounded px-2 py-1 flex-grow mr-2"
-                />
-                <button 
-                  type="button" 
-                  className="bg-red-500 text-white px-3 py-1 rounded"
-                  onClick={() => removeField(field.id)}
-                >
-                  Remove Field
-                </button>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Available Timeslots
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {timeslots
-                    .slice() // Create a shallow copy to avoid mutating the original array
-                    .sort((a, b) => {
-                      const [aHour, aMinute] = a.startTime.split(":").map(Number);
-                      const [bHour, bMinute] = b.startTime.split(":").map(Number);
-                      return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
-                    })
-                    .map((timeslot) => (
-                      <label key={timeslot.id} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={field.timeslotIds.includes(timeslot.id)}
-                          onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
-                          className="mr-2"
-                        />
-                        {timeslot.startTime} - {timeslot.endTime}
-                      </label>
-                    ))}
+          {fields.length === 0 ? (
+            <p className="text-gray-500 italic">No Fields</p>
+          ) : (
+            fields.map((field) => (
+              <div key={field.id} className="mb-3 p-3 border rounded">
+                <div className="flex justify-between items-center mb-2">
+                  <input
+                    type="text"
+                    value={field.name}
+                    onChange={(e) => updateFieldName(field.id, e.target.value)}
+                    className="border rounded px-2 py-1 flex-grow mr-2"
+                  />
+                  <button
+                    type="button"
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                    onClick={() => removeField(field.id)}
+                  >
+                    Remove Field
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Available Timeslots
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {timeslots
+                      .slice() // Create a shallow copy to avoid mutating the original array
+                      .sort((a, b) => {
+                        const [aHour, aMinute] = a.startTime.split(":").map(Number);
+                        const [bHour, bMinute] = b.startTime.split(":").map(Number);
+                        return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
+                      })
+                      .map((timeslot) => (
+                        <label key={timeslot.id} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={field.timeslotIds.includes(timeslot.id)}
+                            onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
+                            className="mr-2"
+                          />
+                          {timeslot.startTime} - {timeslot.endTime}
+                        </label>
+                      ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Save Button */}

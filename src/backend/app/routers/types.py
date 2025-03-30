@@ -253,3 +253,6 @@ class WaiverFormat(BaseModel):
 
 class WaiverFormatList(BaseModel):
     data: list[WaiverFormat]
+
+class WaverEnabled(BaseModel):
+    waiver_enabled: bool
