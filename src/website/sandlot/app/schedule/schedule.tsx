@@ -446,6 +446,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       })();
       setLoading(false);
     }
+    // Reset selected dates
+    setSelectedDates([]);
   };
 
   const handleGenerateSchedule = () => {
@@ -497,6 +499,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       })
     }
 
+    // Reset selected dates
+    setSelectedDates([]);
+
     // setTimeout is used to wait for the db to be populated with the rescheduled game before attempting to retrieve the game information on the schedule page
     setTimeout(() => {
       handleReturnClick()
@@ -544,6 +549,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       option4_field: selectedDates[3]?.field.toString() || "",
       option5_field: selectedDates[4]?.field.toString() || "",
     };
+
+    // Reset selected dates
+    setSelectedDates([]);
 
     console.log(RRdata);
     await createRR(RRdata);
@@ -992,12 +1000,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                 className="px-4 py-2 bg-green-500 text-white rounded-lg"
                 onClick={handleGenerateSchedule}
               >
-                Generate Schedule
+                Generate New Schedule
               </button>
               <div className="flex items-center">
                 <span className="mr-4 text-lg">
                   {Object.keys(schedule).length === 0
-                    ? "No new schedule to submit"
+                    ? "No new schedule to save"
                     : `Current Schedule Score: ${schedScore}`}
                 </span>
                 <button
@@ -1005,7 +1013,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                   disabled={Object.keys(schedule).length === 0}
                   onClick={handleSubmitSchedule}
                 >
-                  Submit Schedule
+                  Save Schedule
                 </button>
               </div>
             </div>

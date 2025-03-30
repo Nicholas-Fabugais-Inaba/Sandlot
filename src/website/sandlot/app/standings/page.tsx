@@ -11,8 +11,8 @@ import {
   Spinner,
 } from "@heroui/react";
 
-import getStandings from "../functions/getStandings";
-import getSeasonState from "../functions/getSeasonState";
+import getStandings from "@/app/functions/getStandings";
+import getSeasonState from "@/app/functions/getSeasonState";
 import OffseasonMessage from "@/app/no-season/OffseasonMessage";
 import PreseasonMessage from "@/app/no-season/PresasonMessage";
 

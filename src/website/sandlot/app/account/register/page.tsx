@@ -21,6 +21,7 @@ import createWaiver from "@/app/functions/createWaiver";
 import getPlayer from "@/app/functions/getPlayer";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
+import getSeasonState from "@/app/functions/getSeasonState";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -49,7 +50,9 @@ export default function Register() {
   
   const [isRegistering, setIsRegistering] = useState(false);
   const [fieldsFilled, setFieldsFilled] = useState<number>(0);
-  const [showWaiver, setShowWaiver] = useState<boolean>(false);  
+  const [showWaiver, setShowWaiver] = useState<boolean>(false); 
+  const [seasonState, setSeasonState] = useState<any>();
+ 
   const router = useRouter();
 
   // waiver sub-component state
@@ -66,6 +69,7 @@ export default function Register() {
   const [waiverInitials, setWaiverInitials] = useState("");
   const [waiverSignature, setWaiverSignature] = useState("");
   const [waiverEnabled, setWaiverEnabled] = useState<boolean>();
+  const [isLoading, setIsLoading] = useState(true);
 
   // const [waiverState, setWaiverState] = useState(true);
 
@@ -155,6 +159,18 @@ export default function Register() {
         }
       };
 
+      const fetchSeasonState = async () => {
+        let response = await getSeasonState();
+        setSeasonState(response);
+
+        if (response === "offseason") {
+          router.push("/");
+          return;
+        } 
+        setIsLoading(false);
+      }
+
+      fetchSeasonState();
       fetchWaiverEnabled();
     }, []);
 
@@ -222,7 +238,6 @@ export default function Register() {
       return;
     }
 
-    console.log("HEREEEEEEEEE")
     setIsRegistering(true);
 
     try {
@@ -564,10 +579,10 @@ export default function Register() {
                 onChange={(e) => setPreferredDivision(parseInt(e.target.value))}
               >
                 <option value="-1">None</option>
-                <option value="0">A</option>
-                <option value="1">B</option>
-                <option value="2">C</option>
-                <option value="3">D</option>
+                <option value="1">A</option>
+                <option value="2">B</option>
+                <option value="3">C</option>
+                <option value="4">D</option>
               </select>
             </div>
 
@@ -609,66 +624,109 @@ export default function Register() {
     }
   };
 
-  return (
-    <div>
-      <div className="mt-[20px]">
-        <h1 className={title()}>
-          {accountType === "player"
-            ? "Register Player"
-            : accountType === "team"
-              ? "Register Team"
-              : "Register"}
-        </h1>
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading Registration Page..." size="lg" />
       </div>
-      <div className={styles.container}>
-        <div className="centered-container">
-          {isRegistering ? (
-            <div className="flex justify-center items-center h-full min-h-[400px]">
-              <Spinner label="Creating your account..." size="lg" />
-            </div>
-          ) : (
-            <>
-              {errors.general && <p className={styles.errorMessage}>{errors.general}</p>}
-              {accountType === null ? (
-                <div className="form">
-                  <h1 className="text-xl font-semibold text-center mt-8">
-                    Choose an Account Type
-                  </h1>
-                  <div className="flex space-x-4 mt-4">
-                    <Button
-                      className="button"
-                      onPress={() => setAccountType("player")}
-                    >
-                      Player
-                    </Button>
-                    <Button
-                      className="button"
-                      onPress={() => setAccountType("team")}
-                    >
-                      Team
-                    </Button>
-                  </div>
-                  <div className="flex justify-center mt-48">
-                    <Button
-                      className="button"
-                      onPress={() => router.push("/account")}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <form className="form" onSubmit={(e) => handleRegister(e)}>
-                  {renderForm()}
+    );
+  }
 
-                  <div className="flex space-x-4 justify-center">
-                    {showWaiver || accountType == "team" ? (
-                      <Button className="button" type="submit" isDisabled={fieldsFilled < 3}>
-                        Register
+  if (seasonState !== "offseason") {
+    return (
+      <div>
+        <div className="mt-[20px]">
+          <h1 className={title()}>
+            {accountType === "player"
+              ? "Register Player"
+              : accountType === "team"
+                ? "Register Team"
+                : "Register"}
+          </h1>
+        </div>
+        <div className={styles.container}>
+          <div className="centered-container">
+            {isRegistering ? (
+              <div className="flex justify-center items-center h-full min-h-[400px]">
+                <Spinner label="Creating your account..." size="lg" />
+              </div>
+            ) : (
+              <>
+                {errors.general && <p className={styles.errorMessage}>{errors.general}</p>}
+                {accountType === null ? (
+                  <div className="form">
+                    <h1 className="text-xl font-semibold text-center mt-8">
+                      Choose an Account Type
+                    </h1>
+                    <div className="flex space-x-4 mt-4">
+                      <Button
+                        className="button"
+                        onPress={() => setAccountType("player")}
+                      >
+                        Player
                       </Button>
-                      ) : waiverEnabled ? (
+                      <Button
+                        className="button"
+                        onPress={() => setAccountType("team")}
+                      >
+                        Team
+                      </Button>
+                    </div>
+                    <div className="flex justify-center mt-48">
+                      <Button
+                        className="button"
+                        onPress={() => router.push("/account")}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <form className="form" onSubmit={(e) => handleRegister(e)}>
+                    {renderForm()}
+
+                    <div className="flex space-x-4 justify-center">
+                      {showWaiver || accountType == "team" ? (
+                        <Button className="button" type="submit" isDisabled={fieldsFilled < 3}>
+                          Register
+                        </Button>
+                        ) : waiverEnabled ? (
+                          <Button
+                            className="button"
+                            isDisabled={fieldsFilled < 7}
+                            onPress={() => {
+                              // Replace the existing validation with a more comprehensive check
+                              const newErrors: typeof errors = {};
+                              
+                              if (!validateEmail(email)) {
+                                newErrors.email = "Invalid email format";
+                              }
+
+                              if (password !== confirmPassword) {
+                                newErrors.password = "Passwords do not match";
+                              }
+
+                              if (email !== confirmEmail) {
+                                newErrors.email = "Emails do not match";
+                              }                  
+
+                              // If there are any errors, set them and prevent proceeding
+                              if (Object.keys(newErrors).length > 0) {
+                                setErrors(newErrors);
+                                return;
+                              }
+                              
+                              // If no errors, proceed to waiver
+                              setShowWaiver(true);
+                              
+                            }}
+                          >
+                            Next
+                          </Button>
+                        ) : (                      
                         <Button
                           className="button"
+                          type="submit"
                           isDisabled={fieldsFilled < 7}
                           onPress={() => {
                             // Replace the existing validation with a more comprehensive check
@@ -692,74 +750,41 @@ export default function Register() {
                               return;
                             }
                             
-                            // If no errors, proceed to waiver
-                            setShowWaiver(true);
                             
                           }}
                         >
-                          Next
-                        </Button>
-                      ) : (                      
+                          Register
+                        </Button>)
+                      }
+                    </div>
+
+                    <div className="flex space-x-4 justify-center mt-4">
                       <Button
                         className="button"
-                        type="submit"
-                        isDisabled={fieldsFilled < 7}
                         onPress={() => {
-                          // Replace the existing validation with a more comprehensive check
-                          const newErrors: typeof errors = {};
-                          
-                          if (!validateEmail(email)) {
-                            newErrors.email = "Invalid email format";
+                          if (showWaiver && accountType === "player") {
+                            setShowWaiver(false);
+                          } else {
+                            setAccountType(null);
                           }
-
-                          if (password !== confirmPassword) {
-                            newErrors.password = "Passwords do not match";
-                          }
-
-                          if (email !== confirmEmail) {
-                            newErrors.email = "Emails do not match";
-                          }                  
-
-                          // If there are any errors, set them and prevent proceeding
-                          if (Object.keys(newErrors).length > 0) {
-                            setErrors(newErrors);
-                            return;
-                          }
-                          
-                          
                         }}
                       >
-                        Register
-                      </Button>)
-                    }
-                  </div>
-
-                  <div className="flex space-x-4 justify-center mt-4">
-                    <Button
-                      className="button"
-                      onPress={() => {
-                        if (showWaiver && accountType === "player") {
-                          setShowWaiver(false);
-                        } else {
-                          setAccountType(null);
-                        }
-                      }}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      className="button"
-                      onPress={() => router.push("/account")}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </>
-          )}
+                        Back
+                      </Button>
+                      <Button
+                        className="button"
+                        onPress={() => router.push("/account")}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

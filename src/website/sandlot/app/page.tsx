@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button, Card, Alert } from "@heroui/react";
+import { Button, Card, Alert, Spinner } from "@heroui/react";
 import { button as buttonStyles } from "@heroui/theme";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
@@ -20,6 +20,8 @@ import deleteAnnouncement from "./functions/deleteAnnouncement";
 import { GithubIcon } from "@/components/icons";
 import { title, subtitle } from "@/components/primitives";
 import { siteConfig } from "@/config/site";
+import getSeasonState from "@/app/functions/getSeasonState";
+
 
 interface Announcement {
   id: number;
@@ -43,6 +45,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [isSuccessAlertVisible, setIsSuccessAlertVisible] = useState(false);
   const [alertSuccessMessage, setAlertSuccessMessage] = useState("");
+  const [seasonState, setSeasonState] = useState<any>();
+  
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -53,10 +57,16 @@ export default function Home() {
 
       setAnnouncements(announcements);
 
-      setLoading(false);
     };
 
+    const fetchSeasonState = async () => {
+      let response = await getSeasonState();
+      setSeasonState(response);
+      setLoading(false);
+    }
+
     fetchSession();
+    fetchSeasonState();
   }, []);
 
   const handleAddAnnouncement = async () => {
@@ -304,10 +314,20 @@ export default function Home() {
                       <p className="mt-4">
                         <em>Don't have an account?</em>
                       </p>
-                      <Button className="button" onPress={() => router.push("/account/register")}>
+                      <Button 
+                      className="button" 
+                      onPress={() => router.push("/account/register")}
+                      isDisabled={seasonState === "offseason"} // Disable button if seasonState is "offseason"
+                      >
                         Register
                       </Button>
+                      {seasonState === "offseason" && (
+                        <p className="text-sm text-red-500 text-center mt-2">
+                          League is currently offseason.
+                        </p>
+                      )}
                     </div>
+                    
                   )}
                 </div>
 
@@ -411,6 +431,14 @@ export default function Home() {
         );
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full min-h-[400px]">
+        <Spinner label="Loading..." size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex">

@@ -11,9 +11,15 @@ interface CommissionerRescheduleData {
 
 export default async function commissionerReschedule(rescheduleData: CommissionerRescheduleData): Promise<void> {
   axios
-    .post(`http://${APIHOST}/schedule/commissioner_reschedule`, rescheduleData)
+    .post(`${process.env.NEXT_PUBLIC_APIHOST}/schedule/commissioner_reschedule`, rescheduleData)
     .then((response) => {
       console.log("server response: " + response.status);
       console.log("Commissioner reschedule accepted");
     })
+    .catch((error) => {
+      console.log(error.response);
+      console.log(
+        "Error " + error.response.status + ": " + error.response.data.detail,
+      );
+    });
 }

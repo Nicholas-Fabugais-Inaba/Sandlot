@@ -81,7 +81,7 @@ export default function SeasonSetupPage() {
     );
   }
 
-  const scheduleDesc = <p className="mb-4">Generating a schedule isn't available until preseason is launched.</p>;
+  const scheduleDesc = <p className="mb-4 text-gray-700">Generating a schedule isn't available until preseason is launched.</p>;
 
   const renderSection = () => {
     switch (activeSection) {
@@ -109,11 +109,11 @@ export default function SeasonSetupPage() {
       case "divisions":
         return (
           <DndProvider backend={HTML5Backend}>
-            <DivisionsSettings setUnsavedChanges={setUnsavedChanges} />
+            <DivisionsSettings setUnsavedChanges={setUnsavedChanges} seasonState={seasonState} />
           </DndProvider>
         );
       case "schedule":
-        return seasonState === "offseason" ? scheduleDesc : <ScheduleSettings setUnsavedChanges={setUnsavedChanges} />;
+        return <ScheduleSettings setUnsavedChanges={setUnsavedChanges} seasonState={seasonState} />;
       case "launchpad":
         return <Launchpad seasonState={seasonState} />;
       default:
@@ -169,9 +169,9 @@ interface ToolbarProps {
 function Toolbar({ setActiveSection, seasonState }: ToolbarProps) {
   return (
     <div className="toolbar">
-      <button onClick={() => setActiveSection("general")}>General</button>
-      <button onClick={() => setActiveSection("divisions")}>Divisions</button>
-      <button onClick={() => setActiveSection("schedule")}>Schedule</button>
+      <button onClick={() => setActiveSection("general")}>General Settings</button>
+      <button onClick={() => setActiveSection("divisions")}>Division Settings</button>
+      <button onClick={() => setActiveSection("schedule")}>Schedule Generator</button>
       <button onClick={() => setActiveSection("launchpad")}>
         {seasonState === "offseason" ? "Launch Preseason" : seasonState === "preseason" ? "Launch Season" : "End Season"}
       </button>
@@ -559,22 +559,22 @@ function GeneralSettings({
   };
 
   const seasonDesc = seasonState === "offseason" 
-    ? "The season is currently in the offseason. You can prepare for the upcoming season by setting up dates, fields, and timeslots."
+    ? "The season is currently in the offseason. You may prepare for the upcoming season by setting up dates, divisions, fields, and timeslots."
     : seasonState === "preseason"
-    ? "The season is currently in the preseason. Configure your fields and timeslots before generating the schedule."
-    : "The season is currently active. Monitor the progress and make adjustments as needed.";
+    ? "The season is currently in the preseason. Configure your fields and timeslots and set teams' divisions before generating the schedule. Once a schedule is generated the season is ready for launch."
+    : "The season is currently active. Reschedule games and set scores in the main site Schedule tab.";
 
   return (
     <div className="general-settings-container">
-      <h2 className="text-2xl font-semibold mb-4">General Settings</h2>
-      <h3 className="text-1xl text-gray-700 mb-4">
-        Season Status: <span className="font-bold text-gray-900">
+      <h2 className="text-3xl font-semibold mb-4">General Settings</h2>
+      <h3 className="text-2xl text-gray-700 mb-4">
+        Season Status: <span className="font-bold text-gray-800">
           {seasonState === "offseason" ? "Offseason" : 
            seasonState === "preseason" ? "Preseason" : 
            "Season Active"}
         </span>
       </h3>
-      <p className="mb-4">{seasonDesc}</p>
+      <p className="mb-4 text-gray-700">{seasonDesc}</p>
       
       <form>
         {/* Date and Games Settings */}
@@ -764,13 +764,43 @@ function GeneralSettings({
 
 interface ScheduleSettingsProps {
   setUnsavedChanges: (hasChanges: boolean) => void;
+  seasonState: string;
 }
 
-function ScheduleSettings({ setUnsavedChanges }: ScheduleSettingsProps) {
+function ScheduleSettings({ setUnsavedChanges, seasonState }: ScheduleSettingsProps) {
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">Schedule Generator</h2>
-      <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
+    <div className="pb-80">
+      <h2 className="text-3xl font-semibold mb-4">Schedule Generator</h2>
+      {seasonState === "offseason" ? (
+        <>
+          <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
+          <p className="mt-4 text-gray-700 text-lg">
+            <strong>ALL TEAMS must have accounts and put into divisions in Division Settings before the schedule should be generated.</strong>
+            <br /><br />
+
+            Press the <strong>Generate New Schedule</strong> button to generate a schedule you can view in this screen before saving.
+            You may regenerate as many times as you like until you find an acceptable schedule.
+            <br /><br />
+
+            Press the <strong>Save Schedule</strong> button to save the schedule. This schedule will be used for the season unless a new schedule is generated and then saved.
+            <br /><br />
+
+            The <strong>Schedule Score</strong> listed beside the Save Schedule button represents how well the schedule fits the preferred times and offdays of the teams.
+            The score can be improved by adding more timeslots and fields, but a perfect score is rarely feasible due to conflicting team preferences.
+            A lower score means a better fit.
+            <br /><br />
+
+            <strong>A schedule must be generated and saved before the season can be launched.</strong>
+            <br /><br />
+
+            Team accounts and players cannot see schedule until season is launched.
+          </p>
+        </>
+      ) : (
+        <p className="mt-4 text-gray-700 text-lg">
+          Cannot generate a schedule unless in preseason.
+        </p>
+      )}
     </div>
   );
 }
