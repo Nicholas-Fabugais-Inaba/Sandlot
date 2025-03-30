@@ -5,6 +5,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 import { title } from "@/components/primitives";
 
@@ -43,6 +44,8 @@ interface Timeslot {
 }
 
 export default function ManageRescheduleRequest() {
+  const router = useRouter();
+  const [session, setSession] = useState<Session | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,30 +75,38 @@ export default function ManageRescheduleRequest() {
     { id: 7, start: "24-0", end: "25-30", field_id: 3, field_name: "Field 3" },
     { id: 8, start: "25-30", end: "27-0", field_id: 3, field_name: "Field 3" },
   ];
-  const router = useRouter();
 
   // Combined fetch for session and reschedule requests
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+
         const session = await getSession();
-        const solsticeSettings = await getSolsticeSettings();
-        const timeslotsResponse = solsticeSettings.active ? solsticeTimeslots : await getAllTimeslots();
-        // if (timeslotsResponse) {
-        //   setTimeslots(timeslotsResponse);
-        // }
+        setSession(session);
 
-        if (session) {
-          setUserRole(session.user?.role || null);
-          setUserTeamId(session.user?.team_id || null);
+        if (!session || session?.user.role !== "team") {
+          router.push("/");
+          return;
+        } else {
 
-          // Fetch reschedule requests immediately after session
-          const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, solsticeSettings);
-          setRescheduleRequests(formattedRequests);
-          setPendingRequests(formattedPendingRequests);
-          console.log("Reschedule Requests:", formattedRequests);
-          console.log("Pending Requests:", formattedPendingRequests);
+          const solsticeSettings = await getSolsticeSettings();
+          const timeslotsResponse = solsticeSettings.active ? solsticeTimeslots : await getAllTimeslots();
+          // if (timeslotsResponse) {
+          //   setTimeslots(timeslotsResponse);
+          // }
+
+          if (session) {
+            setUserRole(session.user?.role || null);
+            setUserTeamId(session.user?.team_id || null);
+
+            // Fetch reschedule requests immediately after session
+            const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, solsticeSettings);
+            setRescheduleRequests(formattedRequests);
+            setPendingRequests(formattedPendingRequests);
+            console.log("Reschedule Requests:", formattedRequests);
+            console.log("Pending Requests:", formattedPendingRequests);
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
