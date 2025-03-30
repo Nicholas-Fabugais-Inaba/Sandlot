@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import Team, Division
-
+from ..create_engine import engine
 
 def get_division_name_by_division_id(division_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(Division.division_name)
@@ -17,7 +16,6 @@ def get_division_name_by_division_id(division_id):
         return result
 
 def get_division_name_by_team_id(team_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(Division.division_name)
@@ -29,7 +27,6 @@ def get_division_name_by_team_id(team_id):
         return result
 
 def get_divisions_season_setup():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -41,7 +38,6 @@ def get_divisions_season_setup():
         return result
 
 def insert_division_with_id(division_id, division_name):
-    engine = create_connection()
     with Session(engine) as session:
         division = Division(
             id=division_id,
@@ -57,7 +53,6 @@ def insert_division_with_id(division_id, division_name):
     return True
 
 def delete_all_divisions_except_team_bank():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = delete(Division).where(Division.id != 0)
         try:

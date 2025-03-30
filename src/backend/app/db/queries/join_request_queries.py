@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, update
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import Player, JoinRequest, Team
-
+from ..create_engine import engine
 
 def insert_join_request(player_id, team_id):
-    engine = create_connection()
     with Session(engine) as session:
         # Check if a join request already exists for the player and team
         existing_request = session.execute(
@@ -33,7 +32,6 @@ def insert_join_request(player_id, team_id):
     return True
 
 def get_join_requests(team_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -56,7 +54,6 @@ def get_join_requests(team_id):
         return result
 
 def get_join_requests_by_player(player_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -74,7 +71,6 @@ def get_join_requests_by_player(player_id):
         return result
     
 def decline_join_request(request_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(JoinRequest).where(JoinRequest.id == request_id).values(accepted=False)
         try:
@@ -87,7 +83,6 @@ def decline_join_request(request_id):
     return True
     
 def delete_join_request(request_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = delete(JoinRequest).where(JoinRequest.id == request_id)
         try:
