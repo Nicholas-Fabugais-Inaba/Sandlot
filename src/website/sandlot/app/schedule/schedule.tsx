@@ -106,6 +106,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const [maxSelectedDates, setMaxSelectedDates] = useState(5); // Maximum number of dates that can be selected when rescheduling games
   const [timeslots, setTimeslots] = useState([]);
   const [fields, setFields] = useState<Record<number, string>>({});
+  const [earliestStart, setEarliestStart] = useState<string>("17:00:00");
+  const [latestEnd, setLatestEnd] = useState<string>("23:00:00");
 
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
@@ -113,13 +115,25 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       setLoading(true); // Set loading to true at the start of fetching
       try {
         const session = await getSession();
-        const timeslots = await getAllTimeslots();
-        if (timeslots) {
-          setTimeslots(timeslots);
+        const timeslotsResponse = await getAllTimeslots();
+        if (timeslotsResponse) {
+          setTimeslots(timeslotsResponse);
+  
+          // Calculate earliest start and latest end
+          const earliest = Math.min(...timeslotsResponse.map((ts: any) => parseInt(ts.start.split("-")[0])));
+          const latest = Math.max(...timeslotsResponse.map((ts: any) => {
+            const [hour, minute] = ts.end.split("-").map(Number); // Extract hour and minute
+            return minute > 0 ? hour + 1 : hour; // Round up if there are minutes
+          }));
+  
+          setEarliestStart(`${earliest-4}:00:00`);
+          setLatestEnd(`${latest-4}:00:00`);
         }
 
+
+
         // Create a dictionary of field_id to field_name
-        const fieldsDict = timeslots.reduce((acc: Record<number, string>, ts: any) => {
+        const fieldsDict = timeslotsResponse.reduce((acc: Record<number, string>, ts: any) => {
           if (!acc[ts.field_id]) {
             acc[ts.field_id] = ts.field_name;
           }
@@ -152,7 +166,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
             setTeamName(teamName)
   
             // Fetch team schedule
-            const formattedEvents = await getTeamSchedule(teamId, timeslots);
+            const formattedEvents = await getTeamSchedule(teamId, timeslotsResponse);
             setEvents(formattedEvents);
           } else if (
             session.user?.role === "commissioner" ||
@@ -162,12 +176,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
             setMaxSelectedDates(1);
   
             // Fetch full schedule
-            const formattedEvents = await getSchedule(timeslots);
+            const formattedEvents = await getSchedule(timeslotsResponse);
             setEvents(formattedEvents);
           }
         } else {
           // Fetch default schedule if no session
-          const formattedEvents = await getSchedule(timeslots);
+          const formattedEvents = await getSchedule(timeslotsResponse);
           setEvents(formattedEvents);
         }
       } catch (error) {
@@ -892,8 +906,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               interactionPlugin,
             ]}
             slotDuration="00:30:00" // Duration of each slot (30 minutes)
-            slotMaxTime="23:00:00" // End at 11 PM
-            slotMinTime="17:00:00" // Start at 5 PM
+            slotMaxTime={latestEnd} // End at 11 PM
+            slotMinTime={earliestStart} // Start at 5 PM
             weekends={false}
           />
           {schedType === 3 &&
