@@ -16,10 +16,4 @@ export default async function commissionerReschedule(rescheduleData: Commissione
       console.log("server response: " + response.status);
       console.log("Commissioner reschedule accepted");
     })
-    .catch((error) => {
-      console.log(error.response);
-      console.log(
-        "Error " + error.response.status + ": " + error.response.data.detail,
-      );
-    });
 }
