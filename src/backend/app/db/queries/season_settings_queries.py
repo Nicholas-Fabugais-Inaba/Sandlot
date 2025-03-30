@@ -92,7 +92,6 @@ def get_waiver_enabled():
         return result
 
 def get_solstice_settings():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = select(
             Solstice.active,

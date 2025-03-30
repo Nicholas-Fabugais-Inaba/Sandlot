@@ -29,6 +29,7 @@ import { useSchedule } from "./ScheduleContext";
 
 import { title } from "@/components/primitives";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
+import getSolsticeSettings from "../functions/getSolsticeSettings";
 import getAllTimeslots from "../functions/getAllTimeslots";
 
 const currDate = new Date();
@@ -108,6 +109,16 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const [fields, setFields] = useState<Record<number, string>>({});
   const [earliestStart, setEarliestStart] = useState<string>("17:00:00");
   const [latestEnd, setLatestEnd] = useState<string>("23:00:00");
+  const solsticeTimeslots = [
+    { id: 1, start: "21-0", end: "22-30", field_id: 1, field_name: "Field 1" },
+    { id: 2, start: "22-30", end: "24-0", field_id: 1, field_name: "Field 1" },
+    { id: 3, start: "21-0", end: "22-30", field_id: 2, field_name: "Field 2" },
+    { id: 4, start: "22-30", end: "24-0", field_id: 2, field_name: "Field 2" },
+    { id: 5, start: "21-0", end: "22-30", field_id: 3, field_name: "Field 3" },
+    { id: 6, start: "22-30", end: "24-0", field_id: 3, field_name: "Field 3" },
+    { id: 7, start: "24-0", end: "25-30", field_id: 3, field_name: "Field 3" },
+    { id: 8, start: "25-30", end: "27-0", field_id: 3, field_name: "Field 3" },
+  ];
 
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
@@ -115,7 +126,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       setLoading(true); // Set loading to true at the start of fetching
       try {
         const session = await getSession();
-        const timeslotsResponse = await getAllTimeslots();
+        const solsticeSettings = await getSolsticeSettings();
+        const timeslotsResponse = solsticeSettings.active ? solsticeTimeslots : await getAllTimeslots();
         if (timeslotsResponse) {
           setTimeslots(timeslotsResponse);
   
