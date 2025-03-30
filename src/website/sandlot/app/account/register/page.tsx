@@ -5,7 +5,7 @@
 import { useState, useEffect, use } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"; // To handle the query parameters
-import { Button } from "@heroui/react";
+import { Button, Spinner } from "@heroui/react";
 import Waiver from "@/app/account/register/waiver"
 
 import styles from "./Register.module.css";
@@ -47,6 +47,7 @@ export default function Register() {
   const [preferredTime, setPreferredTime] = useState<number>(0);
   const [preferredDivision, setPreferredDivision] = useState<number>(0);
   
+  const [isRegistering, setIsRegistering] = useState(false);
   const [fieldsFilled, setFieldsFilled] = useState<number>(0);
   const [showWaiver, setShowWaiver] = useState<boolean>(false);
   const router = useRouter();
@@ -80,39 +81,72 @@ export default function Register() {
 
   useEffect(() => {
     const fetchWaiverFormat = async () => {
-        try {
-            const currentYear = String(new Date().getFullYear());
-            const data = await getWaiverFormatByYear({ year: currentYear });
-            const waiverFormat: WaiverFormat[] = data as WaiverFormat[];
-            // Sort the waiver format by index to ensure the order is correct
-            waiverFormat.sort((a, b) => a.index - b.index);
-            // Set the first item's text as the waiver title
-            setWaiverTitle(waiverFormat[0].text);
-            // Extract the remaining texts (excluding the first and last items)
-            const formattedTexts = waiverFormat.slice(1, -1).map(item => item.text);
-            setWaiverTexts(formattedTexts);
-            // Set the last item's text as the waiver footer
-            setWaiverFooter(waiverFormat[waiverFormat.length - 1].text);
-        } catch (error) {
-            console.error("Error fetching waiver format:", error);
+      try {
+        const currentYear = String(new Date().getFullYear());
+        const data = await getWaiverFormatByYear({ year: currentYear });
+        
+        if (!data) {
+          console.log('No waiver format found for current year');
+          return;
         }
+
+        const waiverFormat: WaiverFormat[] = data as WaiverFormat[];
+        
+        if (!Array.isArray(waiverFormat) || waiverFormat.length === 0) {
+          console.log('Invalid waiver format data');
+          return;
+        }
+
+        // Sort the waiver format by index to ensure the order is correct
+        waiverFormat.sort((a, b) => a.index - b.index);
+        
+        // Set the first item's text as the waiver title
+        setWaiverTitle(waiverFormat[0]?.text || 'Default Waiver Title');
+        
+        // Extract the remaining texts (excluding the first and last items)
+        const formattedTexts = waiverFormat.slice(1, -1).map(item => item.text);
+        setWaiverTexts(formattedTexts);
+        
+        // Set the last item's text as the waiver footer
+        setWaiverFooter(waiverFormat[waiverFormat.length - 1]?.text || '');
+          
+      } catch (error: any) {
+        console.error("Error fetching waiver format:", error?.message || error);
+        // Set default values if fetch fails
+        setWaiverTitle('GSA Softball Player Waiver');
+        setWaiverTexts([
+          'Default waiver text. Please try again later.',
+          'Contact administrator if problem persists.'
+        ]);
+        setWaiverFooter('');
+      }
     };
 
     const fetchWaiverEnabled = async () => {
-        try {
-            const data = await getWaiverEnabled();
-            setWaiverState(data);
-        }
-        catch (error) {
-            console.error("Error fetching waiver state:", error);
-        }
+      try {
+        const data = await getWaiverEnabled();
+        setWaiverState(!!data); // Convert to boolean
+      }
+      catch (error: any) {
+        console.error("Error fetching waiver state:", error?.message || error);
+        setWaiverState(true); // Default to enabled if fetch fails
+      }
     };      
     
-    fetchWaiverEnabled();
-    if (waiverState) {
-      fetchWaiverFormat();
-    }
-}, []);
+    // Wrap in try-catch to prevent unhandled promise rejections
+    const initWaiver = async () => {
+      try {
+          await fetchWaiverEnabled();
+          if (waiverState) {
+            await fetchWaiverFormat();
+          }
+      } catch (error: any) {
+        console.error("Error initializing waiver:", error?.message || error);
+      }
+    };
+
+    initWaiver();
+  }, [waiverState]);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState); // Toggle the visibility state
@@ -177,6 +211,8 @@ export default function Register() {
       return;
     }
 
+    setIsRegistering(true);
+
     try {
       if (accountType === "player") {
         const newUser = {
@@ -225,6 +261,7 @@ export default function Register() {
           setErrors({
             general: (result.error as any).response?.data?.detail || "Registration failed"
           });
+          setIsRegistering(false);
         } else {
           window.location.href = "/join-a-team"; // Full page reload to ensure a complete refresh
         }
@@ -233,6 +270,7 @@ export default function Register() {
       setErrors({
         general: (error as any).response?.data?.detail || "Registration failed"
       });
+      setIsRegistering(false);
     }
   };
 
@@ -564,100 +602,108 @@ export default function Register() {
       </div>
       <div className={styles.container}>
         <div className="centered-container">
-          {errors.general && <p className={styles.errorMessage}>{errors.general}</p>}
-          {accountType === null ? (
-            <div className="form">
-              <h1 className="text-xl font-semibold text-center mt-8">
-                Choose an Account Type
-              </h1>
-              <div className="flex space-x-4 mt-4">
-                <Button
-                  className="button"
-                  onPress={() => setAccountType("player")}
-                >
-                  Player
-                </Button>
-                <Button
-                  className="button"
-                  onPress={() => setAccountType("team")}
-                >
-                  Team
-                </Button>
-              </div>
-              <div className="flex justify-center mt-48">
-                <Button
-                  className="button"
-                  onPress={() => router.push("/account")}
-                >
-                  Cancel
-                </Button>
-              </div>
+          {isRegistering ? (
+            <div className="flex justify-center items-center h-full min-h-[400px]">
+              <Spinner label="Creating your account..." size="lg" />
             </div>
           ) : (
-            <form className="form" onSubmit={(e) => handleRegister(e)}>
-              {renderForm()}
+            <>
+              {errors.general && <p className={styles.errorMessage}>{errors.general}</p>}
+              {accountType === null ? (
+                <div className="form">
+                  <h1 className="text-xl font-semibold text-center mt-8">
+                    Choose an Account Type
+                  </h1>
+                  <div className="flex space-x-4 mt-4">
+                    <Button
+                      className="button"
+                      onPress={() => setAccountType("player")}
+                    >
+                      Player
+                    </Button>
+                    <Button
+                      className="button"
+                      onPress={() => setAccountType("team")}
+                    >
+                      Team
+                    </Button>
+                  </div>
+                  <div className="flex justify-center mt-48">
+                    <Button
+                      className="button"
+                      onPress={() => router.push("/account")}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <form className="form" onSubmit={(e) => handleRegister(e)}>
+                  {renderForm()}
 
-              <div className="flex space-x-4 justify-center">
-                {showWaiver || accountType == "team" ? (
-                  <Button className="button" type="submit" isDisabled={fieldsFilled < 3}>
-                    Register
-                  </Button>
-                ) : (
-                  <Button
-                    className="button"
-                    isDisabled={fieldsFilled < 7}
-                    onPress={() => {
-                      // Replace the existing validation with a more comprehensive check
-                      const newErrors: typeof errors = {};
-                      
-                      if (!validateEmail(email)) {
-                        newErrors.email = "Invalid email format";
-                      }
+                  <div className="flex space-x-4 justify-center">
+                    {showWaiver || accountType == "team" ? (
+                      <Button className="button" type="submit" isDisabled={fieldsFilled < 3}>
+                        Register
+                      </Button>
+                    ) : (
+                      <Button
+                        className="button"
+                        isDisabled={fieldsFilled < 7}
+                        onPress={() => {
+                          // Replace the existing validation with a more comprehensive check
+                          const newErrors: typeof errors = {};
+                          
+                          if (!validateEmail(email)) {
+                            newErrors.email = "Invalid email format";
+                          }
 
-                      if (password !== confirmPassword) {
-                        newErrors.password = "Passwords do not match";
-                      }
+                          if (password !== confirmPassword) {
+                            newErrors.password = "Passwords do not match";
+                          }
 
-                      if (email !== confirmEmail) {
-                        newErrors.email = "Emails do not match";
-                      }                  
+                          if (email !== confirmEmail) {
+                            newErrors.email = "Emails do not match";
+                          }                  
 
-                      // If there are any errors, set them and prevent proceeding
-                      if (Object.keys(newErrors).length > 0) {
-                        setErrors(newErrors);
-                        return;
-                      }
+                          // If there are any errors, set them and prevent proceeding
+                          if (Object.keys(newErrors).length > 0) {
+                            setErrors(newErrors);
+                            return;
+                          }
 
-                      // If no errors, proceed to waiver
-                      setShowWaiver(true);
-                    }}
-                  >
-                    Next
-                  </Button>
-                )}
-              </div>
+                          // If no errors, proceed to waiver
+                          setShowWaiver(true);
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </div>
 
-              <div className="flex space-x-4 justify-center mt-4">
-                <Button
-                  className="button"
-                  onPress={() => {
-                    if (showWaiver && accountType === "player") {
-                      setShowWaiver(false);
-                    } else {
-                      setAccountType(null);
-                    }
-                  }}
-                >
-                  Back
-                </Button>
-                <Button
-                  className="button"
-                  onPress={() => router.push("/account")}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
+                  <div className="flex space-x-4 justify-center mt-4">
+                    <Button
+                      className="button"
+                      onPress={() => {
+                        if (showWaiver && accountType === "player") {
+                          setShowWaiver(false);
+                        } else {
+                          setAccountType(null);
+                        }
+                      }}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      className="button"
+                      onPress={() => router.push("/account")}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              )}
+            </>
           )}
         </div>
       </div>
