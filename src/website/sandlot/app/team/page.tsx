@@ -145,12 +145,23 @@ export default function TeamPage() {
 
   const changeCaptainStatus = async (playerId: number, promotion: boolean) => {
     setActionLoading(true);
-    console.log(roster)
+
+    let rosterCopy = [...roster]
+    for(let i = 0; i < rosterCopy.length; i++) {
+      if(rosterCopy[i].player_id == playerId) {
+        rosterCopy[i].captain = promotion
+      }
+    }
+    setRoster(rosterCopy)
+
     await updateCaptainStatus({ team_id: teamId, player_id: playerId, captain: promotion });
+
     setActionLoading(false);
     // Update the team info and roster
-    const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
-    setRoster(updatedTeamInfo);
+    setTimeout(async() => {
+      const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
+      setRoster(updatedTeamInfo);
+    }, 1000)
   };
 
   // TODO: update client session with these changes and test cases
