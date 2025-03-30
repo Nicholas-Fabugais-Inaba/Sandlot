@@ -768,9 +768,25 @@ interface ScheduleSettingsProps {
 
 function ScheduleSettings({ setUnsavedChanges }: ScheduleSettingsProps) {
   return (
-    <div>
+    <div className="pb-80">
       <h2 className="text-2xl font-semibold mb-4">Schedule Generator</h2>
       <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
+      <p className="mt-4 text-gray-700">
+        Press the <strong>Generate New Schedule</strong> button to generate a schedule you can view in this screen before saving.
+        You may regenerate as many times as you like until you find an acceptable schedule.
+        <br /><br />
+
+        Press the <strong>Save Schedule</strong> button to save the schedule. This schedule will be used for the season unless a new schedule is generated and then saved.
+        <br /><br />
+
+        The <strong>Schedule Score</strong> listed beside the Save Schedule button represents how well the schedule fits the preferred times and offdays of the teams.
+        The score can be improved by adding more timeslots and fields, but a perfect score is rarely feasable due to conflicting team preferences.
+        A lower score means a better fit.
+        <br /><br />
+        
+        <strong>A schedule must be generated and saved before the season can be launched.</strong>
+        <br /><br />
+      </p>
     </div>
   );
 }
