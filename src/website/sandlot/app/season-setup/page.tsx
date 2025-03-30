@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Spinner } from "@heroui/react";
+import { useRouter } from "next/navigation"; 
+import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 import getSeasonSettings from "../functions/getSeasonSettings";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
@@ -32,6 +35,9 @@ interface Field {
 }
 
 export default function SeasonSetupPage() {
+  const [session, setSession] = useState<Session | null>(null);
+  const router = useRouter();
+
   const [activeSection, setActiveSection] = useState("general");
   const [seasonState, setSeasonState] = useState("preseason");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -50,10 +56,18 @@ export default function SeasonSetupPage() {
 
   useEffect(() => {
     const fetchSeasonState = async () => {
-      const state = await getSeasonState();
-      console.log("Season State is", state)
-      setSeasonState(state);
-      setLoading(false);
+      const session = await getSession();
+      setSession(session);
+
+      if (!session || session?.user.role !== "commissioner") {
+        router.push("/");
+        return;
+      } else {
+        const state = await getSeasonState();
+        console.log("Season State is", state)
+        setSeasonState(state);
+        setLoading(false);
+      }
     };
 
     fetchSeasonState();
