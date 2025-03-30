@@ -31,7 +31,7 @@ export default function Launchpad({ seasonState }: LaunchProps) {
         await preseasonToSeason()
         break;
       case "endSeason":
-        await endSeason({archiveTeams:false})
+        await endSeason({archive_teams: false})
         break;
       case "returnPreseason":
         alert(`Returned to Preseason!`);

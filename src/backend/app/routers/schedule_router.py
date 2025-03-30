@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .types import RescheduleRequest, TeamID, GameID, RRAccept, SchedParams, ScoreData, CommissionerReschedule
+from .types import RescheduleRequest, TeamID, GameID, RRAccept, RRDeny, SchedParams, ScoreData, CommissionerReschedule
 from ..db.queries.game_queries import get_all_games, get_team_games, update_game, delete_all_games, get_score, update_score
 from ..db.queries.reschedule_request_queries import insert_reschedule_request, get_reschedule_requests, delete_reschedule_request, delete_all_reschedule_requests
 from ..db.queries.timeslot_queries import get_all_timeslots
@@ -34,6 +34,12 @@ async def get_team_RRs(data: TeamID):
 async def RR_accepted(data: RRAccept):
     delete_reschedule_request(data.rr_id)
     update_game(data.old_game_id, data.date, data.time, data.field)
+    return True
+
+@router.post("/reschedule_request_denied", response_model=None)
+async def RR_denied(data: RRDeny):
+    # Remove reschedule request from the database
+    delete_reschedule_request(data.rr_id)
     return True
 
 @router.post("/gen_schedule", response_model=object)

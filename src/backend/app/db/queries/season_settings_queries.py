@@ -63,7 +63,8 @@ def update_season_settings(start_date, end_date, games_per_team):
 def update_season_state(new_state):
     engine = create_connection()
     with Session(engine) as session:
-        stmt = update(SeasonSettings).where(SeasonSettings.id == 1).values(state=new_state)
+        # Select the first entry in the table
+        stmt = update(SeasonSettings).where(SeasonSettings.id == select(SeasonSettings.id).limit(1)).values(state=new_state)
         try:
             session.execute(stmt)
         except:

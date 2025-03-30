@@ -60,7 +60,7 @@ const AvailableTeams: React.FC = () => {
     fetchTeamsAndRequests();
   }, []);
 
-  const handleRequestJoin = async (team_id: number) => {
+  const handleRequestJoin = async (team_id: number, name: string) => {
     // Check if the total number of accepted or pending requests is 3
     if (pendingRequests.length + acceptedRequests.length >= 3) {
       return; // Stop execution if the limit is reached
@@ -74,16 +74,25 @@ const AvailableTeams: React.FC = () => {
         team_id: team_id
       });
 
-      // After the request is created, fetch the updated pending requests
-      const requests = await getPendingRequests(session.user.email);
-      const accepted = requests.filter((req: JoinRequest) => req.accepted === true);
-      const pending = requests.filter((req: JoinRequest) => req.accepted === null);
-      const denied = requests.filter((req: JoinRequest) => req.accepted === false);
+      let dummyJR = {
+        id: 0,
+        team_name: name,
+        accepted: null
+      }
+      setPendingRequests([...pendingRequests, dummyJR])
 
-      setAcceptedRequests(accepted); // Update accepted requests state
-      setPendingRequests(pending); // Update pending requests state
-      setDeniedRequests(denied); // Update denied requests state
-      setActionLoading(false);
+      // After the request is created, fetch the updated pending requests
+      setTimeout(async() => {
+        const requests = await getPendingRequests(session.user.email);
+        const accepted = requests.filter((req: JoinRequest) => req.accepted === true);
+        const pending = requests.filter((req: JoinRequest) => req.accepted === null);
+        const denied = requests.filter((req: JoinRequest) => req.accepted === false);
+
+        setAcceptedRequests(accepted); // Update accepted requests state
+        setPendingRequests(pending); // Update pending requests state
+        setDeniedRequests(denied); // Update denied requests state
+        setActionLoading(false);
+      }, 1000)
     }
   };
 
@@ -114,7 +123,7 @@ const AvailableTeams: React.FC = () => {
                         <Button
                           className="w-36 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                           disabled={actionLoading || pendingRequests.length + acceptedRequests.length >= 3}
-                          onPress={() => handleRequestJoin(team.id)}
+                          onPress={() => handleRequestJoin(team.id, team.name)}
                         >
                           {pendingRequests.length + acceptedRequests.length >= 3 ? "Limit Reached" : "Request to Join"}
                         </Button>

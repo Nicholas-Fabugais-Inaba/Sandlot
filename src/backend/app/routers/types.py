@@ -57,6 +57,9 @@ class RRAccept(BaseModel):
     time: str
     field: str
 
+class RRDeny(BaseModel):
+    rr_id: int
+
 class SchedParams(BaseModel):
     num_games: int
 
@@ -211,7 +214,7 @@ class NewWaiver(BaseModel):
     year: str
 
 class EndSeasonData(BaseModel):
-    archiveTeams: bool
+    archive_teams: bool
 
 class UpdateActiveTeam(BaseModel):
     player_id: int
