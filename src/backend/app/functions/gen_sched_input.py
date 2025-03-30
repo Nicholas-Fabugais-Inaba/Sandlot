@@ -81,6 +81,37 @@ def gen_games_division(divs: dict, games_per_team: int):
     return games
 
 
+def gen_games_division_a_b_mixed(divs: dict, games_per_team: int):
+    games = []
+
+    # Generate intra-division games
+    for div_key, div in divs.items():
+        # Adjust the number of games per team based on the size of the other division
+        adjusted_games_per_team = games_per_team
+        if div_key == 1 and 2 in divs:  # Division A
+            adjusted_games_per_team -= len(divs[2])  # Subtract the size of Division B
+        elif div_key == 2 and 1 in divs:  # Division B
+            adjusted_games_per_team -= len(divs[1])  # Subtract the size of Division A
+
+        # Ensure the adjusted games per team is not negative
+        adjusted_games_per_team = max(0, adjusted_games_per_team)
+
+        div_games = gen_games_round_robin(div, adjusted_games_per_team)
+        games.extend(div_games)
+
+    # Generate inter-division games only for divisions with keys 1 and 2
+    if 1 in divs and 2 in divs:
+        div_a = divs[1]
+        div_b = divs[2]
+
+        # Generate one game between each team in Division A (key 1) and Division B (key 2)
+        for team_a in div_a.keys():
+            for team_b in div_b.keys():
+                games.append((team_a, team_b))  # Add inter-division game
+
+    return games
+
+
 def gen_games_round_robin(teams, games_per_team: int):
     team_list = list(teams.keys())
     if len(team_list) % 2 == 1:
@@ -242,7 +273,7 @@ def gen_schedule_repeated():
     end_date = datetime.strptime(Settings["end_date"], "%Y-%m-%d").date()
     print(start_date, end_date)
 
-    games = gen_games_division(divs, Settings["games_per_team"])
+    games = gen_games_division_a_b_mixed(divs, Settings["games_per_team"])
 
     Timeslots = get_all_timeslots()
     print(Timeslots)
