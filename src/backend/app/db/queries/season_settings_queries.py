@@ -91,6 +91,17 @@ def get_waiver_enabled():
         result = session.execute(stmt).mappings().first()
         return result
 
+def update_waiver_enabled(waiver_enabled):
+    with Session(engine) as session:
+        stmt = update(SeasonSettings).where(SeasonSettings.id == select(SeasonSettings.id).limit(1)).values(waiver_enabled=waiver_enabled)
+        try:
+            session.execute(stmt)
+        except:
+            session.rollback()
+            raise
+        else:
+            session.commit()
+
 def get_solstice_settings():
     with Session(engine) as session:
         stmt = select(
