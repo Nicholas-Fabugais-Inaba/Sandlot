@@ -20,13 +20,11 @@ export default function JoinATeamPage() {
   const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [seasonState, setSeasonState] = useState<any>();
 
   useEffect(() => {
     const fetchSession = async () => {
 
       let response = await getSeasonState();
-      setSeasonState(response);
 
       const session = await getSession();
       setSession(session);
