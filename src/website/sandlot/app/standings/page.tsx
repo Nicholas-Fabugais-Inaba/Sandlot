@@ -64,9 +64,10 @@ export default function StandingsPage() {
   }, []);
 
   // Extract unique divisions
-  const uniqueDivisions = Array.from(
+  let uniqueDivisions = Array.from(
     new Set(teams.map((team) => team.division)),
   );
+  uniqueDivisions = uniqueDivisions.sort((s1, s2) => s1.toLowerCase().localeCompare(s2.toLowerCase()));
 
   // Function to handle sorting within a division
   const handleSort = (

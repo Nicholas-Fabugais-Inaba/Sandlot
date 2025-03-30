@@ -191,7 +191,8 @@ export default function TeamsDirectoryPage() {
     return data; // Return the data instead of resolving a void promise
   };
 
-  const uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
+  let uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
+  uniqueDivisions = uniqueDivisions.sort((s1, s2) => s1.toLowerCase().localeCompare(s2.toLowerCase()));
 
   const handleSort = (
     division: string,
