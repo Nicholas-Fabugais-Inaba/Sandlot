@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button, Card } from "@heroui/react";
+import { Button, Card, Alert } from "@heroui/react";
 import { button as buttonStyles } from "@heroui/theme";
 import { useRouter } from "next/navigation";
 import { Session } from "next-auth";
@@ -41,6 +41,8 @@ export default function Home() {
   const [editBody, setEditBody] = useState("");
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isSuccessAlertVisible, setIsSuccessAlertVisible] = useState(false);
+  const [alertSuccessMessage, setAlertSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -69,6 +71,14 @@ export default function Home() {
       await createAnnouncement(newAnnouncement);
       setAnnouncements([...announcements, newAnnouncement]);
 
+      setAlertSuccessMessage("Announcement posted successfully");
+      setIsSuccessAlertVisible(true);
+
+      // Hide alert after 3 seconds
+      setTimeout(() => {
+        setIsSuccessAlertVisible(false);
+      }, 3000);
+
       setNewAnnouncementTitle(""); // Reset title field
       setNewAnnouncementBody(""); // Reset body field
     }
@@ -93,12 +103,16 @@ export default function Home() {
       };
       await updateAnnouncement(updatedAnnouncements[index]);
       setAnnouncements(updatedAnnouncements);
-
       setEditingIndex(null); // Reset editing index
-    } else {
-      // Optionally, show an error message if the title or body is empty
-      alert("Both title and body must be filled out.");
-    }
+
+      setAlertSuccessMessage("Announcement updated successfully");
+      setIsSuccessAlertVisible(true);
+
+      // Hide alert after 3 seconds
+      setTimeout(() => {
+        setIsSuccessAlertVisible(false);
+      }, 3000);
+    } 
   };
 
   const handleDeleteAnnouncement = async (index: number) => {
@@ -106,6 +120,14 @@ export default function Home() {
 
     await deleteAnnouncement({ announcement_id: announcements[index].id });
     setAnnouncements(updatedAnnouncements);
+
+    setAlertSuccessMessage("Announcement deleted successfully");
+    setIsSuccessAlertVisible(true);
+
+    // Hide alert after 3 seconds
+    setTimeout(() => {
+      setIsSuccessAlertVisible(false);
+    }, 3000);
   };
 
   const handleWeatherClick = () => {
@@ -494,6 +516,19 @@ export default function Home() {
       <main className="flex-grow p-8 h-full overflow-auto">
         {renderContent()}
       </main>
+
+      {/* Success Alert */}
+      {isSuccessAlertVisible && (
+        <Alert
+          color="success"
+          description={alertSuccessMessage}
+          isVisible={isSuccessAlertVisible}
+          title="Success"
+          variant="faded"
+          onClose={() => setIsSuccessAlertVisible(false)}
+          className="fixed top-4 right-4 z-50 w-96"
+        />
+      )}
     </div>
   );  
 }
