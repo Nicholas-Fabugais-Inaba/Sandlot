@@ -80,6 +80,7 @@ export default function WaiverManagementPage() {
 
   // State for waiver configuration
   const [waiverConfig, setWaiverConfig] = useState<boolean>()
+  const [tempWaiverConfig, setTempWaiverConfig] = useState<boolean>();
 
   // State for signed waivers and teams
   const [signedWaivers, setSignedWaivers] = useState<SignedWaiver[]>([]);
@@ -121,6 +122,7 @@ export default function WaiverManagementPage() {
           // Fetch existing waiver configuration
           const enabled = await getWaiverEnabled();
           setWaiverConfig(enabled.waiver_enabled);
+          setTempWaiverConfig(enabled.waiver_enabled);
 
           // Fetch signed waivers
           // const existingWaivers = await getSignedWaivers();
@@ -137,20 +139,20 @@ export default function WaiverManagementPage() {
     setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    const updateWaiverStatus = async () => {
-      if (!isLoading) {
-        try {
-          await updateWaiverEnabled({ waiver_enabled: waiverConfig });
-        } catch (error) {
-          console.error("Failed to update waiver status", error);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const updateWaiverStatus = async () => {
+  //     if (!isLoading) {
+  //       try {
+  //         await updateWaiverEnabled({ waiver_enabled: waiverConfig });
+  //       } catch (error) {
+  //         console.error("Failed to update waiver status", error);
+  //       }
+  //     }
+  //   };
 
-    updateWaiverStatus();
-  }
-  , [waiverConfig]);
+  //   updateWaiverStatus();
+  // }
+  // , [waiverConfig]);
 
   const fetchWaiverFormat = async () => {
     try {
@@ -185,6 +187,10 @@ export default function WaiverManagementPage() {
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
     try {
+
+      setWaiverConfig(tempWaiverConfig);
+      await updateWaiverEnabled({ waiver_enabled: tempWaiverConfig });
+
       if(waiverFormat) {
         let waiverCopy = [...waiverFormat]
         for(let i = 0; i < waiverFormat.length; i++) {
@@ -297,9 +303,9 @@ export default function WaiverManagementPage() {
           <div className="justify-left flex items-center space-x-4 mb-4">
             <span>Enable Waiver</span>
             <Switch 
-              isSelected={waiverConfig}
+              isSelected={tempWaiverConfig}
               // onChange={(e) => setWaiverConfig(e.target.checked)}
-              onValueChange={setWaiverConfig}
+              onValueChange={setTempWaiverConfig}
             />
           </div>
 
@@ -334,6 +340,7 @@ export default function WaiverManagementPage() {
                   {index === 0 && (
                     <p className="text-sm font-semibold mb-2 text-left">Title</p>
                   )}
+
                   <div className="flex items-start justify-between p-3 border rounded mb-2">
                     <div className="flex-1 mr-4 overflow-hidden">
                       <p className="whitespace-pre-wrap break-words text-black dark:text-white">
@@ -347,7 +354,7 @@ export default function WaiverManagementPage() {
                   </div>
                 </div>
               ))}
-            <Button onPress={addWaiverSection} className="mt-4">Add Section</Button>
+            <Button onPress={addWaiverSection} className="mt-4 w-40">Add Section</Button>
           </div>
           <div className="mt-4">
             <Button onPress={handleSaveConfiguration}>Save Configuration</Button>
