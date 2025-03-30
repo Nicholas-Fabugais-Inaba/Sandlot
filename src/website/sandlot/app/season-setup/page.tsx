@@ -606,43 +606,50 @@ function GeneralSettings({
         </div> */}
 
         {/* Timeslots Section */}
-        <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-gray-700">
-              Timeslots
-            </label>
-            <button 
-              type="button" 
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-              onClick={addTimeslot}
-            >
-              Add Timeslot
-            </button>
-          </div>
-          {timeslots.map((timeslot) => (
-            <div key={timeslot.id} className="flex items-center space-x-2 mb-2">
-              <input
-                type="time"
-                value={timeslot.startTime}
-                onChange={(e) => updateTimeslot(timeslot.id, 'startTime', e.target.value)}
-                className="border rounded px-2 py-1"
-              />
-              <input
-                type="time"
-                value={timeslot.endTime}
-                onChange={(e) => updateTimeslot(timeslot.id, 'endTime', e.target.value)}
-                className="border rounded px-2 py-1"
-              />
-              <button 
-                type="button" 
-                className="bg-red-500 text-white px-3 py-1 rounded"
-                onClick={() => removeTimeslot(timeslot.id)}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-        </div>
+<div className="mb-4">
+  <div className="flex justify-between items-center mb-2">
+    <label className="block text-gray-700">
+      Timeslots
+    </label>
+    <button 
+      type="button" 
+      className="bg-blue-500 text-white px-3 py-1 rounded"
+      onClick={addTimeslot}
+    >
+      Add Timeslot
+    </button>
+  </div>
+  {timeslots
+    .slice() // Create a shallow copy to avoid mutating the original array
+    .sort((a, b) => {
+      const [aHour, aMinute] = a.startTime.split(":").map(Number);
+      const [bHour, bMinute] = b.startTime.split(":").map(Number);
+      return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
+    })
+    .map((timeslot) => (
+      <div key={timeslot.id} className="flex items-center space-x-2 mb-2">
+        <input
+          type="time"
+          value={timeslot.startTime}
+          onChange={(e) => updateTimeslot(timeslot.id, 'startTime', e.target.value)}
+          className="border rounded px-2 py-1"
+        />
+        <input
+          type="time"
+          value={timeslot.endTime}
+          onChange={(e) => updateTimeslot(timeslot.id, 'endTime', e.target.value)}
+          className="border rounded px-2 py-1"
+        />
+        <button 
+          type="button" 
+          className="bg-red-500 text-white px-3 py-1 rounded"
+          onClick={() => removeTimeslot(timeslot.id)}
+        >
+          Remove
+        </button>
+      </div>
+    ))}
+</div>
 
         {/* Fields Section */}
         <div className="mb-4">
@@ -681,17 +688,24 @@ function GeneralSettings({
                   Available Timeslots
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {timeslots.map((timeslot) => (
-                    <label key={timeslot.id} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={field.timeslotIds.includes(timeslot.id)}
-                        onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
-                        className="mr-2"
-                      />
-                      {timeslot.startTime} - {timeslot.endTime}
-                    </label>
-                  ))}
+                  {timeslots
+                    .slice() // Create a shallow copy to avoid mutating the original array
+                    .sort((a, b) => {
+                      const [aHour, aMinute] = a.startTime.split(":").map(Number);
+                      const [bHour, bMinute] = b.startTime.split(":").map(Number);
+                      return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
+                    })
+                    .map((timeslot) => (
+                      <label key={timeslot.id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={field.timeslotIds.includes(timeslot.id)}
+                          onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
+                          className="mr-2"
+                        />
+                        {timeslot.startTime} - {timeslot.endTime}
+                      </label>
+                    ))}
                 </div>
               </div>
             </div>
