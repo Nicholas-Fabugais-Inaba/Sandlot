@@ -26,7 +26,7 @@ import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
 import getPlayerWaivers from "@/app/functions/getPlayerWaivers";
 
-// import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
+import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 
 let notificationTimeout: NodeJS.Timeout | null = null;
@@ -47,6 +47,7 @@ export default function TeamsDirectoryPage() {
   const [waiverTitle, setWaiverTitle] = useState<string>("");
   const [waiverTexts, setWaiverTexts] = useState<string[]>([]);
   const [waiverFooter, setWaiverFooter] = useState<string>("");
+  const [waiverEnabled, setWaiverEnabled] = useState<boolean>();
 
   const [currentYear] = useState<string>(String(new Date().getFullYear()));
 
@@ -84,6 +85,10 @@ export default function TeamsDirectoryPage() {
       } else {
         const teams = await getDirectoryTeams();
         setTeams(teams);
+
+        const enabled = await getWaiverEnabled();
+        setWaiverEnabled(enabled.waiver_enabled);
+        // console.log("Waiver Enabled:", waiverEnabled);
 
         // Fetch players for all teams (concurrently?)
         // const playersData = await Promise.all(
@@ -185,7 +190,7 @@ export default function TeamsDirectoryPage() {
 
   const fillDataPDF = async (playerId: number): Promise<Record<string, string | string[]>> => {
     let dataPlayer = await getPlayerWaivers({ player_id: playerId });
-    console.log("Player Waiver Data", dataPlayer);
+    // console.log("Player Waiver Data", dataPlayer);
     const data = {
       "Waiver Title": waiverTitle,
       "Waiver Texts": waiverTexts,
@@ -194,7 +199,7 @@ export default function TeamsDirectoryPage() {
       "Player Signature": dataPlayer[0].signature,
     };
 
-    console.log("This is data in fillDataPDF:", data);
+    // console.log("This is data in fillDataPDF:", data);
     return data; // Return the data instead of resolving a void promise
   };
 
@@ -336,7 +341,7 @@ export default function TeamsDirectoryPage() {
                                             {player.email}
                                           </div>
                                           <div>{player.phone_number}</div>
-                                          {(session?.user.role === "commissioner") && (
+                                          {(session?.user.role === "commissioner" && waiverEnabled) && (
                                             <div className="text-xs text-black mt-1 flex items-center">
                                               Download waiver: 
                                               <button onClick={() => downloadPlayerPDF(player)}>
