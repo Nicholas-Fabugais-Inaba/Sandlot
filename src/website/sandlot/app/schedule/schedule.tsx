@@ -487,7 +487,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       rescheduleGame,
     );
     if (rescheduleGame && selectedDates[0]) {
-      const formattedDate: string = selectedDates[0].date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      const adjustedDate = subtractHours(selectedDates[0].date, 8); // Adjust date by subtracting 4 hours
+      const formattedDate: string = adjustedDate.toISOString().split('T')[0];
       commissionerReschedule({
         game_id: rescheduleGame?.game_id,
         date: formattedDate,
@@ -511,6 +512,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         )
       : false;
   };
+
+  function subtractHours(date: Date, hours: number): Date {
+    const adjustedDate = new Date(date);
+    adjustedDate.setUTCHours(adjustedDate.getUTCHours() - hours);
+    return adjustedDate;
+  }
 
   const handleSendRequest = async () => {
     handleReturnClick();
