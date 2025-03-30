@@ -29,6 +29,9 @@ import getPlayerWaivers from "@/app/functions/getPlayerWaivers";
 import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 
+import getSeasonState from "@/app/functions/getSeasonState";
+import OffseasonMessage from "@/app/no-season/OffseasonMessage";
+
 let notificationTimeout: NodeJS.Timeout | null = null;
 
 export default function TeamsDirectoryPage() {
@@ -50,6 +53,8 @@ export default function TeamsDirectoryPage() {
   const [waiverEnabled, setWaiverEnabled] = useState<boolean>();
 
   const [currentYear] = useState<string>(String(new Date().getFullYear()));
+  const [seasonState, setSeasonState] = useState<any>();
+  
 
   interface Team {
     team_id: number;
@@ -76,13 +81,17 @@ export default function TeamsDirectoryPage() {
 
   useEffect(() => {
     const fetchSessionAndData = async () => {
+
+      let response = await getSeasonState();
+      setSeasonState(response);
+
       const session = await getSession();
       setSession(session);
 
       if (!session || (session?.user.role !== "commissioner" && session?.user.role !== "team")) {
         router.push("/");
         return;
-      } else {
+      } else if (response === "offseason") {
         const teams = await getDirectoryTeams();
         setTeams(teams);
 
@@ -224,7 +233,10 @@ export default function TeamsDirectoryPage() {
     );
   }
 
-  if (session?.user.role === "commissioner" || session?.user.role === "team") {
+  if (seasonState === "offseason") {
+    return <OffseasonMessage />;
+  }
+  else if (session?.user.role === "commissioner" || session?.user.role === "team") {
     return (
       <div>
         <div style={{ marginBottom: "20px" }}>
