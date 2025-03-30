@@ -6,6 +6,7 @@ import getAllTimeslots from "../app/functions/getAllTimeslots";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
+import getSolsticeSettings from "@/app/functions/getSolsticeSettings";
 
 interface RescheduleRequest {
   id: number;
@@ -50,7 +51,8 @@ export const NotificationModal: FC<NotificationModalProps> = ({
         try {
           const session = await getSession();
           const timeslotsResponse = await getAllTimeslots();
-          const [rrList, pendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, false);
+          const solsticeSettings = await getSolsticeSettings();
+          const [rrList, pendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, solsticeSettings);
 
           const currentTime = new Date();
           setFetchTime(currentTime);

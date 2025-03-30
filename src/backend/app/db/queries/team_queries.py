@@ -37,7 +37,7 @@ def get_all_teams():
         )
         result = session.execute(stmt).mappings().all()
         return result
-    
+
 # Gets all teams that are currently assigned to a valid division
 def get_all_season_teams():
     with Session(engine) as session:
@@ -49,7 +49,7 @@ def get_all_season_teams():
         )
         result = session.execute(stmt).mappings().all()
         return result
-        
+
 def get_team(login_username):
     with Session(engine) as session:
         stmt = select(
