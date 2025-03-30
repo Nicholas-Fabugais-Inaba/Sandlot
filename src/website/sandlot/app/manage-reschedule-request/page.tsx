@@ -78,7 +78,6 @@ export default function ManageRescheduleRequest() {
     { id: 7, start: "24-0", end: "25-30", field_id: 3, field_name: "Field 3" },
     { id: 8, start: "25-30", end: "27-0", field_id: 3, field_name: "Field 3" },
   ];
-  const [isLoading, setIsLoading] = useState(true);
 
   // Combined fetch for session and reschedule requests
   useEffect(() => {
@@ -290,7 +289,7 @@ export default function ManageRescheduleRequest() {
   //   );
   // }
 
-   if (isLoading) {
+   if (loading) {
       return (
         <div className="flex justify-center items-center h-full min-h-[400px]">
           <Spinner label="Loading Rescheduler..." size="lg" />
