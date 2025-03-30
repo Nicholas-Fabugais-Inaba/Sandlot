@@ -21,6 +21,9 @@ import getSolsticeSettings from "../functions/getSolsticeSettings";
 import getAllOccupiedGameslots from "../functions/getAllOccupiedGameslots";
 import denyRR from "../functions/denyRR";
 
+import getSeasonState from "@/app/functions/getSeasonState";
+
+
 interface RescheduleRequest {
   id: string;
   game_id: number;
@@ -75,6 +78,7 @@ export default function ManageRescheduleRequest() {
     { id: 7, start: "24-0", end: "25-30", field_id: 3, field_name: "Field 3" },
     { id: 8, start: "25-30", end: "27-0", field_id: 3, field_name: "Field 3" },
   ];
+  const [isLoading, setIsLoading] = useState(true);
 
   // Combined fetch for session and reschedule requests
   useEffect(() => {
@@ -82,10 +86,12 @@ export default function ManageRescheduleRequest() {
       try {
         setLoading(true);
 
+        let response = await getSeasonState();
+    
         const session = await getSession();
         setSession(session);
 
-        if (!session || session?.user.role !== "team") {
+        if ((!session || session?.user.role !== "team") || response === "offseason") {
           router.push("/");
           return;
         } else {
@@ -283,6 +289,14 @@ export default function ManageRescheduleRequest() {
   //     </div>
   //   );
   // }
+
+   if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-full min-h-[400px]">
+          <Spinner label="Loading Rescheduler..." size="lg" />
+        </div>
+      );
+    }
 
   return (
     <div>

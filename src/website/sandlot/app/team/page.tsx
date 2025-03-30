@@ -41,6 +41,8 @@ import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 import updateCaptainStatus from "../functions/updateCaptainStatus";
 import leaveTeam from "../functions/leaveTeam";
 import getTeamAccountData from "../functions/getTeamAccountData";
+import getSeasonState from "@/app/functions/getSeasonState";
+import OffseasonMessage from "@/app/no-season/OffseasonMessage";
 
 interface JoinRequest {
   id: number;
@@ -82,19 +84,23 @@ export default function TeamPage() {
   // const { teamId, teamName } = useGlobalState();
   const [teamId, setTeamId] = useState<number>(0);
   const [teamName, setTeamName] = useState<string>("team_name");
-
+  const [seasonState, setSeasonState] = useState<any>();
   const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
 
   useEffect(() => {
     const initializeStates = async () => {
       try {
+
+        let response = await getSeasonState();
+        setSeasonState(response);
+
         const session = await getSession();
         setSession(session);
         
         if (!session || (session?.user.role !== "team" && session?.user.role !== "player")) {
           router.push("/");
           return;
-        } else {
+        } else if (response !== "offseason"){
   
           let teamId = 0;
           let teamName = "team_name";
@@ -138,11 +144,12 @@ export default function TeamPage() {
             setJoinRequests([]); // Gracefully handle the error and set empty join requests
           }
     
-          setLoading(false);
       }
 
       } catch (error) {
         console.error("Error during session initialization:", error);
+        setLoading(false); // Ensure loading is stopped in case of any error
+      } finally {
         setLoading(false); // Ensure loading is stopped in case of any error
       }
       
@@ -209,6 +216,10 @@ export default function TeamPage() {
         <Spinner label="Loading Team Information..." size="lg" />
       </div>
     );
+  }
+
+  if (seasonState === "offseason") {
+    return <OffseasonMessage />;
   }
 
   return (
