@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select, or_, update
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import Team, Game
-
+from ..create_engine import engine
 
 def insert_game(home_team, away_team, date, time, field):
-    engine = create_connection()
     with Session(engine) as session:
         game = Game(
             home_team_id=home_team,
@@ -24,7 +23,6 @@ def insert_game(home_team, away_team, date, time, field):
     return True
 
 def get_all_games():
-    engine = create_connection()
     with Session(engine) as session:
         home_team_alias = aliased(Team, name="home_team")
         away_team_alias = aliased(Team, name="away_team")
@@ -51,7 +49,6 @@ def get_all_games():
         return result
     
 def get_team_games(team_id):
-    engine = create_connection()
     with Session(engine) as session:
         home_team_alias = aliased(Team, name="home_team")
         away_team_alias = aliased(Team, name="away_team")
@@ -79,7 +76,6 @@ def get_team_games(team_id):
         return result
     
 def update_game(game_id, new_date, new_time, new_field):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Game).where(Game.id == game_id).values(date=new_date, time=new_time, field=new_field)
         try:
@@ -91,7 +87,6 @@ def update_game(game_id, new_date, new_time, new_field):
             session.commit()
 
 def delete_all_games():
-    engine = create_connection()
     with Session(engine) as session:
         try:
             session.query(Game).delete()
@@ -102,14 +97,12 @@ def delete_all_games():
             session.commit()
 
 def get_score(game_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = select(Game.home_team_score, Game.away_team_score, Game.forfeit).where(Game.id == game_id)
         result = session.execute(stmt).mappings().first()
         return result
 
 def update_score(game_id, home_team_score, away_team_score, forfeit):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Game).where(Game.id == game_id).values(home_team_score=home_team_score, away_team_score=away_team_score, forfeit=forfeit, played=1)
         try:
@@ -123,7 +116,6 @@ def update_score(game_id, home_team_score, away_team_score, forfeit):
 
 # TODO: not sure if this should be in team_queries or game_queries but this seemed more appropriate
 def get_standings():
-    engine = create_connection()
     with Session(engine) as session:
         team1 = aliased(Team)
         team2 = aliased(Team)

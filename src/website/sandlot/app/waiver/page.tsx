@@ -27,6 +27,11 @@ import getWaiverEnabled from "../functions/getWaiverEnabled";
 import updateDivision from "../functions/updateTeamDivision";
 import { BlobOptions } from "buffer";
 
+import { useRouter } from "next/navigation";
+import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
+
+
 
 // Typescript interfaces for type safety
 interface WaiverSection {
@@ -68,6 +73,10 @@ interface WaiverFormat {
 }
 
 export default function WaiverManagementPage() {
+
+  const [session, setSession] = useState<Session | null>(null);
+  const router = useRouter();
+
   // State for waiver configuration
   const [waiverConfig, setWaiverConfig] = useState<boolean>(false)
 
@@ -91,22 +100,32 @@ export default function WaiverManagementPage() {
   // Fetch teams and existing waiver config on component mount
   useEffect(() => {
     const fetchInitialData = async () => {
-      try {
-        // Fetch teams
-        const teamList = await getDirectoryTeams();
-        const teamNames: string[] = teamList.map((team: Team) => team.name);
-        setTeams(teamNames);
 
-        // Fetch existing waiver configuration
-        const enabled = await getWaiverEnabled();
-        setWaiverConfig(enabled.waiver_enabled);
+      const session = await getSession();
+      setSession(session);
 
-        // Fetch signed waivers
-        // const existingWaivers = await getSignedWaivers();
-        // setSignedWaivers(existingWaivers);
+      if (!session || session?.user.role !== "commissioner") {
+        router.push("/");
+        return;
+      } else {
 
-      } catch (error) {
-        console.error("Failed to fetch initial data", error);
+        try {
+          // Fetch teams
+          const teamList = await getDirectoryTeams();
+          const teamNames: string[] = teamList.map((team: Team) => team.name);
+          setTeams(teamNames);
+
+          // Fetch existing waiver configuration
+          const enabled = await getWaiverEnabled();
+          setWaiverConfig(enabled.waiver_enabled);
+
+          // Fetch signed waivers
+          // const existingWaivers = await getSignedWaivers();
+          // setSignedWaivers(existingWaivers);
+
+        } catch (error) {
+          console.error("Failed to fetch initial data", error);
+        }
       }
     };
     
@@ -305,7 +324,7 @@ export default function WaiverManagementPage() {
       </Card>
 
       {/* Signed Waivers Section */}
-      <Card className="mt-6 mb-6">
+      {/* <Card className="mt-6 mb-6">
         <CardHeader>
           <h2 className="text-xl font-semibold">Signed Waivers</h2>
         </CardHeader>
@@ -335,7 +354,7 @@ export default function WaiverManagementPage() {
                 </TableBody>
             </Table>
         </div>
-      </Card>
+      </Card> */}
 
       {/* Edit Section Modal */}
       {editingSection && (

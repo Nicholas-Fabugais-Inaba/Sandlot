@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import TimeSlot, Field
-
+from ..create_engine import engine
 
 def insert_timeslot(start, end, field_id, timeslot_id=None):
-    engine = create_connection()
     with Session(engine) as session:
         timeslot = TimeSlot(
             id=timeslot_id,
@@ -23,7 +22,6 @@ def insert_timeslot(start, end, field_id, timeslot_id=None):
     return True
 
 def get_all_timeslots():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -39,7 +37,6 @@ def get_all_timeslots():
         return result
 
 def delete_timeslot(timeslot_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = delete(TimeSlot).where(TimeSlot.id == timeslot_id)
         try:
@@ -51,7 +48,6 @@ def delete_timeslot(timeslot_id):
             session.commit()
 
 def delete_all_timeslots():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = delete(TimeSlot)
         try:

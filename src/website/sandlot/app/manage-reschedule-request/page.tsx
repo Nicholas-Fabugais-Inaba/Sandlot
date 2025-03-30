@@ -5,6 +5,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 import { title } from "@/components/primitives";
 
@@ -17,6 +18,8 @@ import getRR from "../functions/getRR";
 import acceptRR from "../functions/acceptRR";
 import getAllTimeslots from "../functions/getAllTimeslots";
 import getSolsticeSettings from "../functions/getSolsticeSettings";
+import getAllOccupiedGameslots from "../functions/getAllOccupiedGameslots";
+import denyRR from "../functions/denyRR";
 
 interface RescheduleRequest {
   id: string;
@@ -41,6 +44,8 @@ interface Timeslot {
 }
 
 export default function ManageRescheduleRequest() {
+  const router = useRouter();
+  const [session, setSession] = useState<Session | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,30 +75,38 @@ export default function ManageRescheduleRequest() {
     { id: 7, start: "24-0", end: "25-30", field_id: 3, field_name: "Field 3" },
     { id: 8, start: "25-30", end: "27-0", field_id: 3, field_name: "Field 3" },
   ];
-  const router = useRouter();
 
   // Combined fetch for session and reschedule requests
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+
         const session = await getSession();
-        const solsticeSettings = await getSolsticeSettings();
-        const timeslotsResponse = solsticeSettings.active ? solsticeTimeslots : await getAllTimeslots();
-        // if (timeslotsResponse) {
-        //   setTimeslots(timeslotsResponse);
-        // }
+        setSession(session);
 
-        if (session) {
-          setUserRole(session.user?.role || null);
-          setUserTeamId(session.user?.team_id || null);
+        if (!session || session?.user.role !== "team") {
+          router.push("/");
+          return;
+        } else {
 
-          // Fetch reschedule requests immediately after session
-          const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, solsticeSettings);
-          setRescheduleRequests(formattedRequests);
-          setPendingRequests(formattedPendingRequests);
-          console.log("Reschedule Requests:", formattedRequests);
-          console.log("Pending Requests:", formattedPendingRequests);
+          const solsticeSettings = await getSolsticeSettings();
+          const timeslotsResponse = solsticeSettings.active ? solsticeTimeslots : await getAllTimeslots();
+          // if (timeslotsResponse) {
+          //   setTimeslots(timeslotsResponse);
+          // }
+
+          if (session) {
+            setUserRole(session.user?.role || null);
+            setUserTeamId(session.user?.team_id || null);
+
+            // Fetch reschedule requests immediately after session
+            const [formattedRequests, formattedPendingRequests] = await getRR({ team_id: session?.user.team_id }, timeslotsResponse, solsticeSettings);
+            setRescheduleRequests(formattedRequests);
+            setPendingRequests(formattedPendingRequests);
+            console.log("Reschedule Requests:", formattedRequests);
+            console.log("Pending Requests:", formattedPendingRequests);
+          }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -105,21 +118,54 @@ export default function ManageRescheduleRequest() {
     fetchData();
   }, []);
 
-  const handleAccept = (id: string) => {
+  function isConflict(newDate: string, occupiedGameslots: Record<string, boolean>): boolean {
+    console.log(newDate);
+    // Split the newDate into components
+    const [dateTime, time, field] = newDate.split(" ");
+
+    // Adjust the date by subtracting 8 hours
+    const adjustedDate = subtractHours(new Date(dateTime), 8).toISOString();
+
+    // Extract only the date portion (before the "T" in ISO format)
+    const date = adjustedDate.split("T")[0];
+  
+    // Reconstruct the normalized key
+    const normalizedKey = `${date} ${time} ${field}`;
+  
+    // Check if the normalized key exists in the occupiedGameslots
+    return !!occupiedGameslots[normalizedKey];
+  }
+
+  const handleAccept = async (id: string) => {
     const selectedDate = selectedDates[id];
     const request = rescheduleRequests.find((req) => req.id === id);
 
     if (selectedDate && request) {
-      setModalContent({
-        id,
-        action: "accept",
-        originalDate: request.originalDate,
-        originalField: request.originalField,
-        receiver_name: request.receiver_name,
-        requester_name: request.requester_name,
-        newDate: selectedDate,
-      });
-      setModalVisible(true);
+      try {
+        // Fetch occupied gameslots
+        const occupiedGameslots = await getAllOccupiedGameslots();
+
+        // Check for conflicts
+        if (isConflict(selectedDate, occupiedGameslots)) {
+          alert("The selected date and time conflict with another game. Please choose a different time.");
+          return;
+        }
+
+        // No conflict, proceed to set modal content
+        setModalContent({
+          id,
+          action: "accept",
+          originalDate: request.originalDate,
+          originalField: request.originalField,
+          receiver_name: request.receiver_name,
+          requester_name: request.requester_name,
+          newDate: selectedDate,
+        });
+        setModalVisible(true);
+      } catch (error) {
+        console.error("Error checking for conflicts:", error);
+        alert("An error occurred while checking for conflicts. Please try again.");
+      }
     } else {
       alert("Please select a date.");
     }
@@ -163,7 +209,8 @@ export default function ManageRescheduleRequest() {
           // }
           // // Get the timeslot for the new game
           // timeslot = deriveTimeslot(splitNewDate[0], splitNewDate[1], timeslots);
-          let formattedDate: string = splitNewDate[0].toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+          let ajustedDate = subtractHours(splitNewDate[0], 8); // Adjust the date by subtracting 1 hour
+          let formattedDate: string = ajustedDate.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
           acceptRR({
             rr_id: parseInt(request.id, 10),
@@ -175,18 +222,30 @@ export default function ManageRescheduleRequest() {
             field: splitNewDate[2],
           });
           alert(
-            `Reschedule request ${modalContent.id} accepted for ${modalContent.newDate.toLocaleString()}`,
+            `Reschedule request ${modalContent.id} accepted for ${ajustedDate.toISOString()} on Field ${splitNewDate[2]}`,
           );
         }
       } else if (modalContent.action === "deny") {
         // Implement the logic to deny the reschedule request
-        alert(`Reschedule request ${modalContent.id} denied.`);
+        try {
+          denyRR({ rr_id: parseInt(modalContent.id, 10) }); // Call denyRR with the request ID
+          alert(`Reschedule request ${modalContent.id} denied.`);
+        } catch (error) {
+          console.error("Error denying the reschedule request:", error);
+          alert("An error occurred while denying the reschedule request. Please try again.");
+        }
       }
       setModalVisible(false);
       setModalContent(null);
       window.location.reload();
     }
   };
+
+  function subtractHours(date: Date, hours: number): Date {
+    const adjustedDate = new Date(date);
+    adjustedDate.setUTCHours(adjustedDate.getUTCHours() - hours);
+    return adjustedDate;
+  }
 
   function parseNewDate(newDate: string): [Date, string, string] {
     let splitNewDate = newDate.split(" ");
