@@ -550,7 +550,10 @@ function GeneralSettings({
   };
 
   const convertTimeToUTC = (time: string): string => {
-    const [hour, minute] = time.split(":").map(Number);
+    let [hour, minute] = time.split(":").map(Number);
+    if (hour < 4) {
+      hour += 24; // Adjust for UTC conversion (example: +4 hours)
+    }
     const utcHour = hour + 4; // Adjust for UTC conversion (example: +4 hours)
     return `${utcHour}-${minute}`;
   };

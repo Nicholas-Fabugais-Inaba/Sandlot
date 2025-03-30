@@ -810,7 +810,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                       <div className="text-xs text-gray-600">{fieldName}</div>
                     )}
                   </div>
-                ) : null
+                ) : <div className={`event-content p-2 rounded-xl spacer-event`}></div>
               ) : schedType === 1 ? ( // Team Schedule
                 eventInfo.event.extendedProps.home &&
                 eventInfo.event.extendedProps.away &&
