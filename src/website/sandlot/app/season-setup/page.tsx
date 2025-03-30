@@ -771,7 +771,7 @@ function ScheduleSettings({ setUnsavedChanges, seasonState }: ScheduleSettingsPr
   return (
     <div className="pb-80">
       <h2 className="text-3xl font-semibold mb-4">Schedule Generator</h2>
-      {seasonState === "offseason" ? (
+      {seasonState === "preseason" ? (
         <>
           <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
           <p className="mt-4 text-gray-700 text-lg">
