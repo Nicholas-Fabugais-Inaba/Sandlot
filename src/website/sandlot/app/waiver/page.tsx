@@ -159,11 +159,12 @@ export default function WaiverManagementPage() {
         let data = await getWaiverFormatByYear({ year: currentYear });
 
         // Process each section's text with decodeURIComponent and replace newlines
-        const processedData = data.map((section: WaiverFormat) => ({
+        let processedData = data.map((section: WaiverFormat) => ({
             ...section,
             text: decodeURIComponent(section.text)
         }));
 
+        processedData = processedData.sort((s1: any, s2:any) => s1.index > s2.index);
         setWaiverFormat(processedData);
 
         if (processedData.length === 0) {
@@ -291,11 +292,10 @@ export default function WaiverManagementPage() {
         <CardHeader>
           <div className="flex justify-between items-center gap-4">
             <h2 className="text-xl font-semibold">Waiver Configuration</h2>
-            <Button onPress={handleSaveConfiguration}>Save Configuration</Button>
           </div>
         </CardHeader>
         <div className="p-4">
-          <div className="justify-between flex items-center space-x-4 mb-4">
+          <div className="justify-left flex items-center space-x-4 mb-4">
             <span>Enable Waiver</span>
             <Switch 
               isSelected={waiverConfig}
@@ -304,7 +304,7 @@ export default function WaiverManagementPage() {
             />
           </div>
 
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <Input 
               placeholder="Waiver Title"
               value={waiverFormat ? decodeURI(waiverFormat[0].text): "Title"}
@@ -316,23 +316,24 @@ export default function WaiverManagementPage() {
                 }
               }}
             />
-            {/* <Textarea 
+            <Textarea 
               placeholder="Waiver Description"
               value={waiverConfig.description}
               onChange={(e) => setWaiverConfig(prev => ({...prev, description: e.target.value}))}
-            /> */}
-          </div>
+            />
+          </div> */}
 
           {/* Waiver Sections Management */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-4">Waiver Sections</h3>
-            {waiverFormat
-              ?.filter((section) => section.index !== 0)
-              .map((section, index, array) => (
+            {waiverFormat?.map((section, index, array) => (
                 <div key={section.id}>
                   {/* Conditionally render "Footer" above the last section */}
                   {index === array.length - 1 && (
                     <p className="text-sm font-semibold mb-2 text-left">Footer</p>
+                  )}
+                  {index === 0 && (
+                    <p className="text-sm font-semibold mb-2 text-left">Title</p>
                   )}
                   <div className="flex items-start justify-between p-3 border rounded mb-2">
                     <div className="flex-1 mr-4 overflow-hidden">
@@ -348,6 +349,9 @@ export default function WaiverManagementPage() {
                 </div>
               ))}
             <Button onPress={addWaiverSection} className="mt-4">Add Section</Button>
+          </div>
+          <div className="mt-4">
+            <Button onPress={handleSaveConfiguration}>Save Configuration</Button>
           </div>
         </div>
       </Card>
