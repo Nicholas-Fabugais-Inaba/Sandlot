@@ -1,7 +1,7 @@
 import axios from "axios";
 
 interface EndSeasonData {
-    archiveTeams: boolean
+    archive_teams: boolean
 }
 
 export default async function endSeason(data: EndSeasonData): Promise<any> {
