@@ -296,13 +296,22 @@ function GeneralSettings({
       alert("You can only create up to 3 fields.");
       return;
     }
-
+  
     const newField: Field = {
-      id: fields.length + 1, // Generate ID within the range 1 to len(fields)
+      id: fields.length + 1, // Assign ID based on the current number of fields
       name: `Field ${fields.length + 1}`,
-      timeslotIds: []
+      timeslotIds: [],
     };
-    setFields(prev => [...prev, newField]);
+  
+    setFields((prev) => {
+      const updatedFields = [...prev, newField];
+      // Reassign IDs to ensure they remain sequential
+      return updatedFields.map((field, index) => ({
+        ...field,
+        id: index + 1, // Reassign IDs starting from 1
+      }));
+    });
+  
     setUnsavedChanges(true);
   };
 
