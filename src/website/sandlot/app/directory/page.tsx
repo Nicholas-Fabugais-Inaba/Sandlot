@@ -85,19 +85,26 @@ export default function TeamsDirectoryPage() {
         const teams = await getDirectoryTeams();
         setTeams(teams);
 
-        // Fetch players for all teams
-        const playersData = await Promise.all(
-          teams.map(async (team: Team) => {
-            const players = await getDirectoryPlayers({ team_id: team.team_id });
-            return { teamName: team.name, players };
-          })
-        );
+        // Fetch players for all teams (concurrently?)
+        // const playersData = await Promise.all(
+        //   teams.map(async (team: Team) => {
+        //     const players = await getDirectoryPlayers({ team_id: team.team_id });
+        //     return { teamName: team.name, players };
+        //   })
+        // );
 
-        // Map players to their respective teams
-        const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
-          acc[teamName] = players;
-          return acc;
-        }, {} as Record<string, Player[]>);
+            // Fetch players for all teams sequentially
+        const playersByTeamData: Record<string, Player[]> = {};
+        for (const team of teams) {
+          const players = await getDirectoryPlayers({ team_id: team.team_id });
+          playersByTeamData[team.name] = players;
+        }
+
+        // // Map players to their respective teams (for concurrent? implementation of getting players)
+        // const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
+        //   acc[teamName] = players;
+        //   return acc;
+        // }, {} as Record<string, Player[]>);
 
         setPlayersByTeam(playersByTeamData);
         setIsLoading(false); // Set loading to false after all data is fetched
