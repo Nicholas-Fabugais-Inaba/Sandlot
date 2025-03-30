@@ -43,7 +43,7 @@ export default function TeamsDirectoryPage() {
   const [expandedTeams, setExpandedTeams] = useState<string[]>([]); 
   const [playersByTeam, setPlayersByTeam] = useState<Record<string, Player[]>>({}); 
   const [copyNotification, setCopyNotification] = useState<string | null>(null);
-  const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[]>([]);
+  // const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[]>([]);
   const [waiverTitle, setWaiverTitle] = useState<string>("");
   const [waiverTexts, setWaiverTexts] = useState<string[]>([]);
   const [waiverFooter, setWaiverFooter] = useState<string>("");
