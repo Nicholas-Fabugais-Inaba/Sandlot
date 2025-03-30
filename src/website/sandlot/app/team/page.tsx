@@ -140,7 +140,7 @@ export default function TeamPage() {
     
           setLoading(false);
       }
-      
+
       } catch (error) {
         console.error("Error during session initialization:", error);
         setLoading(false); // Ensure loading is stopped in case of any error
@@ -244,7 +244,7 @@ export default function TeamPage() {
                         <TableCell className="py-2 column-name flex items-center gap-3">
                           {player.first_name + " " + player.last_name}
                           {player.captain ? 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 26 26">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 26 26">
                               <title>Captain</title>
                               <path fill="currentColor" d="M25.326 10.137a1.001 1.001 0 0 0-.807-.68l-7.34-1.066l-3.283-6.651c-.337-.683-1.456-.683-1.793 0L8.82 8.391L1.48 9.457a1 1 0 0 0-.554 1.705l5.312 5.178l-1.254 7.31a1.001 1.001 0 0 0 1.451 1.054L13 21.252l6.564 3.451a1 1 0 0 0 1.451-1.054l-1.254-7.31l5.312-5.178a.998.998 0 0 0 .253-1.024z"/>
                             </svg>
@@ -323,8 +323,14 @@ export default function TeamPage() {
                   {roster ? (
                     roster.map((player, index) => (
                       <TableRow key={index}>
-                        <TableCell className="py-2 column-name">
+                        <TableCell className="py-2 column-name flex items-center gap-3">
                           {player.first_name + " " + player.last_name}
+                          {player.captain ? 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 26 26">
+                              <title>Captain</title>
+                              <path fill="currentColor" d="M25.326 10.137a1.001 1.001 0 0 0-.807-.68l-7.34-1.066l-3.283-6.651c-.337-.683-1.456-.683-1.793 0L8.82 8.391L1.48 9.457a1 1 0 0 0-.554 1.705l5.312 5.178l-1.254 7.31a1.001 1.001 0 0 0 1.451 1.054L13 21.252l6.564 3.451a1 1 0 0 0 1.451-1.054l-1.254-7.31l5.312-5.178a.998.998 0 0 0 .253-1.024z"/>
+                            </svg>
+                          : null}
                         </TableCell>
                         <TableCell className="py-2 column-contact">
                           {player.email}
