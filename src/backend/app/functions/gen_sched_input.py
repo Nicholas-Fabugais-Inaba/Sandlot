@@ -4,7 +4,7 @@ from .scheduler import gen_schedule_w_skip, send_schedule_to_db
 # from scheduler import gen_schedule_w_skip
 from random import shuffle
 from ..db.queries.team_queries import get_all_teams, get_all_season_teams
-from ..db.queries.season_settings_queries import get_season_settings
+from ..db.queries.season_settings_queries import get_season_settings, get_solstice_settings
 from ..db.queries.timeslot_queries import get_all_timeslots
 
 from ..db.mock_data import insert_mock_schedule
@@ -55,6 +55,17 @@ GAMES_PER_TEAM = 25 # CURRENTLY BROKEN
 # div_d = {21: red_sox, 22: diamondbacks, 23: mets, 24: reds, 25: phillies, 26: pirates, 27: mariners}
 
 # divs = [div_a, div_b, div_c, div_d]
+
+solsticeTimeslots = [
+    { id: 1, "start": "21-0", "end": "22-30", "field_id": 1, "field_name": "Field 1" },
+    { id: 2, "start": "22-30", "end": "24-0", "field_id": 1, "field_name": "Field 1" },
+    { id: 3, "start": "21-0", "end": "22-30", "field_id": 2, "field_name": "Field 2" },
+    { id: 4, "start": "22-30", "end": "24-0", "field_id": 2, "field_name": "Field 2" },
+    { id: 5, "start": "21-0", "end": "22-30", "field_id": 3, "field_name": "Field 3" },
+    { id: 6, "start": "22-30", "end": "24-0", "field_id": 3, "field_name": "Field 3" },
+    { id: 7, "start": "24-0", "end": "25-30", "field_id": 3, "field_name": "Field 3" },
+    { id: 8, "start": "25-30", "end": "27-0", "field_id": 3, "field_name": "Field 3" },
+]
 
 
 def gen_games_round_robin_old(teams, rounds: int):
@@ -244,6 +255,7 @@ def gen_schedule_repeated():
 
     # Teams = get_all_teams()
     Teams = get_all_season_teams()
+    Solstice = get_solstice_settings()
     Settings = get_season_settings()
 
     for i in range(len(Teams)):
@@ -275,8 +287,11 @@ def gen_schedule_repeated():
 
     games = gen_games_division_a_b_mixed(divs, Settings["games_per_team"])
 
-    Timeslots = get_all_timeslots()
-    print(Timeslots)
+    if not Solstice["active"]:
+        Timeslots = get_all_timeslots()
+        print(Timeslots)
+    else:
+        Timeslots = solsticeTimeslots
 
     max_timeslots_per_field = analyze_timeslots(Timeslots)
 
