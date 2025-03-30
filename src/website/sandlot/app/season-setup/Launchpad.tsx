@@ -75,7 +75,7 @@ export default function Launchpad({ seasonState }: LaunchProps) {
   const returnWarning = "Warning, returning to the preseason may revert changes team accounts have made to the schedule."
 
   return (
-    <div className="p-6">
+    <div>
       <h2 className="text-3xl font-semibold mb-4">{getButtonText()}</h2>
       <p className="mt-4 mb-6 text-gray-700 text-lg">{getDescription()}</p>      {seasonState === "season" && (
         <div className="flex space-x-4">
