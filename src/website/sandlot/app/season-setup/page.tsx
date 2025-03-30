@@ -242,21 +242,7 @@ function GeneralSettings({
       return;
     }
   
-    // Ensure startTime is earlier than endTime
-    const timeslot = timeslots.find(ts => ts.id === id);
-    if (timeslot) {
-      const startTime = field === "startTime" ? value : timeslot.startTime;
-      const endTime = field === "endTime" ? value : timeslot.endTime;
-  
-      const start = new Date(`1970-01-01T${startTime}:00`);
-      const end = new Date(`1970-01-01T${endTime}:00`);
-  
-      if (start >= end) {
-        alert("Start time must be earlier than end time.");
-        return;
-      }
-    }
-  
+    // Update the timeslot in the state
     setTimeslots(prev =>
       prev.map(timeslot =>
         timeslot.id === id
@@ -425,13 +411,28 @@ function GeneralSettings({
 
   // Check if save can be done
   const isSaveDisabled = 
-    !startDate || 
-    !endDate || 
-    gamesPerTeam <= 0 || 
-    fields.length === 0 || 
+    !startDate ||
+    !endDate ||
+    gamesPerTeam <= 0 ||
+    fields.length === 0 ||
     timeslots.length === 0 ||
     timeslots.some(ts => !ts.startTime || !ts.endTime) ||
-    fields.some(field => field.timeslotIds.length === 0);
+    fields.some(field => field.timeslotIds.length === 0) ||
+    timeslots.some(ts => {
+      const start = new Date(`1970-01-01T${ts.startTime}:00`);
+      const end = new Date(`1970-01-01T${ts.endTime}:00`);
+      const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60); // Calculate difference in minutes
+      return start >= end || diffInMinutes < 30; // Check if start is not earlier than end or difference is less than 30 minutes
+    });
+
+  const invalidTimeslotMessage = timeslots.some(ts => {
+    const start = new Date(`1970-01-01T${ts.startTime}:00`);
+    const end = new Date(`1970-01-01T${ts.endTime}:00`);
+    const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+    return start >= end || diffInMinutes < 30;
+  })
+    ? "One or more timeslots have a start time that is not earlier than the end time or have less than a 30-minute duration."
+    : "";
 
   useEffect(() => {
     const loadFormData = async () => {
@@ -695,9 +696,9 @@ function GeneralSettings({
           </button>
           {isSaveDisabled && (
             <div className="ml-4 text-red-500" style={{ width: "60%" }}>
-              Must input valid start/end dates, games per team, at least one field and 
-              timeslot, and ensure all timeslots have start/end times and fields have 
-              assigned timeslots.
+              {invalidTimeslotMessage || (
+                "Must input valid start/end dates, games per team, at least one field and timeslot, and ensure all timeslots have start/end times and fields have assigned timeslots."
+              )}
             </div>
           )}
         </div>
