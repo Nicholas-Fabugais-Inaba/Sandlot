@@ -4,7 +4,7 @@ from ..db.queries.mock_queries import insert_mock_player
 from ..db.queries.division_queries import insert_division_with_id
 from ..db.queries.season_settings_queries import insert_season_settings
 from ..db.queries.team_players_queries import insert_team_player
-from ..db.queries.waiver_queries import insert_waiver_format
+from ..db.queries.waiver_queries import insert_waiver_format, insert_waiver
 
 
 class MockTeam(BaseModel):
@@ -376,13 +376,13 @@ def insert_mock_players():
     for player in mock_players:
         insert_mock_player(player.first_name, player.last_name, player.email, player.password, player.phone_number, player.gender, player.team_id)
         insert_team_player(player.team_id, i)
+        insert_waiver(i, player.first_name + player.last_name, player.first_name + player.last_name, 2025)
         i += 1
 
-
 def insert_mock_schedule():
-    insert_mock_divisions()
-    insert_mock_season_settings()
+    #insert_mock_divisions()
+    #insert_mock_season_settings()
     insert_mock_teams()
     insert_mock_players()
-    insert_mock_waiver_formats()
+    #insert_mock_waiver_formats()
     
