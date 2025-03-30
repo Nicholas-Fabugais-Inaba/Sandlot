@@ -50,7 +50,10 @@ export default async function getTeamsSeasonSetup(): Promise<Division[]> {
       divisionsMap[divisionId].teams.push({
         id: teamData.id,
         name: teamData.team_name,
-        preferredDivision: teamData.preferred_division,
+        preferredDivision:
+        teamData.preferred_division === 0
+          ? "None"
+          : divisionsMap[teamData.preferred_division]?.name || "Unknown Division",
       });
     }
   });
