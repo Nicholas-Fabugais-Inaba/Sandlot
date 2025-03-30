@@ -273,7 +273,7 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Division Settings</h2>
+      <h2 className="text-3xl font-semibold mb-4">Division Settings</h2>
 
       <div className="mb-4 flex items-center">
         <input
