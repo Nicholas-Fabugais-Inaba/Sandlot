@@ -29,8 +29,8 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
 }) => {
   const [value, setValue] = useState(initialValue);
   const [confirmValue, setConfirmValue] = useState("");
-  const [currentFirstName, setCurrentFirstName] = useState(firstName); // Use firstName prop
-  const [currentLastName, setCurrentLastName] = useState(lastName);   // Use lastName prop
+  const [currentFirstName, setCurrentFirstName] = useState(); // Use firstName prop
+  const [currentLastName, setCurrentLastName] = useState();   // Use lastName prop
   const [email, setEmail] = useState(""); // New state for email
   const [confirmEmail, setConfirmEmail] = useState(""); // New state for confirming email
 
@@ -41,17 +41,23 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
   }>({});
 
   useEffect(() => {
-    // Reset state when the modal mode changes
-    if (isEmailChange) {
-      setEmail(initialValue);
-      setConfirmEmail("");
-    } else if (isPassword) {
-      setValue(initialValue);
-      setConfirmValue("");
-    } else if (isNameChange) {
-      setCurrentFirstName(firstName);
-      setCurrentLastName(lastName);
-    }
+
+    // Currently commenting out initial value functionality
+    // if (isEmailChange) {
+    //   setEmail(initialValue);
+    //   setConfirmEmail("");
+    // } else if (isPassword) {
+    //   setValue(initialValue);
+    //   setConfirmValue("");
+    // } else if (isNameChange) {
+    //   setCurrentFirstName(firstName);
+    //   setCurrentLastName(lastName);
+    // }
+
+    setValue(""); // Clear password
+    setConfirmValue(""); // Clear confirm password
+    setEmail(""); // Clear email
+    setConfirmEmail(""); // Clear confirm email
   
     // Clear errors when switching modes
     setErrors({});
@@ -106,6 +112,12 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
 
   const handleClose = () => {
     setErrors({}); // Clear errors
+    setValue(""); // Clear the password input field
+    setConfirmValue("");
+    setCurrentFirstName(""); // Clear first name
+    setCurrentLastName(""); // Clear last name
+    setEmail(""); // Clear email
+    setConfirmEmail(""); // Clear confirm email
     onClose(); // Call the provided onClose function
   };
 
@@ -126,7 +138,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
               className="w-full px-4 py-2 border rounded-lg mb-4"
               placeholder="First Name"
               type="text"
-              value={firstName}
+              value={currentFirstName}
               onChange={(e) => {
                 setCurrentFirstName(e.target.value);
                 const newErrors = { ...errors };
@@ -138,7 +150,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
               className="w-full px-4 py-2 border rounded-lg mb-4"
               placeholder="Last Name"
               type="text"
-              value={lastName}
+              value={currentLastName}
               onChange={(e) => {
                 setCurrentLastName(e.target.value);
                 const newErrors = { ...errors };
