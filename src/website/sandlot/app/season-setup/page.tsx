@@ -247,11 +247,11 @@ function GeneralSettings({
     const [hour, minute] = value.split(":").map(Number);
   
     // Validate start and end times
-    if (field === "startTime" && (hour < 5 || hour > 23 || (hour === 23 && minute > 0))) {
+    if (field === "startTime" && (hour < 5 || hour > 23)) {
       alert("Start time must be between 5:00 AM and 11:59 PM.");
       return;
     }
-    if (field === "endTime" && (hour < 5 && hour !== 0 || hour > 23 || (hour === 0 && minute !== 0))) {
+    if (field === "endTime" && (hour < 5 && hour !== 0 || hour > 23 || (hour === 0 && minute > 0))) {
       alert("End time must be between 5:00 AM and 12:00 AM.");
       return;
     }
@@ -433,16 +433,28 @@ function GeneralSettings({
     timeslots.some(ts => !ts.startTime || !ts.endTime) ||
     fields.some(field => field.timeslotIds.length === 0) ||
     timeslots.some(ts => {
-      const start = new Date(`1970-01-01T${ts.startTime}:00`);
-      const end = new Date(`1970-01-01T${ts.endTime}:00`);
-      const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60); // Calculate difference in minutes
+      const normalizeTime = (time: string) => {
+        const [hour, minute] = time.split(":").map(Number);
+        return hour === 0 ? 24 * 60 + minute : hour * 60 + minute; // Treat 12:00 AM as 24:00
+      };
+
+      const start = normalizeTime(ts.startTime);
+      const end = normalizeTime(ts.endTime);
+      const diffInMinutes = end - start; // Calculate difference in minutes
+
       return start >= end || diffInMinutes < 30; // Check if start is not earlier than end or difference is less than 30 minutes
     });
 
   const invalidTimeslotMessage = timeslots.some(ts => {
-    const start = new Date(`1970-01-01T${ts.startTime}:00`);
-    const end = new Date(`1970-01-01T${ts.endTime}:00`);
-    const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+    const normalizeTime = (time: string) => {
+      const [hour, minute] = time.split(":").map(Number);
+      return hour === 0 ? 24 * 60 + minute : hour * 60 + minute; // Treat 12:00 AM as 24:00
+    };
+  
+    const start = normalizeTime(ts.startTime);
+    const end = normalizeTime(ts.endTime);
+    const diffInMinutes = end - start;
+  
     return start >= end || diffInMinutes < 30;
   })
     ? "One or more timeslots have a start time that is not earlier than the end time or have less than a 30-minute duration."
@@ -472,7 +484,13 @@ function GeneralSettings({
       });
   
       // Convert the Map to an array of timeslots
-      const timeslots = Array.from(timeslotMap.values()).map(({ fieldIds, ...rest }) => rest);
+      const timeslots = Array.from(timeslotMap.values())
+        .map(({ fieldIds, ...rest }) => rest)
+        .sort((a, b) => {
+          const [aHour, aMinute] = a.startTime.split(":").map(Number);
+          const [bHour, bMinute] = b.startTime.split(":").map(Number);
+          return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
+        });
   
       // Group timeslots by field
       const fields = Array.from(timeslotMap.values()).reduce((acc: Field[], timeslot) => {
@@ -606,43 +624,43 @@ function GeneralSettings({
         </div> */}
 
         {/* Timeslots Section */}
-        <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-gray-700">
-              Timeslots
-            </label>
-            <button 
-              type="button" 
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-              onClick={addTimeslot}
-            >
-              Add Timeslot
-            </button>
-          </div>
-          {timeslots.map((timeslot) => (
-            <div key={timeslot.id} className="flex items-center space-x-2 mb-2">
-              <input
-                type="time"
-                value={timeslot.startTime}
-                onChange={(e) => updateTimeslot(timeslot.id, 'startTime', e.target.value)}
-                className="border rounded px-2 py-1"
-              />
-              <input
-                type="time"
-                value={timeslot.endTime}
-                onChange={(e) => updateTimeslot(timeslot.id, 'endTime', e.target.value)}
-                className="border rounded px-2 py-1"
-              />
-              <button 
-                type="button" 
-                className="bg-red-500 text-white px-3 py-1 rounded"
-                onClick={() => removeTimeslot(timeslot.id)}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-        </div>
+<div className="mb-4">
+  <div className="flex justify-between items-center mb-2">
+    <label className="block text-gray-700">
+      Timeslots
+    </label>
+    <button 
+      type="button" 
+      className="bg-blue-500 text-white px-3 py-1 rounded"
+      onClick={addTimeslot}
+    >
+      Add Timeslot
+    </button>
+  </div>
+  {timeslots.map((timeslot) => (
+    <div key={timeslot.id} className="flex items-center space-x-2 mb-2">
+      <input
+        type="time"
+        value={timeslot.startTime}
+        onChange={(e) => updateTimeslot(timeslot.id, "startTime", e.target.value)}
+        className="border rounded px-2 py-1"
+      />
+      <input
+        type="time"
+        value={timeslot.endTime}
+        onChange={(e) => updateTimeslot(timeslot.id, "endTime", e.target.value)}
+        className="border rounded px-2 py-1"
+      />
+      <button
+        type="button"
+        className="bg-red-500 text-white px-3 py-1 rounded"
+        onClick={() => removeTimeslot(timeslot.id)}
+      >
+        Remove
+      </button>
+    </div>
+  ))}
+</div>
 
         {/* Fields Section */}
         <div className="mb-4">
@@ -681,17 +699,24 @@ function GeneralSettings({
                   Available Timeslots
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {timeslots.map((timeslot) => (
-                    <label key={timeslot.id} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={field.timeslotIds.includes(timeslot.id)}
-                        onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
-                        className="mr-2"
-                      />
-                      {timeslot.startTime} - {timeslot.endTime}
-                    </label>
-                  ))}
+                  {timeslots
+                    .slice() // Create a shallow copy to avoid mutating the original array
+                    .sort((a, b) => {
+                      const [aHour, aMinute] = a.startTime.split(":").map(Number);
+                      const [bHour, bMinute] = b.startTime.split(":").map(Number);
+                      return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
+                    })
+                    .map((timeslot) => (
+                      <label key={timeslot.id} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={field.timeslotIds.includes(timeslot.id)}
+                          onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
+                          className="mr-2"
+                        />
+                        {timeslot.startTime} - {timeslot.endTime}
+                      </label>
+                    ))}
                 </div>
               </div>
             </div>
