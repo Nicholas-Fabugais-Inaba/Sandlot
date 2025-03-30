@@ -43,7 +43,6 @@ import leaveTeam from "../functions/leaveTeam";
 import getTeamAccountData from "../functions/getTeamAccountData";
 import getSeasonState from "@/app/functions/getSeasonState";
 import OffseasonMessage from "@/app/no-season/OffseasonMessage";
-import PreseasonMessage from "@/app/no-season/PresasonMessage";
 
 interface JoinRequest {
   id: number;

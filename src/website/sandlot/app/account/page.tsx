@@ -310,7 +310,7 @@ export default function AccountPage() {
           </div>
           {seasonState === "offseason" && (
           <p className="text-sm text-red-500 text-center mt-2">
-            League is currently offseason.
+            League is currently in offseason.
           </p>
         )}
         </div>
