@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import select, or_, delete
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import Team, Game, RescheduleRequest
-
+from ..create_engine import engine
 
 def insert_reschedule_request(requester_id, receiver_id, game_id, option1, option2, option3, option4, option5, option1_field, option2_field, option3_field, option4_field, option5_field, option1_timeslot, option2_timeslot, option3_timeslot, option4_timeslot, option5_timeslot):
-    engine = create_connection()
     with Session(engine) as session:
         request = RescheduleRequest(
             requester_id=requester_id,
@@ -37,7 +36,6 @@ def insert_reschedule_request(requester_id, receiver_id, game_id, option1, optio
             return "reschedule request created"
 
 def get_reschedule_requests(team_id):
-    engine = create_connection()
     with Session(engine) as session:
         requester_alias = aliased(Team, name="requesting_team")
         receiver_alias = aliased(Team, name="receiving_team")
@@ -79,7 +77,6 @@ def get_reschedule_requests(team_id):
         return result
     
 def delete_reschedule_request(request_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = delete(RescheduleRequest).where(RescheduleRequest.id == request_id)
         try:
@@ -92,7 +89,6 @@ def delete_reschedule_request(request_id):
         return "reschedule request deleted"
     
 def delete_all_reschedule_requests():
-    engine = create_connection()
     with Session(engine) as session:
         try:
             session.query(RescheduleRequest).delete()

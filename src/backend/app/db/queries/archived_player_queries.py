@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import ArchivedPlayer
-
+from ..create_engine import engine
 
 def insert_archived_player(archived_team_id, first_name, last_name):
-    engine = create_connection()
     with Session(engine) as session:
         player = ArchivedPlayer(
             archived_team_id = archived_team_id,
@@ -22,7 +21,6 @@ def insert_archived_player(archived_team_id, first_name, last_name):
     return True
 
 def get_archived_players_by_team(archived_team_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(

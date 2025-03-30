@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import ArchivedTeam
+from ..create_engine import engine
 
 
 def insert_archived_team(name, division_name, standing, year):
-    engine = create_connection()
     with Session(engine) as session:
         team = ArchivedTeam(
             name = name,
@@ -23,7 +23,6 @@ def insert_archived_team(name, division_name, standing, year):
     return True
 
 def get_all_archived_teams():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = select(
             ArchivedTeam.id,
@@ -36,7 +35,6 @@ def get_all_archived_teams():
         return result
     
 def get_archived_team(name, year):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(

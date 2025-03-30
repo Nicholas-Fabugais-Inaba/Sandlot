@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import Player, Game
-
+from ..create_engine import engine
 
 # TODO: change to work with TeamPlayer
 def insert_mock_player(first_name, last_name, email, password, phone_number, gender, team_id):
-    engine = create_connection()
     with Session(engine) as session:
         account = Player(
             first_name=first_name,
@@ -26,7 +25,6 @@ def insert_mock_player(first_name, last_name, email, password, phone_number, gen
     return True
 
 def insert_mock_game(home_team, away_team, date, time, field, home_team_score, away_team_score, played):
-    engine = create_connection()
     with Session(engine) as session:
         game = Game(
             home_team_id=home_team,
