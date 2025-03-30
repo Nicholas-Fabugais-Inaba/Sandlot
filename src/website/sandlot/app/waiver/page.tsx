@@ -142,7 +142,6 @@ export default function WaiverManagementPage() {
       if (!isLoading) {
         try {
           await updateWaiverEnabled({ waiver_enabled: waiverConfig });
-          console.log("Waiver Enabled: ", waiverConfig)
         } catch (error) {
           console.error("Failed to update waiver status", error);
         }
