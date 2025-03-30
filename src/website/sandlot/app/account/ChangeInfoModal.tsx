@@ -5,16 +5,14 @@ import styles from "./ChangeInfoModal.module.css";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    firstName: string,
-    lastName?: string,
-    confirmValue?: string
-  ) => void;
+  onSubmit: (firstName: string, lastName?: string, confirmValue?: string) => void;
   title: string;
   initialValue: string;
   isPassword?: boolean;
   isNameChange?: boolean;
-  isEmailChange?: boolean; // New prop for email change
+  isEmailChange?: boolean;
+  firstName?: string; // Add firstName prop
+  lastName?: string;  // Add lastName prop
 }
 
 const ChangeInfoModal: React.FC<ModalProps> = ({
@@ -25,12 +23,14 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
   initialValue,
   isPassword = false,
   isNameChange = false,
-  isEmailChange = false, // New prop
+  isEmailChange = false,
+  firstName = "", // Default to empty string
+  lastName = "", // Default to empty string
 }) => {
   const [value, setValue] = useState(initialValue);
   const [confirmValue, setConfirmValue] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [currentFirstName, setCurrentFirstName] = useState(firstName); // Use firstName prop
+  const [currentLastName, setCurrentLastName] = useState(lastName);   // Use lastName prop
   const [email, setEmail] = useState(""); // New state for email
   const [confirmEmail, setConfirmEmail] = useState(""); // New state for confirming email
 
@@ -49,9 +49,8 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
       setValue(initialValue);
       setConfirmValue("");
     } else if (isNameChange) {
-      const [first, last] = initialValue.split(" ");
-      setFirstName(first || "");
-      setLastName(last || "");
+      setCurrentFirstName(firstName);
+      setCurrentLastName(lastName);
     }
   
     // Clear errors when switching modes
@@ -97,7 +96,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
   
     setErrors({});
     if (isNameChange) {
-      onSubmit(firstName, lastName);
+      onSubmit(currentFirstName, currentLastName);
     } else if (isEmailChange) {
       onSubmit(email, confirmEmail);
     } else {
@@ -109,11 +108,6 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
     setErrors({}); // Clear errors
     onClose(); // Call the provided onClose function
   };
-  
-  // Update the Cancel button to use handleClose
-  <Button className="button" onPress={handleClose}>
-    Cancel
-  </Button>
 
   if (!isOpen) return null;
 
@@ -134,7 +128,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
               type="text"
               value={firstName}
               onChange={(e) => {
-                setFirstName(e.target.value);
+                setCurrentFirstName(e.target.value);
                 const newErrors = { ...errors };
                 delete newErrors.general;
                 setErrors(newErrors);
@@ -146,7 +140,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
               type="text"
               value={lastName}
               onChange={(e) => {
-                setLastName(e.target.value);
+                setCurrentLastName(e.target.value);
                 const newErrors = { ...errors };
                 delete newErrors.general;
                 setErrors(newErrors);

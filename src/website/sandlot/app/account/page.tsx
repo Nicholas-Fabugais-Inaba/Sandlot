@@ -89,11 +89,8 @@ export default function AccountPage() {
 
   const handleChangeName = () => {
     setModalTitle("Change Name");
-    setModalInitialValue(
-      `${accountInfo.firstName || ""} ${accountInfo.lastName || ""}`,
-    );
+    setModalInitialValue(""); // Clear initial value
     setModalSubmitHandler(() => (firstName: string, lastName?: string) => {
-      // Implement the logic to change the name
       alert(`Name changed to: ${firstName} ${lastName}`);
       if (session) {
         updatePlayerName({
@@ -114,7 +111,7 @@ export default function AccountPage() {
     });
     setIsPasswordModal(false);
     setIsNameChange(true);
-    setIsEmailChange(false)
+    setIsEmailChange(false);
     setIsModalOpen(true);
   };
 
@@ -374,6 +371,8 @@ export default function AccountPage() {
         title={modalTitle}
         onClose={() => setIsModalOpen(false)}
         onSubmit={modalSubmitHandler}
+        firstName={accountInfo.firstName} // Pass firstName
+        lastName={accountInfo.lastName}  // Pass lastName
 />
     </div>
   );
