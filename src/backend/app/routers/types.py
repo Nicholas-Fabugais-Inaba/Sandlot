@@ -57,6 +57,9 @@ class RRAccept(BaseModel):
     time: str
     field: str
 
+class RRDeny(BaseModel):
+    rr_id: int
+
 class SchedParams(BaseModel):
     num_games: int
 
