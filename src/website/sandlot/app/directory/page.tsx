@@ -91,7 +91,7 @@ export default function TeamsDirectoryPage() {
       if (!session || (session?.user.role !== "commissioner" && session?.user.role !== "team")) {
         router.push("/");
         return;
-      } else if (response === "offseason") {
+      } else if (response !== "offseason") {
         const teams = await getDirectoryTeams();
         setTeams(teams);
 
@@ -121,8 +121,8 @@ export default function TeamsDirectoryPage() {
         // }, {} as Record<string, Player[]>);
 
         setPlayersByTeam(playersByTeamData);
-        setIsLoading(false); // Set loading to false after all data is fetched
       }
+      setIsLoading(false); // Set loading to false after all data is fetched
     };
 
     fetchSessionAndData();
