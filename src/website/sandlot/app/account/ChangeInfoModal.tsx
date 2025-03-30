@@ -29,8 +29,8 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
 }) => {
   const [value, setValue] = useState(initialValue);
   const [confirmValue, setConfirmValue] = useState("");
-  const [currentFirstName, setCurrentFirstName] = useState(); // Use firstName prop
-  const [currentLastName, setCurrentLastName] = useState();   // Use lastName prop
+  const [currentFirstName, setCurrentFirstName] = useState<string>(""); // Use firstName prop
+  const [currentLastName, setCurrentLastName] = useState<string>("");   // Use lastName prop
   const [email, setEmail] = useState(""); // New state for email
   const [confirmEmail, setConfirmEmail] = useState(""); // New state for confirming email
 
