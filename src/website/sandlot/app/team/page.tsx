@@ -90,54 +90,62 @@ export default function TeamPage() {
       try {
         const session = await getSession();
         setSession(session);
+        
+        if (!session || (session?.user.role !== "team" && session?.user.role !== "player")) {
+          router.push("/");
+          return;
+        } else {
   
-        let teamId = 0;
-        let teamName = "team_name";
-  
-        // Check the role and fetch the appropriate data
-        if (session && session.user.role === "player") {
-          try {
-            const teamData = await getPlayerActiveTeam(session?.user.id);
-            teamId = teamData.team_id;
-            teamName = teamData.team_name;
-          } catch (error) {
-            console.error("Error fetching player active team:", error);
-            // If error occurs, set team name to "No team assigned"
-            teamName = "No team assigned";
+          let teamId = 0;
+          let teamName = "team_name";
+    
+          // Check the role and fetch the appropriate data
+          if (session && session.user.role === "player") {
+            try {
+              const teamData = await getPlayerActiveTeam(session?.user.id);
+              teamId = teamData.team_id;
+              teamName = teamData.team_name;
+            } catch (error) {
+              console.error("Error fetching player active team:", error);
+              // If error occurs, set team name to "No team assigned"
+              teamName = "No team assigned";
+            }
+          } else if (session && session.user.role === "team") {
+            const accountData = await getTeamAccountData(session.user.id);
+            teamId = session.user.id;
+            teamName = accountData.teamName;
           }
-        } else if (session && session.user.role === "team") {
-          const accountData = await getTeamAccountData(session.user.id);
-          teamId = session.user.id;
-          teamName = accountData.teamName;
-        }
-  
-        // Set teamId and teamName
-        setTeamId(teamId);
-        setTeamName(teamName);
-  
-        // Fetch team info
-        try {
-          let teamInfo = await getTeamInfo({ team_id: teamId });
-          setRoster(teamInfo);
-        } catch (error) {
-          console.error("Error fetching team info:", error);
-          setRoster([]); // Gracefully handle the error and set an empty roster
-        }
-  
-        // Fetch join requests
-        try {
-          let requests = await getJR({ team_id: teamId });
-          setJoinRequests(requests);
-        } catch (error) {
-          console.error("Error fetching join requests:", error);
-          setJoinRequests([]); // Gracefully handle the error and set empty join requests
-        }
-  
-        setLoading(false);
+    
+          // Set teamId and teamName
+          setTeamId(teamId);
+          setTeamName(teamName);
+    
+          // Fetch team info
+          try {
+            let teamInfo = await getTeamInfo({ team_id: teamId });
+            setRoster(teamInfo);
+          } catch (error) {
+            console.error("Error fetching team info:", error);
+            setRoster([]); // Gracefully handle the error and set an empty roster
+          }
+    
+          // Fetch join requests
+          try {
+            let requests = await getJR({ team_id: teamId });
+            setJoinRequests(requests);
+          } catch (error) {
+            console.error("Error fetching join requests:", error);
+            setJoinRequests([]); // Gracefully handle the error and set empty join requests
+          }
+    
+          setLoading(false);
+      }
+      
       } catch (error) {
         console.error("Error during session initialization:", error);
         setLoading(false); // Ensure loading is stopped in case of any error
       }
+      
     };
   
     initializeStates();
@@ -145,12 +153,23 @@ export default function TeamPage() {
 
   const changeCaptainStatus = async (playerId: number, promotion: boolean) => {
     setActionLoading(true);
-    console.log(roster)
+
+    let rosterCopy = [...roster]
+    for(let i = 0; i < rosterCopy.length; i++) {
+      if(rosterCopy[i].player_id == playerId) {
+        rosterCopy[i].captain = promotion
+      }
+    }
+    setRoster(rosterCopy)
+
     await updateCaptainStatus({ team_id: teamId, player_id: playerId, captain: promotion });
+
     setActionLoading(false);
     // Update the team info and roster
-    const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
-    setRoster(updatedTeamInfo);
+    setTimeout(async() => {
+      const updatedTeamInfo = await getTeamInfo({ team_id: teamId });
+      setRoster(updatedTeamInfo);
+    }, 1000)
   };
 
   // TODO: update client session with these changes and test cases
@@ -168,6 +187,7 @@ export default function TeamPage() {
     else {
       await leaveTeam({team_id: teamId, player_id: playerId, new_active_team_required: false, new_active_team: null})
     }
+    window.location.reload();
     router.push('/join-a-team')
   }
 
@@ -246,10 +266,10 @@ export default function TeamPage() {
 
           {/* Right Section: Team Info (Captain's Info and Leave Team) */}
           <div className="w-2/5">
-            <h2 className="text-xl font-bold mb-2">
+            {/* <h2 className="text-xl font-bold mb-2">
               {teamName} Info
             </h2>
-            <div className="flex flex-col items-center space-y-4"> {/* Added flex column with spacing */}
+            <div className="flex flex-col items-center space-y-4">
               <Button
                 className="button min-w-[160px]" // Made full width for consistency
                 onPress={() =>
@@ -260,7 +280,7 @@ export default function TeamPage() {
               >
                 Captain's Info
               </Button>
-            </div>
+            </div> */}
             <h2 className="text-xl font-bold mt-4 mb-2">
               Player Actions
             </h2>

@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, update
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import Player, Team, Division
-
+from ..create_engine import engine
 
 def insert_team(team_name, username, password, division, preferred_division, preferred_offday, preferred_time):
-    engine = create_connection()
     with Session(engine) as session:
         account = Team(
             team_name=team_name,
@@ -26,7 +25,6 @@ def insert_team(team_name, username, password, division, preferred_division, pre
             return "team created"
         
 def get_all_teams():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = select(
             Team.id, 
@@ -42,7 +40,6 @@ def get_all_teams():
 
 # Gets all teams that are currently assigned to a valid division
 def get_all_season_teams():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(Team.id, Team.team_name, Team.division, Division.division_name, Team.offday, Team.preferred_time)
@@ -54,7 +51,6 @@ def get_all_season_teams():
         return result
 
 def get_team(login_username):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = select(
             Team.id, 
@@ -72,7 +68,6 @@ def get_team(login_username):
         return result
 
 def get_team_account_data(team_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = select(
             Team.id,
@@ -90,7 +85,6 @@ def get_team_account_data(team_id):
 # TODO: naming of this query was overhauled, make sure to update any imports of get_team_info_by_current_user
 # TODO: change to work with TeamPlayers
 def get_team_players(team_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -110,7 +104,6 @@ def get_team_players(team_id):
         return result
     
 def update_division(team_id, division):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Team).where(Team.id == team_id).values(division=division)
         try:
@@ -123,7 +116,6 @@ def update_division(team_id, division):
     return True
         
 def delete_team(team_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = delete(Team).where(Team.id == team_id)
         try:
@@ -136,7 +128,6 @@ def delete_team(team_id):
         return "team deleted"
 
 def update_team_name(team_id, new_name):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Team).where(Team.id == team_id).values(team_name=new_name)
         try:
@@ -149,7 +140,6 @@ def update_team_name(team_id, new_name):
         return "team name updated"
 
 def update_team_username(team_id, new_username):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Team).where(Team.id == team_id).values(username=new_username)
         try:
@@ -162,7 +152,6 @@ def update_team_username(team_id, new_username):
         return "team username updated"
 
 def update_team_password(team_id, new_password):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Team).where(Team.id == team_id).values(password=new_password)
         try:
@@ -176,7 +165,6 @@ def update_team_password(team_id, new_password):
 
 # TODO: naming of this query might need to be changed
 def get_teams_season_setup():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(Team.id, Team.team_name, Team.division, Team.preferred_division, Division.division_name)
@@ -187,7 +175,6 @@ def get_teams_season_setup():
         return result
 
 def deactivate_all_teams():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Team).values(active=False)
         try:
@@ -200,7 +187,6 @@ def deactivate_all_teams():
         return "all teams deactivated"
 
 def activate_all_teams(): # FOR DEVLOPMENT PURPOSES ONLY TODO REMOVE THIS
-    engine = create_connection()
     with Session(engine) as session:
         stmt = update(Team).values(active=True)
         try:

@@ -30,10 +30,15 @@ const AvailableTeams: React.FC = () => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [pendingRequests, setPendingRequests] = useState<JoinRequest[]>([]);
   const [acceptedRequests, setAcceptedRequests] = useState<JoinRequest[]>([]);
-  const [deniedRequests, setDeniedRequests] = useState<JoinRequest[]>([]); // Track denied requests
+  const [deniedRequests, setDeniedRequests] = useState<JoinRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [userTeamId, setUserTeamId] = useState<number | null>(null);
+  
+  const [sortDescriptor, setSortDescriptor] = useState<{
+    column: keyof Team;
+    direction: "ascending" | "descending";
+  } | null>(null);
 
   useEffect(() => {
     const fetchTeamsAndRequests = async () => {
@@ -60,7 +65,29 @@ const AvailableTeams: React.FC = () => {
     fetchTeamsAndRequests();
   }, []);
 
-  const handleRequestJoin = async (team_id: number) => {
+  const handleSort = (sortDescriptor: { column: keyof Team; direction: "ascending" | "descending" }) => {
+    setSortDescriptor(sortDescriptor);
+  };  
+
+  const sortedTeams = [...teams].sort((a, b) => {
+    if (!sortDescriptor) return 0;
+  
+    const { column, direction } = sortDescriptor;
+    const first = a[column];
+    const second = b[column];
+  
+    if (typeof first === "string" && typeof second === "string") {
+      return direction === "ascending"
+        ? first.localeCompare(second)
+        : second.localeCompare(first);
+    } else if (typeof first === "number" && typeof second === "number") {
+      return direction === "ascending" ? first - second : second - first;
+    }
+  
+    return 0;
+  });  
+
+  const handleRequestJoin = async (team_id: number, name: string) => {
     // Check if the total number of accepted or pending requests is 3
     if (pendingRequests.length + acceptedRequests.length >= 3) {
       return; // Stop execution if the limit is reached
@@ -74,16 +101,25 @@ const AvailableTeams: React.FC = () => {
         team_id: team_id
       });
 
-      // After the request is created, fetch the updated pending requests
-      const requests = await getPendingRequests(session.user.email);
-      const accepted = requests.filter((req: JoinRequest) => req.accepted === true);
-      const pending = requests.filter((req: JoinRequest) => req.accepted === null);
-      const denied = requests.filter((req: JoinRequest) => req.accepted === false);
+      let dummyJR = {
+        id: 0,
+        team_name: name,
+        accepted: null
+      }
+      setPendingRequests([...pendingRequests, dummyJR])
 
-      setAcceptedRequests(accepted); // Update accepted requests state
-      setPendingRequests(pending); // Update pending requests state
-      setDeniedRequests(denied); // Update denied requests state
-      setActionLoading(false);
+      // After the request is created, fetch the updated pending requests
+      setTimeout(async() => {
+        const requests = await getPendingRequests(session.user.email);
+        const accepted = requests.filter((req: JoinRequest) => req.accepted === true);
+        const pending = requests.filter((req: JoinRequest) => req.accepted === null);
+        const denied = requests.filter((req: JoinRequest) => req.accepted === false);
+
+        setAcceptedRequests(accepted); // Update accepted requests state
+        setPendingRequests(pending); // Update pending requests state
+        setDeniedRequests(denied); // Update denied requests state
+        setActionLoading(false);
+      }, 1000)
     }
   };
 
@@ -93,18 +129,25 @@ const AvailableTeams: React.FC = () => {
         <h2 className="text-xl font-semibold text-center mb-4 mt-4">
           Request to join a team from the list below:
         </h2>
-        {teams.length > 0 && userTeamId !== null ? (
+        {sortedTeams.length > 0 && userTeamId !== null ? (
           <div className="max-h-[calc(100vh-200px)] overflow-y-auto p-2">
-            <Table aria-label="Available Teams" classNames={{ table: "min-w-full" }}>
+            <Table
+              aria-label="Available Teams"
+              sortDescriptor={sortDescriptor || undefined}
+              onSortChange={(sort) => handleSort(sort as { column: keyof Team; direction: "ascending" | "descending" })}
+            >
               <TableHeader>
-                {["Team Name", "Division", "Action"].map((key) => (
-                  <TableColumn key={key} allowsSorting>
-                    {key.charAt(0).toUpperCase() + key.slice(1)}
-                  </TableColumn>
-                ))}
+                <>
+                  {["name", "division"].map((key) => (
+                    <TableColumn key={key} allowsSorting>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </TableColumn>
+                  ))}
+                  <TableColumn>Action</TableColumn>
+                </>
               </TableHeader>
               <TableBody>
-                {teams
+                {sortedTeams
                   .filter((team) => team.id !== userTeamId)
                   .map((team) => (
                     <TableRow key={team.id}>
@@ -114,7 +157,7 @@ const AvailableTeams: React.FC = () => {
                         <Button
                           className="w-36 h-12 text-sm rounded-full bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                           disabled={actionLoading || pendingRequests.length + acceptedRequests.length >= 3}
-                          onPress={() => handleRequestJoin(team.id)}
+                          onPress={() => handleRequestJoin(team.id, team.name)}
                         >
                           {pendingRequests.length + acceptedRequests.length >= 3 ? "Limit Reached" : "Request to Join"}
                         </Button>
@@ -132,7 +175,6 @@ const AvailableTeams: React.FC = () => {
           <p>No available teams at the moment.</p>
         )}
       </div>
-
       <div className="w-2/5">
         <h2 className="text-xl font-semibold text-center mb-4 mt-4">
           Pending Requests

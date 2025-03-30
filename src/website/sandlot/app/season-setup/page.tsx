@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Spinner } from "@heroui/react";
+import { useRouter } from "next/navigation"; 
+import { getSession } from "next-auth/react";
+import { Session } from "next-auth";
 
 import getSeasonSettings from "../functions/getSeasonSettings";
 import updateSeasonSettings from "../functions/updateSeasonSettings";
@@ -32,6 +35,9 @@ interface Field {
 }
 
 export default function SeasonSetupPage() {
+  const [session, setSession] = useState<Session | null>(null);
+  const router = useRouter();
+
   const [activeSection, setActiveSection] = useState("general");
   const [seasonState, setSeasonState] = useState("preseason");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
@@ -50,10 +56,18 @@ export default function SeasonSetupPage() {
 
   useEffect(() => {
     const fetchSeasonState = async () => {
-      const state = await getSeasonState();
-      console.log("Season State is", state)
-      setSeasonState(state);
-      setLoading(false);
+      const session = await getSession();
+      setSession(session);
+
+      if (!session || session?.user.role !== "commissioner") {
+        router.push("/");
+        return;
+      } else {
+        const state = await getSeasonState();
+        console.log("Season State is", state)
+        setSeasonState(state);
+        setLoading(false);
+      }
     };
 
     fetchSeasonState();
@@ -213,12 +227,16 @@ function GeneralSettings({
     });
   };
 
-  // Add Timeslot Function
   const addTimeslot = () => {
+    if (timeslots.length >= 30) {
+      alert("You can only create up to 30 timeslots.");
+      return;
+    }
+
     const newTimeslot: Timeslot = {
       id: timeslots.length + 1, // Generate ID within the range 1 to len(timeslots)
-      startTime: '',
-      endTime: ''
+      startTime: '17:00', // Default to 5:00 PM
+      endTime: '18:00' // Default to 6:00 PM
     };
     setTimeslots(prev => [...prev, newTimeslot]);
     setUnsavedChanges(true);
@@ -226,9 +244,22 @@ function GeneralSettings({
 
   // Update Timeslot Function
   const updateTimeslot = (id: number, field: 'startTime' | 'endTime', value: string) => {
-    setTimeslots(prev => 
-      prev.map(timeslot => 
-        timeslot.id === id 
+    const [hour, minute] = value.split(":").map(Number);
+  
+    // Validate start and end times
+    if (field === "startTime" && (hour < 5 || hour > 23 || (hour === 23 && minute > 0))) {
+      alert("Start time must be between 5:00 AM and 11:59 PM.");
+      return;
+    }
+    if (field === "endTime" && (hour < 5 && hour !== 0 || hour > 23 || (hour === 0 && minute !== 0))) {
+      alert("End time must be between 5:00 AM and 12:00 AM.");
+      return;
+    }
+  
+    // Update the timeslot in the state
+    setTimeslots(prev =>
+      prev.map(timeslot =>
+        timeslot.id === id
           ? { ...timeslot, [field]: value }
           : timeslot
       )
@@ -261,6 +292,11 @@ function GeneralSettings({
 
   // Add Field Function
   const addField = () => {
+    if (fields.length >= 3) {
+      alert("You can only create up to 3 fields.");
+      return;
+    }
+
     const newField: Field = {
       id: fields.length + 1, // Generate ID within the range 1 to len(fields)
       name: `Field ${fields.length + 1}`,
@@ -287,14 +323,45 @@ function GeneralSettings({
     setFields(prev =>
       prev.map(field => {
         if (field.id === fieldId) {
-          const updatedTimeslotIds = field.timeslotIds.includes(timeslotId)
-            ? field.timeslotIds.filter(id => id !== timeslotId)
-            : [...field.timeslotIds, timeslotId];
+          const selectedTimeslot = timeslots.find(ts => ts.id === timeslotId);
+          if (!selectedTimeslot) return field;
+  
+          const isToggled = field.timeslotIds.includes(timeslotId);
+  
+          // If toggling off, allow it without checking for overlaps
+          if (isToggled) {
+            const updatedTimeslotIds = field.timeslotIds.filter(id => id !== timeslotId);
+            return { ...field, timeslotIds: updatedTimeslotIds };
+          }
+  
+          // Check for overlapping timeslots if toggling on
+          const hasOverlap = field.timeslotIds.some(id => {
+            const existingTimeslot = timeslots.find(ts => ts.id === id);
+            if (!existingTimeslot) return false;
+  
+            const selectedStart = new Date(`1970-01-01T${selectedTimeslot.startTime}:00`);
+            const selectedEnd = new Date(`1970-01-01T${selectedTimeslot.endTime}:00`);
+            const existingStart = new Date(`1970-01-01T${existingTimeslot.startTime}:00`);
+            const existingEnd = new Date(`1970-01-01T${existingTimeslot.endTime}:00`);
+  
+            return (
+              selectedStart < existingEnd && selectedEnd > existingStart // Overlap condition
+            );
+          });
+  
+          if (hasOverlap) {
+            // alert("This timeslot overlaps with an existing timeslot for this field.");
+            return field; // Do not toggle the timeslot
+          }
+  
+          // Toggle the timeslot if no overlap
+          const updatedTimeslotIds = [...field.timeslotIds, timeslotId];
           return { ...field, timeslotIds: updatedTimeslotIds };
         }
         return field;
       })
     );
+  
     setUnsavedChanges(true);
   };
 
@@ -358,13 +425,28 @@ function GeneralSettings({
 
   // Check if save can be done
   const isSaveDisabled = 
-    !startDate || 
-    !endDate || 
-    gamesPerTeam <= 0 || 
-    fields.length === 0 || 
+    !startDate ||
+    !endDate ||
+    gamesPerTeam <= 0 ||
+    fields.length === 0 ||
     timeslots.length === 0 ||
     timeslots.some(ts => !ts.startTime || !ts.endTime) ||
-    fields.some(field => field.timeslotIds.length === 0);
+    fields.some(field => field.timeslotIds.length === 0) ||
+    timeslots.some(ts => {
+      const start = new Date(`1970-01-01T${ts.startTime}:00`);
+      const end = new Date(`1970-01-01T${ts.endTime}:00`);
+      const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60); // Calculate difference in minutes
+      return start >= end || diffInMinutes < 30; // Check if start is not earlier than end or difference is less than 30 minutes
+    });
+
+  const invalidTimeslotMessage = timeslots.some(ts => {
+    const start = new Date(`1970-01-01T${ts.startTime}:00`);
+    const end = new Date(`1970-01-01T${ts.endTime}:00`);
+    const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+    return start >= end || diffInMinutes < 30;
+  })
+    ? "One or more timeslots have a start time that is not earlier than the end time or have less than a 30-minute duration."
+    : "";
 
   useEffect(() => {
     const loadFormData = async () => {
@@ -503,7 +585,7 @@ function GeneralSettings({
         </div>
 
         {/* Game Days */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-gray-700">Game Days</label>
           <div className="grid grid-cols-4 gap-2">
             {[
@@ -521,7 +603,7 @@ function GeneralSettings({
               </label>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Timeslots Section */}
         <div className="mb-4">
@@ -628,9 +710,9 @@ function GeneralSettings({
           </button>
           {isSaveDisabled && (
             <div className="ml-4 text-red-500" style={{ width: "60%" }}>
-              Must input valid start/end dates, games per team, at least one field and 
-              timeslot, and ensure all timeslots have start/end times and fields have 
-              assigned timeslots.
+              {invalidTimeslotMessage || (
+                "Must input valid start/end dates, games per team, at least one field and timeslot, and ensure all timeslots have start/end times and fields have assigned timeslots."
+              )}
             </div>
           )}
         </div>

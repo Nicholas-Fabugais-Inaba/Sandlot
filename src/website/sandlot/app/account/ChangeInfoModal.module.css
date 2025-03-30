@@ -1,0 +1,32 @@
+.errorMessage {
+  color: red;
+  font-size: 0.9rem;
+  background-color: white; /* Add a white background */
+  border: 1px solid red; /* Add a red border */
+  border-radius: 8px; /* Make the box rounded */
+  padding: 8px 12px; /* Add padding inside the box */
+  visibility: visible;
+  width: auto; /* Adjust width to fit content */
+  max-width: 90%; /* Prevent the box from being too wide */
+  text-align: center;
+  position: relative; /* Adjust position */
+  margin-bottom: 8px; /* Add spacing between error messages */
+  z-index: 1;
+}
+
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px; /* Add spacing between error messages */
+}
+  
+  .errorMessage:not(:last-child) {
+    top: 40px;
+  }
+  
+  .errorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }

@@ -1,11 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, delete, update
-from ..create_engine import create_connection
+#from ..create_engine import create_connection
 from ..models import Waiver, Player, WaiverFormat
-
+from ..create_engine import engine
 
 def insert_waiver(player_id, signature, initials, year):
-    engine = create_connection()
     with Session(engine) as session:
         waiver = Waiver(
             player_id = player_id,
@@ -23,7 +22,6 @@ def insert_waiver(player_id, signature, initials, year):
     return True
 
 def insert_waiver_format(year, index, text):
-    engine = create_connection()
     with Session(engine) as session:
         waiver_format = WaiverFormat(
             year = year,
@@ -40,7 +38,6 @@ def insert_waiver_format(year, index, text):
     return True
 
 def get_player_waivers(player_id):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -56,7 +53,6 @@ def get_player_waivers(player_id):
         return result
     
 def get_all_waivers():
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -75,7 +71,6 @@ def get_all_waivers():
         return result
     
 def get_waiver_format_by_year(year):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             select(
@@ -91,7 +86,6 @@ def get_waiver_format_by_year(year):
         return result
     
 def delete_waiver_formats_by_year(year):
-    engine = create_connection()
     with Session(engine) as session:
         stmt = (
             delete(WaiverFormat)

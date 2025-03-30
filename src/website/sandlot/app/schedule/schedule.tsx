@@ -29,6 +29,7 @@ import { useSchedule } from "./ScheduleContext";
 
 import { title } from "@/components/primitives";
 import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
+import getSolsticeSettings from "../functions/getSolsticeSettings";
 import getAllTimeslots from "../functions/getAllTimeslots";
 
 const currDate = new Date();
@@ -106,6 +107,18 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
   const [maxSelectedDates, setMaxSelectedDates] = useState(5); // Maximum number of dates that can be selected when rescheduling games
   const [timeslots, setTimeslots] = useState([]);
   const [fields, setFields] = useState<Record<number, string>>({});
+  const [earliestStart, setEarliestStart] = useState<string>("17:00:00");
+  const [latestEnd, setLatestEnd] = useState<string>("23:00:00");
+  const solsticeTimeslots = [
+    { id: 1, start: "21-0", end: "22-30", field_id: 1, field_name: "Field 1" },
+    { id: 2, start: "22-30", end: "24-0", field_id: 1, field_name: "Field 1" },
+    { id: 3, start: "21-0", end: "22-30", field_id: 2, field_name: "Field 2" },
+    { id: 4, start: "22-30", end: "24-0", field_id: 2, field_name: "Field 2" },
+    { id: 5, start: "21-0", end: "22-30", field_id: 3, field_name: "Field 3" },
+    { id: 6, start: "22-30", end: "24-0", field_id: 3, field_name: "Field 3" },
+    { id: 7, start: "24-0", end: "25-30", field_id: 3, field_name: "Field 3" },
+    { id: 8, start: "25-30", end: "27-0", field_id: 3, field_name: "Field 3" },
+  ];
 
   // Fetch session data to get user role and team (if player or team account)
   useEffect(() => {
@@ -113,13 +126,23 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       setLoading(true); // Set loading to true at the start of fetching
       try {
         const session = await getSession();
-        const timeslots = await getAllTimeslots();
-        if (timeslots) {
-          setTimeslots(timeslots);
+        const solsticeSettings = await getSolsticeSettings();
+        const timeslotsResponse = solsticeSettings.active ? solsticeTimeslots : await getAllTimeslots();
+        if (timeslotsResponse) {
+          setTimeslots(timeslotsResponse);
+  
+          // Calculate earliest start and latest end
+          const earliest = Math.min(...timeslotsResponse.map((ts: any) => parseInt(ts.start.split("-")[0])));
+          const latest = Math.max(...timeslotsResponse.map((ts: any) => {
+            const [hour, minute] = ts.end.split("-").map(Number); // Extract hour and minute
+            return minute > 0 ? hour + 1 : hour; // Round up if there are minutes
+          }));
+  
+          setEarliestStart(`${earliest-4}:00:00`);
+          setLatestEnd(`${latest-4}:00:00`);
         }
-
         // Create a dictionary of field_id to field_name
-        const fieldsDict = timeslots.reduce((acc: Record<number, string>, ts: any) => {
+        const fieldsDict = timeslotsResponse.reduce((acc: Record<number, string>, ts: any) => {
           if (!acc[ts.field_id]) {
             acc[ts.field_id] = ts.field_name;
           }
@@ -144,6 +167,17 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               const teamData = await getPlayerActiveTeam(session?.user.id)
               teamId = teamData.team_id
               teamName = teamData.team_name
+
+              if (!teamId) {
+                setSchedType(0);
+                setView("timeGridWeek");
+                if (calendarRef.current) {
+                  calendarRef.current.getApi().changeView("timeGridWeek");
+                }
+                const formattedEvents = await getSchedule(timeslots);
+                setEvents(formattedEvents);
+                return;
+              }
             } else if (session.user.role === "team") {
               teamId = session.user.id
               teamName = session.user.teamName
@@ -152,7 +186,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
             setTeamName(teamName)
   
             // Fetch team schedule
-            const formattedEvents = await getTeamSchedule(teamId, timeslots);
+            const formattedEvents = await getTeamSchedule(teamId, timeslotsResponse);
             setEvents(formattedEvents);
           } else if (
             session.user?.role === "commissioner" ||
@@ -162,12 +196,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
             setMaxSelectedDates(1);
   
             // Fetch full schedule
-            const formattedEvents = await getSchedule(timeslots);
+            const formattedEvents = await getSchedule(timeslotsResponse);
             setEvents(formattedEvents);
           }
         } else {
           // Fetch default schedule if no session
-          const formattedEvents = await getSchedule(timeslots);
+          const formattedEvents = await getSchedule(timeslotsResponse);
           setEvents(formattedEvents);
         }
       } catch (error) {
@@ -584,7 +618,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         null
       ) : (
         <div className="pageHeader">
-          <h1 className={title()}>Schedule</h1>
+          <h1 className={title()}>
+            {teamName && teamName !== "" && teamName !== "team_name" ? `${teamName} Schedule` : "Schedule"}
+          </h1>
         </div>
       )}
       {schedType === 3 ? (
@@ -594,7 +630,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       ) : (userRole === "team") && !viewer ? (
         <p className="text-2xl text-center mt-2">
           <em>
-            Click on one of your team's games to reschedule the game or submit a
+            Click on your team's games to reschedule the game or submit a
             score
           </em>
         </p>
@@ -892,8 +928,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               interactionPlugin,
             ]}
             slotDuration="00:30:00" // Duration of each slot (30 minutes)
-            slotMaxTime="23:00:00" // End at 11 PM
-            slotMinTime="17:00:00" // Start at 5 PM
+            slotMaxTime={latestEnd} // End at 11 PM
+            slotMinTime={earliestStart} // Start at 5 PM
             weekends={false}
           />
           {schedType === 3 &&

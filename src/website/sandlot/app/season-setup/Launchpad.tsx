@@ -31,7 +31,7 @@ export default function Launchpad({ seasonState }: LaunchProps) {
         await preseasonToSeason()
         break;
       case "endSeason":
-        await endSeason({archiveTeams:false})
+        await endSeason({archive_teams: false})
         break;
       case "returnPreseason":
         alert(`Returned to Preseason!`);
@@ -85,12 +85,12 @@ export default function Launchpad({ seasonState }: LaunchProps) {
           >
             End Season
           </Button>
-          <Button
+          {/* <Button
             className="bg-yellow-500 text-white px-6 py-3 rounded-lg"
             onPress={() => handleLaunchClick("returnPreseason")}
           >
             Return to Preseason
-          </Button>
+          </Button> */}
         </div>
       )}
       {seasonState !== "season" && (
