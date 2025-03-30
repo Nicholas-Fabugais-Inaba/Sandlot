@@ -258,7 +258,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
           selectedDate.date.getTime() === start.getTime() &&
           selectedDate.field === field,
       );
-  
+
       if (isDuplicate) {
         const newSelectedDates = selectedDates.filter(
           (selectedDate) =>
@@ -267,7 +267,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               selectedDate.field === field
             ),
         );
-  
+
         setSelectedDates(newSelectedDates);
       } else {
         let newSelectedDates = [...selectedDates, { date: start, timeslot, field }];
@@ -275,7 +275,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         if (newSelectedDates.length > maxSelectedDates) {
           newSelectedDates = newSelectedDates.slice(1); // Remove the first selected date
         }
-  
+
         setSelectedDates(newSelectedDates);
       }
     }
