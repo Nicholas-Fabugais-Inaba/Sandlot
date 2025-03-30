@@ -179,9 +179,10 @@ const Division: React.FC<DivisionProps> = ({
 
 interface DivisionsSettingsProps {
   setUnsavedChanges: (hasChanges: boolean) => void;
+  seasonState: string;
 }
 
-export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettingsProps) {
+export default function DivisionsSettings({ setUnsavedChanges, seasonState }: DivisionsSettingsProps) {
   const [isDivisionsEnabled, setIsDivisionsEnabled] = useState<boolean>(true);
   const [divisions, setDivisions] = useState<Division[]>([
     { id: 0, name: "Team Bank", teams: [] },
@@ -287,79 +288,84 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
           Enable Divisions
         </label>
       </div> */}
+      {seasonState === "season" ? (
+        <p className="mt-4 text-gray-700 text-lg">
+          Division settings cannot be modified when the season is active.
+        </p>
+      ) : (
+        isDivisionsEnabled && (
+          <div className="flex">
+            <div
+              className="divisions-container flex-grow"
+              style={{ width: "60%" }}
+            >
+              <div className="mb-4 flex">
+                <input
+                  className="w-full px-4 py-2 border rounded-lg"
+                  placeholder="Division Name"
+                  type="text"
+                  value={newDivision}
+                  onChange={(e) => setNewDivision(e.target.value)}
+                />
+                <button
+                  className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  type="button"
+                  onClick={addDivision}
+                >
+                  Add Division
+                </button>
+              </div>
 
-      {isDivisionsEnabled && (
-        <div className="flex">
-          <div
-            className="divisions-container flex-grow"
-            style={{ width: "60%" }}
-          >
-            <div className="mb-4 flex">
-              <input
-                className="w-full px-4 py-2 border rounded-lg"
-                placeholder="Division Name"
-                type="text"
-                value={newDivision}
-                onChange={(e) => setNewDivision(e.target.value)}
-              />
-              <button
-                className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
-                type="button"
-                onClick={addDivision}
+              <div
+                className="divisions-list overflow-y-auto"
+                style={{ maxHeight: "60vh" }}
               >
-                Add Division
-              </button>
+                {divisions
+                  .filter((division) => division.name !== "Team Bank")
+                  .map((division) => (
+                    <div key={division.id} className="division-container">
+                      <Division
+                        division={division}
+                        isDragging={isDragging}
+                        moveTeam={moveTeam}
+                        setIsDragging={setIsDragging}
+                        sourceDivision={sourceDivision}
+                        setSourceDivision={setSourceDivision}
+                        removeDivision={removeDivision} // Pass the removeDivision function
+                      />
+                    </div>
+                  ))}
+              </div>
             </div>
 
             <div
-              className="divisions-list overflow-y-auto"
-              style={{ maxHeight: "60vh" }}
+              className="team-bank-container flex-shrink-0 ml-4"
+              style={{ width: "40%", position: "sticky", top: "10px" }}
             >
-              {divisions
-                .filter((division) => division.name !== "Team Bank")
-                .map((division) => (
-                  <div key={division.id} className="division-container">
-                    <Division
-                      division={division}
-                      isDragging={isDragging}
-                      moveTeam={moveTeam}
-                      setIsDragging={setIsDragging}
-                      sourceDivision={sourceDivision}
-                      setSourceDivision={setSourceDivision}
-                      removeDivision={removeDivision} // Pass the removeDivision function
-                    />
-                  </div>
-                ))}
+              <p className="mb-4">Drag and drop teams to their divisions. Teams left in the team bank will not be scheduled games.</p>
+              <Division
+                division={
+                  divisions.find((division) => division.name === "Team Bank")!
+                }
+                isDragging={isDragging}
+                moveTeam={moveTeam}
+                setIsDragging={setIsDragging}
+                sourceDivision={sourceDivision}
+                setSourceDivision={setSourceDivision}
+                removeDivision={removeDivision} // Pass the removeDivision function
+              />
+              <div style={{ textAlign: "right", marginTop: "20px" }}>
+                <button
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                  type="button"
+                  onClick={saveDivisions}
+                >
+                  Save
+                </button>
+              </div>
             </div>
           </div>
-
-          <div
-            className="team-bank-container flex-shrink-0 ml-4"
-            style={{ width: "40%", position: "sticky", top: "10px" }}
-          >
-            <p className="mb-4">Drag and drop teams to their divisions. Teams left in the team bank will not be scheduled games.</p>
-            <Division
-              division={
-                divisions.find((division) => division.name === "Team Bank")!
-              }
-              isDragging={isDragging}
-              moveTeam={moveTeam}
-              setIsDragging={setIsDragging}
-              sourceDivision={sourceDivision}
-              setSourceDivision={setSourceDivision}
-              removeDivision={removeDivision} // Pass the removeDivision function
-            />
-            <div style={{ textAlign: "right", marginTop: "20px" }}>
-              <button
-                className="px-4 py-2 bg-green-500 text-white rounded-lg"
-                type="button"
-                onClick={saveDivisions}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
+        )
       )}
     </div>
   );

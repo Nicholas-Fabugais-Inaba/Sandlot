@@ -109,7 +109,7 @@ export default function SeasonSetupPage() {
       case "divisions":
         return (
           <DndProvider backend={HTML5Backend}>
-            <DivisionsSettings setUnsavedChanges={setUnsavedChanges} />
+            <DivisionsSettings setUnsavedChanges={setUnsavedChanges} seasonState={seasonState} />
           </DndProvider>
         );
       case "schedule":
@@ -169,9 +169,9 @@ interface ToolbarProps {
 function Toolbar({ setActiveSection, seasonState }: ToolbarProps) {
   return (
     <div className="toolbar">
-      <button onClick={() => setActiveSection("general")}>General</button>
-      <button onClick={() => setActiveSection("divisions")}>Divisions</button>
-      <button onClick={() => setActiveSection("schedule")}>Schedule</button>
+      <button onClick={() => setActiveSection("general")}>General Settings</button>
+      <button onClick={() => setActiveSection("divisions")}>Division Settings</button>
+      <button onClick={() => setActiveSection("schedule")}>Schedule Generator</button>
       <button onClick={() => setActiveSection("launchpad")}>
         {seasonState === "offseason" ? "Launch Preseason" : seasonState === "preseason" ? "Launch Season" : "End Season"}
       </button>
@@ -559,10 +559,10 @@ function GeneralSettings({
   };
 
   const seasonDesc = seasonState === "offseason" 
-    ? "The season is currently in the offseason. You can prepare for the upcoming season by setting up dates, fields, and timeslots."
+    ? "The season is currently in the offseason. You may prepare for the upcoming season by setting up dates, divisions, fields, and timeslots."
     : seasonState === "preseason"
-    ? "The season is currently in the preseason. Configure your fields and timeslots before generating the schedule."
-    : "The season is currently active. Monitor the progress and make adjustments as needed.";
+    ? "The season is currently in the preseason. Configure your fields and timeslots and set teams' divisions before generating the schedule. Once a schedule is generated the season is ready for launch."
+    : "The season is currently active. Reschedule games and set scores in the main site Schedule tab.";
 
   return (
     <div className="general-settings-container">
