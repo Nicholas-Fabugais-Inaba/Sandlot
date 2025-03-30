@@ -182,7 +182,7 @@ async def update_divisions_and_teams_route(data: list[DivisionTeamData]):
 @router.post("/end_season", response_model=None)
 async def end_season_route(data: EndSeasonData):
     # Archive all active team and player data
-    if data.archiveTeams:
+    if data.archive_teams:
         print("archive teams")
     # Deactivate all active teams and players
     deactivate_all_teams()

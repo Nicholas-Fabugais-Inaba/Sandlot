@@ -49,6 +49,7 @@ export default function AccountPage() {
   >(() => {});
   const [isPasswordModal, setIsPasswordModal] = useState(false);
   const [isNameChange, setIsNameChange] = useState(false);
+  const [isEmailChange, setIsEmailChange] = useState(false); // New state for email change
   const [accountInfo, setAccountInfo] = useState<AccountInfo>({});
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -123,6 +124,7 @@ export default function AccountPage() {
     });
     setIsPasswordModal(false);
     setIsNameChange(true);
+    setIsEmailChange(false)
     setIsModalOpen(true);
   };
 
@@ -183,15 +185,12 @@ export default function AccountPage() {
   const handleChangeEmail = () => {
     setModalTitle("Change Email");
     setModalInitialValue(accountInfo.email || ""); // Use accountInfo for the initial value
-    setModalSubmitHandler(() => (value: string) => {
-      if (
-        session?.user.role === "player" ||
-        session?.user.role === "commissioner"
-      ) {
-        updatePlayerEmail({ player_id: session.user.id, new_email: value }); // Use session for the player ID
+    setModalSubmitHandler(() => (email: string, confirmEmail?: string) => {
+      if (session?.user.role === "player" || session?.user.role === "commissioner") {
+        updatePlayerEmail({ player_id: session.user.id, new_email: email }); // Use session for the player ID
         setAccountInfo((prev) => ({
           ...prev,
-          email: value, // Update accountInfo with the new email
+          email: email, // Update accountInfo with the new email
         }));
 
         // Show success alert
@@ -205,18 +204,18 @@ export default function AccountPage() {
       }
       setIsModalOpen(false);
     });
-    setIsPasswordModal(false);
-    setIsNameChange(false);
+    setIsPasswordModal(false); // Reset other modal states
+    setIsNameChange(false);    // Reset other modal states
+    setIsEmailChange(true);    // Ensure this is set to true
     setIsModalOpen(true);
   };
-
+  
   const handleChangePassword = () => {
     setModalTitle("Change Password");
     setModalInitialValue("");
     setModalSubmitHandler(() => (value: string, confirmValue?: string) => {
       if (value !== confirmValue) {
         alert("Passwords do not match");
-
         return;
       }
       if (
@@ -250,8 +249,9 @@ export default function AccountPage() {
       }
       setIsModalOpen(false);
     });
-    setIsPasswordModal(true);
-    setIsNameChange(false);
+    setIsPasswordModal(true);  // Ensure this is set to true
+    setIsNameChange(false);    // Reset other modal states
+    setIsEmailChange(false);   // Reset other modal states
     setIsModalOpen(true);
   };
 
@@ -436,12 +436,13 @@ export default function AccountPage() {
       <ChangeInfoModal
         initialValue={modalInitialValue}
         isNameChange={isNameChange}
+        isEmailChange={isEmailChange} // Pass the isEmailChange prop
         isOpen={isModalOpen}
         isPassword={isPasswordModal}
         title={modalTitle}
         onClose={() => setIsModalOpen(false)}
         onSubmit={modalSubmitHandler}
-      />
+/>
     </div>
   );
 }

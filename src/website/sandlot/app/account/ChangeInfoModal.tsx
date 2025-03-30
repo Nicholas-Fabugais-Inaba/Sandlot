@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@heroui/react";
+import styles from "./ChangeInfoModal.module.css";
 
 interface ModalProps {
   isOpen: boolean;
@@ -7,12 +8,13 @@ interface ModalProps {
   onSubmit: (
     firstName: string,
     lastName?: string,
-    confirmValue?: string,
+    confirmValue?: string
   ) => void;
   title: string;
   initialValue: string;
   isPassword?: boolean;
   isNameChange?: boolean;
+  isEmailChange?: boolean; // New prop for email change
 }
 
 const ChangeInfoModal: React.FC<ModalProps> = ({
@@ -23,21 +25,95 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
   initialValue,
   isPassword = false,
   isNameChange = false,
+  isEmailChange = false, // New prop
 }) => {
   const [value, setValue] = useState(initialValue);
   const [confirmValue, setConfirmValue] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState(""); // New state for email
+  const [confirmEmail, setConfirmEmail] = useState(""); // New state for confirming email
+
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+    general?: string;
+  }>({});
 
   useEffect(() => {
-    setValue(initialValue);
-    if (isNameChange) {
+    // Reset state when the modal mode changes
+    if (isEmailChange) {
+      setEmail(initialValue);
+      setConfirmEmail("");
+    } else if (isPassword) {
+      setValue(initialValue);
+      setConfirmValue("");
+    } else if (isNameChange) {
       const [first, last] = initialValue.split(" ");
-
       setFirstName(first || "");
       setLastName(last || "");
     }
-  }, [initialValue, isNameChange]);
+  
+    // Clear errors when switching modes
+    setErrors({});
+  }, [isEmailChange, isPassword, isNameChange, initialValue]);
+
+  const validateEmail = (email: string) => {
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+      email
+    );
+  };
+
+  const handleSubmit = () => {
+    const newErrors: typeof errors = {};
+  
+    if (isNameChange) {
+      if (!firstName.trim()) {
+        newErrors.general = "First name is required.";
+      }
+      if (!lastName.trim()) {
+        newErrors.general = "Last name is required.";
+      }
+    } else if (isEmailChange) {
+      if (!validateEmail(email)) {
+        newErrors.email = "Invalid email format.";
+      }
+      if (email !== confirmEmail) {
+        newErrors.email = "Emails do not match.";
+      }
+    } else if (isPassword) {
+      if (!value.trim()) {
+        newErrors.password = "Password is required.";
+      }
+      if (value !== confirmValue) {
+        newErrors.password = "Passwords do not match.";
+      }
+    }
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+  
+    setErrors({});
+    if (isNameChange) {
+      onSubmit(firstName, lastName);
+    } else if (isEmailChange) {
+      onSubmit(email, confirmEmail);
+    } else {
+      onSubmit(value, confirmValue);
+    }
+  };
+
+  const handleClose = () => {
+    setErrors({}); // Clear errors
+    onClose(); // Call the provided onClose function
+  };
+  
+  // Update the Cancel button to use handleClose
+  <Button className="button" onPress={handleClose}>
+    Cancel
+  </Button>
 
   if (!isOpen) return null;
 
@@ -45,55 +121,102 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold mb-4">{title}</h2>
-        {isNameChange ? (
+        <div className={styles.errorContainer}>
+          {errors.general && <p className={styles.errorMessage}>{errors.general}</p>}
+          {errors.email && <p className={styles.errorMessage}>{errors.email}</p>}
+          {errors.password && <p className={styles.errorMessage}>{errors.password}</p>}
+        </div>
+        {isNameChange && (
           <>
             <input
               className="w-full px-4 py-2 border rounded-lg mb-4"
               placeholder="First Name"
               type="text"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => {
+                setFirstName(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.general;
+                setErrors(newErrors);
+              }}
             />
             <input
               className="w-full px-4 py-2 border rounded-lg mb-4"
               placeholder="Last Name"
               type="text"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.general;
+                setErrors(newErrors);
+              }}
             />
           </>
-        ) : (
-          <input
-            autoComplete={isPassword ? "new-password" : "off"}
-            className="w-full px-4 py-2 border rounded-lg mb-4"
-            placeholder="New Password"
-            type={isPassword ? "password" : "text"}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+        )}
+        {isEmailChange && (
+          <>
+            <input
+              className="w-full px-4 py-2 border rounded-lg mb-4"
+              placeholder="New Email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.email;
+                setErrors(newErrors);
+              }}
+            />
+            <input
+              className="w-full px-4 py-2 border rounded-lg mb-4"
+              placeholder="Confirm New Email"
+              type="email"
+              value={confirmEmail}
+              onChange={(e) => {
+                setConfirmEmail(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.email;
+                setErrors(newErrors);
+              }}
+            />
+          </>
         )}
         {isPassword && (
-          <input
-            autoComplete="new-password"
-            className="w-full px-4 py-2 border rounded-lg mb-4"
-            placeholder="Confirm New Password"
-            type="password"
-            value={confirmValue}
-            onChange={(e) => setConfirmValue(e.target.value)}
-          />
+          <>
+            <input
+              autoComplete="new-password"
+              className="w-full px-4 py-2 border rounded-lg mb-4"
+              placeholder="New Password"
+              type="password"
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.password;
+                setErrors(newErrors);
+              }}
+            />
+            <input
+              autoComplete="new-password"
+              className="w-full px-4 py-2 border rounded-lg mb-4"
+              placeholder="Confirm New Password"
+              type="password"
+              value={confirmValue}
+              onChange={(e) => {
+                setConfirmValue(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.password;
+                setErrors(newErrors);
+              }}
+            />
+          </>
         )}
         <div className="flex justify-end space-x-4">
-          <Button className="button" onPress={onClose}>
-            Cancel
-          </Button>
-          <Button
-            className="button"
-            onPress={() =>
-              isNameChange
-                ? onSubmit(firstName, lastName)
-                : onSubmit(value, confirmValue)
-            }
-          >
+        <Button className="button" onPress={handleClose}>
+          Cancel
+        </Button>
+          <Button className="button" onPress={handleSubmit}>
             Submit
           </Button>
         </div>
