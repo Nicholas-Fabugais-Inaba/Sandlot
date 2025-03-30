@@ -1000,12 +1000,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                 className="px-4 py-2 bg-green-500 text-white rounded-lg"
                 onClick={handleGenerateSchedule}
               >
-                Generate Schedule
+                Generate New Schedule
               </button>
               <div className="flex items-center">
                 <span className="mr-4 text-lg">
                   {Object.keys(schedule).length === 0
-                    ? "No new schedule to submit"
+                    ? "No new schedule to save"
                     : `Current Schedule Score: ${schedScore}`}
                 </span>
                 <button
@@ -1013,7 +1013,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                   disabled={Object.keys(schedule).length === 0}
                   onClick={handleSubmitSchedule}
                 >
-                  Submit Schedule
+                  Save Schedule
                 </button>
               </div>
             </div>

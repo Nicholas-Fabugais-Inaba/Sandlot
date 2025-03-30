@@ -49,11 +49,11 @@ export default function Launchpad({ seasonState }: LaunchProps) {
   const getDescription = () => {
     switch (seasonState) {
       case "offseason":
-        return "Launching the pre-season will allow new team and player accounts to be created and old player and team accounts to be reactivated. The season start and end dates will be shown to all users and team accounts will be able to choose their preferred division from the list in division settings. Make sure all settings are configured correctly before proceeding.";
+        return "Launching the Preseason will allow new team and player accounts to be created and old player and team accounts to be reactivated. The season start and end dates will be shown to all users and team accounts will be able to choose their preferred division from the list in division settings. Make sure all settings are configured correctly before proceeding.";
       case "preseason":
-        return "Launching the season will start the official games and competitions. Make sure all teams are ready and schedules are set.";
+        return "Launching the Season will start the official games and competitions. Make sure all teams are ready and schedules are set.";
       case "season":
-        return "Ending the season will put the system into offseason. Ending the season will deactivate all team and player accounts for the season. Users may reactivate their accounts in the next preseason.";
+        return "Ending the Season will put the system into offseason. Ending the season will deactivate all team and player accounts for the season. Users may reactivate their accounts in the next preseason.";
       default:
         return "";
     }
@@ -75,12 +75,12 @@ export default function Launchpad({ seasonState }: LaunchProps) {
   const returnWarning = "Warning, returning to the preseason may revert changes team accounts have made to the schedule."
 
   return (
-    <div className="p-6">
-      <p className="mb-4">{getDescription()}</p>
-      {seasonState === "season" && (
+    <div>
+      <h2 className="text-3xl font-semibold mb-4">{getButtonText()}</h2>
+      <p className="mt-4 mb-6 text-gray-700 text-lg">{getDescription()}</p>      {seasonState === "season" && (
         <div className="flex space-x-4">
           <Button
-            className="bg-red-500 text-white px-6 py-3 rounded-lg"
+            className="bg-red-500 text-white px-8 py-4 rounded-lg text-lg font-bold hover:bg-red-600 transition"
             onPress={() => handleLaunchClick("endSeason")}
           >
             End Season
@@ -95,7 +95,7 @@ export default function Launchpad({ seasonState }: LaunchProps) {
       )}
       {seasonState !== "season" && (
         <Button
-          className="bg-red-500 text-white px-6 py-3 rounded-lg"
+          className="bg-red-500 text-white px-8 py-4 rounded-lg text-lg font-bold hover:bg-red-600 transition"
           onPress={() => handleLaunchClick(seasonState === "offseason" ? "launchPreseason" : "launchSeason")}
         >
           {getButtonText()}

@@ -200,10 +200,10 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
     loadDivisionData();
   }, []);
 
-  const toggleDivisions = () => {
-    setIsDivisionsEnabled((prev) => !prev);
-    setUnsavedChanges(true);
-  };
+  // const toggleDivisions = () => {
+  //   setIsDivisionsEnabled((prev) => !prev);
+  //   setUnsavedChanges(true);
+  // };
 
   const addDivision = () => {
     if (newDivision.trim() !== "") {
@@ -273,9 +273,9 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Division Settings</h2>
+      <h2 className="text-3xl font-semibold mb-4">Division Settings</h2>
 
-      <div className="mb-4 flex items-center">
+      {/* <div className="mb-4 flex items-center">
         <input
           checked={isDivisionsEnabled}
           className="mr-2"
@@ -286,7 +286,7 @@ export default function DivisionsSettings({ setUnsavedChanges }: DivisionsSettin
         <label className="text-gray-700" htmlFor="toggleDivisions">
           Enable Divisions
         </label>
-      </div>
+      </div> */}
 
       {isDivisionsEnabled && (
         <div className="flex">
