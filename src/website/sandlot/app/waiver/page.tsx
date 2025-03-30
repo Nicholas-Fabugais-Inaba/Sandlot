@@ -305,7 +305,7 @@ export default function WaiverManagementPage() {
       </Card>
 
       {/* Signed Waivers Section */}
-      <Card className="mt-6 mb-6">
+      {/* <Card className="mt-6 mb-6">
         <CardHeader>
           <h2 className="text-xl font-semibold">Signed Waivers</h2>
         </CardHeader>
@@ -335,7 +335,7 @@ export default function WaiverManagementPage() {
                 </TableBody>
             </Table>
         </div>
-      </Card>
+      </Card> */}
 
       {/* Edit Section Modal */}
       {editingSection && (

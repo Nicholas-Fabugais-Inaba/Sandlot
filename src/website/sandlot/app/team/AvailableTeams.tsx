@@ -82,15 +82,17 @@ const AvailableTeams: React.FC = () => {
       setPendingRequests([...pendingRequests, dummyJR])
 
       // After the request is created, fetch the updated pending requests
-      const requests = await getPendingRequests(session.user.email);
-      const accepted = requests.filter((req: JoinRequest) => req.accepted === true);
-      const pending = requests.filter((req: JoinRequest) => req.accepted === null);
-      const denied = requests.filter((req: JoinRequest) => req.accepted === false);
+      setTimeout(async() => {
+        const requests = await getPendingRequests(session.user.email);
+        const accepted = requests.filter((req: JoinRequest) => req.accepted === true);
+        const pending = requests.filter((req: JoinRequest) => req.accepted === null);
+        const denied = requests.filter((req: JoinRequest) => req.accepted === false);
 
-      setAcceptedRequests(accepted); // Update accepted requests state
-      setPendingRequests(pending); // Update pending requests state
-      setDeniedRequests(denied); // Update denied requests state
-      setActionLoading(false);
+        setAcceptedRequests(accepted); // Update accepted requests state
+        setPendingRequests(pending); // Update pending requests state
+        setDeniedRequests(denied); // Update denied requests state
+        setActionLoading(false);
+      }, 1000)
     }
   };
 
