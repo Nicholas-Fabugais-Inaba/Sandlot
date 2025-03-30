@@ -213,12 +213,16 @@ function GeneralSettings({
     });
   };
 
-  // Add Timeslot Function
   const addTimeslot = () => {
+    if (timeslots.length >= 30) {
+      alert("You can only create up to 30 timeslots.");
+      return;
+    }
+
     const newTimeslot: Timeslot = {
       id: timeslots.length + 1, // Generate ID within the range 1 to len(timeslots)
-      startTime: '',
-      endTime: ''
+      startTime: '17:00', // Default to 5:00 PM
+      endTime: '18:00' // Default to 6:00 PM
     };
     setTimeslots(prev => [...prev, newTimeslot]);
     setUnsavedChanges(true);
@@ -226,9 +230,36 @@ function GeneralSettings({
 
   // Update Timeslot Function
   const updateTimeslot = (id: number, field: 'startTime' | 'endTime', value: string) => {
-    setTimeslots(prev => 
-      prev.map(timeslot => 
-        timeslot.id === id 
+    const [hour, minute] = value.split(":").map(Number);
+  
+    // Validate start and end times
+    if (field === "startTime" && (hour < 5 || hour > 23 || (hour === 23 && minute > 0))) {
+      alert("Start time must be between 5:00 AM and 11:59 PM.");
+      return;
+    }
+    if (field === "endTime" && (hour < 5 && hour !== 0 || hour > 23 || (hour === 0 && minute !== 0))) {
+      alert("End time must be between 5:00 AM and 12:00 AM.");
+      return;
+    }
+  
+    // Ensure startTime is earlier than endTime
+    const timeslot = timeslots.find(ts => ts.id === id);
+    if (timeslot) {
+      const startTime = field === "startTime" ? value : timeslot.startTime;
+      const endTime = field === "endTime" ? value : timeslot.endTime;
+  
+      const start = new Date(`1970-01-01T${startTime}:00`);
+      const end = new Date(`1970-01-01T${endTime}:00`);
+  
+      if (start >= end) {
+        alert("Start time must be earlier than end time.");
+        return;
+      }
+    }
+  
+    setTimeslots(prev =>
+      prev.map(timeslot =>
+        timeslot.id === id
           ? { ...timeslot, [field]: value }
           : timeslot
       )
@@ -261,6 +292,11 @@ function GeneralSettings({
 
   // Add Field Function
   const addField = () => {
+    if (fields.length >= 3) {
+      alert("You can only create up to 3 fields.");
+      return;
+    }
+
     const newField: Field = {
       id: fields.length + 1, // Generate ID within the range 1 to len(fields)
       name: `Field ${fields.length + 1}`,
@@ -287,14 +323,45 @@ function GeneralSettings({
     setFields(prev =>
       prev.map(field => {
         if (field.id === fieldId) {
-          const updatedTimeslotIds = field.timeslotIds.includes(timeslotId)
-            ? field.timeslotIds.filter(id => id !== timeslotId)
-            : [...field.timeslotIds, timeslotId];
+          const selectedTimeslot = timeslots.find(ts => ts.id === timeslotId);
+          if (!selectedTimeslot) return field;
+  
+          const isToggled = field.timeslotIds.includes(timeslotId);
+  
+          // If toggling off, allow it without checking for overlaps
+          if (isToggled) {
+            const updatedTimeslotIds = field.timeslotIds.filter(id => id !== timeslotId);
+            return { ...field, timeslotIds: updatedTimeslotIds };
+          }
+  
+          // Check for overlapping timeslots if toggling on
+          const hasOverlap = field.timeslotIds.some(id => {
+            const existingTimeslot = timeslots.find(ts => ts.id === id);
+            if (!existingTimeslot) return false;
+  
+            const selectedStart = new Date(`1970-01-01T${selectedTimeslot.startTime}:00`);
+            const selectedEnd = new Date(`1970-01-01T${selectedTimeslot.endTime}:00`);
+            const existingStart = new Date(`1970-01-01T${existingTimeslot.startTime}:00`);
+            const existingEnd = new Date(`1970-01-01T${existingTimeslot.endTime}:00`);
+  
+            return (
+              selectedStart < existingEnd && selectedEnd > existingStart // Overlap condition
+            );
+          });
+  
+          if (hasOverlap) {
+            // alert("This timeslot overlaps with an existing timeslot for this field.");
+            return field; // Do not toggle the timeslot
+          }
+  
+          // Toggle the timeslot if no overlap
+          const updatedTimeslotIds = [...field.timeslotIds, timeslotId];
           return { ...field, timeslotIds: updatedTimeslotIds };
         }
         return field;
       })
     );
+  
     setUnsavedChanges(true);
   };
 
