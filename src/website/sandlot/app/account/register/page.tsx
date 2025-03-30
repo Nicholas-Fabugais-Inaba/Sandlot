@@ -564,10 +564,10 @@ export default function Register() {
                 onChange={(e) => setPreferredDivision(parseInt(e.target.value))}
               >
                 <option value="-1">None</option>
-                <option value="0">A</option>
-                <option value="1">B</option>
-                <option value="2">C</option>
-                <option value="3">D</option>
+                <option value="1">A</option>
+                <option value="2">B</option>
+                <option value="3">C</option>
+                <option value="4">D</option>
               </select>
             </div>
 
