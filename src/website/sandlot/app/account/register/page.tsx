@@ -49,7 +49,7 @@ export default function Register() {
   
   const [isRegistering, setIsRegistering] = useState(false);
   const [fieldsFilled, setFieldsFilled] = useState<number>(0);
-  const [showWaiver, setShowWaiver] = useState<boolean>(false);
+  const [showWaiver, setShowWaiver] = useState<boolean>(false);  
   const router = useRouter();
 
   // waiver sub-component state
@@ -65,7 +65,9 @@ export default function Register() {
   const [waiverFooter, setWaiverFooter] = useState("")
   const [waiverInitials, setWaiverInitials] = useState("");
   const [waiverSignature, setWaiverSignature] = useState("");
-  const [waiverState, setWaiverState] = useState(true);
+  const [waiverEnabled, setWaiverEnabled] = useState<boolean>();
+
+  // const [waiverState, setWaiverState] = useState(true);
 
   interface WaiverFormat {
     id: number;
@@ -122,31 +124,39 @@ export default function Register() {
       }
     };
 
-    const fetchWaiverEnabled = async () => {
-      try {
-        const data = await getWaiverEnabled();
-        setWaiverState(!!data); // Convert to boolean
-      }
-      catch (error: any) {
-        console.error("Error fetching waiver state:", error?.message || error);
-        setWaiverState(true); // Default to enabled if fetch fails
-      }
-    };      
+    // const fetchWaiverEnabled = async () => {
+    //   try {
+    //     const data = await getWaiverEnabled();
+    //     setWaiverState(!!data); // Convert to boolean
+    //   }
+    //   catch (error: any) {
+    //     console.error("Error fetching waiver state:", error?.message || error);
+    //     setWaiverState(true); // Default to enabled if fetch fails
+    //   }
+    // };      
     
     // Wrap in try-catch to prevent unhandled promise rejections
-    const initWaiver = async () => {
-      try {
-          await fetchWaiverEnabled();
-          if (waiverState) {
-            await fetchWaiverFormat();
-          }
-      } catch (error: any) {
-        console.error("Error initializing waiver:", error?.message || error);
-      }
-    };
+    // const initWaiver = async () => {
+    //   try {
+    //       await fetchWaiverEnabled();
+    //       if (waiverState) {
+    //         await fetchWaiverFormat();
+    //       }
+    //   } catch (error: any) {
+    //     console.error("Error initializing waiver:", error?.message || error);
+    //   }
+    // };
 
-    initWaiver();
-  }, [waiverState]);
+      const fetchWaiverEnabled = async () => {
+        const enabled = await getWaiverEnabled();
+        setWaiverEnabled(enabled.waiver_enabled);
+        if (enabled.waiver_enabled) {
+          await fetchWaiverFormat();
+        }
+      };
+
+      fetchWaiverEnabled();
+    }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState); // Toggle the visibility state
@@ -229,13 +239,15 @@ export default function Register() {
         setTimeout(async () => {
           const player = await getPlayer({ email: email })
 
-          const completedWaiver = {
-            player_id: player.id,
-            signature: waiverSignature,
-            initials: waiverInitials,
-            year: String(new Date().getFullYear())
-          }
+          if (waiverEnabled) {
+            const completedWaiver = {
+              player_id: player.id,
+              signature: waiverSignature,
+              initials: waiverInitials,
+              year: String(new Date().getFullYear())
+            }
           await createWaiver(completedWaiver)
+          }
         }, )
       } else {
         const newTeam = {
@@ -654,9 +666,43 @@ export default function Register() {
                       <Button className="button" type="submit" isDisabled={fieldsFilled < 3}>
                         Register
                       </Button>
-                    ) : (
+                      ) : waiverEnabled ? (
+                        <Button
+                          className="button"
+                          isDisabled={fieldsFilled < 7}
+                          onPress={() => {
+                            // Replace the existing validation with a more comprehensive check
+                            const newErrors: typeof errors = {};
+                            
+                            if (!validateEmail(email)) {
+                              newErrors.email = "Invalid email format";
+                            }
+
+                            if (password !== confirmPassword) {
+                              newErrors.password = "Passwords do not match";
+                            }
+
+                            if (email !== confirmEmail) {
+                              newErrors.email = "Emails do not match";
+                            }                  
+
+                            // If there are any errors, set them and prevent proceeding
+                            if (Object.keys(newErrors).length > 0) {
+                              setErrors(newErrors);
+                              return;
+                            }
+                            
+                            // If no errors, proceed to waiver
+                            setShowWaiver(true);
+                            
+                          }}
+                        >
+                          Next
+                        </Button>
+                      ) : (                      
                       <Button
                         className="button"
+                        type="submit"
                         isDisabled={fieldsFilled < 7}
                         onPress={() => {
                           // Replace the existing validation with a more comprehensive check
@@ -679,14 +725,13 @@ export default function Register() {
                             setErrors(newErrors);
                             return;
                           }
-
-                          // If no errors, proceed to waiver
-                          setShowWaiver(true);
+                          
+                          
                         }}
                       >
-                        Next
-                      </Button>
-                    )}
+                        Register
+                      </Button>)
+                    }
                   </div>
 
                   <div className="flex space-x-4 justify-center mt-4">
