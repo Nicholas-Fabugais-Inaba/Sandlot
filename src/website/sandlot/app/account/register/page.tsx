@@ -166,11 +166,7 @@ export default function Register() {
   const validateForm = () => {
     const newErrors: typeof errors = {};
   
-    // Common validations
-    if (!validateEmail(email)) {
-      newErrors.email = "Invalid email format";
-    }
-  
+    // Common validations  
     if (password !== confirmPassword) {
       newErrors.password = "Passwords do not match";
     }
@@ -185,6 +181,9 @@ export default function Register() {
     // Player-specific validations
     if (accountType === "player") {
       // Add any player-specific validations here
+      if (!validateEmail(email)) {
+        newErrors.email = "Invalid email format";
+      }
       if (!firstname.trim()) {
         newErrors.username = "First name is required";
       }
@@ -201,16 +200,19 @@ export default function Register() {
     }
   
     setErrors(newErrors);
+    console.log(newErrors)
     return Object.keys(newErrors).length === 0;
   };
   
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
+    
 
     if (!validateForm()) {
       return;
     }
 
+    console.log("HEREEEEEEEEE")
     setIsRegistering(true);
 
     try {
@@ -263,7 +265,13 @@ export default function Register() {
           });
           setIsRegistering(false);
         } else {
-          window.location.href = "/join-a-team"; // Full page reload to ensure a complete refresh
+          if(accountType == "player") {
+            window.location.href = "/join-a-team"; // Full page reload to ensure a complete refresh
+          }
+          else {
+            window.location.href = "/team"
+          }
+          
         }
       }, 1000)
     } catch (error) {
