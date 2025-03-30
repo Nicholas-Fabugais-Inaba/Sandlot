@@ -141,9 +141,6 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
           setEarliestStart(`${earliest-4}:00:00`);
           setLatestEnd(`${latest-4}:00:00`);
         }
-
-
-
         // Create a dictionary of field_id to field_name
         const fieldsDict = timeslotsResponse.reduce((acc: Record<number, string>, ts: any) => {
           if (!acc[ts.field_id]) {
@@ -621,7 +618,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         null
       ) : (
         <div className="pageHeader">
-          <h1 className={title()}>Schedule</h1>
+          <h1 className={title()}>
+            {teamName && teamName !== "" && teamName !== "team_name" ? `${teamName} Schedule` : "Schedule"}
+          </h1>
         </div>
       )}
       {schedType === 3 ? (
@@ -631,7 +630,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       ) : (userRole === "team") && !viewer ? (
         <p className="text-2xl text-center mt-2">
           <em>
-            Click on one of your team's games to reschedule the game or submit a
+            Click on your team's games to reschedule the game or submit a
             score
           </em>
         </p>
