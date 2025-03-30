@@ -13,6 +13,8 @@ interface ModalProps {
   isEmailChange?: boolean;
   firstName?: string; // Add firstName prop
   lastName?: string;  // Add lastName prop
+  isTeamDisplayChange?: boolean; // New prop for team display name change
+  isTeamUsernameChange?: boolean; // New prop for team username change
 }
 
 const ChangeInfoModal: React.FC<ModalProps> = ({
@@ -24,6 +26,8 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
   isPassword = false,
   isNameChange = false,
   isEmailChange = false,
+  isTeamDisplayChange = false,
+  isTeamUsernameChange = false,
   firstName = "", // Default to empty string
   lastName = "", // Default to empty string
 }) => {
@@ -33,6 +37,8 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
   const [currentLastName, setCurrentLastName] = useState<string>("");   // Use lastName prop
   const [email, setEmail] = useState(""); // New state for email
   const [confirmEmail, setConfirmEmail] = useState(""); // New state for confirming email
+  const [teamDisplayName, setTeamDisplayName] = useState(""); // State for team display name
+  const [teamUsername, setTeamUsername] = useState(""); // State for team username
 
   const [errors, setErrors] = useState<{
     email?: string;
@@ -52,7 +58,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
     // } else if (isNameChange) {
     //   setCurrentFirstName(firstName);
     //   setCurrentLastName(lastName);
-    // }
+    // } else
 
     setValue(""); // Clear password
     setConfirmValue(""); // Clear confirm password
@@ -61,7 +67,7 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
   
     // Clear errors when switching modes
     setErrors({});
-  }, [isEmailChange, isPassword, isNameChange, initialValue]);
+  }, [isEmailChange, isPassword, isNameChange, isTeamDisplayChange, isTeamUsernameChange]);
 
   const validateEmail = (email: string) => {
     return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
@@ -93,6 +99,14 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
       if (value !== confirmValue) {
         newErrors.password = "Passwords do not match.";
       }
+    } else if (isTeamDisplayChange) {
+      if (!teamDisplayName.trim()) {
+        newErrors.general = "Display name is required.";
+      }
+    } else if (isTeamUsernameChange) {
+      if (!teamUsername.trim()) {
+        newErrors.general = "Username is required.";
+      }
     }
   
     if (Object.keys(newErrors).length > 0) {
@@ -105,6 +119,10 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
       onSubmit(currentFirstName, currentLastName);
     } else if (isEmailChange) {
       onSubmit(email, confirmEmail);
+    } else if (isTeamDisplayChange) {
+      onSubmit(teamDisplayName); // Submit team display name
+    } else if (isTeamUsernameChange) {
+      onSubmit(teamUsername); // Submit team username
     } else {
       onSubmit(value, confirmValue);
     }
@@ -118,6 +136,8 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
     setCurrentLastName(""); // Clear last name
     setEmail(""); // Clear email
     setConfirmEmail(""); // Clear confirm email
+    setTeamDisplayName(""); // Clear team display name
+    setTeamUsername(""); // Clear team username
     onClose(); // Call the provided onClose function
   };
 
@@ -218,6 +238,34 @@ const ChangeInfoModal: React.FC<ModalProps> = ({
             />
           </>
         )}
+          {isTeamDisplayChange && (
+            <input
+              className="w-full px-4 py-2 border rounded-lg mb-4"
+              placeholder="New display name"
+              type="text"
+              value={teamDisplayName}
+              onChange={(e) => {
+                setTeamDisplayName(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.general;
+                setErrors(newErrors);
+              }}
+            />
+          )}
+          {isTeamUsernameChange && (
+            <input
+              className="w-full px-4 py-2 border rounded-lg mb-4"
+              placeholder="New username"
+              type="text"
+              value={teamUsername}
+              onChange={(e) => {
+                setTeamUsername(e.target.value);
+                const newErrors = { ...errors };
+                delete newErrors.general;
+                setErrors(newErrors);
+              }}
+            />
+          )}
         <div className="flex justify-end space-x-4">
         <Button className="button" onPress={handleClose}>
           Cancel

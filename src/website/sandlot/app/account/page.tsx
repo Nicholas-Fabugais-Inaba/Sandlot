@@ -50,6 +50,8 @@ export default function AccountPage() {
   const [isPasswordModal, setIsPasswordModal] = useState(false);
   const [isNameChange, setIsNameChange] = useState(false);
   const [isEmailChange, setIsEmailChange] = useState(false); // New state for email change
+  const [isTeamDisplayChange, setIsTeamDisplayChange] = useState(false); // New state for team display name change
+  const [isTeamUsernameChange, setIsTeamUsernameChange] = useState(false); // New state for team username change  
   const [accountInfo, setAccountInfo] = useState<AccountInfo>({});
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -124,6 +126,8 @@ export default function AccountPage() {
     setIsPasswordModal(false);
     setIsNameChange(true);
     setIsEmailChange(false);
+    setIsTeamDisplayChange(false); // Ensure this is set to false
+    setIsTeamUsernameChange(false); // Ensure this is set to false
     setIsModalOpen(true);
   };
 
@@ -137,11 +141,11 @@ export default function AccountPage() {
           ...prev,
           teamName: value, // Update accountInfo with the new team name
         }));
-        
+  
         // Show success alert
         setAlertMessage(`Team Name successfully changed to: ${value}`);
         setIsAlertVisible(true);
-
+  
         // Hide alert after 3 seconds
         setTimeout(() => {
           setIsAlertVisible(false);
@@ -151,6 +155,9 @@ export default function AccountPage() {
     });
     setIsPasswordModal(false);
     setIsNameChange(false);
+    setIsEmailChange(false);
+    setIsTeamDisplayChange(true); // Ensure this is set to true
+    setIsTeamUsernameChange(false); // Ensure this is set to false
     setIsModalOpen(true);
   };
   
@@ -164,11 +171,11 @@ export default function AccountPage() {
           ...prev,
           username: value, // Update accountInfo with the new username
         }));
-        
+  
         // Show success alert
         setAlertMessage(`Username successfully changed to: ${value}`);
         setIsAlertVisible(true);
-
+  
         // Hide alert after 3 seconds
         setTimeout(() => {
           setIsAlertVisible(false);
@@ -178,6 +185,9 @@ export default function AccountPage() {
     });
     setIsPasswordModal(false);
     setIsNameChange(false);
+    setIsEmailChange(false);
+    setIsTeamDisplayChange(false); // Ensure this is set to false
+    setIsTeamUsernameChange(true); // Ensure this is set to true
     setIsModalOpen(true);
   };
   
@@ -210,6 +220,8 @@ export default function AccountPage() {
     setIsPasswordModal(false); // Reset other modal states
     setIsNameChange(false);    // Reset other modal states
     setIsEmailChange(true);    // Ensure this is set to true
+    setIsTeamDisplayChange(false); // Reset other modal states
+    setIsTeamUsernameChange(false); // Reset other modal states
     setIsModalOpen(true);
   };
   
@@ -255,6 +267,8 @@ export default function AccountPage() {
     setIsPasswordModal(true);  // Ensure this is set to true
     setIsNameChange(false);    // Reset other modal states
     setIsEmailChange(false);   // Reset other modal states
+    setIsTeamDisplayChange(false); // Reset other modal states
+    setIsTeamUsernameChange(false); // Reset other modal states
     setIsModalOpen(true);
   };
 
@@ -440,6 +454,8 @@ export default function AccountPage() {
         initialValue={modalInitialValue}
         isNameChange={isNameChange}
         isEmailChange={isEmailChange} // Pass the isEmailChange prop
+        isTeamDisplayChange={isTeamDisplayChange} // Pass the isTeamChange prop
+        isTeamUsernameChange={isTeamUsernameChange} // Pass the isTeamChange prop
         isOpen={isModalOpen}
         isPassword={isPasswordModal}
         title={modalTitle}
