@@ -19,6 +19,8 @@ import { FaFileDownload } from 'react-icons/fa';
 import { pdf } from "@react-pdf/renderer";
 import MyPDF from "./WaiverPDF";
 
+import { useRouter } from "next/navigation"; // Add this import
+
 import { title } from "@/components/primitives";
 import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
@@ -30,6 +32,7 @@ import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 let notificationTimeout: NodeJS.Timeout | null = null;
 
 export default function TeamsDirectoryPage() {
+  const router = useRouter(); // Initialize the router
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
@@ -75,25 +78,30 @@ export default function TeamsDirectoryPage() {
       const session = await getSession();
       setSession(session);
 
-      const teams = await getDirectoryTeams();
-      setTeams(teams);
+      if (!session || (session?.user.role !== "commissioner" && session?.user.role !== "team")) {
+        router.push("/");
+        return;
+      } else {
+        const teams = await getDirectoryTeams();
+        setTeams(teams);
 
-      // Fetch players for all teams
-      const playersData = await Promise.all(
-        teams.map(async (team: Team) => {
-          const players = await getDirectoryPlayers({ team_id: team.team_id });
-          return { teamName: team.name, players };
-        })
-      );
+        // Fetch players for all teams
+        const playersData = await Promise.all(
+          teams.map(async (team: Team) => {
+            const players = await getDirectoryPlayers({ team_id: team.team_id });
+            return { teamName: team.name, players };
+          })
+        );
 
-      // Map players to their respective teams
-      const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
-        acc[teamName] = players;
-        return acc;
-      }, {} as Record<string, Player[]>);
+        // Map players to their respective teams
+        const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
+          acc[teamName] = players;
+          return acc;
+        }, {} as Record<string, Player[]>);
 
-      setPlayersByTeam(playersByTeamData);
-      setIsLoading(false); // Set loading to false after all data is fetched
+        setPlayersByTeam(playersByTeamData);
+        setIsLoading(false); // Set loading to false after all data is fetched
+      }
     };
 
     fetchSessionAndData();
