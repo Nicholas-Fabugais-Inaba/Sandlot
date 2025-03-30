@@ -144,6 +144,17 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               const teamData = await getPlayerActiveTeam(session?.user.id)
               teamId = teamData.team_id
               teamName = teamData.team_name
+
+              if (!teamId) {
+                setSchedType(0);
+                setView("timeGridWeek");
+                if (calendarRef.current) {
+                  calendarRef.current.getApi().changeView("timeGridWeek");
+                }
+                const formattedEvents = await getSchedule(timeslots);
+                setEvents(formattedEvents);
+                return;
+              }
             } else if (session.user.role === "team") {
               teamId = session.user.id
               teamName = session.user.teamName
