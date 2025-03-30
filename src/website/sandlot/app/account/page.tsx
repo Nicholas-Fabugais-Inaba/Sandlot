@@ -186,6 +186,10 @@ export default function AccountPage() {
     setModalTitle("Change Email");
     setModalInitialValue(accountInfo.email || ""); // Use accountInfo for the initial value
     setModalSubmitHandler(() => (email: string, confirmEmail?: string) => {
+      if (email !== confirmEmail) {
+        alert("Emails do not match");
+        return;
+      }
       if (session?.user.role === "player" || session?.user.role === "commissioner") {
         updatePlayerEmail({ player_id: session.user.id, new_email: email }); // Use session for the player ID
         setAccountInfo((prev) => ({
@@ -194,7 +198,7 @@ export default function AccountPage() {
         }));
 
         // Show success alert
-        setAlertMessage(`Email successfully changed to: ${value}`);
+        setAlertMessage(`Email successfully changed to: ${email}`);
         setIsAlertVisible(true);
 
         // Hide alert after 3 seconds
