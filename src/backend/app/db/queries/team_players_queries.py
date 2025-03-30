@@ -35,29 +35,23 @@ def get_players_teams(player_id):
 
 def get_teams_players(team_id):
     with Session(engine) as session:
-        try:
-            stmt = (
-                select(
-                    TeamPlayers.player_id,
-                    TeamPlayers.captain,
-                    Player.first_name,
-                    Player.last_name,
-                    Player.email,
-                    Player.phone_number,
-                    Player.gender,
-                    Player.active
-                )
-                .select_from(TeamPlayers)
-                .join(Player, TeamPlayers.player_id == Player.id)
-                .where(TeamPlayers.team_id == team_id)
+        stmt = (
+            select(
+                TeamPlayers.player_id,
+                TeamPlayers.captain,
+                Player.first_name,
+                Player.last_name,
+                Player.email,
+                Player.phone_number,
+                Player.gender,
+                Player.active
             )
-            result = session.execute(stmt).mappings().all()
-            return result
-        except Exception as e:
-            session.rollback()
-            raise e
-        finally:
-            session.close()
+            .select_from(TeamPlayers)
+            .join(Player, TeamPlayers.player_id == Player.id)
+            .where(TeamPlayers.team_id == team_id)
+        )
+        result = session.execute(stmt).mappings().all()
+        return result
     
 def update_team_player(team_id, player_id, captain):
     with Session(engine) as session:
