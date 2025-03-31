@@ -1,6 +1,7 @@
 import * as React from "react";
 
-import { IconSvgProps } from "@/types";
+import { IconSvgProps, BellIconProps } from "@/types";
+import Image from 'next/image';
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
@@ -8,20 +9,13 @@ export const Logo: React.FC<IconSvgProps> = ({
   height,
   ...props
 }) => (
-  <svg
-    fill="none"
-    height={size || height}
-    viewBox="0 0 32 32"
-    width={size || width}
-    {...props}
-  >
-    <path
-      clipRule="evenodd"
-      d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-      fill="currentColor"
-      fillRule="evenodd"
-    />
-  </svg>
+  <Image
+    alt="Sandlot Logo"
+    height={60}
+    priority
+    src="/favicon.ico"
+    width={60}
+  />
 );
 
 export const DiscordIcon: React.FC<IconSvgProps> = ({
@@ -184,4 +178,51 @@ export const SearchIcon = (props: IconSvgProps) => (
       strokeWidth="2"
     />
   </svg>
+);
+
+export const BellIcon: React.FC<BellIconProps> = ({
+  size = 24,
+  unreadCount,
+  ...props
+}) => (
+  <div>
+    <svg
+      className="icon icon-tabler icons-tabler-outline icon-tabler-bell"
+      fill="none"
+      height={24}
+      stroke="#71717a"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+      width={24}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M0 0h24v24H0z" fill="none" stroke="none" />
+      <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+      <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+    </svg>
+    {unreadCount > 0 && (
+      <div
+        style={{
+          position: 'absolute',
+          top: 12,
+          width: '16px',
+          height: '16px',
+          backgroundColor: 'red',
+          borderRadius: '50%',
+          color: 'white',
+          fontSize: '10px',
+          fontWeight: 'bold',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          border: '2px solid white',
+        }}
+      >
+        {unreadCount}
+      </div>
+    )}
+  </div>
 );

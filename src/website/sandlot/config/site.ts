@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "Sandlot",
-  description: "Make beautiful websites regardless of your design experience.",
+  description: "A web-based service that enables league and schedule management from a convenient user interface",
   navItems: [
     {
       label: "Home",
@@ -21,50 +21,34 @@ export const siteConfig = {
       href: "/team",
     },
     {
-      label: "Profile",
-      href: "/profile",
+      label: "Account",
+      href: "/account",
     },
     {
-      label: "Accept RR",
-      href: "/accept-reschedule-request",
+      label: "Rescheduler",
+      href: "/manage-reschedule-request",
     },
   ],
-  navMenuItems: [
+  manageLeagueOptions: [
     {
-      label: "Profile",
-      href: "/profile",
+      label: "Season Setup",
+      href: "/season-setup",
     },
+    // {
+    //   label: "Broadcast",
+    //   href: "/broadcast",
+    // },
     {
-      label: "Dashboard",
-      href: "/dashboard",
+      label: "Waiver",
+      href: "/waiver",
     },
-    {
-      label: "Projects",
-      href: "/projects",
-    },
-    {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback",
-    },
-    {
-      label: "Logout",
-      href: "/logout",
-    },
+    // {
+    //   label: "Archive",
+    //   href: "/archive",
+    // },
   ],
   links: {
     github: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot",
-    docs: "https://heroui.com",
+    docs: "https://github.com/Nicholas-Fabugais-Inaba/Sandlot?tab=readme-ov-file#sandlot",
   },
 };
