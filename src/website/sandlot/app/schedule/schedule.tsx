@@ -258,7 +258,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
           selectedDate.date.getTime() === start.getTime() &&
           selectedDate.field === field,
       );
-  
+
       if (isDuplicate) {
         const newSelectedDates = selectedDates.filter(
           (selectedDate) =>
@@ -267,7 +267,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
               selectedDate.field === field
             ),
         );
-  
+
         setSelectedDates(newSelectedDates);
       } else {
         let newSelectedDates = [...selectedDates, { date: start, timeslot, field }];
@@ -275,7 +275,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         if (newSelectedDates.length > maxSelectedDates) {
           newSelectedDates = newSelectedDates.slice(1); // Remove the first selected date
         }
-  
+
         setSelectedDates(newSelectedDates);
       }
     }
@@ -446,6 +446,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       })();
       setLoading(false);
     }
+    // Reset selected dates
+    setSelectedDates([]);
   };
 
   const handleGenerateSchedule = () => {
@@ -487,7 +489,8 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       rescheduleGame,
     );
     if (rescheduleGame && selectedDates[0]) {
-      const formattedDate: string = selectedDates[0].date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+      const adjustedDate = subtractHours(selectedDates[0].date, 8); // Adjust date by subtracting 4 hours
+      const formattedDate: string = adjustedDate.toISOString().split('T')[0];
       commissionerReschedule({
         game_id: rescheduleGame?.game_id,
         date: formattedDate,
@@ -495,6 +498,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         field: selectedDates[0].field.toString()
       })
     }
+
+    // Reset selected dates
+    setSelectedDates([]);
 
     // setTimeout is used to wait for the db to be populated with the rescheduled game before attempting to retrieve the game information on the schedule page
     setTimeout(() => {
@@ -511,6 +517,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
         )
       : false;
   };
+
+  function subtractHours(date: Date, hours: number): Date {
+    const adjustedDate = new Date(date);
+    adjustedDate.setUTCHours(adjustedDate.getUTCHours() - hours);
+    return adjustedDate;
+  }
 
   const handleSendRequest = async () => {
     handleReturnClick();
@@ -537,6 +549,9 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
       option4_field: selectedDates[3]?.field.toString() || "",
       option5_field: selectedDates[4]?.field.toString() || "",
     };
+
+    // Reset selected dates
+    setSelectedDates([]);
 
     console.log(RRdata);
     await createRR(RRdata);
@@ -810,7 +825,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                       <div className="text-xs text-gray-600">{fieldName}</div>
                     )}
                   </div>
-                ) : null
+                ) : <div className={`event-content p-2 rounded-xl spacer-event`}></div>
               ) : schedType === 1 ? ( // Team Schedule
                 eventInfo.event.extendedProps.home &&
                 eventInfo.event.extendedProps.away &&
@@ -985,12 +1000,12 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                 className="px-4 py-2 bg-green-500 text-white rounded-lg"
                 onClick={handleGenerateSchedule}
               >
-                Generate Schedule
+                Generate New Schedule
               </button>
               <div className="flex items-center">
                 <span className="mr-4 text-lg">
                   {Object.keys(schedule).length === 0
-                    ? "No new schedule to submit"
+                    ? "No new schedule to save"
                     : `Current Schedule Score: ${schedScore}`}
                 </span>
                 <button
@@ -998,7 +1013,7 @@ export default function Schedule({ viewer, setUnsavedChanges }: ScheduleProps) {
                   disabled={Object.keys(schedule).length === 0}
                   onClick={handleSubmitSchedule}
                 >
-                  Submit Schedule
+                  Save Schedule
                 </button>
               </div>
             </div>

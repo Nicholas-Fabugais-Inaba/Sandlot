@@ -26,8 +26,11 @@ import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getDirectoryPlayers from "@/app/functions/getDirectoryPlayers";
 import getPlayerWaivers from "@/app/functions/getPlayerWaivers";
 
-// import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
+import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
+
+import getSeasonState from "@/app/functions/getSeasonState";
+import OffseasonMessage from "@/app/no-season/OffseasonMessage";
 
 let notificationTimeout: NodeJS.Timeout | null = null;
 
@@ -43,12 +46,15 @@ export default function TeamsDirectoryPage() {
   const [expandedTeams, setExpandedTeams] = useState<string[]>([]); 
   const [playersByTeam, setPlayersByTeam] = useState<Record<string, Player[]>>({}); 
   const [copyNotification, setCopyNotification] = useState<string | null>(null);
-  const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[]>([]);
+  // const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[]>([]);
   const [waiverTitle, setWaiverTitle] = useState<string>("");
   const [waiverTexts, setWaiverTexts] = useState<string[]>([]);
   const [waiverFooter, setWaiverFooter] = useState<string>("");
+  const [waiverEnabled, setWaiverEnabled] = useState<boolean>();
 
   const [currentYear] = useState<string>(String(new Date().getFullYear()));
+  const [seasonState, setSeasonState] = useState<any>();
+  
 
   interface Team {
     team_id: number;
@@ -75,33 +81,48 @@ export default function TeamsDirectoryPage() {
 
   useEffect(() => {
     const fetchSessionAndData = async () => {
+
+      let response = await getSeasonState();
+      setSeasonState(response);
+
       const session = await getSession();
       setSession(session);
 
       if (!session || (session?.user.role !== "commissioner" && session?.user.role !== "team")) {
         router.push("/");
         return;
-      } else {
+      } else if (response !== "offseason") {
         const teams = await getDirectoryTeams();
         setTeams(teams);
 
-        // Fetch players for all teams
-        const playersData = await Promise.all(
-          teams.map(async (team: Team) => {
-            const players = await getDirectoryPlayers({ team_id: team.team_id });
-            return { teamName: team.name, players };
-          })
-        );
+        const enabled = await getWaiverEnabled();
+        setWaiverEnabled(enabled.waiver_enabled);
+        // console.log("Waiver Enabled:", waiverEnabled);
 
-        // Map players to their respective teams
-        const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
-          acc[teamName] = players;
-          return acc;
-        }, {} as Record<string, Player[]>);
+        // Fetch players for all teams (concurrently?)
+        // const playersData = await Promise.all(
+        //   teams.map(async (team: Team) => {
+        //     const players = await getDirectoryPlayers({ team_id: team.team_id });
+        //     return { teamName: team.name, players };
+        //   })
+        // );
+
+            // Fetch players for all teams sequentially
+        const playersByTeamData: Record<string, Player[]> = {};
+        for (const team of teams) {
+          const players = await getDirectoryPlayers({ team_id: team.team_id });
+          playersByTeamData[team.name] = players;
+        }
+
+        // // Map players to their respective teams (for concurrent? implementation of getting players)
+        // const playersByTeamData = playersData.reduce((acc, { teamName, players }) => {
+        //   acc[teamName] = players;
+        //   return acc;
+        // }, {} as Record<string, Player[]>);
 
         setPlayersByTeam(playersByTeamData);
-        setIsLoading(false); // Set loading to false after all data is fetched
       }
+      setIsLoading(false); // Set loading to false after all data is fetched
     };
 
     fetchSessionAndData();
@@ -178,7 +199,7 @@ export default function TeamsDirectoryPage() {
 
   const fillDataPDF = async (playerId: number): Promise<Record<string, string | string[]>> => {
     let dataPlayer = await getPlayerWaivers({ player_id: playerId });
-    console.log("Player Waiver Data", dataPlayer);
+    // console.log("Player Waiver Data", dataPlayer);
     const data = {
       "Waiver Title": waiverTitle,
       "Waiver Texts": waiverTexts,
@@ -187,11 +208,12 @@ export default function TeamsDirectoryPage() {
       "Player Signature": dataPlayer[0].signature,
     };
 
-    console.log("This is data in fillDataPDF:", data);
+    // console.log("This is data in fillDataPDF:", data);
     return data; // Return the data instead of resolving a void promise
   };
 
-  const uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
+  let uniqueDivisions = Array.from(new Set(teams.map((team) => team.division)));
+  uniqueDivisions = uniqueDivisions.sort((s1, s2) => s1.toLowerCase().localeCompare(s2.toLowerCase()));
 
   const handleSort = (
     division: string,
@@ -211,7 +233,10 @@ export default function TeamsDirectoryPage() {
     );
   }
 
-  if (session?.user.role === "commissioner" || session?.user.role === "team") {
+  if (seasonState === "offseason") {
+    return <OffseasonMessage />;
+  }
+  else if (session?.user.role === "commissioner" || session?.user.role === "team") {
     return (
       <div>
         <div style={{ marginBottom: "20px" }}>
@@ -328,7 +353,7 @@ export default function TeamsDirectoryPage() {
                                             {player.email}
                                           </div>
                                           <div>{player.phone_number}</div>
-                                          {(session?.user.role === "commissioner") && (
+                                          {(session?.user.role === "commissioner" && waiverEnabled) && (
                                             <div className="text-xs text-black mt-1 flex items-center">
                                               Download waiver: 
                                               <button onClick={() => downloadPlayerPDF(player)}>

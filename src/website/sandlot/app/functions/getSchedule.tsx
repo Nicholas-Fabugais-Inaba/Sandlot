@@ -279,6 +279,13 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any, sols
   const solsticeStart = new Date(solsticeSettings.start);
   const solsticeEnd = new Date(solsticeSettings.end);
 
+  // Calculate earliest start and latest end
+  const earliest = Math.min(...timeslots.map((ts: any) => parseInt(ts.start.split("-")[0])));
+  const latest = Math.max(...timeslots.map((ts: any) => {
+    const [hour, minute] = ts.end.split("-").map(Number); // Extract hour and minute
+    return minute > 0 ? hour + 1 : hour; // Round up if there are minutes
+  }));
+
   // Determine the fields based on dynamicSolstice or timeslots
   const fields: Record<string, Field> = solsticeSettings.active
     ? nonSolsticeTimeslots
@@ -311,7 +318,7 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any, sols
 
       // Add spacer from 5:00 to the start of the first timeslot
       const startOfDay = new Date(currentDate);
-      startOfDay.setUTCHours(dayStart, 0, 0);
+      startOfDay.setUTCHours(earliest, 0, 0);
 
       const startOfFirstTimeslot = new Date(currentDate);
       startOfFirstTimeslot.setUTCHours(firstTimeslot.start_hour, firstTimeslot.start_minutes, 0);
@@ -357,7 +364,7 @@ export function addSpacerEventsUsingFields(events: Event[], timeslots: any, sols
       endOfLastTimeslot.setUTCHours(lastTimeslot.end_hour, lastTimeslot.end_minutes, 0);
 
       const endOfDay = new Date(currentDate);
-      endOfDay.setUTCHours(dayEnd, 0, 0);
+      endOfDay.setUTCHours(latest, 0, 0);
 
       // Adjust for solstice if applicable
       if (solsticeSettings.active && currentDate >= solsticeStart && currentDate <= solsticeEnd) {

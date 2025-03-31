@@ -97,12 +97,12 @@ def soft_constraint2(game, game_slot, schedule):
     for team in game:
         if teams[team]["pref_time"] == 1: # Early preference
             if time == 3 or time == 4:
-                score += 3
+                score += 6
         elif teams[team]["pref_time"] == 2: # Balanced preference
             continue
         elif teams[team]["pref_time"] == 3: # Late preference
             if time == 1 or time == 2:
-                score += 3
+                score += 6
     return score
 
 
@@ -122,7 +122,7 @@ def soft_constraint3(game, game_slot, schedule):
             has_other_slots = True
             # Check if the timeslot number is one away from other timeslot numbers
             # print(sched_game_slot[1], time, abs(sched_game_slot[1] - time) == 1)
-            print("Checking: ", sched_game_slot[1], time, sched_game_slot[0], field_id, sched_game_slot[2], date, sched_game_slot[0] == field_id and sched_game_slot[2] == date)
+            # print("Checking: ", sched_game_slot[1], time, sched_game_slot[0], field_id, sched_game_slot[2], date, sched_game_slot[0] == field_id and sched_game_slot[2] == date)
             if abs(sched_game_slot[1] - time) == 1:
                 return 0
 
@@ -130,7 +130,7 @@ def soft_constraint3(game, game_slot, schedule):
     if not has_other_slots:
         return 0
 
-    print("Failed")
+    # print("Failed")
     # If there are other slots but none are adjacent, return a penalty score
     return 50
 
@@ -140,7 +140,7 @@ def soft_constraint4(game, game_slot, schedule):
     weekday: int = game_slot[2].weekday()
     score = 0
     if weekday == 4: # Friday
-        score = 1
+        score = 2
     return score
 
 
@@ -251,9 +251,12 @@ def backtrack_scheduler_w_skip():
                 break
 
         if not slot_chosen and len(soft_constrained_slots) > 0:
+
             # Find the soft constrained slot with the lowest score
-            print("Using soft constrained slot")
+            # print("Using soft constrained slot")
             lowest_score_slot = min(soft_constrained_slots, key=lambda x: x[1])
+            # print("Soft constrained slots:", soft_constrained_slots)
+            print("Lowest score slot:", lowest_score_slot)
             curr_score += lowest_score_slot[1]
             schedule[lowest_score_slot[0]] = game
             slot_chosen = True
@@ -273,6 +276,7 @@ def gen_constraints():
     hard_constraints.append(constraint2)
     # hard_constraints.append(constraint3)
     # hard_constraints.append(constraint4)
+    
     soft_constraints.append(soft_constraint1)
     soft_constraints.append(soft_constraint2)
     soft_constraints.append(soft_constraint3)

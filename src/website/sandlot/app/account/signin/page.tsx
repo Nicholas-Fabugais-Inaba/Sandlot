@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"; // To handle the query parameters
 import { Button } from "@heroui/react";
@@ -12,13 +12,24 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { title } from "@/components/primitives";
 import "../../Global.css";
+import getSeasonState from "@/app/functions/getSeasonState";
 
 export default function SignIn() {
   const [userID, setUserID] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [seasonState, setSeasonState] = useState<any>();
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchSeasonState = async () => {
+      const state = await getSeasonState();
+      setSeasonState(state);
+    };
+
+    fetchSeasonState();
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState); // Toggle the visibility state
@@ -99,9 +110,15 @@ export default function SignIn() {
             <Button
               className="button"
               onPress={() => router.push("/account/register")}
+              isDisabled={seasonState === "offseason"} // Disable button if seasonState is "offseason"
             >
               Register
             </Button>
+            {seasonState === "offseason" && (
+              <p className="text-sm text-red-500 text-center mt-2">
+                League is currently in offseason.
+              </p>
+            )}
           </div>
           <div className="flex justify-center mt-4">
             <Button

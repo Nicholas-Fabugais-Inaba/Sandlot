@@ -12,6 +12,8 @@ import { Spinner } from "@heroui/react";
 
 import AvailableTeams from "@/app/team/AvailableTeams"; // Import the schedule page
 import "./JoinATeam.css";
+import getSeasonState from "@/app/functions/getSeasonState";
+
 
 export default function JoinATeamPage() {
 
@@ -19,21 +21,21 @@ export default function JoinATeamPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const fetchSession = async () => {
+
+      let response = await getSeasonState();
+
       const session = await getSession();
       setSession(session);
       
-      if (!session || (session?.user.role !== "player")) {
+      if ((!session || (session?.user.role !== "player")) || response === "offseason") {
         router.push("/");
         return;
       } 
       setLoading(false);
 
     };
-
-    setLoading(true);
 
     fetchSession();
   }

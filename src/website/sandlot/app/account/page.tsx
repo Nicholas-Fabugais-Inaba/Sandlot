@@ -21,6 +21,7 @@ import getPlayerActiveTeam from "../functions/getPlayerActiveTeam";
 import "../Global.css";
 import getPlayerAccountData from "../functions/getPlayerAccountInfo";
 import getTeamAccountData from "../functions/getTeamAccountData";
+import getSeasonState from "@/app/functions/getSeasonState";
 
 function capitalizeFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -55,6 +56,8 @@ export default function AccountPage() {
   const [accountInfo, setAccountInfo] = useState<AccountInfo>({});
   const [isAlertVisible, setIsAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [seasonState, setSeasonState] = useState<any>();
+  
 
   const router = useRouter();
 
@@ -62,7 +65,8 @@ export default function AccountPage() {
     const fetchSession = async () => {
       const session = await getSession();
       // If role is player, use getPlayer(), if role is team, use getTeam(), if role is commissioner do nothing
-      
+      let response = await getSeasonState();
+      setSeasonState(response);
 
       if (session) {
         if (session.user.role === "player") {
@@ -299,10 +303,16 @@ export default function AccountPage() {
             <Button
               className="button"
               onPress={() => router.push("/account/register")}
+              isDisabled={seasonState === "offseason"} 
             >
               Register
             </Button>
           </div>
+          {seasonState === "offseason" && (
+          <p className="text-sm text-red-500 text-center mt-2">
+            League is currently in offseason.
+          </p>
+        )}
         </div>
       </div>
     );

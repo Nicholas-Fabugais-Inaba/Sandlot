@@ -81,7 +81,7 @@ export default function SeasonSetupPage() {
     );
   }
 
-  const scheduleDesc = <p className="mb-4">Generating a schedule isn't available until preseason is launched.</p>;
+  const scheduleDesc = <p className="mb-4 text-gray-700">Generating a schedule isn't available until preseason is launched.</p>;
 
   const renderSection = () => {
     switch (activeSection) {
@@ -109,11 +109,11 @@ export default function SeasonSetupPage() {
       case "divisions":
         return (
           <DndProvider backend={HTML5Backend}>
-            <DivisionsSettings setUnsavedChanges={setUnsavedChanges} />
+            <DivisionsSettings setUnsavedChanges={setUnsavedChanges} seasonState={seasonState} />
           </DndProvider>
         );
       case "schedule":
-        return seasonState === "offseason" ? scheduleDesc : <ScheduleSettings setUnsavedChanges={setUnsavedChanges} />;
+        return <ScheduleSettings setUnsavedChanges={setUnsavedChanges} seasonState={seasonState} />;
       case "launchpad":
         return <Launchpad seasonState={seasonState} />;
       default:
@@ -169,9 +169,9 @@ interface ToolbarProps {
 function Toolbar({ setActiveSection, seasonState }: ToolbarProps) {
   return (
     <div className="toolbar">
-      <button onClick={() => setActiveSection("general")}>General</button>
-      <button onClick={() => setActiveSection("divisions")}>Divisions</button>
-      <button onClick={() => setActiveSection("schedule")}>Schedule</button>
+      <button onClick={() => setActiveSection("general")}>General Settings</button>
+      <button onClick={() => setActiveSection("divisions")}>Division Settings</button>
+      <button onClick={() => setActiveSection("schedule")}>Schedule Generator</button>
       <button onClick={() => setActiveSection("launchpad")}>
         {seasonState === "offseason" ? "Launch Preseason" : seasonState === "preseason" ? "Launch Season" : "End Season"}
       </button>
@@ -247,11 +247,11 @@ function GeneralSettings({
     const [hour, minute] = value.split(":").map(Number);
   
     // Validate start and end times
-    if (field === "startTime" && (hour < 5 || hour > 23 || (hour === 23 && minute > 0))) {
+    if (field === "startTime" && (hour < 5 || hour > 23)) {
       alert("Start time must be between 5:00 AM and 11:59 PM.");
       return;
     }
-    if (field === "endTime" && (hour < 5 && hour !== 0 || hour > 23 || (hour === 0 && minute !== 0))) {
+    if (field === "endTime" && (hour < 5 && hour !== 0 || hour > 23 || (hour === 0 && minute > 0))) {
       alert("End time must be between 5:00 AM and 12:00 AM.");
       return;
     }
@@ -296,13 +296,22 @@ function GeneralSettings({
       alert("You can only create up to 3 fields.");
       return;
     }
-
+  
     const newField: Field = {
-      id: fields.length + 1, // Generate ID within the range 1 to len(fields)
+      id: fields.length + 1, // Assign ID based on the current number of fields
       name: `Field ${fields.length + 1}`,
-      timeslotIds: []
+      timeslotIds: [],
     };
-    setFields(prev => [...prev, newField]);
+  
+    setFields((prev) => {
+      const updatedFields = [...prev, newField];
+      // Reassign IDs to ensure they remain sequential
+      return updatedFields.map((field, index) => ({
+        ...field,
+        id: index + 1, // Reassign IDs starting from 1
+      }));
+    });
+  
     setUnsavedChanges(true);
   };
 
@@ -433,16 +442,28 @@ function GeneralSettings({
     timeslots.some(ts => !ts.startTime || !ts.endTime) ||
     fields.some(field => field.timeslotIds.length === 0) ||
     timeslots.some(ts => {
-      const start = new Date(`1970-01-01T${ts.startTime}:00`);
-      const end = new Date(`1970-01-01T${ts.endTime}:00`);
-      const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60); // Calculate difference in minutes
+      const normalizeTime = (time: string) => {
+        const [hour, minute] = time.split(":").map(Number);
+        return hour === 0 ? 24 * 60 + minute : hour * 60 + minute; // Treat 12:00 AM as 24:00
+      };
+
+      const start = normalizeTime(ts.startTime);
+      const end = normalizeTime(ts.endTime);
+      const diffInMinutes = end - start; // Calculate difference in minutes
+
       return start >= end || diffInMinutes < 30; // Check if start is not earlier than end or difference is less than 30 minutes
     });
 
   const invalidTimeslotMessage = timeslots.some(ts => {
-    const start = new Date(`1970-01-01T${ts.startTime}:00`);
-    const end = new Date(`1970-01-01T${ts.endTime}:00`);
-    const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+    const normalizeTime = (time: string) => {
+      const [hour, minute] = time.split(":").map(Number);
+      return hour === 0 ? 24 * 60 + minute : hour * 60 + minute; // Treat 12:00 AM as 24:00
+    };
+  
+    const start = normalizeTime(ts.startTime);
+    const end = normalizeTime(ts.endTime);
+    const diffInMinutes = end - start;
+  
     return start >= end || diffInMinutes < 30;
   })
     ? "One or more timeslots have a start time that is not earlier than the end time or have less than a 30-minute duration."
@@ -472,7 +493,13 @@ function GeneralSettings({
       });
   
       // Convert the Map to an array of timeslots
-      const timeslots = Array.from(timeslotMap.values()).map(({ fieldIds, ...rest }) => rest);
+      const timeslots = Array.from(timeslotMap.values())
+        .map(({ fieldIds, ...rest }) => rest)
+        .sort((a, b) => {
+          const [aHour, aMinute] = a.startTime.split(":").map(Number);
+          const [bHour, bMinute] = b.startTime.split(":").map(Number);
+          return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
+        });
   
       // Group timeslots by field
       const fields = Array.from(timeslotMap.values()).reduce((acc: Field[], timeslot) => {
@@ -523,28 +550,31 @@ function GeneralSettings({
   };
 
   const convertTimeToUTC = (time: string): string => {
-    const [hour, minute] = time.split(":").map(Number);
+    let [hour, minute] = time.split(":").map(Number);
+    if (hour < 4) {
+      hour += 24; // Adjust for UTC conversion (example: +4 hours)
+    }
     const utcHour = hour + 4; // Adjust for UTC conversion (example: +4 hours)
     return `${utcHour}-${minute}`;
   };
 
   const seasonDesc = seasonState === "offseason" 
-    ? "The season is currently in the offseason. You can prepare for the upcoming season by setting up dates, fields, and timeslots."
+    ? "The season is currently in the offseason. You may prepare for the upcoming season by setting up dates, divisions, fields, and timeslots."
     : seasonState === "preseason"
-    ? "The season is currently in the preseason. Configure your fields and timeslots before generating the schedule."
-    : "The season is currently active. Monitor the progress and make adjustments as needed.";
+    ? "The season is currently in the preseason. Configure your fields and timeslots and set teams' divisions before generating the schedule. Once a schedule is generated the season is ready for launch."
+    : "The season is currently active. Reschedule games and set scores in the main site Schedule tab.";
 
   return (
     <div className="general-settings-container">
-      <h2 className="text-2xl font-semibold mb-4">General Settings</h2>
-      <h3 className="text-1xl text-gray-700 mb-4">
-        Season Status: <span className="font-bold text-gray-900">
+      <h2 className="text-3xl font-semibold mb-4">General Settings</h2>
+      <h3 className="text-2xl text-gray-700 mb-4">
+        Season Status: <span className="font-bold text-gray-800">
           {seasonState === "offseason" ? "Offseason" : 
            seasonState === "preseason" ? "Preseason" : 
            "Season Active"}
         </span>
       </h3>
-      <p className="mb-4">{seasonDesc}</p>
+      <p className="mb-4 text-gray-700">{seasonDesc}</p>
       
       <form>
         {/* Date and Games Settings */}
@@ -607,95 +637,106 @@ function GeneralSettings({
 
         {/* Timeslots Section */}
         <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-gray-700">
-              Timeslots
-            </label>
-            <button 
-              type="button" 
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-              onClick={addTimeslot}
-            >
-              Add Timeslot
-            </button>
-          </div>
-          {timeslots.map((timeslot) => (
+        <div className="flex justify-between items-center mb-2">
+          <label className="block text-gray-700">Timeslots</label>
+          <button
+            type="button"
+            className="bg-blue-500 text-white px-3 py-1 rounded"
+            onClick={addTimeslot}
+          >
+            Add Timeslot
+          </button>
+        </div>
+        {timeslots.length === 0 ? (
+          <p className="text-gray-500 italic">No Timeslots</p>
+        ) : (
+          timeslots.map((timeslot) => (
             <div key={timeslot.id} className="flex items-center space-x-2 mb-2">
               <input
                 type="time"
                 value={timeslot.startTime}
-                onChange={(e) => updateTimeslot(timeslot.id, 'startTime', e.target.value)}
+                onChange={(e) => updateTimeslot(timeslot.id, "startTime", e.target.value)}
                 className="border rounded px-2 py-1"
               />
               <input
                 type="time"
                 value={timeslot.endTime}
-                onChange={(e) => updateTimeslot(timeslot.id, 'endTime', e.target.value)}
+                onChange={(e) => updateTimeslot(timeslot.id, "endTime", e.target.value)}
                 className="border rounded px-2 py-1"
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="bg-red-500 text-white px-3 py-1 rounded"
                 onClick={() => removeTimeslot(timeslot.id)}
               >
                 Remove
               </button>
             </div>
-          ))}
-        </div>
+          ))
+        )}
+      </div>
 
         {/* Fields Section */}
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <label className="block text-gray-700">
-              Fields
-            </label>
-            <button 
-              type="button" 
+            <label className="block text-gray-700">Fields</label>
+            <button
+              type="button"
               className="bg-blue-500 text-white px-3 py-1 rounded"
               onClick={addField}
             >
               Add Field
             </button>
           </div>
-          {fields.map((field) => (
-            <div key={field.id} className="mb-3 p-3 border rounded">
-              <div className="flex justify-between items-center mb-2">
-                <input 
-                  type="text" 
-                  value={field.name} 
-                  onChange={(e) => updateFieldName(field.id, e.target.value)}
-                  className="border rounded px-2 py-1 flex-grow mr-2"
-                />
-                <button 
-                  type="button" 
-                  className="bg-red-500 text-white px-3 py-1 rounded"
-                  onClick={() => removeField(field.id)}
-                >
-                  Remove Field
-                </button>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Available Timeslots
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {timeslots.map((timeslot) => (
-                    <label key={timeslot.id} className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={field.timeslotIds.includes(timeslot.id)}
-                        onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
-                        className="mr-2"
-                      />
-                      {timeslot.startTime} - {timeslot.endTime}
-                    </label>
-                  ))}
+          {fields.length === 0 ? (
+            <p className="text-gray-500 italic">No Fields</p>
+          ) : (
+            fields.map((field) => (
+              <div key={field.id} className="mb-3 p-3 border rounded">
+                <div className="flex justify-between items-center mb-2">
+                  <input
+                    type="text"
+                    value={field.name}
+                    onChange={(e) => updateFieldName(field.id, e.target.value)}
+                    className="border rounded px-2 py-1 flex-grow mr-2"
+                  />
+                  <button
+                    type="button"
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                    onClick={() => removeField(field.id)}
+                  >
+                    Remove Field
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Available Timeslots
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {timeslots
+                      .slice() // Create a shallow copy to avoid mutating the original array
+                      .sort((a, b) => {
+                        const [aHour, aMinute] = a.startTime.split(":").map(Number);
+                        const [bHour, bMinute] = b.startTime.split(":").map(Number);
+                        return aHour === bHour ? aMinute - bMinute : aHour - bHour; // Compare hours, then minutes
+                      })
+                      .map((timeslot) => (
+                        <label key={timeslot.id} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={field.timeslotIds.includes(timeslot.id)}
+                            onChange={() => toggleTimeslotForField(field.id, timeslot.id)}
+                            className="mr-2"
+                          />
+                          {timeslot.startTime} - {timeslot.endTime}
+                        </label>
+                      ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
 
         {/* Save Button */}
@@ -723,13 +764,43 @@ function GeneralSettings({
 
 interface ScheduleSettingsProps {
   setUnsavedChanges: (hasChanges: boolean) => void;
+  seasonState: string;
 }
 
-function ScheduleSettings({ setUnsavedChanges }: ScheduleSettingsProps) {
+function ScheduleSettings({ setUnsavedChanges, seasonState }: ScheduleSettingsProps) {
   return (
-    <div>
-      <h2 className="text-2xl font-semibold mb-4">Schedule Generator</h2>
-      <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
+    <div className="pb-80">
+      <h2 className="text-3xl font-semibold mb-4">Schedule Generator</h2>
+      {seasonState === "preseason" ? (
+        <>
+          <Schedule viewer={true} setUnsavedChanges={setUnsavedChanges} />
+          <p className="mt-4 text-gray-700 text-lg">
+            <strong>ALL TEAMS must have accounts and put into divisions in Division Settings before the schedule should be generated.</strong>
+            <br /><br />
+
+            Press the <strong>Generate New Schedule</strong> button to generate a schedule you can view in this screen before saving.
+            You may regenerate as many times as you like until you find an acceptable schedule.
+            <br /><br />
+
+            Press the <strong>Save Schedule</strong> button to save the schedule. This schedule will be used for the season unless a new schedule is generated and then saved.
+            <br /><br />
+
+            The <strong>Schedule Score</strong> listed beside the Save Schedule button represents how well the schedule fits the preferred times and offdays of the teams.
+            The score can be improved by adding more timeslots and fields, but a perfect score is rarely feasible due to conflicting team preferences.
+            A lower score means a better fit.
+            <br /><br />
+
+            <strong>A schedule must be generated and saved before the season can be launched.</strong>
+            <br /><br />
+
+            Team accounts and players cannot see schedule until season is launched.
+          </p>
+        </>
+      ) : (
+        <p className="mt-4 text-gray-700 text-lg">
+          Cannot generate a schedule unless in preseason.
+        </p>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { title } from "@/components/primitives";
 import {
     Button,
@@ -9,6 +9,7 @@ import {
     Input,
     Switch,
     Textarea,
+    Spinner,
     Table,
     TableBody,
     TableCell,
@@ -23,8 +24,8 @@ import getDirectoryTeams from "@/app/functions/getDirectoryTeams";
 import getWaiverFormatByYear from "@/app/functions/getWaiverFormatByYear";
 import deleteWaiverFormatByYear from "@/app/functions/deleteWaiverFormat";
 import createWaiverFormat from "@/app/functions/createWaiverFormat";
-import getWaiverEnabled from "../functions/getWaiverEnabled";
-import updateDivision from "../functions/updateTeamDivision";
+import getWaiverEnabled from "@/app/functions/getWaiverEnabled";
+import updateWaiverEnabled from "@/app/functions/updateWaiverEnabled";
 import { BlobOptions } from "buffer";
 
 import { useRouter } from "next/navigation";
@@ -40,14 +41,14 @@ interface WaiverSection {
   requireInitials: boolean;
 }
 
-interface WaiverConfig {
-  id?: string;
-  isEnabled: boolean;
-  title: string;
-  description: string;
-  sections: WaiverSection[];
-  requiredSignatures: string[];
-}
+// interface WaiverConfig {
+//   id?: string;
+//   isEnabled: boolean;
+//   title: string;
+//   description: string;
+//   sections: WaiverSection[];
+//   requiredSignatures: string[];
+// }
 
 interface SignedWaiver {
   id?: string;
@@ -78,7 +79,8 @@ export default function WaiverManagementPage() {
   const router = useRouter();
 
   // State for waiver configuration
-  const [waiverConfig, setWaiverConfig] = useState<boolean>(false)
+  const [waiverConfig, setWaiverConfig] = useState<boolean>()
+  const [tempWaiverConfig, setTempWaiverConfig] = useState<boolean>();
 
   // State for signed waivers and teams
   const [signedWaivers, setSignedWaivers] = useState<SignedWaiver[]>([]);
@@ -94,6 +96,8 @@ export default function WaiverManagementPage() {
 
   const [waiverFormat, setWaiverFormat] = useState<WaiverFormat[] | null>(null)
   const [tempSection, setTempSection] = useState<WaiverFormat | null>(null);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   // const [selectedYear, setSelectedYear] = useState<string>("")
 
@@ -111,13 +115,14 @@ export default function WaiverManagementPage() {
 
         try {
           // Fetch teams
-          const teamList = await getDirectoryTeams();
-          const teamNames: string[] = teamList.map((team: Team) => team.name);
-          setTeams(teamNames);
+          // const teamList = await getDirectoryTeams();
+          // const teamNames: string[] = teamList.map((team: Team) => team.name);
+          // setTeams(teamNames);
 
           // Fetch existing waiver configuration
           const enabled = await getWaiverEnabled();
           setWaiverConfig(enabled.waiver_enabled);
+          setTempWaiverConfig(enabled.waiver_enabled);
 
           // Fetch signed waivers
           // const existingWaivers = await getSignedWaivers();
@@ -131,7 +136,23 @@ export default function WaiverManagementPage() {
     
     fetchInitialData();
     fetchWaiverFormat();
+    setIsLoading(false);
   }, []);
+
+  // useEffect(() => {
+  //   const updateWaiverStatus = async () => {
+  //     if (!isLoading) {
+  //       try {
+  //         await updateWaiverEnabled({ waiver_enabled: waiverConfig });
+  //       } catch (error) {
+  //         console.error("Failed to update waiver status", error);
+  //       }
+  //     }
+  //   };
+
+  //   updateWaiverStatus();
+  // }
+  // , [waiverConfig]);
 
   const fetchWaiverFormat = async () => {
     try {
@@ -139,11 +160,12 @@ export default function WaiverManagementPage() {
         let data = await getWaiverFormatByYear({ year: currentYear });
 
         // Process each section's text with decodeURIComponent and replace newlines
-        const processedData = data.map((section: WaiverFormat) => ({
+        let processedData = data.map((section: WaiverFormat) => ({
             ...section,
             text: decodeURIComponent(section.text)
         }));
 
+        processedData = processedData.sort((s1: any, s2:any) => s1.index > s2.index);
         setWaiverFormat(processedData);
 
         if (processedData.length === 0) {
@@ -165,6 +187,10 @@ export default function WaiverManagementPage() {
   // Function to save waiver configuration
   const handleSaveConfiguration = async () => {
     try {
+
+      setWaiverConfig(tempWaiverConfig);
+      await updateWaiverEnabled({ waiver_enabled: tempWaiverConfig });
+
       if(waiverFormat) {
         let waiverCopy = [...waiverFormat]
         for(let i = 0; i < waiverFormat.length; i++) {
@@ -252,6 +278,14 @@ export default function WaiverManagementPage() {
     setTempSection(null);
   };
 
+   if (isLoading) {
+      return (
+        <div className="flex justify-center items-center h-full min-h-[400px]">
+          <Spinner label="Loading Waiver Editor..." size="lg" />
+        </div>
+      );
+    }
+
   return (
     <div>
       <div className="pageHeader">
@@ -263,19 +297,19 @@ export default function WaiverManagementPage() {
         <CardHeader>
           <div className="flex justify-between items-center gap-4">
             <h2 className="text-xl font-semibold">Waiver Configuration</h2>
-            <Button onPress={handleSaveConfiguration}>Save Configuration</Button>
           </div>
         </CardHeader>
         <div className="p-4">
-          <div className="justify-between flex items-center space-x-4 mb-4">
+          <div className="justify-left flex items-center space-x-4 mb-4">
             <span>Enable Waiver</span>
             <Switch 
-              checked={waiverConfig}
-              onChange={(e) => setWaiverConfig(e.target.checked)}
+              isSelected={tempWaiverConfig}
+              // onChange={(e) => setWaiverConfig(e.target.checked)}
+              onValueChange={setTempWaiverConfig}
             />
           </div>
 
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <Input 
               placeholder="Waiver Title"
               value={waiverFormat ? decodeURI(waiverFormat[0].text): "Title"}
@@ -287,24 +321,26 @@ export default function WaiverManagementPage() {
                 }
               }}
             />
-            {/* <Textarea 
+            <Textarea 
               placeholder="Waiver Description"
               value={waiverConfig.description}
               onChange={(e) => setWaiverConfig(prev => ({...prev, description: e.target.value}))}
-            /> */}
-          </div>
+            />
+          </div> */}
 
           {/* Waiver Sections Management */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-4">Waiver Sections</h3>
-            {waiverFormat
-              ?.filter((section) => section.index !== 0)
-              .map((section, index, array) => (
+            {waiverFormat?.map((section, index, array) => (
                 <div key={section.id}>
                   {/* Conditionally render "Footer" above the last section */}
                   {index === array.length - 1 && (
                     <p className="text-sm font-semibold mb-2 text-left">Footer</p>
                   )}
+                  {index === 0 && (
+                    <p className="text-sm font-semibold mb-2 text-left">Title</p>
+                  )}
+
                   <div className="flex items-start justify-between p-3 border rounded mb-2">
                     <div className="flex-1 mr-4 overflow-hidden">
                       <p className="whitespace-pre-wrap break-words text-black dark:text-white">
@@ -318,7 +354,10 @@ export default function WaiverManagementPage() {
                   </div>
                 </div>
               ))}
-            <Button onPress={addWaiverSection} className="mt-4">Add Section</Button>
+            <Button onPress={addWaiverSection} className="mt-4 w-40">Add Section</Button>
+          </div>
+          <div className="mt-4">
+            <Button onPress={handleSaveConfiguration}>Save Configuration</Button>
           </div>
         </div>
       </Card>
