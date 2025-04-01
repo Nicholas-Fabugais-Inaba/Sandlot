@@ -159,32 +159,32 @@ of the website.
 \subsection{Hands-On Users of the Project}
 
 \begin{itemize}
-  \item [All Users]
+  \item \textbf{All Users}
   \begin{itemize}
     \item Actions: Create an account, log in to their account.
     \item Necessary Information: Their login details.
   \end{itemize}
-  \item [Players]
+  \item \textbf{Players}
   \begin{itemize}
     \item Actions: Request to join a team, view season schedule.
     \item Necessary Information: Their team's name and details, and the season
     schedule.
   \end{itemize}
-  \item [Captains]
+  \item \textbf{Captains}
   \begin{itemize}
     \item Actions: Create a team account, view schedule and reschedule a game.
     \item Necessary Information: Team account login details, team's game
     details including schedule, and days the team is free to reschedule a
     game.
   \end{itemize}
-  \item [Commissioners]
+  \item \textbf{Commissioners}
   \begin{itemize}
     \item Actions: Send league alerts, assign teams to divisions, manually
     update schedule and team information such as player lists.
     \item Necessary Information: Alert content, team division information,
     schedule changes.
   \end{itemize}
-  \item [Umpires]
+  \item \textbf{Umpires}
   \begin{itemize}
     \item Actions: View schedule. (This type of user does not need an
     account.)
@@ -224,18 +224,15 @@ of the website.
 \subsection{Priorities Assigned to Users}
 
 \begin{itemize}
-  \item [Key Users]
+  \item \textbf{Key Users:}
   \begin{itemize}
     \item Players
     \item Captains
     \item Commissioners
   \end{itemize}
-  \item [Secondary Users]
+  \item \textbf{Secondary Users:}
   \begin{itemize}
     \item Umpires
-  \end{itemize}
-  \item [Unimportant Users]
-  \begin{itemize}
     \item Spectators
   \end{itemize}
 \end{itemize}
@@ -374,7 +371,23 @@ Commissioner: A person who manages the league. They may also play in the
 league. Commissioners have top level permissions on Sandlot, they may edit any
 team information like player list and past scores.\\\\
 
-
+\subsection{Symbolic Constants}
+RESCHED\_NOTICE\_HRS = 24\\
+MIN\_INPUT\_SIZE = 44\\
+MIN\_CONTRAST\_RATIO = 4.5:1\\
+MAX\_NAV\_CLICKS = 2\\
+MAX\_TRAIN\_MINS = 60\\
+MIN\_UNDERSTAND\_PERCENT = 90\\
+MIN\_FONT\_SIZE = 16\\
+MIN\_LINE\_CHARS = 45\\
+MAX\_LINE\_CHARS = 75\\
+MAX\_LOAD\_SECS = 3\\
+MIN\_UPTIME\_PERCENT = 99\\
+MAX\_TEAMS = 60\\
+MAX\_PLAYERS = 25\\
+MAX\_USERS = 500\\
+MAX\_SEASON\_START\_HRS = 1\\
+BACKUP\_WEEKS = 1\\
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
@@ -416,14 +429,14 @@ allow users to view the scores of played games, is not working.
       \hline
       Event Name & Input and Output & Summary of BUC\\
       \hline
-      1. User creates an account & Account Data (in) & A player, captain or
+      1. User creates an account & New Account Data (in) & A player, team account, or
       commissioner enters in a username and password along with account details
       including their name, email, phone number, and gender.\\
-      2. User logs in & Login Data (in) & A player, captain or commissioner
+      2. User logs in & Login Data (in) & A player, team account, or commissioner
       enters their username and password and the system grants them access to
       their account.\\
-      3. Captain creates a team & New Team Information (in) & At the
-      start of the season, captains can enter team information such as a team
+      3. Team account is created & New Team Information (in) & At the
+      start of the season, a user can enter team information such as a team
       name. This registers a new team.\\
       4. Player requests to join a team & Team Join Request (in) & At the
       start of the season, players are not assigned to a team and must request
@@ -457,6 +470,9 @@ allow users to view the scores of played games, is not working.
       13. Captain submits game score & Game Score (in)
       & Captains submit the scores of games they have played into the
       system.\\
+      14. User modifies account data & Account Password (if required) (in) \newline
+      New Account Data (in) 
+      & A player, team account, or commissioner modifies their account data (including account deletion)\\
       \hline
     \end{tabular}
   \end{center}
@@ -559,7 +575,7 @@ Not applicable.
     {\reqno FR-3}
     {\reqevent 1}
   \reqdesc Users should be able to create a new account by providing 
-  the necessary information.
+  the necessary information pertaining to their type of account.
   \reqrat An account structure is necessary to be able to change 
   what a user of the system can see/do based on who they are. 
   For example, a player and captain should not be able to see/do 
@@ -567,7 +583,9 @@ Not applicable.
   able to see/do the same things.
   \reqorig Casra Ghazanfari
   \reqfit When a user provides the necessary information 
-  (may or may not include name, email, username, password), 
+  (for players this can include name, email, password, waiver;
+  for team accounts this can include team name, preferred days/times of play,
+  preferred division), 
   an account should be created from that information
   \twoinline
     {\reqsatis 3}
@@ -577,14 +595,15 @@ Not applicable.
 \begin{myreq}
   \twoinline
     {\reqno FR-4}
-    {\reqevent xx}
+    {\reqevent 14}
   \reqdesc Users should be able to change their account information 
   by providing the necessary information.
   \reqrat User information does not stay the same forever, 
   therefore the system should have a way for the user to change 
   their information if it ever changes.
   \reqorig Casra Ghazanfari
-  \reqfit When a user provides the necessary information, 
+  \reqfit When a user provides the necessary information 
+  (i.e. the new information, and/or their password if the field requires user verification), 
   their account information should change.
   \twoinline
     {\reqsatis 3}
@@ -594,13 +613,14 @@ Not applicable.
 \begin{myreq}
   \twoinline
     {\reqno FR-5}
-    {\reqevent xx}
+    {\reqevent 14}
   \reqdesc Users should be able to delete their account by providing 
   the necessary information.
   \reqrat If a user wants to quit the league they should be able to
   delete any of their personal information at any time.
   \reqorig Casra Ghazanfari
   \reqfit When a user provides the necessary information, 
+  (i.e. the new information, and/or their password if the field requires user verification), 
   their account should be deleted.
   \twoinline
     {\reqsatis 3}
@@ -677,15 +697,15 @@ Not applicable.
     {\reqno FR-10}
     {\reqevent 6}
   \reqdesc Captains must be able to request a rescheduling for their team's
-  upcoming games as long as the game is at least 24 hours in the future.
-  Rescheduling involves giving a list of alternate dates which are sent to
-  the opposing team's captain to choose a date and accept.
+  upcoming games as long as the game is at least RESCHED\_NOTICE\_HRS hours
+  in the future. Rescheduling involves giving a list of alternate dates which
+  are sent to the opposing team's captain to choose a date and accept.
   \reqrat Rescheduling is a core feature of the product, and schedule changes
   less than a day from when they are to occur may be too little warning for
   players to prepare for.
   \reqorig Alex Verity
-  \reqfit A captain shall have the option to request a rescheduling for games
-  only more than 24 hours in the future.
+  \reqfit A captain shall have the option to request rescheduling for games
+  only more than RESCHED\_NOTICE\_HRS hours in the future.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -883,12 +903,13 @@ Not applicable.
 
 \begin{myreq}
   \reqno FR-24
-  \reqdesc The system must require the user to sign the league's waiver when they
-  are creating a new account.
-  \reqrat Based on the league's legal requirements, a player must sign a waiver
-  to participate in the league.
+  \reqdesc The system must require the user to sign the league's waiver when
+  they are creating a new account.
+  \reqrat Based on the league's legal requirements, a player must sign a
+  waiver to participate in the league.
   \reqorig Nicholas Fabugais-Inaba
-  \reqfit The waiver form is signed by the user when they are creating an account.
+  \reqfit The waiver form is signed by the user when they are creating an
+  account.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 4}
@@ -904,8 +925,9 @@ Not applicable.
   \reqrat User input should be clear to all users so users know where to enter
   inputs.
   \reqorig Alex Verity
-  \reqfit User input elements shall have a minimum size of 44x44
-  pixels, maintain at least a 3:1 contrast ratio with the background.
+  \reqfit User input elements shall have a minimum width and length of
+  MIN\_INPUT\_SIZE pixels, maintain at least a MIN\_CONTRAST\_RATIO contrast
+  ratio with the background.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -916,8 +938,9 @@ Not applicable.
   \reqdesc All user input elements should provide feedback.
   \reqrat Users should be able to know if their inputs are working or not.
   \reqorig Alex Verity
-  \reqfit User input elements shall include distinct visual feedback (e.g., color change or shadow) on hover or
-  click for clear visibility and interactivity.
+  \reqfit User input elements shall include distinct visual feedback (e.g.,
+  color change or shadow) on hover or click for clear visibility and
+  interactivity.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -976,13 +999,14 @@ Not applicable.
   \twoinline
     {\reqno EU-1}
     {\reqevent 7}
-  \reqdesc All users must be able to easily find the season schedule.
+  \reqdesc Users must be able to easily find the season schedule.
   \reqrat Many users of Sandlot will not be using it often, and the
   schedule will be one of the most frequented parts of Sandlot. It must be
   easy to find and access. 
   \reqorig Alex Verity
   \reqfit On average, a new user shall not take more than one minute to find
-  the schedule, and it should not take more than 2 clicks to access.
+  the schedule, and it should not take more than MAX\_NAV\_CLICKS clicks to
+  access.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 5}
@@ -1037,8 +1061,8 @@ Not applicable.
   product as the league plays out or changes season, and they have the most
   available actions that need to be learned.
   \reqorig Jung Woo Lee
-  \reqfit A new commissioner to the product should be able to learn all of their
-  possible actions within 1 hour.
+  \reqfit A new commissioner to the product should be able to learn all of
+  their possible actions within MAX\_TRAIN\_MINS minutes.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 2}
@@ -1054,7 +1078,7 @@ Not applicable.
   require some learning
   \reqorig Jung Woo Lee
   \reqfit A new captain to the product should be able to learn all of their
-  possible actions within 1 hour.
+  possible actions within MAX\_TRAIN\_MINS minutes.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 2}
@@ -1064,8 +1088,9 @@ Not applicable.
   \twoinline
     {\reqno LR-3}
     {\reqevent 7}
-  \reqdesc A new user should be able to use the basic features (such as viewing
-  the league schedule) of the product without having prior knowledge of the product.
+  \reqdesc A new user should be able to use the basic features (such as
+  viewing the league schedule) of the product without having prior knowledge
+  of the product.
   \reqrat All users should be able to intuitively perform some actions such as 
   viewing the season schedule.
   \reqorig Jung Woo Lee
@@ -1086,7 +1111,8 @@ Not applicable.
   make sure there is little confusion. For example the term off day will be
   used during scheduling as that is used in the past solution.
   \reqorig Alex Verity
-  \reqfit 90 percent of users understand terminology used on Sandlot.
+  \reqfit MIN\_UNDERSTAND\_PERCENT percent of users understand terminology
+  used on the Sandlot user interface.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 2}
@@ -1100,8 +1126,9 @@ Not applicable.
   \reqrat Sandlot will have a wide variety of users, and we must make sure the
   font is an appropriate size for those with reduced vision.
   \reqorig Alex Verity
-  \reqfit Body text shall have a minimum font size of 16 pixels, and a line 
-  length between 45 and 75 characters for optimal readability across all devices.
+  \reqfit Body text shall have a minimum font size of MIN\_FONT\_SIZE pixels,
+  and a line length between MIN\_LINE\_CHARS characters and MAX\_LINE\_CHARS
+  characters for optimal readability across all devices.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 4}
@@ -1114,7 +1141,7 @@ Not applicable.
   colours can be contrasted by all users.
   \reqorig Jung Woo Lee
   \reqfit  All colours applied to elements users will interact with must have
-  a contrast ratio of at least 4.5:1.
+  a contrast ratio of at least MIN\_CONTRAST\_RATIO.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -1143,8 +1170,8 @@ Not applicable.
   \reqrat Sandlot will need to be a solution users are not frustrated by to
   encourage use, and long load times are frustrating.
   \reqorig Alex Verity
-  \reqfit The website shall load in under 3 seconds on a stable internet
-  connection.
+  \reqfit The website shall load in under MAX\_LOAD\_SECS seconds on a stable
+  internet connection.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 5}
@@ -1158,13 +1185,14 @@ Not applicable.
 
 \begin{myreq}
   \reqno RA-1
-  \reqdesc All features of the solution will achieve 99 percent uptime.
+  \reqdesc All features of the solution will achieve MIN\_UPTIME\_PERCENT
+  percent uptime.
   \reqrat The past solution often has features that will break and go down,
   such as the standings feature, which at the time of writing is down. Our
   solution should not have these uptime issues.
   \reqorig Alex Verity
-  \reqfit All features of the solution shall be usable and visible 99 percent
-  of the time.
+  \reqfit All features of the solution shall be usable and visible
+  MIN\_UPTIME\_PERCENT percent of the time.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 4}
@@ -1178,13 +1206,13 @@ Not applicable.
 
 \begin{myreq}
   \reqno CR-1
-  \reqdesc Sandlot should function for upwards of 60 teams and 1500 players in
-  the system at once.
+  \reqdesc Sandlot should function for upwards of MAX\_TEAMS teams in the
+  system at once.
   \reqrat Sandlot should be able to function even if the league increases in
   population between seasons.
   \reqorig Alex Verity
-  \reqfit No faults should occur when 60 teams with 25 players each are
-  entered into the system.
+  \reqfit No faults should occur when MAX\_TEAMS teams with MAX\_TEAM\_PLAYERS
+  players each are entered into the system.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 2}
@@ -1192,11 +1220,12 @@ Not applicable.
 
 \begin{myreq}
   \reqno CR-2
-  \reqdesc Sandlot should function for upwards of 500 concurrent users.
+  \reqdesc Sandlot should function for upwards of MAX\_USERS concurrent users.
   \reqrat Sandlot should be able to function even if a large portion of the
   league including spectators are using the solution.
   \reqorig Alex Verity
-  \reqfit No faults should occur when 500 users are using the system at once.
+  \reqfit No faults should occur when MAX\_USERS users are using the system at
+  once.
   \twoinline
     {\reqsatis 3}
     {\reqdissat 3}
@@ -1249,10 +1278,10 @@ Not applicable.
 \begin{myreq}
   \reqno MR-1
   \reqdesc A new season can be started (i.e. saving past standings, resetting
-  teams.) within one hour.
+  teams.) within MAX\_SEASON\_START\_HRS.
   \reqrat New seasons should not require a lot of maintenance to reset.
   \reqorig Alex Verity
-  \reqfit A new season can be started within one hour.
+  \reqfit A new season can be started within MAX\_SEASON\_START\_HRS.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
@@ -1457,6 +1486,31 @@ Not applicable, our solution will run on the web.
   \twoinline
     {\reqsatis 4}
     {\reqdissat 4}
+\end{myreq}
+
+\begin{myreq}
+  \reqno IG-5
+  \reqdesc The system should implement audit logging for system actions.
+  \reqrat The system should log system activities to help troubleshoot issues
+  within the system and make sure the system runs as intended.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Logs are generated after each system action.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+\end{myreq}
+
+\begin{myreq}
+  \reqno IG-6
+  \reqdesc The system should have data backups at least every BACKUP\_WEEKS weeks.
+  \reqrat The system should complete regularly scheduled data backups in the case
+  where the platform shuts down, making sure data is not lost.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Data backups are completed at least every
+  \\ BACKUP\_WEEKS weeks.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
 \end{myreq}
 
 \subsection{Privacy Requirements}
