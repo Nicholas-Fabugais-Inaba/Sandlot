@@ -187,8 +187,7 @@ Account
 \subsection{Uses}
 
 account\_structure \ref{mAS} \\
-Database \ref{mDB} \\
-web\_app\_framework \ref{mWA}
+Database \ref{mDB}
 
 \subsection{Syntax}
 
@@ -311,8 +310,10 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% \wss{Try to minimize assumptions and anticipate programmer errors via
+%   exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+None
 
 \subsubsection{Access Routine Semantics}
 
@@ -370,8 +371,10 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% \wss{Try to minimize assumptions and anticipate programmer errors via
+%   exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+None
 
 \subsubsection{Access Routine Semantics}
 
@@ -429,8 +432,10 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% \wss{Try to minimize assumptions and anticipate programmer errors via
+%   exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+None
 
 \subsubsection{Access Routine Semantics}
 
@@ -477,10 +482,12 @@ None
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+% \wss{As appropriate} \wss{These functions are for the purpose of specification.
+%   They are not necessarily something that is going to be implemented
+%   explicitly.  Even if they are implemented, they are not exported; they only
+%   have local scope.}
+
+None
 
 \newpage
 
@@ -613,8 +620,7 @@ Reschedule
 
 \subsection{Uses}
 
-Team \ref{mTE} \\
-web\_app\_framework \ref{mWA}
+Team \ref{mTE}
 
 \subsection{Syntax}
 
@@ -645,8 +651,10 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% \wss{Try to minimize assumptions and anticipate programmer errors via
+%   exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+None
 
 \subsubsection{Access Routine Semantics}
 
@@ -664,10 +672,12 @@ None
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+% \wss{As appropriate} \wss{These functions are for the purpose of specification.
+%   They are not necessarily something that is going to be implemented
+%   explicitly.  Even if they are implemented, they are not exported; they only
+%   have local scope.}
+
+None
 
 \newpage
 
@@ -678,8 +688,6 @@ None
 Alerts
 
 \subsection{Uses}
-
-web\_app\_framework \ref{mWA}
 
 \subsection{Syntax}
 
@@ -710,8 +718,10 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% \wss{Try to minimize assumptions and anticipate programmer errors via
+%   exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+None
 
 \subsubsection{Access Routine Semantics}
 
@@ -736,9 +746,9 @@ None
 
 \section{MIS of Database Module} \label{mDB}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+% \wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
 
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+% \wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
 
 \subsection{Module}
 
@@ -757,11 +767,20 @@ standings\_structure \ref{mST}
 \subsubsection{Exported Access Programs}
 
 \begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\begin{tabular}{p{4cm} p{4.5cm} p{2.5cm} p{2cm}}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+insert\_player & player: $P$ & - & - \\
+insert\_team & team: $T$ & - & - \\
+get\_player & login\_email: string & record: $P$ & - \\
+get\_team & login\_username: string & record: $T$ & - \\
+get\_all\_teams & - & records[]: $T$ & - \\
+insert\_game & game: $G$ & - & - \\
+get\_all\_games & - & records[]: $G$ & - \\
+get\_team\_games & team: $T$ & records[]: $G$ & - \\
+update\_game & new\_game: $G$ & - & - \\
+get\_standings & - & records[]: $ST$ & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -778,39 +797,79 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% \wss{Try to minimize assumptions and anticipate programmer errors via
+%   exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent \wss{accessProg}():
+\noindent insert\_player():
 \begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
+\item transition: A new player record is added to the database.
 \end{itemize}
 
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
+\noindent insert\_team():
+\begin{itemize}
+\item transition: A new team record is added to the database.
+\end{itemize}
 
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
+\noindent get\_player():
+\begin{itemize}
+\item output: The player record with the specified email is retrieved from the database.
+\end{itemize}
+
+\noindent get\_team():
+\begin{itemize}
+\item output: The team record with the specified username is retrieved from the database.
+\end{itemize}
+
+\noindent get\_all\_teams():
+\begin{itemize}
+\item output: All team records are retrieved from the database.
+\end{itemize}
+
+\noindent insert\_game():
+\begin{itemize}
+\item transition: A new game record is added to the database.
+\end{itemize}
+
+\noindent get\_all\_games():
+\begin{itemize}
+\item output: All game records are retrieved from the database.
+\end{itemize}
+
+\noindent get\_team\_games():
+\begin{itemize}
+\item output: All game records for the specified team are retrieved from the database.
+\end{itemize}
+
+\noindent update\_game():
+\begin{itemize}
+\item transition: The game record with the specified ID is updated in the database.
+\end{itemize}
+
+\noindent get\_standings():
+\begin{itemize}
+\item output: The standings records are retrieved from the database.
+\end{itemize}
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
+% \wss{As appropriate} \wss{These functions are for the purpose of specification.
+%   They are not necessarily something that is going to be implemented
+%   explicitly.  Even if they are implemented, they are not exported; they only
+%   have local scope.}
+
+None
 
 \newpage
 
 \section{MIS of Season Scheduler Module} \label{mS}
 
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
+% \wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
 
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+% \wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
 
 \subsection{Module}
 
@@ -848,8 +907,10 @@ None
 
 \subsubsection{Assumptions}
 
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
+% \wss{Try to minimize assumptions and anticipate programmer errors via
+%   exceptions, but for practical purposes assumptions are sometimes appropriate.}
+
+None
 
 \subsubsection{Access Routine Semantics}
 
@@ -897,80 +958,12 @@ None
 
 \subsubsection{Local Functions}
 
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
-
-\newpage
-
-\section{MIS of Web Application Framework Module} \label{mWA}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
-
-\subsection{Module}
-
-web\_app\_framework
-
-\subsection{Uses}
-
-N/A
-
-\subsection{Syntax}
-
-\subsubsection{Exported Constants}
-
-\subsubsection{Exported Access Programs}
-
-\begin{center}
-\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
-\hline
-\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
-\hline
-\wss{accessProg} & - & - & - \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Semantics}
-
-\subsubsection{State Variables}
+% \wss{As appropriate} \wss{These functions are for the purpose of specification.
+%   They are not necessarily something that is going to be implemented
+%   explicitly.  Even if they are implemented, they are not exported; they only
+%   have local scope.}
 
 None
-
-\subsubsection{Environment Variables}
-
-None
-
-\subsubsection{Assumptions}
-
-\wss{Try to minimize assumptions and anticipate programmer errors via
-  exceptions, but for practical purposes assumptions are sometimes appropriate.}
-
-\subsubsection{Access Routine Semantics}
-
-\noindent \wss{accessProg}():
-\begin{itemize}
-\item transition: \wss{if appropriate} 
-\item output: \wss{if appropriate} 
-\item exception: \wss{if appropriate} 
-\end{itemize}
-
-\wss{A module without environment variables or state variables is unlikely to
-  have a state transition.  In this case a state transition can only occur if
-  the module is changing the state of another module.}
-
-\wss{Modules rarely have both a transition and an output.  In most cases you
-  will have one or the other.}
-
-\subsubsection{Local Functions}
-
-\wss{As appropriate} \wss{These functions are for the purpose of specification.
-  They are not necessarily something that is going to be implemented
-  explicitly.  Even if they are implemented, they are not exported; they only
-  have local scope.}
 
 \newpage
 
@@ -979,9 +972,9 @@ None
 
 \newpage
 
-\section{Appendix} \label{Appendix}
+% \section{Appendix} \label{Appendix}
 
-\wss{Extra information if required}
+% \wss{Extra information if required}
 
 \newpage{}
 

@@ -3,7 +3,9 @@ import NextAuth from "next-auth";
 declare module "next-auth" {
   interface Session {
     user: {
-      name: string;
+      id: number;
+      firstname: string;
+      lastname: string;
       email: string;
       role: string;
       gender: string;
@@ -14,11 +16,14 @@ declare module "next-auth" {
       preferred_division: string;
       preferred_time: string;
       team_id: number;
+      teams: { [key: number]: string };
     };
   }
 
   interface User {
-    name: string;
+    id: number;
+    firstname: string;
+    lastname: string;
     email: string;
     role: string;
     gender: string;
@@ -29,5 +34,6 @@ declare module "next-auth" {
     preferred_division: string;
     preferred_time: string;
     team_id: number;
+    teams: { [key: number]: string };
   }
 }

@@ -1,0 +1,8 @@
+/* app/team/TeamPage.css */
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  max-width: 30%;
+  justify-content: space-between;
+}

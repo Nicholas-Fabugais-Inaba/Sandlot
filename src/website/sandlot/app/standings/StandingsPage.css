@@ -1,6 +1,6 @@
 .column-name {
   width: 25%;
-  min-width: 150px; 
+  min-width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -9,8 +9,7 @@
 .column-wins,
 .column-losses,
 .column-ties,
-.column-forfeits
-.column-differential {
+.column-forfeits .column-differential {
   width: 15%;
   min-width: 100px;
   white-space: nowrap;

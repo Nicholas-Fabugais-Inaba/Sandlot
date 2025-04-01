@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -7,117 +9,290 @@ import {
   NavbarItem,
   NavbarMenuItem,
 } from "@heroui/navbar";
-import { Button } from "@heroui/button";
-import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
-import { Input } from "@heroui/input";
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
+import React, { useEffect, useState, useRef } from "react";
+import { Session } from "next-auth";
+import { getSession, signOut, signIn } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  TwitterIcon,
-  GithubIcon,
-  DiscordIcon,
-  HeartFilledIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
+import { Logo, BellIcon } from "@/components/icons";
+import { NotificationModal } from "@/components/NotificationModal"; // Import modal
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+
+import getRR from "../app/functions/getRR";
+import getAllTimeslots from "../app/functions/getAllTimeslots";
+import getPlayerActiveTeam from "../app/functions/getPlayerActiveTeam";
+import updatePlayerActiveTeam from "../app/functions/updatePlayerActiveTeam";
+import getPlayerAccountData from "@/app/functions/getPlayerAccountInfo";
 
 export const Navbar = () => {
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for the modal
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [activeTeamId, setActiveTeamId] = useState<number>(0);
+  const bellRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname(); // Get current URL path
+  const [manageLeagueDropOpen, setManageLeagueDropOpen] = useState(false);
+  const [userTeams, setUserTeams] = useState<{ [key: number]: string }>({});
+
+  useEffect(() => {
+    const fetchSessionAndNotifications = async () => {
+      try {
+        const session = await getSession();
+        setSession(session)
+        console.log("Session:", session);
+
+        if (session && session.user.role === "player") {
+          const activeTeamData = await getPlayerActiveTeam(session.user.id);
+          setActiveTeamId(activeTeamData.team_id);
+          const accountData = await getPlayerAccountData(session.user.id);
+          setUserTeams(accountData.teams);
+          // console.log("Active team ID:", activeTeamData.team_id);
+          // console.log("Teams dict:", accountData.teams);
+          // console.log("Session teams dict:", session.user.teams);
+          if (Object.keys(accountData.teams).length === 0) {
+            console.log("No teams found for the user.");
+          } else if (!activeTeamData.team_id || activeTeamData.team_id <= 0) {
+            const firstTeamId = Object.keys(accountData.teams).length > 0 ? Number(Object.keys(accountData.teams)[0]) : 0;
+            updatePlayerActiveTeam({player_id: session.user.id, team_id: firstTeamId});
+            setActiveTeamId(firstTeamId);
+          }
+        }
+
+        // // Fetch unread notifications immediately
+        // if (session?.user.team_id) {
+        //   const timeslotsResponse = await getAllTimeslots();
+        //   const rrList = await getRR({ team_id: session.user.team_id }, timeslotsResponse);
+        //   const unreadNotifications = rrList.filter((rr: any) => !rr.isRead);
+        //   setUnreadCount(unreadNotifications.length);
+        // }
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching session and notifications:", error);
+        setLoading(false);
       }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
-  );
+    };
+
+    fetchSessionAndNotifications();
+  }, []);
+
+  // Filter nav items based on user role
+  const filteredNavItems = siteConfig.navItems.filter((item) => {
+    if (item.label === "Rescheduler" && session?.user.role !== "team") {
+      return false; // Hide if the user is not part of a team
+    } else if (
+      item.label === "Team" &&
+      session?.user.role !== "player" &&
+      session?.user.role !== "team"
+    ) {
+      return false; // Hide if the user is not signed in as a team or player
+    } else if (item.label === "Broadcast" && session?.user.role !== "commissioner") {
+      return false; // Hide if the user is not a commissioner
+    }
+
+    return true;
+  });
+
+  const handleTeamSwitch = async (teamId: number) => {
+    if (session) {
+      await updatePlayerActiveTeam({player_id: session.user.id, team_id: teamId})
+      setActiveTeamId(teamId)
+      console.log(`Switched to team: ${userTeams[teamId]}`);
+      // Refresh the page
+      window.location.reload();
+    }
+  };
+
+  const handleBellClick = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const handleManageLeagueOptionClick = (href: string) => {
+    setManageLeagueDropOpen(false); // Hide the dropdown
+    window.location.href = href; // Navigate to the selected page
+  };
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
+    <HeroUINavbar
+      isMenuOpen={isMenuOpen}
+      maxWidth="xl"
+      position="sticky"
+      onMenuOpenChange={setIsMenuOpen}
+      className="border-b-[1px] border-b-[#F3F4F6] dark:border-b-[#3C3C3C] bg-white dark:bg-[#0d0d0d] shadow-md"
+      >
+      <NavbarContent className="basis-1/6 sm:basis-auto" justify="start">
+        <NavbarBrand as="li" className="gap-3 max-w-fit mr-3 min-w-[120px]">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Logo />
-            <p className="font-bold text-inherit">Sandlot</p>
+            <p className="font-bold text-inherit whitespace-nowrap">Sandlot</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
+
+        {/* Prevent rendering navbar items until session is loaded */}
+        {!loading && (
+          <ul className="hidden lg:flex gap-4 items-center">
+            {filteredNavItems.map((item) => (
+              <NavbarItem key={item.href} className="min-w-fit">
+                <NextLink
+                  className={clsx(
+                    linkStyles({ color: "foreground" }),
+                    pathname === item.href
+                      ? "text-primary font-semibold border-b-2 border-primary"
+                      : "hover:text-gray-600"
+                  )}
+                  href={item.href}
+                >
+                  {item.label}
+                </NextLink>
+              </NavbarItem>
+            ))}
+            {session?.user.role === "commissioner" && (
+              <NavbarItem className="relative group">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={clsx(
+                      "cursor-default",
+                      siteConfig.manageLeagueOptions.some((option) => pathname === option.href)
+                        ? "text-primary font-semibold border-b-2 border-primary"
+                        : ""
+                    )}
+                  >
+                    Manage League
+                  </span>
+                  <ChevronDown size={16} className="text-gray-600" />
+                </div>
+                <div className="absolute hidden group-hover:flex bg-white dark:bg-gray-800 shadow-md rounded-lg p-2 z-10 w-42">
+                  <ul className="w-full">
+                    {siteConfig.manageLeagueOptions.map((option) => (
+                      <li
+                        key={option.href}
+                        className={clsx(
+                          "p-2 rounded-md cursor-pointer text-center w-full mt-1",
+                          pathname === option.href
+                            ? "text-primary font-semibold bg-gray-100 dark:bg-gray-700"
+                            : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                        )}
+                      >
+                        <NextLink href={option.href} className="block w-full">
+                          {option.label}
+                        </NextLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </NavbarItem>
+            )}
+          </ul>        
+        )}
       </NavbarContent>
 
       <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
+        className="flex basis-1/5 sm:basis-full gap-2"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <GithubIcon className="text-default-500" />
-          </Link>
+        {!session && (
+          <NavbarItem>
+            <button
+              onClick={() => signIn(undefined, { callbackUrl: "/account" })}
+              className="w-20 h-10 text-sm rounded-lg bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+            >
+              Sign In
+            </button>
+          </NavbarItem>
+        )}
+        {session && (
+          <NavbarItem>
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="w-20 h-10 text-sm rounded-lg bg-blue-500 text-white dark:bg-blue-600 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+            >
+              Sign Out
+            </button>
+          </NavbarItem>
+        )}
+        {session?.user.role === "player" && Object.keys(userTeams).length >= 1 && (
+          <NavbarItem className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-800 rounded-lg cursor-pointer">
+                {activeTeamId && userTeams[activeTeamId]} <ChevronDown size={16} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="bg-white dark:bg-gray-900 shadow-md rounded-lg p-2">
+                {session && Object.entries(userTeams).map(([id, name]) => (
+                  <DropdownMenuItem
+                    key={id}
+                    className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-md"
+                    onClick={() => handleTeamSwitch(Number(id))}
+                  >
+                    {name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </NavbarItem>
+        )}
+        {/* {(session?.user.role === "team" || session?.user.role === "player") && (
+          <NavbarItem className="flex gap-2">
+            <div ref={bellRef}>
+              {" "}
+              <BellIcon
+                className="cursor-pointer"
+                onClick={handleBellClick}
+                unreadCount={unreadCount}
+              />
+            </div>
+          </NavbarItem>
+        )} */}
+        <NavbarItem className="flex gap-2">
           <ThemeSwitch />
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
-      </NavbarContent>
 
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
-        </Link>
-        <ThemeSwitch />
-        <NavbarMenuToggle />
+        {/* Menu toggle */}
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="lg:hidden"
+        />
       </NavbarContent>
 
       <NavbarMenu>
-        {searchInput}
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
+        {filteredNavItems.map((item, index) => (
+          <NavbarMenuItem key={`${item.label}-${index}`}>
+            <Link
+              href={item.href}
+              size="lg"
+              onPress={() => setIsMenuOpen(false)}
+              className={clsx(
+                pathname === item.href
+                  ? "text-primary font-semibold border-b-2 border-primary"
+                  : "hover:text-gray-600"
+              )}
+            >
+              {item.label}
+            </Link>
+          </NavbarMenuItem>
+        ))}
       </NavbarMenu>
+
+      {/* Modal */}
+      <NotificationModal
+        anchorRef={bellRef}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        team_id={activeTeamId} // Adjust this value
+        setUnreadCount={setUnreadCount}
+      />
     </HeroUINavbar>
   );
 };
