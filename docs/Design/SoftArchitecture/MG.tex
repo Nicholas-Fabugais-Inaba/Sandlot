@@ -48,6 +48,10 @@
 \midrule
 January 13, 2025 & 1.0 & TA Feedback\\
 January 17, 2025 & 1.1 & Rev0\\
+April 1, 2025 & 1.2 & Based on TA feedback: Exact appendix referenced in
+section 10. Changed sections 7.1 and 7.2 titles to be grammatically correct.
+Season scheduler module is a SW decision module as it can be replaced with
+different scheduling algorithms.\\
 \bottomrule
 \end{tabularx}
 
@@ -229,8 +233,6 @@ be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mS}:] Season Scheduler Module
   \item [\refstepcounter{mnum} \mthemnum \label{mRE}:] Reschedule Module
   \item [\refstepcounter{mnum} \mthemnum \label{mAL}:] Alerts Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mWA}:] Web Application
-  Framework Module
   \item [\refstepcounter{mnum} \mthemnum \label{mDB}:] Database Module
 \end{description}
 
@@ -260,7 +262,6 @@ be implemented.
 
 \multirow{2}{0.3\textwidth}{Software Decision Module} & Season Scheduler
 Module\\
-& Web Application Framework Module\\
 \bottomrule
 
 \end{tabular}
@@ -290,7 +291,7 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not
 have to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Module (\mref{mHH})}
 
 \begin{description}
   \item[Secrets:]The data structure and algorithm used to implement the
@@ -301,7 +302,7 @@ have to be implemented.
   \item[Implemented By:] OS
 \end{description}
 
-\subsection{Behaviour-Hiding Module}
+\subsection{Behaviour-Hiding Modules}
 
 \begin{description}
   \item[Secrets:]The contents of the required behaviours.
@@ -450,17 +451,6 @@ have to be implemented.
   \item[Implemented By:] \progname{}
 \end{description}
 
-\subsubsection{Web Application Framework Module (\mref{mWA})}
-
-\begin{description}
-  \item[Secrets:]The framework needed to host the web application on which
-  \progname{} will run.
-  \item[Services:]Defines a framework that will allow all other modules to be
-  hosted on a web application including any other UI libraries or tools
-  needed.
-  \item[Implemented By:] \progname{}
-\end{description}
-
 \section{Traceability Matrix} \label{SecTM}
 
 This section shows two traceability matrices: between the modules and the
@@ -557,7 +547,7 @@ because they use modules from the lower levels.
 \section{User Interfaces}
 
 Preliminary design of the major user interfaces can be found in the \href{https://www.figma.com/proto/5YNR4bBk1vqGhvvdioqJnI/Capstone-MG-Sketches?node-id=4-2&p=f&t=sLgjpB9bWIdGXPd8-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1}{Figma}.
-Screens are also provided in the appendix.
+Screens are also provided in the \nameref{Appendix}.
 
 \section{Design of Communication Protocols}
 
@@ -599,7 +589,6 @@ making sure the performance of the system is able to accomplish each module's fu
   \item \textbf{Week 3 (January 27-February 2)}: Remaining Modules and Integration
     \begin{itemize}
       \item Implement alerts module (Alex Verity)
-      \item Implement web application framework module (Casra Ghazanfari)
       \item Implement reschedule module (Jung Woo Lee)
       \item Initial integration testing (All team members)
     \end{itemize}
