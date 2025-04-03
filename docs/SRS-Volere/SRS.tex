@@ -6,6 +6,7 @@
 % Risks are removed because they are covered by the Hazard Analysis
 \documentclass[12pt]{article}
 
+\usepackage{amsmath, mathtools, amssymb}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -89,6 +90,8 @@ Jan. 7, 2025 & 1.5 & Based on TA feedback: Sections 7 and 21 added. Added explan
 what sections were deemed not applicable. Added priorities/project plan (Section 21).\\
 Jan. 8, 2025 & 1.6 & Based on TA feedback: Fixed text overflow in margin.\\
 Apr. 1, 2025 & 1.7 & Based on TA feedback: Likely/unlikely changes documented.\\
+Apr. 3, 2025 & 1.8 & Based on TA feedback: Added specification math and
+justification for unused sections on the page below the table.\\
 \bottomrule
 \end{tabularx}
 
@@ -101,13 +104,18 @@ James Robertson and Suzanne Robertson (Edition 16, 2012). Some sections have bee
 applicable to the Sandlot project's requirements specification.\\\\
 The unused sections are:
 \begin{itemize}
-  \item Section 8, The Scope of the Project. (We believe the content is covered
-  in section 6.)
-  \item Section 18, Open Issues.
-  \item Section 19, Off-the-Shelf Solutions.
-  \item Section 23, Costs.
-  \item Section 25, Waiting Room.
-  \item Section 26, Ideas for Solutiuon.
+  \item Section 8, The Scope of the Project. (We believe the content is
+  covered in section 6.)
+  \item Section 18, Open Issues. (We believe all open issues are covered in
+  other requirements sections.)
+  \item Section 19, Off-the-Shelf Solutions. (Our stakeholders understand the
+  existing off-the-shelf solutions and as such do not need them defined.)
+  \item Section 23, Costs. (Our solution does not have costs in fulfilling the
+  requirements.)
+  \item Section 25, Waiting Room. (Other sections are used for the same
+  purpose.)
+  \item Section 26, Ideas for Solutiuon. (We believe this section is not
+  necessary due to the solution oriented nature of the section.)
   \item Various subsections, marked with the text "Not applicable".
 \end{itemize}
 
@@ -394,22 +402,66 @@ league. Commissioners have top level permissions on Sandlot, they may edit any
 team information like player list and past scores.\\\\
 
 \subsection{Symbolic Constants}
-RESCHED\_NOTICE\_HRS = 24\\
-MIN\_INPUT\_SIZE = 44\\
-MIN\_CONTRAST\_RATIO = 4.5:1\\
-MAX\_NAV\_CLICKS = 2\\
-MAX\_TRAIN\_MINS = 60\\
-MIN\_UNDERSTAND\_PERCENT = 90\\
-MIN\_FONT\_SIZE = 16\\
-MIN\_LINE\_CHARS = 45\\
-MAX\_LINE\_CHARS = 75\\
-MAX\_LOAD\_SECS = 3\\
-MIN\_UPTIME\_PERCENT = 99\\
-MAX\_TEAMS = 60\\
-MAX\_PLAYERS = 25\\
-MAX\_USERS = 500\\
-MAX\_SEASON\_START\_HRS = 1\\
-BACKUP\_WEEKS = 1\\
+
+The following table summarizes the symbolic constants used by \progname.\\
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Constant} & \textbf{Value} \\ \hline
+RESCHED\_NOTICE\_HRS & 24 \\ \hline
+MIN\_INPUT\_SIZE & 44 \\ \hline
+MIN\_CONTRAST\_RATIO & 4.5:1 \\ \hline
+MAX\_NAV\_CLICKS & 2 \\ \hline
+MAX\_TRAIN\_MINS & 60 \\ \hline
+MIN\_UNDERSTAND\_PERCENT & 90 \\ \hline
+MIN\_FONT\_SIZE & 16 \\ \hline
+MIN\_LINE\_CHARS & 45 \\ \hline
+MAX\_LINE\_CHARS & 75 \\ \hline
+MAX\_LOAD\_SECS & 3 \\ \hline
+MIN\_UPTIME\_PERCENT & 99 \\ \hline
+MAX\_TEAMS & 60 \\ \hline
+MAX\_PLAYERS & 25 \\ \hline
+MAX\_USERS & 500 \\ \hline
+MAX\_SEASON\_START\_HRS & 1 \\ \hline
+BACKUP\_WEEKS & 1 \\ \hline
+\end{tabular}
+\label{tab:symbolic_constants}
+\end{table}
+
+\newpage
+
+\noindent The following table summarizes the data types used by \progname.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\noindent 
+\begin{tabular}{l l p{7.5cm}} 
+\toprule 
+\textbf{Data Type} & \textbf{Notation} & \textbf{Description}\\ 
+\midrule
+character & char & a single symbol or digit\\
+integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
+natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
+real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+schedule & $S$ & a list of games to be played in a season\\
+game & $G$ & a time, date, location, score, team1, and team2 that defines a game to
+be played\\
+player & $P$ & a player on a team\\
+team & $T$ & a team in the league including a team's id, team's name, team's division,
+list of players on the team, and the team's standing in the league\\
+% date & $d$ & a date in the format YYYY-MM-DD\\
+start date & $d_s$ & a date that represents the start of the season\\
+end date & $d_e$ & a date that represents the end of the season\\
+% time & t & $a$ time in the format HH:MM (24 hour clock)\\
+division & $D$ & an integer indexing a list of teams that play each other in a
+season\\
+
+\bottomrule
+\end{tabular}
+\end{center}
 
 \section{Relevant Facts And Assumptions}
 \subsection{Relevant Facts}
@@ -420,6 +472,43 @@ BACKUP\_WEEKS = 1\\
   100 games a month.
   \item Many users are older and require an intuitive UI to enjoy using the
   site
+  \item A schedule S is defined such that:
+    \begin{itemize}
+      \item No two games in $S$ should share a date, time, and location:\\
+      $c_1(s:S) = \forall(g_1, g_2 \in s | g_1 \neq g_2 : g_1.date \neq
+      g_2.date \land g_1.time \neq g_2.time \land g_1.location \neq g_2.location)$
+      \item No game's parameters should include the same team twice.\\
+      $c_2(s:S) = \forall (g \in s |: g.team1 \neq g.team2)$
+      \item No team can play more than one game in a day.\\
+      $c_3(s:S) = \forall (g_1, g_2 \in s |g_1 \neq g_2 \land g_1.date =
+      g_2.date : g_1.team1 \neq g_2.team1 \land g_1.team1 \neq g_2.team2 \land
+      g_1.team2 \neq g_2.team1 \land g_1.team2 \neq g_2.team2)$
+      \item Teams in division 1 (A) should all play against every team in division
+      2 (B) once.\\
+      count($s:S$, $t_1:T$, $t_2:T$) = $+(g \in s | (g.team1 = t_1 \land
+      g.team2 = t_2) \lor (g.team1 = t_2 \land g.team2 = t_1) : 1)$\\
+      $c_4(s:S) = \forall (t_1 \in D_1, D_1 \in D |: \forall (t_2 \in D_2 |:$ count$(s, t_1,
+      t_2) = 1))$
+      \item Teams in divisions 3 and onward should only play against teams in
+      their own division.\\
+      $c_5(s:S) = \forall (D_i \in D, i \in \mathbb{N} | i > 2 : \forall (g \in s |:g.team1.division = g.team2.division))$
+      \item All games must be within the start and end dates of the season.\\
+      $c_6(s:S) = \forall (g \in s |: d_s \leq g.date \leq d_e)$
+      \item All constraints should hold for the output schedule $S_o$:\\
+      $C = {c_1, c_2, c_3, c_4, c_5}$\\
+      $\forall(c \in C |: c(S_o) = true)$
+      \item The schedule $S_o$ should also be optimized according the soft
+      constants below:
+      \begin{itemize}
+        \item Minimize the maximum number of games played in a week over the
+        season.
+        $n_ji$ = number of games played by a team in a week\\
+        $m$ = frequency of $n$ occuring over each week of the season\\
+        $f(t) = $
+        \item Minimize the number of games played on a team's scheduled off day
+        according to the team's availability.
+      \end{itemize}
+    \end{itemize} 
 \end{itemize}
 
 \subsection{Business Rules}
@@ -706,13 +795,14 @@ requirements must be implemented and therefore are unlikely to change.
   \twoinline
     {\reqno FR-9}
     {\reqevent 3}
-  \reqdesc Once the season start due date is reached, all captain's
-  availability will be used to generate a season schedule.
+  \reqdesc Before the season starts, the commissioner should be able to use
+  all captain's availability to generate a season schedule.
   \reqrat Once the season starts all users need to know the schedule to know
   when and where to go to games.
   \reqorig Alex Verity
   \reqfit When the season start due date is reached, a season schedule shall
-  be displayed on the website.
+  be displayed on the website, with the schedule following the definition
+  provided in section 5.1.
   \twoinline
     {\reqsatis 2}
     {\reqdissat 3}
