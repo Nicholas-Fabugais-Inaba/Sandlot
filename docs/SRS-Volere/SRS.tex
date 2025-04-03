@@ -90,8 +90,9 @@ Jan. 7, 2025 & 1.5 & Based on TA feedback: Sections 7 and 21 added. Added explan
 what sections were deemed not applicable. Added priorities/project plan (Section 21).\\
 Jan. 8, 2025 & 1.6 & Based on TA feedback: Fixed text overflow in margin.\\
 Apr. 1, 2025 & 1.7 & Based on TA feedback: Likely/unlikely changes documented.\\
-Apr. 3, 2025 & 1.8 & Based on TA feedback: Added specification math and
-justification for unused sections on the page below the table.\\
+Apr. 3, 2025 & 1.8 & Based on TA feedback: Added specification math, added
+maintenance requirement, and justification for unused sections on the page
+below the table.\\
 \bottomrule
 \end{tabularx}
 
@@ -1443,6 +1444,18 @@ avoided.
   \reqrat New seasons should not require a lot of maintenance to reset.
   \reqorig Alex Verity
   \reqfit A new season can be started within MAX\_SEASON\_START\_HRS.
+  \twoinline
+    {\reqsatis 5}
+    {\reqdissat 5}
+\end{myreq}
+
+\begin{myreq}
+  \reqno MR-2
+  \reqdesc The system should not require any code changes or direct database
+  modification to restart the season for the next year.
+  \reqrat New seasons should not require programming knowledge to reset.
+  \reqorig Alex Verity
+  \reqfit A new season can be started using in app features only.
   \twoinline
     {\reqsatis 5}
     {\reqdissat 5}
