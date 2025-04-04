@@ -111,9 +111,9 @@ natural number & $\mathbb{N}$ & a number without a fractional component in [1, $
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
 schedule & $S$ & a list of games to be played in a season, see Schedule
 Record Module \ref{mSS}\\
-standings & $ST$ & a team's record in a season including wins, losses,
-ties, forfeits, and point differential, see Standings
-Record Module \ref{mST}\\
+% standings & $ST$ & a team's record in a season including wins, losses,
+% ties, forfeits, and point differential, see Standings
+% Record Module \ref{mST}\\
 game & $G$ & a time, date, location, score, team1, and team2 that defines a game to
 be played\\
 player & $P$ & a player on a team, uses the Account Record Module
@@ -157,14 +157,14 @@ The following table is taken directly from the Module Guide document for this pr
 {Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{11}{0.3\textwidth}{Behaviour-Hiding Module} & Account Module\\
+\multirow{9}{0.3\textwidth}{Behaviour-Hiding Module} & Account Module\\
 & Player Module\\
 & Team Module\\
 & Commissioner Module\\
 & Account Record Module\\
 & Team Record Module\\
 & Schedule Record Module\\
-& Standings Record Module\\
+% & Standings Record Module\\
 & Reschedule Module\\
 & Alerts Module\\
 & Database Module\\
@@ -541,7 +541,7 @@ team\_id: $\mathbb{N}$\\
 team\_name: string\\
 div: $D$\\
 players: $P[]$\\
-standing: $ST$
+% standing: $ST$\\
 
 \subsubsection{Environment Variables}
 
@@ -575,40 +575,40 @@ None
 
 \newpage
 
-\section{MIS of Standings Record Module} \label{mST}
+% \section{MIS of Standings Record Module} \label{mST}
 
-\subsection{Module}
+% \subsection{Module}
 
-standings\_record
+% standings\_record
 
-\subsection{Uses}
+% \subsection{Uses}
 
-N/A
+% N/A
 
-\subsection{Syntax}
+% \subsection{Syntax}
 
-N/A
+% N/A
 
-\subsection{Semantics}
+% \subsection{Semantics}
 
-\subsubsection{State Variables}
+% \subsubsection{State Variables}
 
-wins: $\mathbb{N}$\\
-losses: $\mathbb{N}$\\ 
-ties: $\mathbb{N}$\\
-forfeits: $\mathbb{N}$\\
-point\_diff: $\mathbb{Z}$
+% wins: $\mathbb{N}$\\
+% losses: $\mathbb{N}$\\ 
+% ties: $\mathbb{N}$\\
+% forfeits: $\mathbb{N}$\\
+% point\_diff: $\mathbb{Z}$
 
-\subsubsection{Environment Variables}
+% \subsubsection{Environment Variables}
 
-None
+% None
 
-\subsubsection{Local Functions}
+% \subsubsection{Local Functions}
 
-calc\_score: $\mathbb{N}, \mathbb{N}, \mathbb{N}, \mathbb{N} \rightarrow \mathbb{N}$\\
-calc\_score(wins, ties) = $2*wins + ties$
+% calc\_score: $\mathbb{N}, \mathbb{N}, \mathbb{N}, \mathbb{N} \rightarrow \mathbb{N}$\\
+% calc\_score(wins, ties) = $2*wins + ties$
 
-\newpage
+% \newpage
 
 \section{MIS of Reschedule Module} \label{mRE}
 
@@ -758,7 +758,7 @@ Database
 
 team\_record \ref{mTS} \\
 schedule\_record \ref{mSS} \\
-standings\_record \ref{mST}
+% standings\_record \ref{mST}
 
 \subsection{Syntax}
 
@@ -780,7 +780,7 @@ insert\_game & game: $G$ & - & - \\
 get\_all\_games & - & records[]: $G$ & - \\
 get\_team\_games & team: $T$ & records[]: $G$ & - \\
 update\_game & new\_game: $G$ & - & - \\
-get\_standings & - & records[]: $ST$ & - \\
+% get\_standings & - & records[]: $ST$ & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -849,10 +849,10 @@ None
 \item transition: The game record with the specified ID is updated in the database.
 \end{itemize}
 
-\noindent get\_standings():
-\begin{itemize}
-\item output: The standings records are retrieved from the database.
-\end{itemize}
+% \noindent get\_standings():
+% \begin{itemize}
+% \item output: The standings records are retrieved from the database.
+% \end{itemize}
 
 \subsubsection{Local Functions}
 
@@ -1058,7 +1058,7 @@ graduate attribute of Problem Analysis and Design.
     was because we wanted to make sure that each account would have the same functionality, but
     the type of account (players, teams, and commissioners) would have different functionalities
     associated with the module. The record modules were then selected to account for the
-    core parts of the system including the schedule, standings, accounts, and teams.
+    core parts of the system including the schedule, accounts, and teams.
 
 \end{enumerate}
 
