@@ -355,7 +355,7 @@ Reschedule \ref{mRE}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-submit\_score & team\_1:$\mathbb{N}$,team\_2:$\mathbb{N}$ & - & - \\
+submit\_score & game:$G$, home\_team\_score:$\mathbb{N}$, away\_team\_score:$\mathbb{N}$, forfeit:$\mathbb{N}$ & - & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -381,7 +381,8 @@ None
 
 \noindent submit\_score():
 \begin{itemize}
-\item transition: The team's $ST$ is updated with the new team record.
+\item transition: The game's score data is updated with the user inputted home
+team score, away team score and forfeit data.
 \end{itemize}
 
 \newpage
