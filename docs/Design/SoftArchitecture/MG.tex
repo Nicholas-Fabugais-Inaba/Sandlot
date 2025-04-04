@@ -178,8 +178,6 @@ change.
   scheduling conflicts are to be resolved.
   \item[\refstepcounter{acnum} \actheacnum \label{acSchedFormat}:] The format
   of the season schedule.
-  \item[\refstepcounter{acnum} \actheacnum \label{acStandFormat}:] The format
-  of the season standings.
   \item[\refstepcounter{acnum} \actheacnum \label{acCreateAccount}:] The
   format of the create player/team account process and data.
   \item[\refstepcounter{acnum} \actheacnum \label{acJoinRequest}:] The process
@@ -232,8 +230,6 @@ be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mTS}:] Team Records Module
   \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Records
   Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Records
-  Module
   \item [\refstepcounter{mnum} \mthemnum \label{mS}:] Season Scheduler Module
   \item [\refstepcounter{mnum} \mthemnum \label{mRE}:] Reschedule Module
   \item [\refstepcounter{mnum} \mthemnum \label{mAL}:] Alerts Module
@@ -258,7 +254,6 @@ be implemented.
 & Account Records Module\\
 & Team Records Module\\
 & Schedule Records Module\\
-& Standings Records Module\\
 & Reschedule Module\\
 & Alerts Module\\
 & Database Module\\
@@ -387,15 +382,6 @@ have to be implemented.
   \item[Type of Module:] Abstract Data Type
 \end{description}
 
-\subsubsection{Standings Records Module (\mref{mST})}
-
-\begin{description}
-  \item[Secrets:]The format of the season standings data.
-  \item[Services:]Defines a season standings data structure.
-  \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Data Type
-\end{description}
-
 \subsubsection{Reschedule Module (\mref{mRE})}
 
 \begin{description}
@@ -420,8 +406,7 @@ have to be implemented.
 \subsubsection{Database Module (\mref{mDB})}
 
 \begin{description}
-  \item[Secrets:]The function of storing player, team, commissioner, schedule
-  and standings data.
+  \item[Secrets:]The function of storing player, team, commissioner, and schedule data.
   \item[Services:]Defines and maintains a database that stores all relevant data
   to the \progname{} system. This includes account data for players, teams, and
   commissioners such as contact information and team player lists. It also
