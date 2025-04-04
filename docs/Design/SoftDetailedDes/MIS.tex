@@ -57,6 +57,8 @@ January 13, 2025 & 1.0 & TA Feedback\\
 January 15, 2025 & 1.1 & Rev0\\
 April 2, 2025 & 1.2 & Based on TA feedback: Ensured consistent names with
 update or overwrite. References seem to be working appropriately.\\
+April 4, 2025 & 1.3 & Based on TA feedback: Updated document semantics and
+get\_score access routine.\\
 \bottomrule
 \end{tabularx}
 
@@ -108,17 +110,17 @@ integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, 
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
 schedule & $S$ & a list of games to be played in a season, see Schedule
-Structure Module \ref{mSS}\\
+Record Module \ref{mSS}\\
 standings & $ST$ & a team's record in a season including wins, losses,
 ties, forfeits, and point differential, see Standings
-Structure Module \ref{mST}\\
+Record Module \ref{mST}\\
 game & $G$ & a time, date, location, score, team1, and team2 that defines a game to
 be played\\
-player & $P$ & a player on a team, uses the Account Structure Module
+player & $P$ & a player on a team, uses the Account Record Module
 \ref{mAS}\\
 team & $T$ & a team in the league including a team's id, team's name, team's division,
 list of players on the team, and the team's standing in the league,
-see Team Structure Module \ref{mTS}\\
+see Team Record Module \ref{mTS}\\
 % date & $d$ & a date in the format YYYY-MM-DD\\
 start date & $d_s$ & a date that represents the start of the season\\
 end date & $d_e$ & a date that represents the end of the season\\
@@ -159,16 +161,16 @@ The following table is taken directly from the Module Guide document for this pr
 & Player Module\\
 & Team Module\\
 & Commissioner Module\\
-& Account Structure Module\\
-& Team Structure Module\\
-& Schedule Structure Module\\
-& Standings Structure Module\\
+& Account Record Module\\
+& Team Record Module\\
+& Schedule Record Module\\
+& Standings Record Module\\
 & Reschedule Module\\
 & Alerts Module\\
 & Database Module\\
 \midrule
 
-\multirow{2}{0.3\textwidth}{Software Decision Module} & Season Scheduler
+\multirow{1}{0.3\textwidth}{Software Decision Module} & Season Scheduler
 Module\\
 \bottomrule
 
@@ -187,7 +189,7 @@ Account
 
 \subsection{Uses}
 
-account\_structure \ref{mAS} \\
+account\_record \ref{mAS} \\
 Database \ref{mDB}
 
 \subsection{Syntax}
@@ -234,39 +236,45 @@ as the number of teams in a division.
 
 \subsubsection{Access Routine Semantics}
 
-\noindent create\_account():
+\noindent create\_account(name:$string$, email:$string$, pass:$string$, num:$\mathbb{N}$):
 \begin{itemize}
-\item transition: Update the database with the new account information.
+\item transition: New account information is inserted into the database.
 \end{itemize}
 
 \noindent delete\_account():
 \begin{itemize}
-\item transition: Update the database to remove the account.
+\item transition: The account is removed from the database.
 \end{itemize}
 
-\noindent change\_name():
+\noindent change\_name(new\_name:$string$):
 \begin{itemize}
-\item transition: Update the database to change the account's name.
+\item transition: The account's name in the database is changed to the inputted
+name.
 \end{itemize}
 
-\noindent change\_pass():
+\noindent change\_pass(new\_pass:$string$):
 \begin{itemize}
-\item transition: Update the database to change the account's password.
+\item transition: The account's password in the database is changed to the
+inputted password.
 \end{itemize}
 
-\noindent change\_email():
+\noindent change\_email(new\_email:$string$):
 \begin{itemize}
-\item transition: Update the database to change the account's email.
+\item transition: The account's email in the database is changed to the
+inputted email.
 \end{itemize}
 
-\noindent change\_num():
+\noindent change\_num(new\_num:$\mathbb{N}$):
 \begin{itemize}
-\item transition: Update the database to change the account's phone number.
+\item transition: The account's phone number in the database is changed to the
+inputted phone number.
 \end{itemize}
 
-\noindent account\_login():
+\noindent account\_login(email:$string$, pass:$string$):
 \begin{itemize}
-\item transition: Access is given to the account if the email and password match.
+\item transition: If the email and password match the saved account, their
+session is updated to allow them to access all features related to that
+account type.
 \end{itemize}
 
 \newpage
@@ -280,7 +288,7 @@ Player
 \subsection{Uses}
 
 Account \ref{mAC}\\
-account\_structure \ref{mAS}
+account\_record \ref{mAS}
 
 \subsection{Syntax}
 
@@ -318,16 +326,16 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent join\_team():
+\noindent join\_team(team:$T$):
 \begin{itemize}
-\item transition: Modify the inputted team's data to include the player and
-update the player's data to include the team.
+\item transition: Insert the player into the team's player list and insert the
+team into the player's team data.
 \end{itemize}
 
 \noindent leave\_team():
 \begin{itemize}
-\item transition: Modify the team the player is currently on structure to not
-include the player and update the player's data to not include the team.
+\item transition: Remove the player from the team's player data and remove the
+team from the player's team data.
 \end{itemize}
 
 \newpage
@@ -341,7 +349,7 @@ Team
 \subsection{Uses}
 
 Account \ref{mAC} \\
-team\_structure \ref{mTS} \\
+team\_record \ref{mTS} \\
 Reschedule \ref{mRE}
 
 \subsection{Syntax}
@@ -355,7 +363,7 @@ Reschedule \ref{mRE}
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-submit\_score & team\_1:$\mathbb{N}$,team\_2:$\mathbb{N}$ & - & - \\
+submit\_score & game:$G$, home\_team\_score:$\mathbb{N}$, away\_team\_score:$\mathbb{N}$, forfeit:$\mathbb{N}$ & - & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -379,9 +387,10 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent submit\_score():
+\noindent submit\_score(game:$G$, home\_team\_score:$\mathbb{N}$, away\_team\_score:$\mathbb{N}$, forfeit:$\mathbb{N}$):
 \begin{itemize}
-\item transition: The team's $ST$ is updated with the new team record.
+\item transition: The game's score data is changed to be the user inputted
+home team score, away team score and forfeit data.
 \end{itemize}
 
 \newpage
@@ -396,6 +405,7 @@ Commissioner
 
 Player \ref{mPL}\\
 Alerts \ref{mAL}\\
+Reschedule \ref{mRE}\\
 season\_scheduler \ref{mS}
 
 \subsection{Syntax}
@@ -411,9 +421,7 @@ season\_scheduler \ref{mS}
 \hline
 overwrite\_team\_comp & team:$T$, player\_list:P[] & - & - \\
 overwrite\_schedule & sched\_new:$S$ & - & - \\
-overwrite\_standings & new\_standing:$ST$ & - & - \\
-overwrite\_game\_score & game:G, new\_score:$\mathbb{N}$ & - & - \\
-update\_team\_contact & team:$T$, new\_info:$string$ & - & - \\
+overwrite\_game\_score & game:$G$, home\_team\_score:$\mathbb{N}$, away\_team\_score:$\mathbb{N}$, forfeit:$\mathbb{N}$ & - & - \\
 set\_team\_division & team:$T$ division:$D$ & - & - \\
 add\_division & division:$D$ & - & - \\
 
@@ -440,45 +448,34 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent overwrite\_team\_comp():
+\noindent overwrite\_team\_comp(team:$T$, player\_list:P[]):
 \begin{itemize}
 \item transition: The player list of the inputted team is overwritten with the 
       inputted player list.
 \end{itemize}
 
-\noindent overwrite\_schedule():
+\noindent overwrite\_schedule(sched\_new:$S$):
 \begin{itemize}
 \item transition: The current schedule is overwritten with the inputted new
       schedule.
 \end{itemize}
 
-\noindent overwrite\_standings():
+\noindent overwrite\_game\_score(game:$G$, home\_team\_score:$\mathbb{N}$,
+away\_team\_score:$\mathbb{N}$, forfeit:$\mathbb{N}$):
 \begin{itemize}
-\item transition: The current standings are overwritten with the inputted new
-      standings.
+\item transition: The game's score data is changed to be the commissioner
+      inputted home team score, away team score and forfeit data.
 \end{itemize}
 
-\noindent overwrite\_game\_score():
+\noindent set\_team\_division(team:$T$ division:$D$):
 \begin{itemize}
-\item transition: The inputted game's score is overwritten with the inputted new
-      score.
-\end{itemize}
-
-\noindent update\_team\_contact():
-\begin{itemize}
-\item transition: The inputted team's contact information is updated with the
-      inputted new information.
-\end{itemize}
-
-\noindent set\_team\_division():
-\begin{itemize}
-\item transition: The inputted team's division is updated with the inputted
+\item transition: The inputted team's division is change to be the inputted
       division.
 \end{itemize}
 
-\noindent add\_division():
+\noindent add\_division(division:$D$):
 \begin{itemize}
-\item transition: The inputted division is added to the league.
+\item transition: The inputted division is added to the database.
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -492,11 +489,11 @@ None
 
 \newpage
 
-\section{MIS of Account Structure Module} \label{mAS}
+\section{MIS of Account Record Module} \label{mAS}
 
 \subsection{Module}
 
-account\_structure
+account\_record
 
 \subsection{Uses}
 
@@ -522,15 +519,15 @@ None
 
 \newpage
 
-\section{MIS of Team Structure Module} \label{mTS}
+\section{MIS of Team Record Module} \label{mTS}
 
 \subsection{Module}
 
-team\_structure
+team\_record
 
 \subsection{Uses}
 
-account\_structure \ref{mAS}
+account\_record \ref{mAS}
 
 \subsection{Syntax}
 
@@ -552,11 +549,11 @@ None
 
 \newpage
 
-\section{MIS of Schedule Structure Module} \label{mSS}
+\section{MIS of Schedule Record Module} \label{mSS}
 
 \subsection{Module}
 
-schedule\_structure
+schedule\_record
 
 \subsection{Uses}
 
@@ -578,11 +575,11 @@ None
 
 \newpage
 
-\section{MIS of Standings Structure Module} \label{mST}
+\section{MIS of Standings Record Module} \label{mST}
 
 \subsection{Module}
 
-standings\_structure
+standings\_record
 
 \subsection{Uses}
 
@@ -635,7 +632,7 @@ Team \ref{mTE}
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
 request\_reschedule & old\_game:G, new\_game:G & - & - \\
-accept\_reschedule & - & - & - \\
+accept\_reschedule & old\_game:G, new\_game:G & - & - \\
 \hline
 \end{tabular}
 \end{center}
@@ -659,16 +656,18 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent request\_reschedule():
+\noindent request\_reschedule(old\_game:G, new\_game:G):
 \begin{itemize}
-\item transition: The inputted old game is replaced with the inputted new game that has
-      the new date, time, and location.
+\item transition: A request is sent to the opposing team's captain to
+      reschedule the game, sending the old game's information as well as the
+      inputted new proposed game information. The other captain is given the
+      opportunity to accept or deny the request.
 \end{itemize}
 
-\noindent accept\_reschedule():
+\noindent accept\_reschedule(old\_game:G, new\_game:G):
 \begin{itemize}
-\item transition: If the the rescheduling is accepted, the old game is removed and the
-      new game is added to the schedule.
+\item transition: The old game is removed from the schedule and the new game
+      is added to the schedule.
 \end{itemize}
 
 \subsubsection{Local Functions}
@@ -726,12 +725,12 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent create\_alert():
+\noindent create\_alert(msg:string, players:$P[]$):
 \begin{itemize}
 \item output: $A$, an alert created according to the user specifications.
 \end{itemize}
 
-\noindent send\_alert():
+\noindent send\_alert(alert:$A$):
 \begin{itemize}
 \item transition: An alert is sent to the players in the inputted player list.
 \end{itemize}
@@ -757,9 +756,9 @@ Database
 
 \subsection{Uses}
 
-team\_structure \ref{mTS} \\
-schedule\_structure \ref{mSS} \\
-standings\_structure \ref{mST}
+team\_record \ref{mTS} \\
+schedule\_record \ref{mSS} \\
+standings\_record \ref{mST}
 
 \subsection{Syntax}
 
@@ -805,22 +804,22 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent insert\_player():
+\noindent insert\_player(player: $P$):
 \begin{itemize}
 \item transition: A new player record is added to the database.
 \end{itemize}
 
-\noindent insert\_team():
+\noindent insert\_team(team: $T$):
 \begin{itemize}
 \item transition: A new team record is added to the database.
 \end{itemize}
 
-\noindent get\_player():
+\noindent get\_player(login\_email: string):
 \begin{itemize}
 \item output: The player record with the specified email is retrieved from the database.
 \end{itemize}
 
-\noindent get\_team():
+\noindent get\_team(login\_username: string):
 \begin{itemize}
 \item output: The team record with the specified username is retrieved from the database.
 \end{itemize}
@@ -830,7 +829,7 @@ None
 \item output: All team records are retrieved from the database.
 \end{itemize}
 
-\noindent insert\_game():
+\noindent insert\_game(game: $G$):
 \begin{itemize}
 \item transition: A new game record is added to the database.
 \end{itemize}
@@ -840,12 +839,12 @@ None
 \item output: All game records are retrieved from the database.
 \end{itemize}
 
-\noindent get\_team\_games():
+\noindent get\_team\_games(team: $T$):
 \begin{itemize}
 \item output: All game records for the specified team are retrieved from the database.
 \end{itemize}
 
-\noindent update\_game():
+\noindent update\_game(new\_game: $G$):
 \begin{itemize}
 \item transition: The game record with the specified ID is updated in the database.
 \end{itemize}
@@ -878,7 +877,7 @@ season\_scheduler
 
 \subsection{Uses}
 
-schedule\_structure \ref{mSS}
+schedule\_record \ref{mSS}
 
 \subsection{Syntax}
 
@@ -915,7 +914,7 @@ None
 
 \subsubsection{Access Routine Semantics}
 
-\noindent gen\_sched():
+\noindent gen\_sched($D[], d_s, d_e, l[]$):
 \begin{itemize}
 \item output: $out := S_o \in S$ such that:
 \begin{itemize}
@@ -942,7 +941,7 @@ None
   $c_6(s:S) = \forall (g \in s |: d_s \leq g.date \leq d_e)$
   \item All constraints should hold for the output schedule $S_o$:\\
   $C = {c_1, c_2, c_3, c_4, c_5}$\\
-  $\forall(c \in C |: c(S_o) = true)$
+  $\forall(c \in C |: c(S_o))$
   \item The schedule $S_o$ should also be optimized according the soft
   constants below:
   \begin{itemize}
@@ -1016,7 +1015,7 @@ graduate attribute of Problem Analysis and Design.
     module that would specifically deal with the scheduling algorithm for the system's extensibility and
     maintainability purposes. This is because more constraints may be required by the system
     or clients to be added or removed depending on various circumstances, for example, the league's
-    requirements may change overtime. Furthermore, our team had decided to create structure modules,
+    requirements may change overtime. Furthermore, our team had decided to create record modules,
     that were not asked for by the client or a proxy as we believed it would help to simplify the
     complexity of the system and improve the system's maintainability, defining important parts
     such as an account or a team.\\
@@ -1058,7 +1057,7 @@ graduate attribute of Problem Analysis and Design.
     to implement and test each module. The reason why our team had selected the documented design
     was because we wanted to make sure that each account would have the same functionality, but
     the type of account (players, teams, and commissioners) would have different functionalities
-    associated with the module. The structure modules were then selected to account for the
+    associated with the module. The record modules were then selected to account for the
     core parts of the system including the schedule, standings, accounts, and teams.
 
 \end{enumerate}
@@ -1077,10 +1076,10 @@ graduate attribute of Problem Analysis and Design.
   \item What pain points did you experience during this deliverable, and how
   did you resolve them?\\\\
   Some of the pain points from this deliverable were figuring out what subsections would apply to
-  each module as each module whether it was our structure modules or other modules, had varying
+  each module as each module whether it was our record modules or other modules, had varying
   purposes. This issue was resolved by referring back to what we had written in our MG for each
   module's secrets and services as that would help identify any functions that the module would
-  have to accomplish for its dedicated tasks. The same resolution was applied to the structure
+  have to accomplish for its dedicated tasks. The same resolution was applied to the record
   modules as although they did not necessarily have functions as a part of their module, they still
   had state variables that would define the data structure it pertained to.
 \end{enumerate}
@@ -1128,6 +1127,25 @@ graduate attribute of Problem Analysis and Design.
   LaTeX using online resources. After taking the time to learn, writing the 
   deliverable became much easier and quicker.
   
+\end{enumerate}
+
+\subsection*{Alexander Verity -- Reflection}
+
+\begin{enumerate}
+  \item What went well while writing this deliverable?\\\\
+  The writing of the MIS went well as we were able to quickly identify the
+  modules that we needed to implement and the functions that they would need.
+  The modules were not always easy to identify, but they helped us to break
+  figure out the structure of our solution and will help when developing the
+  final product.
+
+  \item What pain points did you experience during this deliverable, and how
+  did you resolve them?\\\\
+  The biggest pain point was writing the specification math for the scheduling
+  module. It was difficult to figure out how to express the constraints in a
+  percise way that fully defines the module. We resolved this by working
+  together to brainstorm the constraints and researching a little more into
+  how specification math works.
 \end{enumerate}
 
 \end{document}
