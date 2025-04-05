@@ -61,6 +61,8 @@ update or overwrite. References seem to be working appropriately.\\
 April 4, 2025 & 1.4 & Based on TA feedback: Updated document semantics and
 get\_score access routine. Based on TA feedback: Not applicable to formalize objective functions. Removed 
 optimization objective functions for specification math as schedule creation is no longer optimal.\\
+April 4, 2025 & 1.5 & Based on TA feedback: Updated general reflection to include more discussion of SE principles in question 3 and 4. \\
+April 4, 2025 & 1.6 & Based on TA feedback: Updated multi-character variables to be properly formatted (specifically in section 16.4.4). \\
 \bottomrule
 \end{tabularx}
 
@@ -921,26 +923,26 @@ None
 \item output: $out := S_o \in S$ such that:
 \begin{itemize}
   \item No two games in $S$ should share a date, time, and location:\\
-  $c_1(s:S) = \forall(g_1, g_2 \in s | g_1 \neq g_2 : g_1.date \neq
-  g_2.date \land g_1.time \neq g_2.time \land g_1.location \neq g_2.location)$
+  $c_1(s:S) = \forall(g_1, g_2 \in s | g_1 \neq g_2 : g_1.\text{date} \neq
+  g_2.\text{date} \land g_1.\text{time} \neq g_2.\text{time} \land g_1.\text{location} \neq g_2.\text{location})$
   \item No game's parameters should include the same team twice.\\
-  $c_2(s:S) = \forall (g \in s |: g.team1 \neq g.team2)$
+  $c_2(s:S) = \forall (g \in s |: g.\text{team1} \neq g.\text{team2})$
   \item No team can play more than one game in a day.\\
-  $c_3(s:S) = \forall (g_1, g_2 \in s |g_1 \neq g_2 \land g_1.date =
-  g_2.date : g_1.team1 \neq g_2.team1 \land g_1.team1 \neq g_2.team2 \land
-  g_1.team2 \neq g_2.team1 \land g_1.team2 \neq g_2.team2)$
+  $c_3(s:S) = \forall (g_1, g_2 \in s |g_1 \neq g_2 \land g_1.\text{date} =
+  g_2.\text{date} : g_1.\text{team1} \neq g_2.\text{team1} \land g_1.\text{team1} \neq g_2.\text{team2} \land
+  g_1.\text{team2} \neq g_2.\text{team1} \land g_1.\text{team2} \neq g_2.\text{team2})$
   \item Teams in division 1 (A) should all play against every team in division
   2 (B) once.\\
-  count($s:S$, $t_1:T$, $t_2:T$) = $+(g \in s | (g.team1 = t_1 \land
-  g.team2 = t_2) \lor (g.team1 = t_2 \land g.team2 = t_1) : 1)$\\
+  count($s:S$, $t_1:T$, $t_2:T$) = $+(g \in s | (g.\text{team1} = t_1 \land
+  g.\text{team2} = t_2) \lor (g.\text{team1} = t_2 \land g.\text{team2} = t_1) : 1)$\\
   $c_4(s:S) = \forall (t_1 \in D_1, D_1 \in D |: \forall (t_2 \in D_2 |:$ count$(s, t_1,
   t_2) = 1))$
   \item Teams in divisions 3 and onward should only play against teams in
   their own division.\\
   $c_5(s:S) = \forall (D_i \in D, i \in \mathbb{N} | i > 2 : \forall (g \in s |:
-  g.team1.division = g.team2.division))$
+  g.\text{team1}.\text{division} = g.\text{team2}.\text{division}))$
   \item All games must be within the start and end dates of the season.\\
-  $c_6(s:S) = \forall (g \in s |: d_s \leq g.date \leq d_e)$
+  $c_6(s:S) = \forall (g \in s |: d_s \leq g.\text{date} \leq d_e)$
   \item All constraints should hold for the output schedule $S_o$:\\
   $C = {c_1, c_2, c_3, c_4, c_5}$\\
   $\forall(c \in C |: c(S_o))$
@@ -1032,6 +1034,16 @@ graduate attribute of Problem Analysis and Design.
     projects. Our project is much smaller in scale, and as such we'll be able 
     to provide the necessary concurrent user count and availability for a 
     project of our size without the need for unlimited resources.
+
+    Additionally, given infinite resources (ie. time) we would like to be able to
+    better adhere to the "degrade gently" software principle. Currently, there are 
+    parts of the code that have been set-up to throw exceptions when certain
+    conditions are not met and display generic error messages to the user. 
+    However, we would like to be able to provide a more detailed description to the 
+    user with a set of possible solutions or next steps to help them work through 
+    the error quickly. Achieving this would greatly increase the usability of the
+    system and improve the end-user's experience
+    
     
     \item Give a brief overview of other design solutions you considered. What
     are the benefits and tradeoffs of those other designs compared with the chosen
@@ -1050,6 +1062,17 @@ graduate attribute of Problem Analysis and Design.
     the type of account (players, teams, and commissioners) would have different functionalities
     associated with the module. The record modules were then selected to account for the
     core parts of the system including the schedule, accounts, and teams.
+
+
+    We also considered developing our own schedule interface to accommodate for our
+    potential need to display many events in one day at the same time if a
+    commissioner were set many custom fields with overlapping timeslots. However, we
+    decided to use a pre-existing library instead and adhere to the software design
+    principle of not "reinventing the wheel". While developing our own interface
+    would allow us to better display certain edge case scenario schedules, it would 
+    greatly increase our development time and complexity. In the end we felt that
+    the interface wasn't at the heart of the projects mission and so opted to use a 
+    pre-existing library.
 
 \end{enumerate}
 
