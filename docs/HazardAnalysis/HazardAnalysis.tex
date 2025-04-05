@@ -68,8 +68,12 @@
 \midrule
 Oct. 21, 2024 & NFI, JL, AV, CG & TA Feedback\\
 Oct. 23, 2024 & NFI, JL, AV, CG & Rev0\\
-Jan. 7, 2025 & JL & Made changes to reflect changes in SRS; added AS-6 to table\\
-... & ... & ...\\
+Jan. 7, 2025 & JL, NFI & Made changes to reflect changes in SRS; added AS-6 to table.
+Based on TA feedback: Adjustments made to weak assumptions.\\
+Jan. 8, 2025 & NFI, JL & Based on TA feedback: Fixed spelling/grammatical errors.
+Changed visible and readable to specifically highlight font size and color ratio. Added reference columns for hazards in FMEA table.\\
+Apr. 4, 2025 & JL & Based on TA feedback: Added table number and caption. Referenced in 
+document body. Also fixed page numbering.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -105,7 +109,7 @@ Hazards to Sandlot could take the form of user interface misinterpretations, mis
 and database errors, leading to possible malfunctions with the product and/or user 
 dissatisfaction.
 This document will first identify the system components and boundaries, state the critical
-assumptions, use a Failure Mode and Effects Analysis (FMEA) table to identify the hazards
+assumptions, use a Failure Mode and Effects Analysis (FMEA) table (\hyperref[tab:FMEA]{Table 1}) to identify the hazards
 and their causes, effects, and mitigation strategies, and lastly the requirements that
 are discovered from the analysis.
 
@@ -171,81 +175,86 @@ This would include the web server, and weather tracker, among others.
 
 \section{Failure Mode and Effect Analysis}
 
-\newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.45in}
+\newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.20in}
 \pagenumbering{gobble}
 \begin{landscape}
+\begin{table}[ht]
 % breaks margins
 %\vspace*{-3.25cm}
 %\hspace*{-3.25cm}
 % adds vertical padding to table
 \def\arraystretch{1.2}
-\begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|}
-\cline{1-6}
-\textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions}\\
-\cline{1-6}
+\begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|p{1cm}|}
+\cline{1-7}
+\textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions} & \textbf{Ref} \\
+\cline{1-7}
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
 & EU-2 AS-6 & Misinputted user login information should give a warning to the user when
-login information does not exist or is incorrect.\\
-\cline{1-6}
+login information does not exist or is incorrect. & HA1\\
+\cline{1-7}
 \multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
 FR-17 & Allow the captain to resubmit availability that overwrites previously
-submitted availability if submitted before the due date.\\
-\cline{2-6}
+submitted availability if submitted before the due date. & HA2.1\\
+\cline{2-7}
 & User reads schedule incorrectly. & User may not attend a game by accident or
-travel to a game at the wrong time. & Schedule is unclear, unreadable, or the user
-makes an error. & AC-1 AC-2 & Ensure schedule data and structure are a readable
+travel to a game at the wrong time. & Schedule is unclear, or unreadable. & AC-1 AC-2 & Ensure schedule data and structure are a readable
 font size of at least 16 pixels and the colours have a contrast ratio of at least
-4.5:1.\\
-\cline{2-6}
+4.5:1. & HA2.2\\
+\cline{2-7}
 & Team's availability data have scheduling conflicts. & System cannot make a
 valid schedule. & Availability data has scheduling conflicts. & EU-3 & Teams
-will be given a warning if their availability data has scheduling conflicts.\\
-\cline{2-6}
+will be given a warning if their availability data has scheduling conflicts. & HA2.3\\
+\cline{2-7}
 & Captain doesn't respond to another captain's reschedule request. & Captain
 who sent the reschedule request will not know if the opposing captain wants to
 reschedule or not. & System doesn't adequately notify the opposing captain
 about the reschedule request. & IG-4 & Make sure the captain who needs to
-accept the request cannot avoid seeing the request notification.\\
-\cline{1-6}
+accept the request cannot avoid seeing the request notification. & HA2.4\\
+\cline{1-7}
 \multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
-unclear or the user makes an error. & AP-1 AP-2 & Ensure that when assigning a team for a
+unclear. & AP-1 AP-2 & Ensure that when assigning a team for a
 user, the team options to select from are clear and the input section is
-readable.\\
-\cline{1-6}
+readable. & HA3\\
+\cline{1-7}
 \multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
-has access to actions they shouldn't use. & Interface lacks security or the user
-makes an error. & AS-5 & Giving an account additional permissions should give
-a warning to the user when configuring accounts.\\
-\cline{2-6}
+has access to actions they shouldn't use. & Interface is unclear to user. & AS-5 & Giving an account additional permissions should give
+a warning to the user when configuring accounts. & HA4.1\\
+\cline{2-7}
 & All commissioner level accounts are deleted. & There are no accounts left
 that can give commissioner level permissions. & System allows for all
 commissioner accounts to be deleted. & IG-2 & Do not let users delete a
-commissioner account if there is only one left.\\
-\cline{2-6}
+commissioner account if there is only one left. & HA4.2\\
+\cline{2-7}
 & User logs in on an account that isn't theirs. & User may make actions that
 are not desired by the account's owner. & Account owners are not careful with
-their login data. & PV-2 & Remind users to keep their passwords secret and secure.\\
-\cline{1-6}
+their login data. & PV-2 & Remind users to keep their passwords secret and secure.
+& HA4.3\\
+\cline{1-7}
 \multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and the database have incorrect scores. & User inputs the wrong score. &
 IG-3 & Allow the opposing team's captain to verify the score and contest it if
-the score is wrong.\\
-\cline{2-6}
-\cline{1-6}
+the score is wrong. & HA5\\
+\cline{2-7}
+\cline{1-7}
 \multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
 critical information. & Alert is unclear, unreadable, or the user makes an error. &
 AC-3 & Ensure the alert message has a readable font size of at least 16 pixels
-and colours with a contrast ratio of at least 4.5:1.\\
-\cline{2-6}
+and colours with a contrast ratio of at least 4.5:1. & HA6\\
+\cline{2-7}
 \hline
 \end{tabularx}
-
+\caption{Failure Mode and Effect Analysis Table} % Added caption
+\label{tab:FMEA}
+\end{table}
 \end{landscape}
 \restoregeometry{}
+
+\pagenumbering{arabic}
+\setcounter{page}{4}
 
 \section{Safety and Security Requirements}
 
@@ -410,28 +419,65 @@ and colours with a contrast ratio of at least 4.5:1.\\
   \reqhist Created 2024-10-25
 \end{myreq}
 
+\begin{myreq}
+  \reqno IG-5
+  \reqdesc The system should implement audit logging for system actions.
+  \reqrat The system should log system activities to help troubleshoot issues
+  within the system and make sure the system runs as intended.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Logs are generated after each system action.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2025-01-08
+\end{myreq}
+
+\begin{myreq}
+  \reqno IG-6
+  \reqdesc The system should have data backups at least every BACKUP\_WEEKS weeks.
+  \reqrat The system should complete regularly scheduled data backups in the case
+  where the platform shuts down, making sure data is not lost.
+  \reqorig Nicholas Fabugais-Inaba
+  \reqfit Data backups are completed at least every
+  \\ BACKUP\_WEEKS weeks.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 3}
+  \reqhist Created 2025-01-08
+\end{myreq}
+
 \section{Roadmap}
 
 The hazard analysis resulted in new safety and security requirements being
 introduced to the project's already existing requirements located in the
-SRS. Provided the time constraints and current project deadlines, critical
-requirements will be initially addressed with lower priority requirements
-being investigated in the future. The hazard analysis will be used as a guideline
+SRS. Provided the time constraints and current project deadlines, high-priority
+requirements will be initially addressed with lower-priority requirements
+being investigated in the future. The explanation of these priorities can be viewed
+in the SRS section 21.1. The hazard analysis will be used as a guideline
 to ensure the safety and security of the Sandlot platform's users.\\\\
 
-Proof of Concept Demonstration (November 11-22):
+\textbf{Proof of Concept Demonstration (November 11-22):} \\\\
+This phase focuses on demonstrating the system's core functionalities to ensure
+feasibility and alignment with initial requirements. 
 \begin{itemize}
-  \item Authentication: AS-6 and EU-2
-  \item Scheduling: FR-17, AC-1, AC-2, and EU-3
+  \item Authentication (AS-6 and EU-2): Validating user login information and ensuring
+  that users can access their respective accounts.
+  \item Scheduling (FR-17, AC-1, AC-2, and EU-3):  Verifying schedule data is correct
+  and adheres to the readable requirements listed in the recommended actions.\\
 \end{itemize}
 
-Final Demonstration (Revision 1) (March 24-30):
+\textbf{Final Demonstration (Revision 1) (March 24-30):} \\\\
+The final demonstration phase evaluates the full implementation of the system,
+ensuring it meets all specified functional and non-functional requirements.
 \begin{itemize}
-  \item Scheduling: IG-4
-  \item Teams: AP-1 and AP-2
-  \item Accounts: AS-5, IG-2, and PV-2
-  \item Scoring/Standings: IG-3
-  \item Alerts: AC-3
+  \item Scheduling (IG-4): System adequately notifies the user of a rescheduling request.
+  \item Teams (AP-1 and AP-2): User is appropriately assigned to/correctly joins their
+    team.
+  \item Accounts (AS-5, IG-2, and PV-2): Accounts are correctly given their respective 
+  permissions.
+  \item Scoring/Standings (IG-3): Displaying of scores are verified to be accurate.
+  \item Alerts (AC-3): Displaying of alerts adhere to the readable requirements listed
+    in the recommended actions.
 \end{itemize}
 
 \newpage{}

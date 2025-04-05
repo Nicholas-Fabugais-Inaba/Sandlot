@@ -41,6 +41,8 @@ Mar. 3, 2025 & 1.0 & TA Feedback\\
 Mar. 10, 2025 & 1.1 & Prior to Rev1\\
 Mar. 3, 2025 & 1.0 & TA Feedback\\
 Mar. 10, 2025 & 1.1 & Prior to Rev1\\
+Apr. 4, 2025 & 1.2 & Restatement of NFR evaluation criteria.
+Based on TA feedback: added explicit references to figures for section 4.\\
 \bottomrule
 \end{tabularx}
 
@@ -169,6 +171,13 @@ seen in more detail in the VnV plan.
 
 \section{Nonfunctional Requirements Evaluation}
 
+As outlined in the VnV Plan, a Microsoft Form was provided to testers of the system to validate specific
+system tests outline in the VnV Plan. Answers for each question ranged from
+either, a rating between 1 (Strongly Disagree) to 5 (Strongly Agree), 1 
+(Very Difficult) to 5 (Very Easy), or 1 (No, the system was difficult to use 
+due to accessibility issues) to 3 (Yes, the system was accessible). A 
+satisfactory result for each question should be scored a 3 or above.
+
 \subsection{Usability}
 
 Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com/Pages/ResponsePage.aspx?id=B2M3RCm0rUKMJSjNSW9HcodvkeIlB8lOjrmyIWuVT7dUQ0hBNFRVTjFHWVhITDIzSklZRDRYTVZRMi4u}{Sandlot Usability Survey}
@@ -179,7 +188,7 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   to read groups of text or images such as the schedule or account registration fields.
   They would then be provided the survey form, provided above, to fill out and provide their own feedback
   on their experience. \\
-  Average Result: Yes, the system was accessible. (3)\\
+  Average Result: Yes, the system was accessible (Score: 3). Results graphed in \hyperref[visual]{Figure 1}.\\
   Evaluation: After the tester(s) had read the Sandlot website's different texts and images,
   they found the website's readability to be up to a high quality, following a consistent
   stylistic formatting as evaluated from the resulting rating metric. This indicates that the
@@ -191,7 +200,7 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   an account they had created, identifying any faults such as login failure, incorrect
   password verification, etc., throughout their experience. They would then be provided the survey form, provided above, to fill
   out and provide their own feedback on their experience. \\
-  Average Result: Strongly Agree (5)\\
+  Average Result: Strongly Agree (Score: 5). Results graphed in \hyperref[account]{Figure 2}.\\
   Evaluation: After the tester(s) had registered and signed in to the account they had
   created on the Sandlot website, they had found the website's registration and sign in process
   to function appropriately (i.e. providing correct sign in feedback if their password was
@@ -205,7 +214,7 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   to navigate to certain functionalities/pages such as viewing the schedule (EU1, LR3),
   rescheduling a game, etc. They would then be provided the survey form, provided above, to fill
   out and provide their own feedback on their experience. \\
-  Average Result: Very/Somewhat Easy (4.4)\\
+  Average Result: Very/Somewhat Easy (Score: 4.4). Results graphed in \hyperref[nav]{Figure 3}.\\
   Evaluation: After the tester(s) had navigated the Sandlot website's different pages
   (Schedule, Home, Profile, etc.), they found the website's navigation including
   its menus and links to be easily accessible and straightforward from the resulting
@@ -246,7 +255,7 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   showed up in the standings with their respective records). Also, the tester would attempt
   to locate sensitive information (PV1) (i.e. contact information of players) across the
   website and confirm if no such information was able to be observed. \\
-  Average Result: Strongly/Slightly Agree (4.75)\\
+  Average Result: Strongly/Slightly Agree (Score: 4.75). Results graphed in \hyperref[access]{Figure 4}.\\
   Evaluation: The tester(s) had successfully accessed the Sandlot website's season schedule and
   standings based on the resulting rating metric, without being logged in to an account. Additionally,
   they were not able to obtain contact information when browsing the website, securing sensitive
@@ -265,7 +274,7 @@ Sandlot's Usability Survey Link used for testing: \href{https://forms.office.com
   confirm if the request had either been successfully denied or accepted. If the reschedule
   request was successfully accepted, the tester should confirm that the updated game day/time
   is reflected upon viewing the season schedule. \\
-  Average Result: Slightly Agree (4)\\
+  Average Result: Slightly Agree (Score: 4). Results graphed in \hyperref[validate]{Figure 5}.\\
   Evaluation: The tester(s) had successfully logged into their account with valid credentials
   and were denied access with invalid credentials based on the resulting rating metric. However,
   the reschedule request process was not as straightforward as expected, with some testers
@@ -352,7 +361,47 @@ making the Sandlot website a more efficient and effective tool for managing leag
   \hline
   \multicolumn{3}{|c|}{\textbf{Database Module}}\\
   \hline
-  test-1 & & \\
+  test\_get\_schedule\_games & Passed & Backend correctly retrieves scheduled 
+  game data. \\
+  \hline
+  test\_team\_games & Passed & Backend correctly retrieves all of the specified 
+  team's games. \\
+  \hline
+  test\_create\_RR & Passed & Backend properly creates a new reschedule request with the 
+  specificied data in the database. \\
+  \hline
+  test\_get\_team\_RRs & Passed & Backend correctly retrieves all reschedule requests adressed to a 
+  specific team. \\
+  \hline
+  test\_delete\_reschedule\_request & Passed &  Backend properly deletes a specified reschedule request 
+  from the database. \\
+  \hline
+  test\_get\_standings\_data & Passed & Backend properly retrieves completed game scores and calculates
+  the standings of teams based on them. \\
+  \hline
+  test\_get\_player\_data & Passed & Backend correctly retrieves the list of players that belong to 
+  a specified team including their information. \\
+  \hline
+  test\_get\_team\_data & Passed & Backend correctly retrieves all teams in the databse and their 
+  divisions. \\
+  \hline
+  test\_create\_player\_account & Passed & Backend properly creates a player account in the database
+  with the player information provided to it. \\
+  \hline
+  test\_create\_team\_account & Passed & Backend properly creates a team account in the database with
+  the team information provided to it. \\
+  \hline
+  test\_get\_player\_account & Passed & Backend correctly retreives a player's account information
+  based on the player's email. \\
+  \hline
+  test\_get\_team\_account & Passed & Backend correctly retrieves a team's account information based on
+  the team's username. \\
+  \hline
+  test\_delete\_player & Passed & Backend properly deletes a player account from the database 
+  based on the information provided. \\
+  \hline
+  test\_delete\_team & Passed & Backend properly deletes a team account from the database based on
+  the information provided. \\
   \hline
   \multicolumn{3}{|c|}{\textbf{Season Scheduler Module}}\\
   \hline
@@ -367,6 +416,9 @@ making the Sandlot website a more efficient and effective tool for managing leag
   \hline
   \caption{Unit Test Results}
 \end{longtable}
+
+The system has proven to be fairly robust, with a majority of our unit tests passing successfully. 
+This shows its stability, reliability, and ability to perform as expected in these specific areas.
 
 \section{Changes Due to Testing}
 
@@ -472,7 +524,7 @@ making the Sandlot website a more efficient and effective tool for managing leag
 \section{Automated Testing}
 
 Currently, unit tests for the database, season scheduler, and reschedule modules are 
-automated and continuously integrated using github actions to execute them on every push
+automated and continuously integrated using GitHub actions to execute them on every push
 and pull reqeust to our main branch. This ensures our code is as robust as possible when 
 pushing to production branches while also saving us the hassle of manually running the tests 
 ourselves. In the future we plan to extend our automated testing environments to produce 
