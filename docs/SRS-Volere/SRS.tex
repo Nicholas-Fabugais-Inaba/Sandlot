@@ -92,7 +92,7 @@ Jan. 8, 2025 & 1.6 & Based on TA feedback: Fixed text overflow in margin.\\
 Apr. 1, 2025 & 1.7 & Based on TA feedback: Likely/unlikely changes documented.\\
 Apr. 3, 2025 & 1.8 & Based on TA feedback: Added specification math, added
 maintenance requirement, and justification for unused sections on the page
-below the table.\\
+below the table. Added privacy requirement from hazard analysis.\\
 \bottomrule
 \end{tabularx}
 
@@ -1725,6 +1725,18 @@ is kept secure and private, viewable only to select individuals.
   \twoinline
     {\reqsatis 1}
     {\reqdissat 1}
+\end{myreq}
+
+\begin{myreq}
+  \reqno PV-3
+  \reqdesc The system should enforce data protection for sensitive user data.
+  \reqrat The system should protect sensitive user data from being stolen or otherwise accessed by a possibly malicious party.
+  \reqorig Jung Woo Lee
+  \reqfit Sensitive user data should be protected by hashing or other means of data protection.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 5}
+  \reqhist Created 2025-04-04
 \end{myreq}
 
 \subsection{Audit Requirements}
