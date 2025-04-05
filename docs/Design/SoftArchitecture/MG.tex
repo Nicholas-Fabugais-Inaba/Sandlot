@@ -48,6 +48,14 @@
 \midrule
 January 13, 2025 & 1.0 & TA Feedback\\
 January 17, 2025 & 1.1 & Rev0\\
+April 1, 2025 & 1.2 & Based on TA feedback: Exact appendix referenced in
+section 10. Changed sections 7.1 and 7.2 titles to be grammatically correct.
+Season scheduler module is a SW decision module as it can be replaced with
+different scheduling algorithms.\\
+April 2, 2025 & 1.3 & Based on TA feedback: References seem to be working
+appropriately.\\
+April 4, 2025 & 1.4 & Updated names of 'structure' modules to 'record modules' to match new hierarchy diagram.
+Based on TA feedback: Changed use hierarchy diagram and appendix screenshots to PDF from image.\\
 \bottomrule
 \end{tabularx}
 
@@ -104,7 +112,7 @@ Our design follows the rules layed out by \citet{ParnasEtAl1984}, as follows:
 \begin{itemize}
 \item System details that are likely to change independently should be the
   secrets of separate modules.
-\item Each data structure is implemented in only one module.
+\item Each data structure is implemented in only one module as a 'record module'.
 \item Any other program that requires information stored in a module's data
   structures must obtain it by calling access programs belonging to that module.
 \end{itemize}
@@ -170,8 +178,6 @@ change.
   scheduling conflicts are to be resolved.
   \item[\refstepcounter{acnum} \actheacnum \label{acSchedFormat}:] The format
   of the season schedule.
-  \item[\refstepcounter{acnum} \actheacnum \label{acStandFormat}:] The format
-  of the season standings.
   \item[\refstepcounter{acnum} \actheacnum \label{acCreateAccount}:] The
   format of the create player/team account process and data.
   \item[\refstepcounter{acnum} \actheacnum \label{acJoinRequest}:] The process
@@ -201,7 +207,7 @@ decisions will be changed.
   \item[\refstepcounter{ucnum} \uctheucnum \label{ucWeb}:] The system being a
   web application.
   \item[\refstepcounter{ucnum} \uctheucnum \label{ucAccStr}:] Player, team,
-  and commissioner account structure.
+  and commissioner account records.
   \item[\refstepcounter{ucnum} \uctheucnum \label{ucSched}:] The goal of the
   system to generate a season schedule.
 \end{description}
@@ -219,18 +225,14 @@ be implemented.
   \item [\refstepcounter{mnum} \mthemnum \label{mPL}:] Player Module
   \item [\refstepcounter{mnum} \mthemnum \label{mTE}:] Team Module
   \item [\refstepcounter{mnum} \mthemnum \label{mCM}:] Commissioner Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mAS}:] Account Structure
+  \item [\refstepcounter{mnum} \mthemnum \label{mAS}:] Account Records
   Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mTS}:] Team Structure Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Structure
-  Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mST}:] Standings Structure
+  \item [\refstepcounter{mnum} \mthemnum \label{mTS}:] Team Records Module
+  \item [\refstepcounter{mnum} \mthemnum \label{mSS}:] Schedule Records
   Module
   \item [\refstepcounter{mnum} \mthemnum \label{mS}:] Season Scheduler Module
   \item [\refstepcounter{mnum} \mthemnum \label{mRE}:] Reschedule Module
   \item [\refstepcounter{mnum} \mthemnum \label{mAL}:] Alerts Module
-  \item [\refstepcounter{mnum} \mthemnum \label{mWA}:] Web Application
-  Framework Module
   \item [\refstepcounter{mnum} \mthemnum \label{mDB}:] Database Module
 \end{description}
 
@@ -249,19 +251,17 @@ be implemented.
 & Player Module\\
 & Team Module\\
 & Commissioner Module\\
-& Account Structure Module\\
-& Team Structure Module\\
-& Schedule Structure Module\\
-& Standings Structure Module\\
+& Account Records Module\\
+& Team Records Module\\
+& Schedule Records Module\\
 & Reschedule Module\\
 & Alerts Module\\
 & Database Module\\
 \midrule
 
-\multirow{2}{0.3\textwidth}{Software Decision Module} & Season Scheduler
+{Software Decision Module} & Season Scheduler
 Module\\
-& Web Application Framework Module\\
-\bottomrule
+\midrule
 
 \end{tabular}
 \caption{Module Hierarchy}
@@ -290,7 +290,7 @@ Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not
 have to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Module (\mref{mHH})}
 
 \begin{description}
   \item[Secrets:]The data structure and algorithm used to implement the
@@ -301,7 +301,7 @@ have to be implemented.
   \item[Implemented By:] OS
 \end{description}
 
-\subsection{Behaviour-Hiding Module}
+\subsection{Behaviour-Hiding Modules}
 
 \begin{description}
   \item[Secrets:]The contents of the required behaviours.
@@ -353,7 +353,7 @@ have to be implemented.
   \item[Type of Module:] Abstract Object
 \end{description}
 
-\subsubsection{Account Structure Module (\mref{mAS})}
+\subsubsection{Account Records Module (\mref{mAS})}
 
 \begin{description}
   \item[Secrets:]The format of the account data.
@@ -363,30 +363,21 @@ have to be implemented.
   \item[Type of Module:] Abstract Data Type
 \end{description}
 
-\subsubsection{Team Structure Module (\mref{mTS})}
+\subsubsection{Team Records Module (\mref{mTS})}
 
 \begin{description}
   \item[Secrets:]The format of the team account data.
-  \item[Services:]Defines a team account data structure that inherits from the
-  account structure module.
+  \item[Services:]Defines a team account data records that inherits from the
+  account records module.
   \item[Implemented By:] \progname{}
   \item[Type of Module:] Abstract Data Type
 \end{description}
 
-\subsubsection{Schedule Structure Module (\mref{mSS})}
+\subsubsection{Schedule Records Module (\mref{mSS})}
 
 \begin{description}
   \item[Secrets:]The format of the season schedule data.
   \item[Services:]Defines a season schedule data structure.
-  \item[Implemented By:] \progname{}
-  \item[Type of Module:] Abstract Data Type
-\end{description}
-
-\subsubsection{Standings Structure Module (\mref{mST})}
-
-\begin{description}
-  \item[Secrets:]The format of the season standings data.
-  \item[Services:]Defines a season standings data structure.
   \item[Implemented By:] \progname{}
   \item[Type of Module:] Abstract Data Type
 \end{description}
@@ -415,8 +406,7 @@ have to be implemented.
 \subsubsection{Database Module (\mref{mDB})}
 
 \begin{description}
-  \item[Secrets:]The function of storing player, team, commissioner, schedule
-  and standings data.
+  \item[Secrets:]The function of storing player, team, commissioner, and schedule data.
   \item[Services:]Defines and maintains a database that stores all relevant data
   to the \progname{} system. This includes account data for players, teams, and
   commissioners such as contact information and team player lists. It also
@@ -446,18 +436,7 @@ have to be implemented.
   \item[Secrets:]The algorithm used to generate a season schedule.
   \item[Services:]The algorithm generates a season schedule using each teams
   availability and a set of constraints as inputs and outputs a schedule of
-  the form of the data structure defined in the schedule structure module.
-  \item[Implemented By:] \progname{}
-\end{description}
-
-\subsubsection{Web Application Framework Module (\mref{mWA})}
-
-\begin{description}
-  \item[Secrets:]The framework needed to host the web application on which
-  \progname{} will run.
-  \item[Services:]Defines a framework that will allow all other modules to be
-  hosted on a web application including any other UI libraries or tools
-  needed.
+  the form of the data structure defined in the schedule records module.
   \item[Implemented By:] \progname{}
 \end{description}
 
@@ -497,7 +476,7 @@ FR-20 & \mref{mSS}, \mref{mS}\\
 FR-21 & \mref{mTS}, \mref{mSS}, \mref{mS}\\
 FR-22 & \mref{mCM}, \mref{mSS}, \mref{mS}\\
 FR-23 & \mref{mTS}\\
-FR-24 & \mref{mAC}, \mref{mWA}\\
+FR-24 & \mref{mAC}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Functional Requirements and Modules}
@@ -511,19 +490,19 @@ FR-24 & \mref{mAC}, \mref{mWA}\\
 \textbf{AC} & \textbf{Modules}\\
 \midrule
 \acref{acHardware} & \mref{mHH}\\
-\acref{acLogIn} & \mref{mAC}, \mref{mAS}, \mref{mWA}, \mref{mDB}\\
+\acref{acLogIn} & \mref{mAC}, \mref{mAS}, \mref{mDB}\\
 \acref{acSched} & \mref{mS}\\
 \acref{acSchedConstraints} & \mref{mSS}\\
-\acref{acAvailability} & \mref{mPL}, \mref{mWA}, \mref{mDB}\\
-\acref{acSchedConflicts} & \mref{mSS}, \mref{mWA}\\
-\acref{acSchedFormat} & \mref{mSS}, \mref{mWA}\\
-\acref{acStandFormat} & \mref{mST}, \mref{mWA}\\
-\acref{acCreateAccount} & \mref{mPL}, \mref{mTE}, \mref{mWA}, \mref{mDB}\\
-\acref{acJoinRequest} & \mref{mPL}, \mref{mTE}, \mref{mWA}\\
-\acref{acAdmin} & \mref{mCM}, \mref{mWA}\\
-\acref{acAlertSend} & \mref{mAL}, \mref{mWA}\\
-\acref{acReschedule} & \mref{mPL}, \mref{mRE}, \mref{mWA}\\
-\acref{acAlertReceive} & \mref{mAL}, \mref{mWA}\\
+\acref{acAvailability} & \mref{mPL}, \mref{mDB}\\
+\acref{acSchedConflicts} & \mref{mSS}\\
+\acref{acSchedFormat} & \mref{mSS}\\
+\acref{acStandFormat} & \mref{mST}\\
+\acref{acCreateAccount} & \mref{mPL}, \mref{mTE}, \mref{mDB}\\
+\acref{acJoinRequest} & \mref{mPL}, \mref{mTE}\\
+\acref{acAdmin} & \mref{mCM}\\
+\acref{acAlertSend} & \mref{mAL}\\
+\acref{acReschedule} & \mref{mPL}, \mref{mRE}\\
+\acref{acAlertReceive} & \mref{mAL}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -543,7 +522,7 @@ the modules. It can be seen that the graph is a directed acyclic graph
 system, and modules in the higher level of the hierarchy are essentially simpler
 because they use modules from the lower levels.
 
-\includegraphics[scale=0.7]{9_use_hierarchy_diagram.png}
+\includegraphics[scale=1]{9_use_hierarchy_diagram.pdf}
 
 \begin{figure}[H]
 \centering
@@ -557,7 +536,7 @@ because they use modules from the lower levels.
 \section{User Interfaces}
 
 Preliminary design of the major user interfaces can be found in the \href{https://www.figma.com/proto/5YNR4bBk1vqGhvvdioqJnI/Capstone-MG-Sketches?node-id=4-2&p=f&t=sLgjpB9bWIdGXPd8-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1}{Figma}.
-Screens are also provided in the appendix.
+Screens are also provided in the \nameref{Appendix}.
 
 \section{Design of Communication Protocols}
 
@@ -593,13 +572,12 @@ making sure the performance of the system is able to accomplish each module's fu
       \item Implement the account module (Casra Ghazanfari)
       \item Implement the player, team, and commissioner modules (Nicholas Fabugais-Inaba)
       \item Setup database module for storing different data (Casra Ghazanfari)
-      \item Create the schedule and standings structure modules (Jung Woo Lee)
+      \item Create the schedule record modules (Jung Woo Lee)
       \item Update season scheduler module to generate an optimal schedule (Alex Verity)
     \end{itemize}
   \item \textbf{Week 3 (January 27-February 2)}: Remaining Modules and Integration
     \begin{itemize}
       \item Implement alerts module (Alex Verity)
-      \item Implement web application framework module (Casra Ghazanfari)
       \item Implement reschedule module (Jung Woo Lee)
       \item Initial integration testing (All team members)
     \end{itemize}
@@ -618,7 +596,7 @@ making sure the performance of the system is able to accomplish each module's fu
 \section{Appendix} \label{Appendix}
 
 \centering
-\includegraphics[scale=0.6]{Figma1.png}
+\includegraphics[scale=0.35]{Season Schedule.pdf}
 \begin{figure}[H]
 \centering
 \caption{User interface: Season schedule page}
@@ -626,7 +604,7 @@ making sure the performance of the system is able to accomplish each module's fu
 \end{figure}
 
 \centering
-\includegraphics[scale=0.5]{Figma2.png}
+\includegraphics[scale=0.35]{Standings.pdf}
 \begin{figure}[H]
 \centering
 \caption{User interface: League standings page}
@@ -634,7 +612,7 @@ making sure the performance of the system is able to accomplish each module's fu
 \end{figure}
 
 \centering
-\includegraphics[scale=0.5]{Figma3.png}
+\includegraphics[scale=0.35]{Team Page.pdf}
 \begin{figure}[H]
 \centering
 \caption{User interface: Team page}
@@ -642,7 +620,7 @@ making sure the performance of the system is able to accomplish each module's fu
 \end{figure}
 
 \centering
-\includegraphics[scale=0.6]{Figma4.png}
+\includegraphics[scale=0.35]{Login.pdf}
 \begin{figure}[H]
 \centering
 \caption{User interface: User log in page}
