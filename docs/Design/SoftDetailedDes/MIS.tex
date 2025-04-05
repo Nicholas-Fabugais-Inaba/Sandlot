@@ -59,7 +59,8 @@ March 10, 2025 & 1.2 & Based on TA feedback: Completed MIS for all modules. Clea
 April 2, 2025 & 1.3 & Based on TA feedback: Ensured consistent names with
 update or overwrite. References seem to be working appropriately.\\
 April 4, 2025 & 1.4 & Based on TA feedback: Updated document semantics and
-get\_score access routine.\\
+get\_score access routine. Based on TA feedback: Not applicable to formalize objective functions. Removed 
+optimization objective functions for specification math as schedule creation is no longer optimal.\\
 \bottomrule
 \end{tabularx}
 
@@ -943,17 +944,6 @@ None
   \item All constraints should hold for the output schedule $S_o$:\\
   $C = {c_1, c_2, c_3, c_4, c_5}$\\
   $\forall(c \in C |: c(S_o))$
-  \item The schedule $S_o$ should also be optimized according the soft
-  constants below:
-  \begin{itemize}
-    \item Minimize the maximum number of games played in a week over the
-    season.
-    $n_ji$ = number of games played by a team in a week\\
-    $m$ = frequency of $n$ occuring over each week of the season\\
-    $f(t) = $
-    \item Minimize the number of games played on a team's scheduled off day
-    according to the team's availability.
-  \end{itemize}
 \end{itemize}
 \end{itemize}
 
