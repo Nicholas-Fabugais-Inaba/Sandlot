@@ -43,6 +43,8 @@ Mar. 3, 2025 & 1.0 & TA Feedback\\
 Mar. 10, 2025 & 1.1 & Prior to Rev1\\
 Apr. 4, 2025 & 1.2 & Restatement of NFR evaluation criteria.
 Based on TA feedback: added explicit references to figures for section 4.\\
+Apr. 4 2025 & 1.3 & Based on TA feedback: Explanation of results and what constitutes 
+a pass/fail for FR tests 
 \bottomrule
 \end{tabularx}
 
@@ -167,6 +169,14 @@ seen in more detail in the VnV plan.
   \caption{Functional Requirements Test Results}
 \end{longtable}
 % \caption{Functional Requirements Test Results}
+
+For all of our FR tests, we had a separate database filled with placeholder data 
+that was used to test the system. This means that we at all times knew what the 
+database held before, during and after our functional tests. This is how we were
+able to determine if our tests passed or failed. Tests that passed matched the 
+expected output of the database for a given set of queries while tests that failed 
+did not. The actual output of the database for any given test varied greatly 
+depending on the queries that were run.
 
 
 \section{Nonfunctional Requirements Evaluation}
