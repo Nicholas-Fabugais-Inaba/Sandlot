@@ -72,6 +72,8 @@ Jan. 7, 2025 & JL, NFI & Made changes to reflect changes in SRS; added AS-6 to t
 Based on TA feedback: Adjustments made to weak assumptions.\\
 Jan. 8, 2025 & NFI & Based on TA feedback: Fixed spelling/grammatical errors.
 Changed visible and readable to specifically highlight font size and color ratio.\\
+Apr. 4, 2025 & JL & Based on TA feedback: Added table number and caption. Referenced in 
+document body. Also fixed page numbering.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -107,7 +109,7 @@ Hazards to Sandlot could take the form of user interface misinterpretations, mis
 and database errors, leading to possible malfunctions with the product and/or user 
 dissatisfaction.
 This document will first identify the system components and boundaries, state the critical
-assumptions, use a Failure Mode and Effects Analysis (FMEA) table to identify the hazards
+assumptions, use a Failure Mode and Effects Analysis (FMEA) table (\hyperref[tab:FMEA]{Table 1}) to identify the hazards
 and their causes, effects, and mitigation strategies, and lastly the requirements that
 are discovered from the analysis.
 
@@ -176,6 +178,7 @@ This would include the web server, and weather tracker, among others.
 \newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.20in}
 \pagenumbering{gobble}
 \begin{landscape}
+\begin{table}[ht]
 % breaks margins
 %\vspace*{-3.25cm}
 %\hspace*{-3.25cm}
@@ -244,9 +247,14 @@ and colours with a contrast ratio of at least 4.5:1. & HA6\\
 \cline{2-7}
 \hline
 \end{tabularx}
-
+\caption{Failure Mode and Effect Analysis Table} % Added caption
+\label{tab:FMEA}
+\end{table}
 \end{landscape}
 \restoregeometry{}
+
+\pagenumbering{arabic}
+\setcounter{page}{4}
 
 \section{Safety and Security Requirements}
 
