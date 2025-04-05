@@ -12,6 +12,7 @@
 \usepackage{tcolorbox}
 \usepackage{array}
 \usepackage{afterpage}
+\usepackage{longtable}
 
 \hypersetup{
     colorlinks=true,       % false: boxed links; true: colored links
@@ -72,8 +73,8 @@ Jan. 7, 2025 & JL, NFI & Made changes to reflect changes in SRS; added AS-6 to t
 Based on TA feedback: Adjustments made to weak assumptions.\\
 Jan. 8, 2025 & NFI, JL & Based on TA feedback: Fixed spelling/grammatical errors.
 Changed visible and readable to specifically highlight font size and color ratio. Added reference columns for hazards in FMEA table.\\
-Apr. 4, 2025 & JL & Based on TA feedback: Added table number and caption. Referenced in 
-document body. Also fixed page numbering.\\
+Apr. 4, 2025 & JL & Based on TA feedback: Added table number and caption; referenced in 
+document body. Added security requirement, added security and data integrity parts to FMEA table. Also fixed page numbering.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -125,14 +126,14 @@ The system can be divided into the following components:
     \subitem This component generates a schedule based on user-inputted availability data. 
     Additionally, it allows for rescheduling events in these schedules after they 
     have been generated.
-    \item Accounts
-    \subitem This component allows users to create, delete, or edit accounts. Additionally, account types 
-    determine how a user can interact with the system, its data, and its components.
     \item Team Structure
     \subitem This component is a data structure of the system that allows accounts to be grouped 
     such that a group of accounts interact with the system, its data, and its components in the same way as 
     each other. Additionally, accounts can be added/removed from teams, users can request to join a 
     certain team, and teams can be created/deleted.
+    \item Accounts
+    \subitem This component allows users to create, delete, or edit accounts. Additionally, account types 
+    determine how a user can interact with the system, its data, and its components.
     \item Scoring/Standings
     \subitem This component allows users to input score data associated with specific events and will 
     generate cumulative standings based on score data.
@@ -140,8 +141,6 @@ The system can be divided into the following components:
     \subitem This component alerts users of important information related to the system.
     \item Database
     \subitem This component stores the system's data.
-    \item User Interface
-    \subitem This component displays the system's data to the user.
 \end{itemize}
 
 \subsection{System Boundaries}
@@ -178,22 +177,36 @@ This would include the web server, and weather tracker, among others.
 \newgeometry{left=0.65in,right=0.25in,top=0.25in,bottom=0.20in}
 \pagenumbering{gobble}
 \begin{landscape}
-\begin{table}[ht]
-% breaks margins
-%\vspace*{-3.25cm}
-%\hspace*{-3.25cm}
-% adds vertical padding to table
+
+% Longtable starts here
 \def\arraystretch{1.2}
-\begin{tabularx}{504pt}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|p{1cm}|}
-\cline{1-7}
+\begin{longtable}{|p{3cm}||p{4cm}|p{4cm}|p{4cm}|p{1cm}|p{5.75cm}|p{1cm}|}
+\caption{Failure Mode and Effect Analysis Table} \label{tab:FMEA} \\
+\hline
 \textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions} & \textbf{Ref} \\
-\cline{1-7}
+\hline
+\endfirsthead
+
+\hline
+\textbf{Component} & \textbf{Failure Mode} & \textbf{Failure Effect} & \textbf{Failure Cause} & \textbf{SR} & \textbf{Recommended Actions} & \textbf{Ref} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{7}{r}{\textit{(Continued on next page)}} \\
+\endfoot
+
+\hline
+\caption{Failure Mode and Effect Analysis Table} \label{tab:FMEA} \\
+\endlastfoot
+
 \multirow{2}{2cm}{Authentication} & User login information does not match database stored
 login information. & User cannot access their account. & Misinputted user login information.
 & EU-2 AS-6 & Misinputted user login information should give a warning to the user when
 login information does not exist or is incorrect. & HA1\\
-\cline{1-7}
-\multirow{2}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
+\hline
+
+\multirow{3}{2cm}{Scheduling} & Captain inputs incorrect availability dates at
 start of season & Schedule is generated incorrectly. & Captain's user error. &
 FR-17 & Allow the captain to resubmit availability that overwrites previously
 submitted availability if submitted before the due date. & HA2.1\\
@@ -212,14 +225,16 @@ who sent the reschedule request will not know if the opposing captain wants to
 reschedule or not. & System doesn't adequately notify the opposing captain
 about the reschedule request. & IG-4 & Make sure the captain who needs to
 accept the request cannot avoid seeing the request notification. & HA2.4\\
-\cline{1-7}
-\multirow{2}{2cm}{Teams} & User is assigned to or joins the wrong team. & User
+\hline
+
+\multirow{2}{2cm}{Team Structure} & User is assigned to or joins the wrong team. & User
 will be shown the wrong schedule and team information. & Interface inputs are
 unclear. & AP-1 AP-2 & Ensure that when assigning a team for a
 user, the team options to select from are clear and the input section is
 readable. & HA3\\
-\cline{1-7}
-\multirow{2}{2cm}{Accounts} & Account is given the wrong permissions. & User 
+\hline
+
+\multirow{3}{2cm}{Accounts} & Account is given the wrong permissions. & User 
 has access to actions they shouldn't use. & Interface is unclear to user. & AS-5 & Giving an account additional permissions should give
 a warning to the user when configuring accounts. & HA4.1\\
 \cline{2-7}
@@ -232,26 +247,33 @@ commissioner account if there is only one left. & HA4.2\\
 are not desired by the account's owner. & Account owners are not careful with
 their login data. & PV-2 & Remind users to keep their passwords secret and secure.
 & HA4.3\\
-\cline{1-7}
-\multirow{3}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
+\hline
+
+\multirow{2}{2cm}{Scoring/ Standings} & Captain inputs the wrong score. &
 Standings and the database have incorrect scores. & User inputs the wrong score. &
 IG-3 & Allow the opposing team's captain to verify the score and contest it if
 the score is wrong. & HA5\\
-\cline{2-7}
-\cline{1-7}
-\multirow{3}{2cm}{Alerts} & User reads alert incorrectly. &
+\hline
+
+\multirow{2}{2cm}{Alerts} & User reads alert incorrectly. &
 User may travel to a game that was postponed or cancelled, or miss out on
 critical information. & Alert is unclear, unreadable, or the user makes an error. &
 AC-3 & Ensure the alert message has a readable font size of at least 16 pixels
 and colours with a contrast ratio of at least 4.5:1. & HA6\\
-\cline{2-7}
 \hline
-\end{tabularx}
-\caption{Failure Mode and Effect Analysis Table} % Added caption
-\label{tab:FMEA}
-\end{table}
+
+\multirow{3}{2cm}{Database} & Database fails. &
+Data may be lost and unrecoverable. & Database fails. &
+IG-5, IG-6 & Enforce database backups and implement audit logging of some form to diagnose issues. & HA7\\
+\cline{2-7}
+& User's data is stolen. & User's private information is compromised to a malicious party. & User's data is not protected. & PV-3 & Enforce data protection of some sort, such as hashing, for sensitive personal information such as emails, passwords, and contact info. & HA8\\
+\hline
+
+\end{longtable}
+
 \end{landscape}
 \restoregeometry{}
+
 
 \pagenumbering{arabic}
 \setcounter{page}{4}
@@ -444,6 +466,18 @@ and colours with a contrast ratio of at least 4.5:1. & HA6\\
     {\reqsatis 3}
     {\reqdissat 3}
   \reqhist Created 2025-01-08
+\end{myreq}
+
+\begin{myreq}
+  \reqno PV-3
+  \reqdesc The system should enforce data protection for sensitive user data.
+  \reqrat The system should protect sensitive user data from being stolen or otherwise accessed by a possibly malicious party.
+  \reqorig Jung Woo Lee
+  \reqfit Sensitive user data should be protected by hashing or other means of data protection.
+  \twoinline
+    {\reqsatis 3}
+    {\reqdissat 5}
+  \reqhist Created 2025-04-04
 \end{myreq}
 
 \section{Roadmap}
