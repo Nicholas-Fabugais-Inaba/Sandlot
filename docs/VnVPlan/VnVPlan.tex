@@ -32,6 +32,13 @@
 \midrule
 Oct. 28, 2024 & 1.0 & TA Feedback\\
 Nov. 1, 2024 & 1.1 & Rev0\\
+Jan. 11, 2025 & 1.2 & Based on TA feedback: Fixed spelling/grammatical errors.
+Quantified a good survey result in the description above the questions.\\
+Apr. 1, 2025 & 1.3 & Based on TA feedback: Specified how data will be analyzed
+and used to improve the product. Specified meaning of user documentation and
+how user documentation will be validated.\\
+Apr. 2, 2025 & 1.4 & Based on TA feedback: Added descriptions for functional
+and non-functional tests.\\
 \bottomrule
 \end{tabularx}
 
@@ -97,8 +104,15 @@ been verified by its implementation teams.
 \subsection{Challenge Level and Extras}
 
 The challenge level of the project is general. The extras that are being used
-are user documentation and a code walkthrough. The challenge level and both extras
+are user documentation and usability testing. The challenge level and both extras
 have been approved by an instructor.
+
+User documentation will be a guide for users to understand the functions
+of the system and how to properly interact with them. There will be step-by-step
+procedures that show users how to perform certain actions as well as answers to any
+frequently asked questions that may arise. Additionally, this user documentation
+will be verified by users of the system including the supervisor and testers that
+may request assistance on actions they may not fully understand.
 
 \subsection{Relevant Documentation}
 
@@ -214,6 +228,13 @@ The given inputs shall produce expected outputs according to the system tests cr
 from the SRS. For specific system tests, a usability survey will be provided along 
 with the test that must be answered by the individual conducting the test.
 
+The data from the usability survey will then be analyzed for certain system actions such as
+scheduling, rescheduling, system performance, ease of use, and more. This analysis will account for
+metrics not deemed a "satisfactory result", see section 6.2 for details, considering them
+an issue that should be dealt with. These issues should then be elaborated upon in the
+survey specifically in the additional feedback section under each issue's question or at the end
+of the survey. These suggestions will then be implemented in the system to improve the product.
+
 \section{System Tests}
 
 This section will list all test cases for both functional and non-functional
@@ -239,6 +260,9 @@ can be modified with the reschedule feature.
 \begin{enumerate}
 
   \item{test-FR8\\}
+  
+  Description: Before the season starts, captains must have the
+  option to give their team’s availability for the season.
 
   Control: Manual
 
@@ -277,6 +301,12 @@ can be modified with the reschedule feature.
   % compared to the results given by the program.
 
   \item{test-FR10\\}
+  
+  Description: Captains must be able to request a rescheduling
+  for their team’s upcoming games as long as the game is at
+  least 24 hours in the future. Rescheduling involves giving
+  a list of alternate dates which are sent to the opposing
+  team’s captain to choose a date and accept.
 
   Control: Manual
 
@@ -295,6 +325,11 @@ can be modified with the reschedule feature.
   for at least 3 different dates and times.
 
   \item{test-FR11-1\\}
+  
+  Description: When a captain receives a rescheduling request,
+  the system should prompt the captain to accept
+  the request and choose a date from the list of alternate
+  dates.
 
   Control: Manual
 
@@ -312,6 +347,9 @@ can be modified with the reschedule feature.
   the system.
 
   \item{test-FR11-2\\}
+  
+  Description: When a captain receives a rescheduling request,
+  the system should prompt the captain to deny the request.
 
   Control: Manual
 
@@ -329,6 +367,10 @@ can be modified with the reschedule feature.
   the system.
 
   \item{test-FR12\\}
+  
+  Description: When a captain’s rescheduling request is either
+  accepted or denied the system should notify them about
+  the outcome.
 
   Control: Manual
 
@@ -351,6 +393,9 @@ can be modified with the reschedule feature.
   occur within the system. 
 
   \item{test-FR18\\}
+  
+  Description: Commissioners should be able to edit the league
+  schedule.
 
   Control: Manual
 
@@ -371,6 +416,9 @@ can be modified with the reschedule feature.
   occurred within the system.
 
   \item{test-FR20\\}
+  
+  Description: The system must display a schedule that includes
+  all past and future games from all teams on a calendar.
 
   Control: Manual
 
@@ -385,6 +433,9 @@ can be modified with the reschedule feature.
   How test will be performed: The season schedule should resemble a calendar and display all games of the season.
 
   \item{test-FR21\\}
+  
+  Description: The system must display a team schedule for each
+  team that includes all the team’s past and future games.
 
   Control: Manual
 
@@ -433,6 +484,8 @@ modification of accounts.
 \begin{enumerate}
 
   \item{test-FR1-1\\}
+  
+  Description: System must display the season schedule.
 
   Control: Manual
 
@@ -449,6 +502,8 @@ modification of accounts.
   the season schedule.
 
   \item{test-FR1-2\\}
+  
+  Description: System must display the standings.
 
   Control: Manual
 
@@ -465,6 +520,9 @@ modification of accounts.
   the standings.
 
   \item{test-FR3-1\\}
+  
+  Description: Users should be able to create a new account by
+  providing valid account information.
 
   Control: Manual
 
@@ -483,6 +541,9 @@ modification of accounts.
   with differing valid account data covering all input fields.
 
   \item{test-FR3-2\\}
+  
+  Description: Users should not be able to create a new account by
+  providing invalid account information.
 
   Control: Manual
 
@@ -503,6 +564,9 @@ modification of accounts.
   covering different input fields.
 
   \item{test-FR4\\}
+  
+  Description: Users should be able to change their account in-
+  formation by providing the necessary information.
 
   Control: Manual
 
@@ -526,6 +590,9 @@ modification of accounts.
   any errors occur within the system.
 
   \item{test-FR5-1\\}
+  
+  Description: Users should be able to delete their account by
+  providing valid login information for that account.
 
   Control: Manual
 
@@ -545,6 +612,9 @@ modification of accounts.
   their account using valid login information.
 
   \item{test-FR5-2\\}
+  
+  Description: Users should not be able to delete their account by
+  providing invalid login information for that account.
 
   Control: Manual
 
@@ -568,6 +638,9 @@ modification of accounts.
   their account using invalid login information.
 
   \item{test-FR16-1\\}
+  
+  Description: Account holders should be able to log in to Sand-
+  lot with valid login data.
 
   Control: Manual
 
@@ -585,6 +658,9 @@ modification of accounts.
   different valid account information and permission levels.
 
   \item{test-FR16-2\\}
+  
+  Description: Account holders should not be able to log in to Sand-
+  lot with invalid login data.
 
   Control: Manual
 
@@ -723,6 +799,8 @@ information being modified.
   % of.
 
   \item{test-FR15\\}
+  
+  Description: Players should be able to join a team.
 
   Control: Manual
 
@@ -915,6 +993,9 @@ performance, maintainability, security, and cultural.
 
 \item{test-AP3\\}
 
+Description: All images and visuals made for/by Sandlot should
+be high quality.
+
 Type: Non-Functional, Dynamic, Manual
 
 Initial State: The solution is opened on a user's web browser.
@@ -932,6 +1013,9 @@ a usability survey to fill out that is located in section 6.2 of this VnV plan d
 
 \item{test-AP4\\}
 
+Description: Navigation should be straightforward, with menus
+and links easily accessible and readable.
+
 Type: Non-Functional, Dynamic, Manual
 					
 Initial State: The solution is opened on a user's web browser.
@@ -947,6 +1031,9 @@ the supervisor will be given a usability survey to fill out that is located in
 section 6.2 of this VnV plan document.
 
 \item{test-STY1\\}
+
+Description: The solution should use the same colours, fonts
+and buttons across the entire user interface.
 
 Type: Non-Functional, Dynamic, Manual
 					
@@ -968,6 +1055,9 @@ inconsistent interface elements will be recorded.
 \begin{enumerate}
 
   \item{test-EU1\\}
+  
+  Description: All users must be able to easily find the season
+  schedule.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -984,6 +1074,10 @@ inconsistent interface elements will be recorded.
   find the schedule.
 
   \item{test-EU2\\}
+  
+  Description: Misinputted user login information shall provide
+  a warning to the user, if login information does not exist
+  or does not match the database stored login information.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -1051,6 +1145,10 @@ inconsistent interface elements will be recorded.
   % complete all tasks in less than one hour the test is successful.
 
   \item{test-LR3\\}
+  
+  Description: A new user should be able to use the basic fea-
+  tures (such as viewing the league schedule) of the prod-
+  uct without having prior knowledge of the product.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -1066,6 +1164,9 @@ inconsistent interface elements will be recorded.
   will be asked to navigate and view the season schedule.
 
   \item{test-UP1\\}
+  
+  Description: Any terminology or symbols used are the same as
+  ones used in the past solution.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -1241,6 +1342,9 @@ inconsistent interface elements will be recorded.
 \begin{enumerate}
 
   \item{test-AS1-1\\}
+  
+  Description: Viewing the league schedule is accessible by any users of
+  the system, logged in or not.
 
   Control: Manual
 
@@ -1254,6 +1358,9 @@ inconsistent interface elements will be recorded.
   the season schedule.
 
   \item{test-AS1-2\\}
+  
+  Description: Viewing the league standings is accessible by any users of
+  the system, logged in or not.
 
   Control: Manual
 
@@ -1362,6 +1469,10 @@ inconsistent interface elements will be recorded.
 
   \item{test-AS6-1\\}
   
+  Description: Users can only access an account with correctly
+  inputted login information that matches the database
+  stored login information.
+  
   Type: Non-Functional, Dynamic, Manual
 
   Initial State: The system is not logged in to an account.
@@ -1378,6 +1489,10 @@ inconsistent interface elements will be recorded.
   different valid account information and permission levels.
 
   \item{test-AS6-2\\}
+  
+  Description: Users cannot access an account with incorrectly
+  inputted login information that does not match the database
+  stored login information.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -1428,6 +1543,9 @@ inconsistent interface elements will be recorded.
   % succeeds.
 
   \item{test-IG1-1\\}
+  
+  Description: Website must not create conflicts when scheduling
+  games.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -1442,6 +1560,9 @@ inconsistent interface elements will be recorded.
   succeeds if a schedule is created without conflicting scheduling data.
 
   \item{test-IG1-2\\}
+  
+  Description: Website must not create conflicts when rescheduling
+  games.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -1517,6 +1638,9 @@ inconsistent interface elements will be recorded.
   % should observe if any errors or failures occur.
 
   \item{test-PV1\\}
+  
+  Description: The product shall not reveal contact information
+  to any parties without the necessary access.
 
   Type: Non-Functional, Dynamic, Manual
 
@@ -1646,6 +1770,9 @@ Reschedule Module, Database Module and Season Scheduler Module.
 
 \item{test-URS1, Reschedule date variation.\\}
 
+Description: Rescheduling of a game should update the database to remove
+the original date of the game and replace the same game with a new date.
+
 Type: Automatic
 
 Initial State: Schedule generated.
@@ -1774,6 +1901,10 @@ whenever possible, a valid schedule is generated.
 
 \item{test-USS1, Start and end dates.\\}
 
+Description: Multiple variations of season start and end dates, number of games
+per team, teams, and division data will be used to generate a valid schedule
+for each given variation, ensuring all games are within the start and end date.
+
 Type: Automatic
 
 Initial State: Schedule not yet generated.
@@ -1792,6 +1923,11 @@ src/backend/app/functions.
 
 \item{test-USS2, Number of games played per team.\\}
 
+Description: Multiple variations of season start and end dates, number of games
+per team, teams, and division data will be used to generate a valid schedule
+for each given variation, ensuring all teams play the same number of games
+plus or minus one game.
+
 Type: Automatic
 
 Initial State: Schedule not yet generated.
@@ -1809,6 +1945,11 @@ How test will be performed: Unit test in test\_scheduler.py found at
 src/backend/app/functions.
 
 \item{test-USS3, Team data variations.\\}
+
+Description: Multiple variations of season start and end dates, number of games
+per team, teams, and division data will be used to generate a valid schedule
+for each given variation, ensuring all teams do not play on their offday and
+only play teams in their division.
 
 Type: Automatic
 
@@ -1850,6 +1991,10 @@ whenever possible, a valid schedule is generated.
 \begin{enumerate}
 
 \item{test-USS4, Time to generate schedule.\\}
+
+Description: Multiple variations of season start and end dates, number of games
+per team, teams, and division data will be used to generate a valid schedule
+for each given variation, ensuring a valid schedule is generated within 10 minutes.
 
 Type: Automatic
 
